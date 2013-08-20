@@ -26,7 +26,9 @@
       __on("click", function() {
         return Gistquire.update(gistId, {
           files: {
-            "editor.js": $('textarea').val()
+            "editor.haml": {
+              content: $('textarea').val()
+            }
           }
         });
       });

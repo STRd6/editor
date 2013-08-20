@@ -3,4 +3,4 @@
 %button
   Save
   - on "click", ->
-    - Gistquire.update gistId, {files: {"editor.js": $('textarea').val()}}
+    - Gistquire.update gistId, {files: {"editor.haml": {content: $('textarea').val()}}}
