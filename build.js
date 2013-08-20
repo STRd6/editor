@@ -8,6 +8,9 @@ $("body").append((function(data) {
     __pop();
     __element = document.createElement("button");
     __push(__element);
+    __element = document.createTextNode('Cool');
+    __push(__element);
+    __pop();
     __on("click", function() {
       __element = document.createTextNode('');
       __text(__element, "debugger\n");
