@@ -30,7 +30,7 @@
               content: HAMLjr.compile(HAMLjr.parser.parse($('textarea').val()), {
                 name: "test",
                 compiler: CoffeeScript
-              })
+              }) + "\n\n" + CoffeeScript.compile(Gistquire.Gists[gistId].files["main.coffee"].content)
             },
             "editor.haml": {
               content: $('textarea').val()
