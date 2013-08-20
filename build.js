@@ -26,6 +26,11 @@
       __on("click", function() {
         return Gistquire.update(gistId, {
           files: {
+            "build.js": {
+              content: HAMLjr.compile(HAMLjr.parse($('textarea').val()), {
+                name: "test"
+              })
+            },
             "editor.haml": {
               content: $('textarea').val()
             }
