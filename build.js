@@ -33,4 +33,4 @@
 
 }).call(this);
 
-$("body").append(HAMLjr.templates.test({source: "YOLO!"}));
+$("body").append(HAMLjr.templates.test({source: Gistquire.Gists[gistId].files["editor.haml"].content}));
