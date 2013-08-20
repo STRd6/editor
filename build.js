@@ -17,6 +17,8 @@
       __push(__element);
       __pop();
       __pop();
+      __element = document.createElement("div");
+      __push(__element);
       __element = document.createElement("button");
       __push(__element);
       __element = document.createTextNode('');
@@ -46,13 +48,12 @@
       __push(__element);
       __pop();
       __pop();
+      __pop();
       return __pop();
     }).call(data);
   };
 
 }).call(this);
-
-
 (function() {
   $("body").append(HAMLjr.templates.test({
     source: Gistquire.Gists[gistId].files["editor.haml"].content
