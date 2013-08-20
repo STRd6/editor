@@ -30,7 +30,7 @@
               content: HAMLjr.compile(HAMLjr.parser.parse($('textarea').val()), {
                 name: "test",
                 compiler: CoffeeScript
-              }) + "\n\n" + CoffeeScript.compile(Gistquire.Gists[gistId].files["main.coffee"].content)
+              }) + CoffeeScript.compile(Gistquire.Gists[gistId].files["main.coffee"].content)
             },
             "editor.haml": {
               content: $('textarea').val()
@@ -42,7 +42,7 @@
       __element = document.createElement("button");
       __push(__element);
       __element = document.createTextNode('');
-      __text(__element, "Badical\n");
+      __text(__element, "Radical\n");
       __push(__element);
       __pop();
       __pop();
@@ -52,4 +52,10 @@
 
 }).call(this);
 
-$("body").append(HAMLjr.templates.test({source: Gistquire.Gists[gistId].files["editor.haml"].content}));
+
+(function() {
+  $("body").append(HAMLjr.templates.test({
+    source: Gistquire.Gists[gistId].files["editor.haml"].content
+  }));
+
+}).call(this);

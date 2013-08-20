@@ -5,5 +5,4 @@
   - on "click", ->
     - Gistquire.update gistId, {files: {"build.js": {content: HAMLjr.compile(HAMLjr.parser.parse($('textarea').val()), name: "test", compiler: CoffeeScript) + CoffeeScript.compile(Gistquire.Gists[gistId].files["main.coffee"].content)}, "editor.haml": {content: $('textarea').val()}}}
 
-%button
-  Badical
+%button Radical
