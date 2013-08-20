@@ -39,10 +39,15 @@
         });
       });
       __pop();
+      __element = document.createElement("button");
+      __push(__element);
+      __element = document.createTextNode('');
+      __text(__element, "Badical\n");
+      __push(__element);
+      __pop();
+      __pop();
       return __pop();
     }).call(data);
   };
 
 }).call(this);
-
-$("body").append(HAMLjr.templates.test({source: Gistquire.Gists[gistId].files["editor.haml"].content}));
