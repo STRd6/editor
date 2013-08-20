@@ -29,4 +29,4 @@
 
 }).call(this);
 
-HAMLjr.templates.test({source: "YOLO!"});
+$("body").append(HAMLjr.templates.test({source: "YOLO!"}));
