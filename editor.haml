@@ -1,6 +1,6 @@
 %textarea
   = @source
 %button
-  Radical
+  Save
   - on "click", ->
-    - debugger
+    - Gistquire.update gistId, {files: {"editor.js": $('textarea').get(0).val()}}

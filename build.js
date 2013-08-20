@@ -20,11 +20,15 @@
       __element = document.createElement("button");
       __push(__element);
       __element = document.createTextNode('');
-      __text(__element, "Radical\n");
+      __text(__element, "Save\n");
       __push(__element);
       __pop();
       __on("click", function() {
-        debugger;
+        return Gistquire.update(gistId, {
+          files: {
+            "editor.js": $('textarea').get(0).val()
+          }
+        });
       });
       __pop();
       return __pop();
