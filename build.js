@@ -33,8 +33,4 @@
 
 }).call(this);
 
-$(function() {
-  alert("duder");
-});
-
 $("body").append(HAMLjr.templates.test({source: "YOLO!"}));
