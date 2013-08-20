@@ -27,7 +27,7 @@
         return Gistquire.update(gistId, {
           files: {
             "build.js": {
-              content: HAMLjr.compile(HAMLjr.parse($('textarea').val()), {
+              content: HAMLjr.compile(HAMLjr.parser.parse($('textarea').val()), {
                 name: "test"
               })
             },
