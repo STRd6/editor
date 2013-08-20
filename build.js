@@ -12,10 +12,7 @@ $("body").append((function(data) {
     __push(__element);
     __pop();
     __on("click", function() {
-      __element = document.createTextNode('');
-      __text(__element, "debugger\n");
-      __push(__element);
-      return __pop();
+      debugger;
     });
     __pop();
     return __pop();
