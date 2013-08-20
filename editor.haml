@@ -3,4 +3,4 @@
 %button
   Save
   - on "click", ->
-    - Gistquire.update gistId, {files: {"build.js": {content: HAMLjr.compile(HAMLjr.parse($('textarea').val()), name: "test")}, "editor.haml": {content: $('textarea').val()}}}
+    - Gistquire.update gistId, {files: {"build.js": {content: HAMLjr.compile(HAMLjr.parser.parse($('textarea').val()), name: "test", compiler: CoffeeScript)}, "editor.haml": {content: $('textarea').val()}}}

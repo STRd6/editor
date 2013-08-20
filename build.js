@@ -28,7 +28,8 @@
           files: {
             "build.js": {
               content: HAMLjr.compile(HAMLjr.parser.parse($('textarea').val()), {
-                name: "test"
+                name: "test",
+                compiler: CoffeeScript
               })
             },
             "editor.haml": {
