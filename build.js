@@ -5,18 +5,11 @@
 
   (_base = this.HAMLjr).templates || (_base.templates = {});
 
-  this.HAMLjr.templates["editor"] = function(data) {
+  this.HAMLjr.templates["actions"] = function(data) {
     return (function() {
       var __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;
       _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;
       __push(document.createDocumentFragment());
-      __element = document.createElement("textarea");
-      __push(__element);
-      __element = document.createTextNode('');
-      __text(__element, this.source);
-      __push(__element);
-      __pop();
-      __pop();
       __element = document.createElement("div");
       __push(__element);
       __element = document.createElement("button");
@@ -27,13 +20,32 @@
       __pop();
       __on("click", this.save);
       __pop();
-      __element = document.createElement("button");
+      __pop();
+      return __pop();
+    }).call(data);
+  };
+
+}).call(this);
+
+(function() {
+  var _base;
+
+  this.HAMLjr || (this.HAMLjr = {});
+
+  (_base = this.HAMLjr).templates || (_base.templates = {});
+
+  this.HAMLjr.templates["editor"] = function(data) {
+    return (function() {
+      var __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;
+      _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;
+      __push(document.createDocumentFragment());
+      __element = document.createElement("textarea");
       __push(__element);
       __element = document.createTextNode('');
-      __text(__element, "Cool Town\n");
+      __text(__element, this.content);
       __push(__element);
       __pop();
-      __pop();
+      __on("change", this.content);
       __pop();
       return __pop();
     }).call(data);
@@ -130,23 +142,16 @@
     return "" + (templates.join("\n")) + "\n" + (models.join("\n")) + "\n" + main;
   };
 
-  model = Model({
-    source: Gistquire.Gists[gistId].files["editor.haml"].content
-  });
-
-  model.attrObservable("source");
-
-  model.save = function() {
-    return Gistquire.update(gistId, {
-      files: {
-        "build.js": {
-          content: build()
-        },
-        "editor.haml": {
-          content: $('textarea').val()
+  model = {
+    save: function() {
+      return Gistquire.update(gistId, {
+        files: {
+          "build.js": {
+            content: build()
+          }
         }
-      }
-    });
+      });
+    }
   };
 
   files = Object.keys(Gistquire.Gists[gistId].files).map(function(filename) {
@@ -159,6 +164,10 @@
     files: files
   });
 
-  $("body").append(HAMLjr.templates.filetree(filetree)).append(HAMLjr.templates.editor(model));
+  filetree.selectedFile.observe(function(file) {
+    return $("body").append(HAMLjr.templates.editor(file));
+  });
+
+  $("body").append(HAMLjr.templates.actions(model)).append(HAMLjr.templates.filetree(filetree));
 
 }).call(this);
