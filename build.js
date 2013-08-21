@@ -135,7 +135,6 @@
     }
     sandbox = window.open("", "sandbox", "width=" + width + ",height=" + height);
     Object.extend(sandbox, methods);
-    sandbox.Function(code)();
     return sandbox;
   };
 
@@ -204,7 +203,9 @@
       }
     },
     run: function() {
-      return Sandbox(build());
+      var sandbox;
+      sandbox = Sandbox();
+      return sandbox["eval"](build());
     }
   };
 

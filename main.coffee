@@ -53,7 +53,9 @@ actions =
         content: ""
 
   run: ->
-    Sandbox(build())
+    sandbox = Sandbox()
+    # TODO: Copy over some setup script tags?
+    sandbox.eval(build())
 
 files = Object.keys(Gistquire.Gists[gistId].files).map (filename) ->
   data = Gistquire.Gists[gistId].files[filename]

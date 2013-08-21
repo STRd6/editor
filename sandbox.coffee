@@ -12,6 +12,4 @@
   # Pass functions to the running window
   Object.extend sandbox, methods
 
-  sandbox.Function(code)()
-
   sandbox
