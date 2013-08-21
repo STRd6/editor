@@ -289,7 +289,7 @@
 
   filetree = Filetree();
 
-  filetree.load(gistId);
+  filetree.load(Gistquire.Gists[gistId].files);
 
   filetree.selectedFile.observe(function(file) {
     var editor;
