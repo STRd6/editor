@@ -1,5 +1,6 @@
 .actions
-  - Object.keys(this).each (name) ->
+  - actions = this
+  - Object.keys(actions).each (name) ->
     %button
       = name.titleize()
-      - on "click", @[name]
+      - on "click", actions[name]
