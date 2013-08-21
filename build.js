@@ -20,6 +20,13 @@
       __pop();
       __on("click", this.save);
       __pop();
+      __element = document.createElement("button");
+      __push(__element);
+      __element = document.createTextNode('');
+      __text(__element, "Yolo!\n");
+      __push(__element);
+      __pop();
+      __pop();
       __pop();
       return __pop();
     }).call(data);
