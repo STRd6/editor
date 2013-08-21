@@ -233,6 +233,8 @@
     var data;
     data = Gistquire.Gists[gistId].files[filename];
     return File(data);
+  }).select(function(file) {
+    return file.filename() !== "style.css" && file.filename() !== "build.js";
   });
 
   filetree = Filetree({

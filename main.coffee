@@ -76,6 +76,9 @@ files = Object.keys(Gistquire.Gists[gistId].files).map (filename) ->
   data = Gistquire.Gists[gistId].files[filename]
   
   File(data)
+.select (file) ->
+  file.filename() != "style.css" and
+  file.filename() != "build.js"
 
 filetree = Filetree
   files: files
