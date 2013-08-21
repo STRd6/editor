@@ -88,8 +88,17 @@ filetree = Filetree
   files: files
 
 filetree.selectedFile.observe (file) ->
-  $("textarea").remove()
-  $("body").append(HAMLjr.templates.editor(file))
+  # TODO: Scope DOM mutation
+  $(".editor-wrap").remove()
+  $("body").append(HAMLjr.templates.editor())
+
+  # TODO: Choose correct editor mode
+
+  editor = TextEditor
+    text: file.content()
+    el: $('.editor').get(0)
+
+  editor.text.observe file.content
 
 $("body")
   .append(HAMLjr.templates.actions(actions))

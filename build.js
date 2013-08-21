@@ -43,13 +43,13 @@
       var __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;
       _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;
       __push(document.createDocumentFragment());
-      __element = document.createElement("textarea");
+      __element = document.createElement("div");
       __push(__element);
-      __element = document.createTextNode('');
-      __text(__element, this.content);
+      __attribute(__element, "class", "editor-wrap");
+      __element = document.createElement("div");
       __push(__element);
+      __attribute(__element, "class", "editor");
       __pop();
-      __on("change", this.content);
       __pop();
       return __pop();
     }).call(data);
@@ -284,8 +284,14 @@
   });
 
   filetree.selectedFile.observe(function(file) {
-    $("textarea").remove();
-    return $("body").append(HAMLjr.templates.editor(file));
+    var editor;
+    $(".editor-wrap").remove();
+    $("body").append(HAMLjr.templates.editor());
+    editor = TextEditor({
+      text: file.content(),
+      el: $('.editor').get(0)
+    });
+    return editor.text.observe(file.content);
   });
 
   $("body").append(HAMLjr.templates.actions(actions)).append(HAMLjr.templates.filetree(filetree));
