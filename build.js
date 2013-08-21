@@ -143,16 +143,18 @@
   model = {
     save: function() {
       var fileData;
-      fileData = {
-        "build.js": {
-          content: build()
-        }
-      };
+      fileData = {};
       filetree.files.each(function(file) {
+        if (file.filename === "build.js") {
+          return;
+        }
         return fileData[file.filename] = {
           content: file.content()
         };
       });
+      fileData["build.js"] = {
+        content: build()
+      };
       return Gistquire.update(gistId, {
         files: fileData
       });
