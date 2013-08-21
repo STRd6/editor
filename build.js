@@ -20,13 +20,6 @@
       __pop();
       __on("click", this.save);
       __pop();
-      __element = document.createElement("button");
-      __push(__element);
-      __element = document.createTextNode('');
-      __text(__element, "Yolo!\n");
-      __push(__element);
-      __pop();
-      __pop();
       __pop();
       return __pop();
     }).call(data);
@@ -150,18 +143,16 @@
   model = {
     save: function() {
       var fileData;
-      fileData = {};
+      fileData = {
+        "build.js": build()
+      };
       filetree.files.each(function(file) {
         return fileData[file.filename] = {
           content: file.content()
         };
       });
       return Gistquire.update(gistId, {
-        files: {
-          "build.js": {
-            content: build()
-          }
-        }
+        files: fileData
       });
     }
   };
