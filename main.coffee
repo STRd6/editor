@@ -6,11 +6,16 @@ compileTemplate = (source, name="test") ->
     compiler: CoffeeScript
 
 build = ->  
-  template = compileTemplate $('textarea').val(), "test"
+  templates = []
+
+  Object.keys(Gistquire.Gists[gistId].files).each (name) ->
+    if name.extension() is "haml"
+      source = Gistquire.Gists[gistId].files[name].content
+      templates.push compileTemplate(source, name.withouExtension())
 
   main = CoffeeScript.compile(Gistquire.Gists[gistId].files["main.coffee"].content)
 
-  "#{template}\n\n#{main}"
+  "#{templates.join("\n")}\n\n#{main}"
 
 model = Model(
   source: Gistquire.Gists[gistId].files["editor.haml"].content
@@ -28,4 +33,4 @@ model.save = ->
       "editor.haml":
         content: $('textarea').val()
 
-$("body").append(HAMLjr.templates.test(model))
+$("body").append(HAMLjr.templates.editor(model))

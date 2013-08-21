@@ -73,47 +73,51 @@
 }).call(this);
 
 
-(function() {
-  var build, compileTemplate, model;
+var build, compileTemplate, model;
 
-  compileTemplate = function(source, name) {
-    var ast;
-    if (name == null) {
-      name = "test";
-    }
-    ast = HAMLjr.parser.parse(source);
-    return HAMLjr.compile(ast, {
-      name: name,
-      compiler: CoffeeScript
-    });
-  };
-
-  build = function() {
-    var main, template;
-    template = compileTemplate($('textarea').val(), "test");
-    main = CoffeeScript.compile(Gistquire.Gists[gistId].files["main.coffee"].content);
-    return "" + template + "\n\n" + main;
-  };
-
-  model = Model({
-    source: Gistquire.Gists[gistId].files["editor.haml"].content
+compileTemplate = function(source, name) {
+  var ast;
+  if (name == null) {
+    name = "test";
+  }
+  ast = HAMLjr.parser.parse(source);
+  return HAMLjr.compile(ast, {
+    name: name,
+    compiler: CoffeeScript
   });
+};
 
-  model.attrObservable("source");
+build = function() {
+  var main, templates;
+  templates = [];
+  Object.keys(Gistquire.Gists[gistId].files).each(function(name) {
+    var source;
+    if (name.extension() === "haml") {
+      source = Gistquire.Gists[gistId].files[name].content;
+      return templates.push(compileTemplate(source, name.withouExtension()));
+    }
+  });
+  main = CoffeeScript.compile(Gistquire.Gists[gistId].files["main.coffee"].content);
+  return "" + (templates.join("\n")) + "\n\n" + main;
+};
 
-  model.save = function() {
-    return Gistquire.update(gistId, {
-      files: {
-        "build.js": {
-          content: build()
-        },
-        "editor.haml": {
-          content: $('textarea').val()
-        }
+model = Model({
+  source: Gistquire.Gists[gistId].files["editor.haml"].content
+});
+
+model.attrObservable("source");
+
+model.save = function() {
+  return Gistquire.update(gistId, {
+    files: {
+      "build.js": {
+        content: build()
+      },
+      "editor.haml": {
+        content: $('textarea').val()
       }
-    });
-  };
+    }
+  });
+};
 
-  $("body").append(HAMLjr.templates.test(model));
-
-}).call(this);
+$("body").append(HAMLjr.templates.editor(model));
