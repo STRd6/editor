@@ -13,6 +13,7 @@
       __element = document.createElement("div");
       __push(__element);
       __attribute(__element, "class", "actions");
+      var actions = this;
       Object.keys(this).each(function(name) {
         __element = document.createElement("button");
         __push(__element);
@@ -20,7 +21,7 @@
         __text(__element, name.titleize());
         __push(__element);
         __pop();
-        __on("click", this[name]);
+        __on("click", actions[name]);
         return __pop();
       });
       __pop();
