@@ -47,6 +47,7 @@ filetree = Filetree
   files: files
 
 filetree.selectedFile.observe (file) ->
+  $("textarea").remove()
   $("body").append(HAMLjr.templates.editor(file))
 
 $("body")
