@@ -84,13 +84,16 @@
     var self;
     self = Model(I).observeAll;
     self.attrObservable("selectedFile");
+    self.selectedFile.observe(function(file) {
+      return console.log("SELECTED", file);
+    });
     return self;
   };
 
 }).call(this);
 
 (function() {
-  var build, compileTemplate, model;
+  var build, compileTemplate, files, filetree, model;
 
   compileTemplate = function(source, name) {
     var ast;
@@ -143,6 +146,16 @@
     });
   };
 
-  $("body").append(HAMLjr.templates.editor(model));
+  files = Object.keys(Gistquire.Gists[gistId].files).map(function(filename) {
+    var data;
+    data = Gistquire.Gists[gistId].files[filename];
+    return File(data);
+  });
+
+  filetree = Filetree({
+    files: files
+  });
+
+  $("body").append(HAMLjr.templates.filetree(filetree)).append(HAMLjr.templates.editor(model));
 
 }).call(this);
