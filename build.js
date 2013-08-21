@@ -60,10 +60,12 @@
         __element = document.createElement("li");
         __push(__element);
         __element = document.createTextNode('');
-        __text(__element, file.name);
+        __text(__element, file.filename);
         __push(__element);
         __pop();
-        __on("click", selectedFile(file));
+        __on("click", function() {
+          return selectedFile(file);
+        });
         return __pop();
       });
       __pop();
