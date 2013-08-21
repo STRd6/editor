@@ -82,7 +82,7 @@ actions =
     sandbox.eval(build())
 
   load: ->
-    if id = prompt("Gist Id", gistId)
+    if id = prompt("Gist Id", gist.id)
       console.log id
       
       Gistquire.get gistId, (data) ->

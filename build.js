@@ -291,7 +291,7 @@
     },
     load: function() {
       var id;
-      if (id = prompt("Gist Id", gistId)) {
+      if (id = prompt("Gist Id", gist.id)) {
         console.log(id);
         return Gistquire.get(gistId, function(data) {
           gist = data;
