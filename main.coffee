@@ -1,3 +1,12 @@
+# Get stuff from our env
+{$root, gist} = ENV
+
+# Apply our styles
+if styleContent = gist.files["style.css"]?.content
+  $root.append $("<style>",
+    html: styleContent
+  )
+
 compileTemplate = (source, name="test") ->
   ast = HAMLjr.parser.parse(source)
   
@@ -58,7 +67,7 @@ actions =
     fileData["style.css"] =
       content: buildStyle()
 
-    Gistquire.update gistId,
+    Gistquire.update gist.id,
       files: fileData
 
   new: ->
@@ -77,10 +86,11 @@ actions =
       console.log id
       
       Gistquire.get gistId, (data) ->
-        filetree.load(data.files)
+        gist = data
+        filetree.load(gist.files)
 
 filetree = Filetree()
-filetree.load(Gistquire.Gists[gistId].files)
+filetree.load(gist.files)
 
 filetree.selectedFile.observe (file) ->
   # TODO: Scope DOM mutation

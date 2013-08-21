@@ -196,7 +196,15 @@
 }).call(this);
 
 (function() {
-  var actions, build, buildStyle, compileTemplate, filetree;
+  var $root, actions, build, buildStyle, compileTemplate, filetree, gist, styleContent, _ref;
+
+  $root = ENV.$root, gist = ENV.gist;
+
+  if (styleContent = (_ref = gist.files["style.css"]) != null ? _ref.content : void 0) {
+    $root.append($("<style>", {
+      html: styleContent
+    }));
+  }
 
   compileTemplate = function(source, name) {
     var ast;
@@ -263,7 +271,7 @@
       fileData["style.css"] = {
         content: buildStyle()
       };
-      return Gistquire.update(gistId, {
+      return Gistquire.update(gist.id, {
         files: fileData
       });
     },
@@ -286,7 +294,8 @@
       if (id = prompt("Gist Id", gistId)) {
         console.log(id);
         return Gistquire.get(gistId, function(data) {
-          return filetree.load(data.files);
+          gist = data;
+          return filetree.load(gist.files);
         });
       }
     }
@@ -294,7 +303,7 @@
 
   filetree = Filetree();
 
-  filetree.load(Gistquire.Gists[gistId].files);
+  filetree.load(gist.files);
 
   filetree.selectedFile.observe(function(file) {
     var editor;
