@@ -165,6 +165,7 @@
   });
 
   filetree.selectedFile.observe(function(file) {
+    $("textarea").remove();
     return $("body").append(HAMLjr.templates.editor(file));
   });
 
