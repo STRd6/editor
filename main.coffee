@@ -9,8 +9,9 @@ build = ->
   templates = []
   models = []
 
-  Object.keys(Gistquire.Gists[gistId].files).each (name) ->
-    source = Gistquire.Gists[gistId].files[name].content
+  filetree.files.each (file) ->
+    name = file.filename()
+    source = file.content()
 
     if name.extension() is "haml"
       templates.push compileTemplate(source, name.withoutExtension())
@@ -31,7 +32,14 @@ build = ->
 
 model =
   save: ->
-    # TODO: Merge in each file
+    fileData = {}
+
+    # TODO: Handle deleted files
+
+    # Merge in each file
+    filetree.files.each (file) ->
+      fileData[file.filename] =
+        content: file.content()
 
     Gistquire.update gistId,
       files:

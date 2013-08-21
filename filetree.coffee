@@ -3,7 +3,4 @@
 
   self.attrObservable "selectedFile"
 
-  self.selectedFile.observe (file) ->
-    console.log "SELECTED", file
-
   return self
