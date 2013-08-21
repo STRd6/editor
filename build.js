@@ -291,6 +291,7 @@
       text: file.content(),
       el: $('.editor').get(0)
     });
+    debugger
     editor.text.observe(function(){debugger;});
   });
 
