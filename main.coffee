@@ -98,6 +98,9 @@ filetree.selectedFile.observe (file) ->
     text: file.content()
     el: $('.editor').get(0)
 
+  # Not sure why this is necessary O_o
+  editor.reset(editor.text())
+
   editor.text.observe file.content
 
 $("body")
