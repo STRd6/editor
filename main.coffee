@@ -51,6 +51,7 @@ buildStyle = ->
   styles.join("\n")
 
 actions =
+  template: "actions"
   save: ->
     fileData = {}
 
@@ -95,6 +96,8 @@ actions =
 
 filetree = Filetree()
 filetree.load(gist.files)
+# TODO: Autodiscover template
+filetree.template = "filetree"
 
 filetree.selectedFile.observe (file) ->
   # TODO: Scope DOM mutation
@@ -113,5 +116,7 @@ filetree.selectedFile.observe (file) ->
   editor.text.observe file.content
 
 $root
-  .append(HAMLjr.templates.actions(actions))
-  .append(HAMLjr.templates.filetree(filetree))
+  .append(HAMLjr.templates.main(
+    filetree: filetree
+    actions: actions
+  ))
