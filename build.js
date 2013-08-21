@@ -227,6 +227,12 @@
       var sandbox;
       sandbox = Sandbox();
       return sandbox["eval"](build());
+    },
+    load: function() {
+      var id;
+      if (id = prompt("Gist Id", gistId)) {
+        return console.log(id);
+      }
     }
   };
 

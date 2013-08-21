@@ -72,6 +72,10 @@ actions =
     # TODO: Copy over some setup script tags?
     sandbox.eval(build())
 
+  load: ->
+    if id = prompt("Gist Id", gistId)
+      console.log id
+
 files = Object.keys(Gistquire.Gists[gistId].files).map (filename) ->
   data = Gistquire.Gists[gistId].files[filename]
   
