@@ -287,11 +287,11 @@
     var editor;
     $(".editor-wrap").remove();
     $("body").append(HAMLjr.templates.editor());
+    debugger;
     editor = TextEditor({
       text: file.content(),
       el: $('.editor').get(0)
     });
-    debugger
     editor.text.observe(function(){debugger;});
   });
 
