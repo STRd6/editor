@@ -25,26 +25,12 @@
       __text(__element, "Save\n");
       __push(__element);
       __pop();
-      __on("click", function() {
-        return Gistquire.update(gistId, {
-          files: {
-            "build.js": {
-              content: HAMLjr.compile(HAMLjr.parser.parse($('textarea').val()), {
-                name: "test",
-                compiler: CoffeeScript
-              }) + CoffeeScript.compile(Gistquire.Gists[gistId].files["main.coffee"].content)
-            },
-            "editor.haml": {
-              content: $('textarea').val()
-            }
-          }
-        });
-      });
+      __on("click", this.save);
       __pop();
       __element = document.createElement("button");
       __push(__element);
       __element = document.createTextNode('');
-      __text(__element, "Radical\n");
+      __text(__element, "Oh My Glob!\n");
       __push(__element);
       __pop();
       __pop();
@@ -54,45 +40,47 @@
   };
 
 }).call(this);
+(function() {
+  var build, compileTemplate, model;
 
-var build, compileTemplate, model;
-
-compileTemplate = function(source, name) {
-  var ast;
-  if (name == null) {
-    name = "test";
-  }
-  ast = HAMLjr.parser.parse(source);
-  return HAMLjr.compile(ast, {
-    name: name,
-    compiler: CoffeeScript
-  });
-};
-
-build = function() {
-  var main, template;
-  template = compileTemplate($('textarea').val(), "test");
-  main = CoffeeScript.compile(Gistquire.Gists[gistId].files["main.coffee"].content);
-  return "" + template + "\n\n" + main;
-};
-
-model = Model({
-  source: Gistquire.Gists[gistId].files["editor.haml"].content
-});
-
-model.attrObservable("source");
-
-model.save = function() {
-  return Gistquire.update(gistId, {
-    files: {
-      "build.js": {
-        content: build()
-      },
-      "editor.haml": {
-        content: $('textarea').val()
-      }
+  compileTemplate = function(source, name) {
+    var ast;
+    if (name == null) {
+      name = "test";
     }
-  });
-};
+    ast = HAMLjr.parser.parse(source);
+    return HAMLjr.compile(ast, {
+      name: name,
+      compiler: CoffeeScript
+    });
+  };
 
-$("body").append(HAMLjr.templates.test(model));
+  build = function() {
+    var main, template;
+    template = compileTemplate($('textarea').val(), "test");
+    main = CoffeeScript.compile(Gistquire.Gists[gistId].files["main.coffee"].content);
+    return "" + template + "\n\n" + main;
+  };
+
+  model = Model({
+    source: Gistquire.Gists[gistId].files["editor.haml"].content
+  });
+
+  model.attrObservable("source");
+
+  model.save = function() {
+    return Gistquire.update(gistId, {
+      files: {
+        "build.js": {
+          content: build()
+        },
+        "editor.haml": {
+          content: $('textarea').val()
+        }
+      }
+    });
+  };
+
+  $("body").append(HAMLjr.templates.test(model));
+
+}).call(this);
