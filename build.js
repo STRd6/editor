@@ -107,6 +107,17 @@
     });
     self = Model(I).observeAll();
     self.attrObservable("selectedFile");
+    self.extend({
+      load: function(fileData) {
+        var files;
+        files = Object.keys(fileData).map(function(name) {
+          return File(fileData[name]);
+        }).select(function(file) {
+          return file.filename() !== "style.css" && file.filename() !== "build.js";
+        });
+        return self.files(files);
+      }
+    });
     return self;
   };
 
@@ -179,7 +190,7 @@
 }).call(this);
 
 (function() {
-  var actions, build, buildStyle, compileTemplate, files, filetree;
+  var actions, build, buildStyle, compileTemplate, filetree;
 
   compileTemplate = function(source, name) {
     var ast;
@@ -267,18 +278,13 @@
     load: function() {
       var id;
       if (id = prompt("Gist Id", gistId)) {
-        return console.log(id);
+        console.log(id);
+        return Gistquire.get(gistId, function(data) {
+          return filetree.load(data.files);
+        });
       }
     }
   };
-
-  files = Object.keys(Gistquire.Gists[gistId].files).map(function(filename) {
-    var data;
-    data = Gistquire.Gists[gistId].files[filename];
-    return File(data);
-  }).select(function(file) {
-    return file.filename() !== "style.css" && file.filename() !== "build.js";
-  });
 
   filetree = Filetree({
     files: files

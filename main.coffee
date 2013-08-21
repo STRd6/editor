@@ -75,14 +75,9 @@ actions =
   load: ->
     if id = prompt("Gist Id", gistId)
       console.log id
-
-files = Object.keys(Gistquire.Gists[gistId].files).map (filename) ->
-  data = Gistquire.Gists[gistId].files[filename]
-  
-  File(data)
-.select (file) ->
-  file.filename() != "style.css" and
-  file.filename() != "build.js"
+      
+      Gistquire.get gistId, (data) ->
+        filetree.load(data.files)
 
 filetree = Filetree
   files: files
