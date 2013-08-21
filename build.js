@@ -54,9 +54,45 @@
   };
 
 }).call(this);
-(function() {
-  $("body").append(HAMLjr.templates.test({
-    source: Gistquire.Gists[gistId].files["editor.haml"].content
-  }));
 
-}).call(this);
+var build, compileTemplate, model;
+
+compileTemplate = function(source, name) {
+  var ast;
+  if (name == null) {
+    name = "test";
+  }
+  ast = HAMLjr.parser.parse(source);
+  return HAMLjr.compile(ast, {
+    name: name,
+    compiler: CoffeeScript
+  });
+};
+
+build = function() {
+  var main, template;
+  template = compileTemplate($('textarea').val(), "test");
+  main = CoffeeScript.compile(Gistquire.Gists[gistId].files["main.coffee"].content);
+  return "" + template + "\n\n" + main;
+};
+
+model = Model({
+  source: Gistquire.Gists[gistId].files["editor.haml"].content
+});
+
+model.attrObservable("source");
+
+model.save = function() {
+  return Gistquire.update(gistId, {
+    files: {
+      "build.js": {
+        content: build()
+      },
+      "editor.haml": {
+        content: $('textarea').val()
+      }
+    }
+  });
+};
+
+$("body").append(HAMLjr.templates.test(model));
