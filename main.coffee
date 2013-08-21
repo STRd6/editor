@@ -32,7 +32,9 @@ build = ->
 
 model =
   save: ->
-    fileData = {}
+    fileData =
+      "build.js":
+        content:  build()
 
     # TODO: Handle deleted files
 
@@ -42,9 +44,7 @@ model =
         content: file.content()
 
     Gistquire.update gistId,
-      files:
-        "build.js":
-          content:  build()
+      files: fileData
 
 files = Object.keys(Gistquire.Gists[gistId].files).map (filename) ->
   data = Gistquire.Gists[gistId].files[filename]
