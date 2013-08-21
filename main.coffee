@@ -29,6 +29,18 @@ build = ->
     #{main}
   """
 
+buildStyle = ->
+  styles = []
+  
+  filetree.files.each (file) ->
+    name = file.filename()
+    source = file.content()
+
+    if name.extension() is "styl"
+      styles.push styl(source, whitespace: true).toString()
+
+  styles.join("\n")
+
 actions =
   save: ->
     fileData = {}
@@ -42,6 +54,9 @@ actions =
 
     fileData["build.js"] =
       content:  build()
+
+    fileData["style.css"] =
+      content: buildStyle()
 
     Gistquire.update gistId,
       files: fileData

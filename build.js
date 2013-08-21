@@ -141,7 +141,7 @@
 }).call(this);
 
 (function() {
-  var actions, build, compileTemplate, files, filetree;
+  var actions, build, buildStyle, compileTemplate, files, filetree;
 
   compileTemplate = function(source, name) {
     var ast;
@@ -177,6 +177,22 @@
     return "" + (templates.join("\n")) + "\n" + (models.join("\n")) + "\n" + main;
   };
 
+  buildStyle = function() {
+    var styles;
+    styles = [];
+    filetree.files.each(function(file) {
+      var name, source;
+      name = file.filename();
+      source = file.content();
+      if (name.extension() === "styl") {
+        return styles.push(styl(source, {
+          whitespace: true
+        }).toString());
+      }
+    });
+    return styles.join("\n");
+  };
+
   actions = {
     save: function() {
       var fileData;
@@ -188,6 +204,9 @@
       });
       fileData["build.js"] = {
         content: build()
+      };
+      fileData["style.css"] = {
+        content: buildStyle()
       };
       return Gistquire.update(gistId, {
         files: fileData
