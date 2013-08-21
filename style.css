@@ -2,3 +2,10 @@ textarea {
   width: 100%;
   height: 400px;
 }
+
+.filetree {
+  width: 200px;
+  position: fixed;
+  left: 0;
+  top: 40px;
+}

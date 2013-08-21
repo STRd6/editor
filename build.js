@@ -83,6 +83,7 @@
       __push(document.createDocumentFragment());
       __element = document.createElement("ul");
       __push(__element);
+      __attribute(__element, "class", "filetree");
       selectedFile = this.selectedFile;
       __each(this.files, function(file) {
         __element = document.createElement("li");
