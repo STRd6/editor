@@ -30,7 +30,7 @@
       __element = document.createElement("button");
       __push(__element);
       __element = document.createTextNode('');
-      __text(__element, "Oh My Glob!\n");
+      __text(__element, "These Lumps\n");
       __push(__element);
       __pop();
       __pop();
@@ -89,17 +89,23 @@
   };
 
   build = function() {
-    var main, templates;
+    var main, models, templates;
     templates = [];
+    models = [];
     Object.keys(Gistquire.Gists[gistId].files).each(function(name) {
       var source;
+      source = Gistquire.Gists[gistId].files[name].content;
       if (name.extension() === "haml") {
-        source = Gistquire.Gists[gistId].files[name].content;
         return templates.push(compileTemplate(source, name.withoutExtension()));
+      } else if (name.extension() === "coffee") {
+        if (name === "main.coffee") {
+          return;
+        }
+        return models.push(CoffeeScript.compile(source));
       }
     });
     main = CoffeeScript.compile(Gistquire.Gists[gistId].files["main.coffee"].content);
-    return "" + (templates.join("\n")) + "\n\n" + main;
+    return "" + (templates.join("\n")) + "\n" + (models.join("\n")) + "\n" + main;
   };
 
   model = Model({
