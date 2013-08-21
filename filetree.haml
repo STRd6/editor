@@ -2,4 +2,4 @@
   - selectedFile = @selectedFile
   - each @files, (file) ->
     %li= file.filename
-      - on "click", selectedFile(file)
+      - on "click", -> selectedFile(file)
