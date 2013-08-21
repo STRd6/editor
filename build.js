@@ -104,75 +104,76 @@
 
 }).call(this);
 
-var build, compileTemplate, files, filetree, model;
+(function() {
+  var build, compileTemplate, files, filetree, model;
 
-compileTemplate = function(source, name) {
-  var ast;
-  if (name == null) {
-    name = "test";
-  }
-  ast = HAMLjr.parser.parse(source);
-  return HAMLjr.compile(ast, {
-    name: name,
-    compiler: CoffeeScript
-  });
-};
-
-build = function() {
-  var main, models, templates;
-  templates = [];
-  models = [];
-  filetree.files.each(function(file) {
-    var name, source;
-    name = file.filename();
-    source = file.content();
-    if (name.extension() === "haml") {
-      return templates.push(compileTemplate(source, name.withoutExtension()));
-    } else if (name.extension() === "coffee") {
-      if (name === "main.coffee") {
-        return;
-      }
-      return models.push(CoffeeScript.compile(source));
+  compileTemplate = function(source, name) {
+    var ast;
+    if (name == null) {
+      name = "test";
     }
-  });
-  main = CoffeeScript.compile(Gistquire.Gists[gistId].files["main.coffee"].content);
-  return "" + (templates.join("\n")) + "\n" + (models.join("\n")) + "\n" + main;
-};
+    ast = HAMLjr.parser.parse(source);
+    return HAMLjr.compile(ast, {
+      name: name,
+      compiler: CoffeeScript
+    });
+  };
 
-model = {
-  save: function() {
-    var fileData;
-    fileData = {};
+  build = function() {
+    var main, models, templates;
+    templates = [];
+    models = [];
     filetree.files.each(function(file) {
-      if (file.filename === "build.js") {
-        return;
+      var name, source;
+      name = file.filename();
+      source = file.content();
+      if (name.extension() === "haml") {
+        return templates.push(compileTemplate(source, name.withoutExtension()));
+      } else if (name.extension() === "coffee") {
+        if (name === "main.coffee") {
+          return;
+        }
+        return models.push(CoffeeScript.compile(source));
       }
-      return fileData[file.filename] = {
-        content: file.content()
+    });
+    main = CoffeeScript.compile(Gistquire.Gists[gistId].files["main.coffee"].content);
+    return "" + (templates.join("\n")) + "\n" + (models.join("\n")) + "\n" + main;
+  };
+
+  model = {
+    save: function() {
+      var fileData;
+      fileData = {
+        "build.js": {
+          content: build()
+        }
       };
-    });
-    fileData["build.js"] = {
-      content: build()
-    };
-    return Gistquire.update(gistId, {
-      files: fileData
-    });
-  }
-};
+      filetree.files.each(function(file) {
+        return fileData[file.filename] = {
+          content: file.content()
+        };
+      });
+      return Gistquire.update(gistId, {
+        files: fileData
+      });
+    }
+  };
 
-files = Object.keys(Gistquire.Gists[gistId].files).map(function(filename) {
-  var data;
-  data = Gistquire.Gists[gistId].files[filename];
-  return File(data);
-});
+  files = Object.keys(Gistquire.Gists[gistId].files).map(function(filename) {
+    var data;
+    data = Gistquire.Gists[gistId].files[filename];
+    return File(data);
+  });
 
-filetree = Filetree({
-  files: files
-});
+  filetree = Filetree({
+    files: files
+  });
 
-filetree.selectedFile.observe(function(file) {
-  $("textarea").remove();
-  return $("body").append(HAMLjr.templates.editor(file));
-});
+  filetree.selectedFile.observe(function(file) {
+    $("textarea").remove();
+    return $("body").append(HAMLjr.templates.editor(file));
+  });
 
-$("body").append(HAMLjr.templates.actions(model)).append(HAMLjr.templates.filetree(filetree));
+  $("body").append(HAMLjr.templates.actions(model)).append(HAMLjr.templates.filetree(filetree));
+
+}).call(this);
