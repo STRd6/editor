@@ -1,10 +1,10 @@
 (function() {
   var _base;
- 
+
   this.HAMLjr || (this.HAMLjr = {});
- 
+
   (_base = this.HAMLjr).templates || (_base.templates = {});
- 
+
   this.HAMLjr.templates["actions"] = function(data) {
     return (function() {
       var __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;
@@ -23,7 +23,7 @@
       __element = document.createElement("button");
       __push(__element);
       __element = document.createTextNode('');
-      __text(__element, "Yolo!\n");
+      __text(__element, "Duder\n");
       __push(__element);
       __pop();
       __pop();
@@ -31,16 +31,16 @@
       return __pop();
     }).call(data);
   };
- 
+
 }).call(this);
- 
+
 (function() {
   var _base;
- 
+
   this.HAMLjr || (this.HAMLjr = {});
- 
+
   (_base = this.HAMLjr).templates || (_base.templates = {});
- 
+
   this.HAMLjr.templates["editor"] = function(data) {
     return (function() {
       var __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;
@@ -57,16 +57,16 @@
       return __pop();
     }).call(data);
   };
- 
+
 }).call(this);
- 
+
 (function() {
   var _base;
- 
+
   this.HAMLjr || (this.HAMLjr = {});
- 
+
   (_base = this.HAMLjr).templates || (_base.templates = {});
- 
+
   this.HAMLjr.templates["filetree"] = function(data) {
     return (function() {
       var selectedFile, __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;
@@ -91,16 +91,16 @@
       return __pop();
     }).call(data);
   };
- 
+
 }).call(this);
- 
+
 (function() {
   this.File = function(I) {
     return Model(I).observeAll();
   };
- 
+
 }).call(this);
- 
+
 (function() {
   this.Filetree = function(I) {
     var self;
@@ -108,12 +108,12 @@
     self.attrObservable("selectedFile");
     return self;
   };
- 
+
 }).call(this);
- 
+
 (function() {
   var build, compileTemplate, files, filetree, model;
- 
+
   compileTemplate = function(source, name) {
     var ast;
     if (name == null) {
@@ -125,7 +125,7 @@
       compiler: CoffeeScript
     });
   };
- 
+
   build = function() {
     var main, models, templates;
     templates = [];
@@ -146,7 +146,7 @@
     main = CoffeeScript.compile(Gistquire.Gists[gistId].files["main.coffee"].content);
     return "" + (templates.join("\n")) + "\n" + (models.join("\n")) + "\n" + main;
   };
- 
+
   model = {
     save: function() {
       var fileData;
@@ -165,22 +165,22 @@
       });
     }
   };
- 
+
   files = Object.keys(Gistquire.Gists[gistId].files).map(function(filename) {
     var data;
     data = Gistquire.Gists[gistId].files[filename];
     return File(data);
   });
- 
+
   filetree = Filetree({
     files: files
   });
- 
+
   filetree.selectedFile.observe(function(file) {
     $("textarea").remove();
     return $("body").append(HAMLjr.templates.editor(file));
   });
- 
+
   $("body").append(HAMLjr.templates.actions(model)).append(HAMLjr.templates.filetree(filetree));
- 
+
 }).call(this);
