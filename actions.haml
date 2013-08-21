@@ -1,12 +1,5 @@
 .actions
-  %button
-    Save
-    - on "click", @save
-
-  %button
-    New
-    - on "click", @new
-
-  %button
-    Run
-    - on "click", @run
+  - Object.keys(this).each (name) ->
+    %button
+      = name.titleize()
+      - on "click", @[name]
