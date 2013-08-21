@@ -285,9 +285,16 @@
       }
     },
     run: function() {
-      var sandbox;
-      sandbox = Sandbox();
-      return sandbox["eval"](build());
+      var demoElement;
+      $root.children(".demo").remove();
+      demoElement = $("<div>", {
+        "class": "demo"
+      });
+      $root.append(demoElement);
+      return Function("ENV", build())({
+        $root: demoElement,
+        gist: gist
+      });
     },
     load: function() {
       var id;

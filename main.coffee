@@ -77,9 +77,13 @@ actions =
         content: ""
 
   run: ->
-    sandbox = Sandbox()
-    # TODO: Copy over some setup script tags?
-    sandbox.eval(build())
+    $root.children(".demo").remove()
+    demoElement = $("<div>", class: "demo")
+    $root.append(demoElement)
+    Function("ENV", build())(
+      $root: demoElement
+      gist: gist
+    )
 
   load: ->
     if id = prompt("Gist Id", gist.id)
