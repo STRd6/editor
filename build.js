@@ -161,7 +161,7 @@
     delete I.el;
     editor = ace.edit(el);
     editor.setFontSize("16px");
-    editor.setTheme("ace/theme/tomorrow");
+    editor.setTheme("ace/theme/chrome");
     editor.getSession().setMode("ace/mode/" + I.mode);
     editor.getSession().setUseSoftTabs(true);
     editor.getSession().setTabSize(2);
