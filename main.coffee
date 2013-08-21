@@ -94,20 +94,20 @@ filetree.load(gist.files)
 
 filetree.selectedFile.observe (file) ->
   # TODO: Scope DOM mutation
-  $(".editor-wrap").remove()
-  $("body").append(HAMLjr.templates.editor())
+  $root.find(".editor-wrap").remove()
+  $root.append(HAMLjr.templates.editor())
 
   # TODO: Choose correct editor mode
 
   editor = TextEditor
     text: file.content()
-    el: $('.editor').get(0)
+    el: $root.find('.editor').get(0)
 
   # Not sure why this is necessary O_o
   editor.reset(editor.text())
 
   editor.text.observe file.content
 
-$("body")
+$root
   .append(HAMLjr.templates.actions(actions))
   .append(HAMLjr.templates.filetree(filetree))
