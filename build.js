@@ -133,6 +133,51 @@
 }).call(this);
 
 (function() {
+  this.TextEditor = function(I) {
+    var editor, el, reset, self, updating;
+    Object.reverseMerge(I, {
+      mode: "coffee",
+      text: ""
+    });
+    self = Model(I);
+    el = I.el;
+    delete I.el;
+    editor = ace.edit(el);
+    editor.setTheme("ace/theme/tomorrow");
+    editor.getSession().setMode("ace/mode/" + I.mode);
+    editor.getSession().setUseSoftTabs(true);
+    editor.getSession().setTabSize(2);
+    reset = function(content) {
+      if (content == null) {
+        content = "";
+      }
+      editor.setValue(content);
+      editor.moveCursorTo(0, 0);
+      return editor.session.selection.clearSelection();
+    };
+    self.attrObservable("text");
+    updating = false;
+    editor.getSession().on('change', function() {
+      updating = true;
+      self.text(editor.getValue());
+      return updating = false;
+    });
+    self.text.observe(function(newValue) {
+      if (!updating) {
+        return reset(newValue);
+      }
+    });
+    self.extend({
+      el: el,
+      editor: editor,
+      reset: reset
+    });
+    return self;
+  };
+
+}).call(this);
+
+(function() {
   var actions, build, buildStyle, compileTemplate, files, filetree;
 
   compileTemplate = function(source, name) {
