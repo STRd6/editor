@@ -72,6 +72,22 @@
 
 }).call(this);
 
+(function() {
+  this.File = function(I) {
+    return Model(I).observeAll();
+  };
+
+}).call(this);
+
+(function() {
+  this.Filetree = function(I) {
+    var self;
+    self = Model(I).observeAll;
+    self.attrObservable("selectedFile");
+    return self;
+  };
+
+}).call(this);
 
 (function() {
   var build, compileTemplate, model;
