@@ -9,3 +9,7 @@ textarea {
   left: 0;
   top: 40px;
 }
+
+.filetree li {
+  list-style-type: none;
+}
