@@ -85,7 +85,7 @@ actions =
     if id = prompt("Gist Id", gist.id)
       console.log id
       
-      Gistquire.get gistId, (data) ->
+      Gistquire.get id, (data) ->
         gist = data
         filetree.load(gist.files)
 

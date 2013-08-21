@@ -293,7 +293,7 @@
       var id;
       if (id = prompt("Gist Id", gist.id)) {
         console.log(id);
-        return Gistquire.get(gistId, function(data) {
+        return Gistquire.get(id, function(data) {
           gist = data;
           return filetree.load(gist.files);
         });
