@@ -108,11 +108,11 @@
       __push(__element);
       __attribute(__element, "class", "main");
       __element = document.createTextNode('');
-      __text(__element, render(this.actions));
+      __text(__element, HAMLjr.templates.actions(this.actions));
       __push(__element);
       __pop();
       __element = document.createTextNode('');
-      __text(__element, render(this.filetree));
+      __text(__element, HAMLjr.templates.filetree(this.filetree));
       __push(__element);
       __pop();
       __pop();
