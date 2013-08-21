@@ -82,7 +82,7 @@
 (function() {
   this.Filetree = function(I) {
     var self;
-    self = Model(I).observeAll;
+    self = Model(I).observeAll();
     self.attrObservable("selectedFile");
     self.selectedFile.observe(function(file) {
       return console.log("SELECTED", file);
