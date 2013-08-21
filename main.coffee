@@ -11,7 +11,7 @@ build = ->
   Object.keys(Gistquire.Gists[gistId].files).each (name) ->
     if name.extension() is "haml"
       source = Gistquire.Gists[gistId].files[name].content
-      templates.push compileTemplate(source, name.withouExtension())
+      templates.push compileTemplate(source, name.withoutExtension())
 
   main = CoffeeScript.compile(Gistquire.Gists[gistId].files["main.coffee"].content)
 

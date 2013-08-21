@@ -94,7 +94,7 @@ build = function() {
     var source;
     if (name.extension() === "haml") {
       source = Gistquire.Gists[gistId].files[name].content;
-      return templates.push(compileTemplate(source, name.withouExtension()));
+      return templates.push(compileTemplate(source, name.withoutExtension()));
     }
   });
   main = CoffeeScript.compile(Gistquire.Gists[gistId].files["main.coffee"].content);
