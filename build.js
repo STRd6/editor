@@ -287,12 +287,12 @@
     var editor;
     $(".editor-wrap").remove();
     $("body").append(HAMLjr.templates.editor());
-    debugger;
     editor = TextEditor({
       text: file.content(),
       el: $('.editor').get(0)
     });
-    editor.text.observe(function(){debugger;});
+    editor.reset(editor.text())
+    editor.text.observe(file.content);
   });
 
   $("body").append(HAMLjr.templates.actions(actions)).append(HAMLjr.templates.filetree(filetree));
