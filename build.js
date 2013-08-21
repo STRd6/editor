@@ -143,6 +143,7 @@
     el = I.el;
     delete I.el;
     editor = ace.edit(el);
+    editor.setFontSize("16px");
     editor.setTheme("ace/theme/tomorrow");
     editor.getSession().setMode("ace/mode/" + I.mode);
     editor.getSession().setUseSoftTabs(true);
