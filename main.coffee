@@ -102,7 +102,7 @@ filetree.template = "filetree"
 filetree.selectedFile.observe (file) ->
   # TODO: Scope DOM mutation
   $root.find(".editor-wrap").remove()
-  $root.append(HAMLjr.templates.editor())
+  $root.find(".main").append(HAMLjr.templates.editor())
 
   # TODO: Choose correct editor mode
 

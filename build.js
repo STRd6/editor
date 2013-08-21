@@ -348,7 +348,7 @@
   filetree.selectedFile.observe(function(file) {
     var editor;
     $root.find(".editor-wrap").remove();
-    $root.append(HAMLjr.templates.editor());
+    $root.find(".main").append(HAMLjr.templates.editor());
     editor = TextEditor({
       text: file.content(),
       el: $root.find('.editor').get(0)
