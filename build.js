@@ -286,9 +286,9 @@
     }
   };
 
-  filetree = Filetree({
-    files: files
-  });
+  filetree = Filetree();
+
+  filetree.load(gistId);
 
   filetree.selectedFile.observe(function(file) {
     var editor;

@@ -79,8 +79,8 @@ actions =
       Gistquire.get gistId, (data) ->
         filetree.load(data.files)
 
-filetree = Filetree
-  files: files
+filetree = Filetree()
+filetree.load(gistId)
 
 filetree.selectedFile.observe (file) ->
   # TODO: Scope DOM mutation
