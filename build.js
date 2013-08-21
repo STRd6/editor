@@ -28,6 +28,14 @@
       __pop();
       __on("click", this["new"]);
       __pop();
+      __element = document.createElement("button");
+      __push(__element);
+      __element = document.createTextNode('');
+      __text(__element, "Run\n");
+      __push(__element);
+      __pop();
+      __on("click", this.run);
+      __pop();
       __pop();
       return __pop();
     }).call(data);
@@ -113,6 +121,27 @@
 }).call(this);
 
 (function() {
+  this.Sandbox = function(code, _arg) {
+    var height, methods, sandbox, width, _ref;
+    _ref = _arg != null ? _arg : {}, width = _ref.width, height = _ref.height, methods = _ref.methods;
+    if (width == null) {
+      width = 800;
+    }
+    if (height == null) {
+      height = 600;
+    }
+    if (methods == null) {
+      methods = {};
+    }
+    sandbox = window.open("", "sandbox", "width=" + width + ",height=" + height);
+    Object.extend(sandbox, methods);
+    sandbox.Function(code)();
+    return sandbox;
+  };
+
+}).call(this);
+
+(function() {
   var actions, build, compileTemplate, files, filetree;
 
   compileTemplate = function(source, name) {
@@ -173,6 +202,9 @@
           content: ""
         }));
       }
+    },
+    run: function() {
+      return Sandbox(build());
     }
   };
 

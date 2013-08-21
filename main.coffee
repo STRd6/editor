@@ -52,6 +52,9 @@ actions =
         filename: name
         content: ""
 
+  run: ->
+    Sandbox(build())
+
 files = Object.keys(Gistquire.Gists[gistId].files).map (filename) ->
   data = Gistquire.Gists[gistId].files[filename]
   
