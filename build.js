@@ -101,6 +101,7 @@
 
 (function() {
   this.Filetree = function(I) {
+    I || (I = {});
     var self;
     Object.defaults(I, {
       files: []
