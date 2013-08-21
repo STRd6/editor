@@ -13,7 +13,7 @@
       __element = document.createElement("div");
       __push(__element);
       __attribute(__element, "class", "actions");
-      Object.keys(this).__each(function(name) {
+      Object.keys(this).each(function(name) {
         __element = document.createElement("button");
         __push(__element);
         __element = document.createTextNode('');
