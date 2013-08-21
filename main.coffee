@@ -8,6 +8,7 @@ compileTemplate = (source, name="test") ->
 build = ->  
   templates = []
   models = []
+  main = ""
 
   filetree.files.each (file) ->
     name = file.filename()
@@ -17,12 +18,10 @@ build = ->
       templates.push compileTemplate(source, name.withoutExtension())
   
     else if name.extension() is "coffee"
-      # Skip main
-      return if name is "main.coffee"
-
-      models.push CoffeeScript.compile(source)
-
-  main = CoffeeScript.compile(Gistquire.Gists[gistId].files["main.coffee"].content)
+      if name is "main.coffee"
+        main = CoffeeScript.compile(source)
+      else
+        models.push CoffeeScript.compile(source)
 
   """
     #{templates.join("\n")}
@@ -32,16 +31,17 @@ build = ->
 
 model =
   save: ->
-    fileData =
-      "build.js":
-        content:  build()
+    fileData = {}
 
     # TODO: Handle deleted files
 
     # Merge in each file
     filetree.files.each (file) ->
-      fileData[file.filename] =
+      fileData[file.filename()] =
         content: file.content()
+
+    fileData["build.js"] =
+      content:  build()
 
     Gistquire.update gistId,
       files: fileData
