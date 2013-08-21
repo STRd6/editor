@@ -99,9 +99,6 @@
     var self;
     self = Model(I).observeAll();
     self.attrObservable("selectedFile");
-    self.selectedFile.observe(function(file) {
-      return console.log("SELECTED", file);
-    });
     return self;
   };
 
@@ -126,9 +123,10 @@
     var main, models, templates;
     templates = [];
     models = [];
-    Object.keys(Gistquire.Gists[gistId].files).each(function(name) {
-      var source;
-      source = Gistquire.Gists[gistId].files[name].content;
+    filetree.files.each(function(file) {
+      var name, source;
+      name = file.filename();
+      source = file.content();
       if (name.extension() === "haml") {
         return templates.push(compileTemplate(source, name.withoutExtension()));
       } else if (name.extension() === "coffee") {
@@ -144,6 +142,13 @@
 
   model = {
     save: function() {
+      var fileData;
+      fileData = {};
+      filetree.files.each(function(file) {
+        return fileData[file.filename] = {
+          content: file.content()
+        };
+      });
       return Gistquire.update(gistId, {
         files: {
           "build.js": {
