@@ -3,6 +3,7 @@
   width: 100%;
   height: 400px;
   position: relative;
+  margin-left: 200px;
 }
 
 .editor-wrap > div {
@@ -18,6 +19,7 @@
   position: fixed;
   left: 0;
   top: 40px;
+  z-index: 2;
 }
 
 .filetree li {
