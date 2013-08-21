@@ -45,4 +45,14 @@ model.save = ->
       "editor.haml":
         content: $('textarea').val()
 
-$("body").append(HAMLjr.templates.editor(model))
+files = Object.keys(Gistquire.Gists[gistId].files).map (filename) ->
+  data = Gistquire.Gists[gistId].files[filename]
+  
+  File(data)
+
+filetree = Filetree
+  files: files
+
+$("body")
+  .append(HAMLjr.templates.filetree(filetree))
+  .append(HAMLjr.templates.editor(model))
