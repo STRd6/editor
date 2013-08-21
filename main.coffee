@@ -80,7 +80,7 @@ actions =
         filetree.load(data.files)
 
 filetree = Filetree()
-filetree.load(gistId)
+filetree.load(Gistquire.Gists[gistId].files)
 
 filetree.selectedFile.observe (file) ->
   # TODO: Scope DOM mutation

@@ -1,2 +1,2 @@
-@File = (I) ->
+@File = (I={}) ->
   Model(I).observeAll()

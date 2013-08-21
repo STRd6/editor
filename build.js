@@ -94,6 +94,9 @@
 
 (function() {
   this.File = function(I) {
+    if (I == null) {
+      I = {};
+    }
     return Model(I).observeAll();
   };
 
@@ -101,8 +104,10 @@
 
 (function() {
   this.Filetree = function(I) {
-    I || (I = {});
     var self;
+    if (I == null) {
+      I = {};
+    }
     Object.defaults(I, {
       files: []
     });

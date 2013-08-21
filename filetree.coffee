@@ -1,4 +1,4 @@
-@Filetree = (I) ->
+@Filetree = (I={}) ->
   Object.defaults I,
     files: []
 
