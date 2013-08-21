@@ -62,7 +62,6 @@
         __text(__element, file.name);
         __push(__element);
         __pop();
-        __on("click", this.selectedFile(file));
         return __pop();
       });
       __pop();
