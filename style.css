@@ -13,3 +13,7 @@ textarea {
 .filetree li {
   list-style-type: none;
 }
+
+.actions {
+  margin-bottom: 1em;
+}

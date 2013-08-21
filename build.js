@@ -12,6 +12,7 @@
       __push(document.createDocumentFragment());
       __element = document.createElement("div");
       __push(__element);
+      __attribute(__element, "class", "actions");
       __element = document.createElement("button");
       __push(__element);
       __element = document.createTextNode('');
