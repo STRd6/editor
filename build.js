@@ -20,6 +20,14 @@
       __pop();
       __on("click", this.save);
       __pop();
+      __element = document.createElement("button");
+      __push(__element);
+      __element = document.createTextNode('');
+      __text(__element, "New\n");
+      __push(__element);
+      __pop();
+      __on("click", this["new"]);
+      __pop();
       __pop();
       return __pop();
     }).call(data);
@@ -105,7 +113,7 @@
 }).call(this);
 
 (function() {
-  var build, compileTemplate, files, filetree, model;
+  var actions, build, compileTemplate, files, filetree;
 
   compileTemplate = function(source, name) {
     var ast;
@@ -141,7 +149,7 @@
     return "" + (templates.join("\n")) + "\n" + (models.join("\n")) + "\n" + main;
   };
 
-  model = {
+  actions = {
     save: function() {
       var fileData;
       fileData = {};
@@ -156,6 +164,15 @@
       return Gistquire.update(gistId, {
         files: fileData
       });
+    },
+    "new": function() {
+      var name;
+      if (name = prompt("File Name", "newfile.coffee")) {
+        return filetree.files.push(File({
+          filename: name,
+          content: ""
+        }));
+      }
     }
   };
 
@@ -174,6 +191,6 @@
     return $("body").append(HAMLjr.templates.editor(file));
   });
 
-  $("body").append(HAMLjr.templates.actions(model)).append(HAMLjr.templates.filetree(filetree));
+  $("body").append(HAMLjr.templates.actions(actions)).append(HAMLjr.templates.filetree(filetree));
 
 }).call(this);

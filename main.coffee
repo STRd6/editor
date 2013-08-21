@@ -29,7 +29,7 @@ build = ->
     #{main}
   """
 
-model =
+actions =
   save: ->
     fileData = {}
 
@@ -46,6 +46,12 @@ model =
     Gistquire.update gistId,
       files: fileData
 
+  new: ->
+    if name = prompt("File Name", "newfile.coffee")
+      filetree.files.push File
+        filename: name
+        content: ""
+
 files = Object.keys(Gistquire.Gists[gistId].files).map (filename) ->
   data = Gistquire.Gists[gistId].files[filename]
   
@@ -59,5 +65,5 @@ filetree.selectedFile.observe (file) ->
   $("body").append(HAMLjr.templates.editor(file))
 
 $("body")
-  .append(HAMLjr.templates.actions(model))
+  .append(HAMLjr.templates.actions(actions))
   .append(HAMLjr.templates.filetree(filetree))
