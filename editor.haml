@@ -1,9 +1,3 @@
 %textarea
-  = @source
-
-%div
-  %button
-    Save
-    - on "click", @save
-
-  %button Cool Town
+  = @content
+  - on "change", @content

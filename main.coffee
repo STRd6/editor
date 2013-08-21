@@ -29,21 +29,14 @@ build = ->
     #{main}
   """
 
-model = Model(
-  source: Gistquire.Gists[gistId].files["editor.haml"].content
-)
+model =
+  save: ->
+    # TODO: Merge in each file
 
-model.attrObservable("source")
-
-model.save = ->
-  # TODO: Merge in each file
-
-  Gistquire.update gistId,
-    files:
-      "build.js":
-        content:  build()
-      "editor.haml":
-        content: $('textarea').val()
+    Gistquire.update gistId,
+      files:
+        "build.js":
+          content:  build()
 
 files = Object.keys(Gistquire.Gists[gistId].files).map (filename) ->
   data = Gistquire.Gists[gistId].files[filename]
@@ -53,6 +46,9 @@ files = Object.keys(Gistquire.Gists[gistId].files).map (filename) ->
 filetree = Filetree
   files: files
 
+filetree.selectedFile.observe (file) ->
+  $("body").append(HAMLjr.templates.editor(file))
+
 $("body")
+  .append(HAMLjr.templates.actions(model))
   .append(HAMLjr.templates.filetree(filetree))
-  .append(HAMLjr.templates.editor(model))
