@@ -291,7 +291,7 @@
       text: file.content(),
       el: $('.editor').get(0)
     });
-    return editor.text.observe(file.content);
+    editor.text.observe(function(){debugger;});
   });
 
   $("body").append(HAMLjr.templates.actions(actions)).append(HAMLjr.templates.filetree(filetree));
