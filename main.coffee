@@ -47,7 +47,6 @@ filetree = Filetree()
 filetree.load(gist.files)
 
 filetree.selectedFile.observe (file) ->
-  # TODO: Scope DOM mutation
   $root.find(".editor-wrap").remove()
   $root.find(".main").append(HAMLjr.templates.editor())
 
