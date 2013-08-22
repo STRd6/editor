@@ -9,7 +9,7 @@ if styleContent = gist.files["style.css"]?.content
 
 builder = Builder()
 
-errors = Observable(["Error logs"])
+errors = Observable([])
 
 actions =
   save: ->
@@ -17,6 +17,8 @@ actions =
       success: (fileData) ->
         Gistquire.update gist.id,
           files: fileData
+          
+        errors([])
       error: errors
 
   test: ->
@@ -40,7 +42,10 @@ actions =
           gist:
             files: fileData
         )
-        
+
+        # TODO: Catch and display runtime errors
+        errors([])
+
       error: errors
         
   load: ->

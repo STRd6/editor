@@ -64,6 +64,34 @@
 
   (_base = this.HAMLjr).templates || (_base.templates = {});
 
+  this.HAMLjr.templates["errors"] = function(data) {
+    return (function() {
+      var __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;
+      _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;
+      __push(document.createDocumentFragment());
+      __element = document.createElement("pre");
+      __push(__element);
+      __attribute(__element, "class", "errors");
+      __each(this, function(error) {
+        __element = document.createTextNode('');
+        __text(__element, error);
+        __push(__element);
+        return __pop();
+      });
+      __pop();
+      return __pop();
+    }).call(data);
+  };
+
+}).call(this);
+
+(function() {
+  var _base;
+
+  this.HAMLjr || (this.HAMLjr = {});
+
+  (_base = this.HAMLjr).templates || (_base.templates = {});
+
   this.HAMLjr.templates["filetree"] = function(data) {
     return (function() {
       var selectedFile, __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;
@@ -161,29 +189,93 @@
 }).call(this);
 
 (function() {
-  var _base;
-
-  this.HAMLjr || (this.HAMLjr = {});
-
-  (_base = this.HAMLjr).templates || (_base.templates = {});
-
-  this.HAMLjr.templates["errors"] = function(data) {
-    return (function() {
-      var __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;
-      _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;
-      __push(document.createDocumentFragment());
-      __element = document.createElement("pre");
-      __push(__element);
-      __attribute(__element, "class", "errors");
-      __each(this, function(error) {
-        __element = document.createTextNode('');
-        __text(__element, error);
-        __push(__element);
-        return __pop();
+  this.Builder = function() {
+    var build, buildStyle, compileTemplate;
+    compileTemplate = function(source, name) {
+      var ast;
+      if (name == null) {
+        name = "test";
+      }
+      ast = HAMLjr.parser.parse(source);
+      return HAMLjr.compile(ast, {
+        name: name,
+        compiler: CoffeeScript
       });
-      __pop();
-      return __pop();
-    }).call(data);
+    };
+    build = function(fileData) {
+      var errors, main, models, templates;
+      templates = [];
+      models = [];
+      main = "";
+      errors = [];
+      Object.keys(fileData).each(function(name) {
+        var error, source;
+        source = fileData[name].content;
+        try {
+          if (name.extension() === "haml") {
+            return templates.push(compileTemplate(source, name.withoutExtension()));
+          } else if (name.extension() === "coffee") {
+            if (name === "main.coffee") {
+              return main = CoffeeScript.compile(source);
+            } else {
+              return models.push(CoffeeScript.compile(source));
+            }
+          }
+        } catch (_error) {
+          error = _error;
+          return errors.push(error);
+        }
+      });
+      return {
+        errors: errors,
+        result: "" + (templates.join("\n")) + "\n" + (models.join("\n")) + "\n" + main
+      };
+    };
+    buildStyle = function(fileData) {
+      var errors, styles;
+      styles = [];
+      errors = [];
+      Object.keys(fileData).each(function(name) {
+        var error, source;
+        source = fileData[name].content;
+        try {
+          if (name.extension() === "styl") {
+            return styles.push(styl(source, {
+              whitespace: true
+            }).toString());
+          }
+        } catch (_error) {
+          error = _error;
+          return errors.push(error);
+        }
+      });
+      return {
+        errors: errors,
+        result: styles.join("\n")
+      };
+    };
+    return {
+      build: function(fileData, _arg) {
+        var collectedErrors, error, errors, result, success, _ref, _ref1;
+        success = _arg.success, error = _arg.error;
+        _ref = build(fileData), collectedErrors = _ref.errors, result = _ref.result;
+        fileData["build.js"] = {
+          filename: "build.js",
+          content: result
+        };
+        _ref1 = buildStyle(fileData), errors = _ref1.errors, result = _ref1.result;
+        collectedErrors = collectedErrors.concat(errors);
+        fileData["style.css"] = {
+          filename: "style.css",
+          content: result
+        };
+        if (collectedErrors.length) {
+          return error(collectedErrors);
+        } else {
+          return success(fileData);
+        }
+      }
+    };
   };
 
 }).call(this);
@@ -306,98 +398,6 @@
 }).call(this);
 
 (function() {
-  this.Builder = function() {
-    var build, buildStyle, compileTemplate;
-    compileTemplate = function(source, name) {
-      var ast;
-      if (name == null) {
-        name = "test";
-      }
-      ast = HAMLjr.parser.parse(source);
-      return HAMLjr.compile(ast, {
-        name: name,
-        compiler: CoffeeScript
-      });
-    };
-    build = function(fileData) {
-      var errors, main, models, templates;
-      templates = [];
-      models = [];
-      main = "";
-      errors = [];
-      Object.keys(fileData).each(function(name) {
-        var error, source;
-        source = fileData[name].content;
-        try {
-          if (name.extension() === "haml") {
-            return templates.push(compileTemplate(source, name.withoutExtension()));
-          } else if (name.extension() === "coffee") {
-            if (name === "main.coffee") {
-              return main = CoffeeScript.compile(source);
-            } else {
-              return models.push(CoffeeScript.compile(source));
-            }
-          }
-        } catch (_error) {
-          error = _error;
-          return errors.push(error);
-        }
-      });
-      return {
-        errors: errors,
-        result: "" + (templates.join("\n")) + "\n" + (models.join("\n")) + "\n" + main
-      };
-    };
-    buildStyle = function(fileData) {
-      var errors, styles;
-      styles = [];
-      errors = [];
-      Object.keys(fileData).each(function(name) {
-        var error, source;
-        source = fileData[name].content;
-        try {
-          if (name.extension() === "styl") {
-            return styles.push(styl(source, {
-              whitespace: true
-            }).toString());
-          }
-        } catch (_error) {
-          error = _error;
-          return errors.push(error);
-        }
-      });
-      return {
-        errors: errors,
-        result: styles.join("\n")
-      };
-    };
-    return {
-      build: function(fileData, _arg) {
-        var collectedErrors, error, errors, result, success, _ref, _ref1;
-        success = _arg.success, error = _arg.error;
-        _ref = build(fileData), collectedErrors = _ref.errors, result = _ref.result;
-        fileData["build.js"] = {
-          filename: "build.js",
-          content: result
-        };
-        _ref1 = buildStyle(fileData), errors = _ref1.errors, result = _ref1.result;
-        collectedErrors = collectedErrors.concat(errors);
-        fileData["style.css"] = {
-          filename: "style.css",
-          content: result
-        };
-        if (collectedErrors.length) {
-          return error(collectedErrors);
-        } else {
-          return success(fileData);
-        }
-      }
-    };
-  };
-
-}).call(this);
-
-(function() {
   var $root, actions, builder, errors, filetree, gist, styleContent, _ref;
 
   $root = ENV.$root, gist = ENV.gist;
@@ -410,15 +410,16 @@
 
   builder = Builder();
 
-  errors = Observable(["Error logs"]);
+  errors = Observable([]);
 
   actions = {
     save: function() {
       return builder.build(filetree.fileData(), {
         success: function(fileData) {
-          return Gistquire.update(gist.id, {
+          Gistquire.update(gist.id, {
             files: fileData
           });
+          return errors([]);
         },
         error: errors
       });
@@ -444,12 +445,13 @@
       $root.append(demoElement);
       return builder.build(filetree.fileData(), {
         success: function(fileData) {
-          return Function("ENV", fileData["build.js"].content)({
+          Function("ENV", fileData["build.js"].content)({
             $root: demoElement,
             gist: {
               files: fileData
             }
           });
+          return errors([]);
         },
         error: errors
       });
