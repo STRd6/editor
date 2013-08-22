@@ -9,15 +9,15 @@ if styleContent = gist.files["style.css"]?.content
 
 builder = Builder()
 
+errors = Observable([])
+
 actions =
   save: ->
     builder.build filetree.fileData(),
       success: (fileData) ->
         Gistquire.update gist.id,
           files: fileData
-      error: (errors) ->
-        # TODO Error display
-        console.log errors
+      error: errors
 
   test: ->
     console.log "TEST", gist.id
@@ -41,8 +41,7 @@ actions =
             files: fileData
         )
         
-      error: (errors) ->
-        console.log errors.map((e) -> e.stack).join("\n")
+      error: errors
         
   load: ->
     if id = prompt("Gist Id", gist.id)
@@ -81,4 +80,5 @@ $root
   .append(HAMLjr.templates.main(
     filetree: filetree
     actions: actions
+    errors: errors
   ))
