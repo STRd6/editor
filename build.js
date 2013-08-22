@@ -369,6 +369,13 @@
           return filetree.load(gist.files);
         });
       }
+    },
+    list: function() {
+      return Gistquire.get("", function(data) {
+        return $root.append(HAMLjr.templates.gist_list({
+          gists: data
+        }));
+      });
     }
   };
 
