@@ -410,7 +410,7 @@
 
   builder = Builder();
 
-  errors = Observable([]);
+  errors = Observable(["Error logs"]);
 
   actions = {
     save: function() {

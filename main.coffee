@@ -9,7 +9,7 @@ if styleContent = gist.files["style.css"]?.content
 
 builder = Builder()
 
-errors = Observable([])
+errors = Observable(["Error logs"])
 
 actions =
   save: ->
