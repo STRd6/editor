@@ -300,6 +300,7 @@
       editor.moveCursorTo(0, 0);
       return editor.session.selection.clearSelection();
     };
+    reset(I.text);
     self.attrObservable("text");
     updating = false;
     editor.getSession().on('change', function() {
@@ -393,7 +394,6 @@
       text: file.content(),
       el: $root.find('.editor').get(0)
     });
-    editor.reset(editor.text());
     return editor.text.observe(file.content);
   });
 

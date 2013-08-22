@@ -22,6 +22,8 @@
     editor.moveCursorTo(0, 0)
     editor.session.selection.clearSelection()
 
+  reset(I.text)
+
   self.attrObservable "text"
 
   updating = false
