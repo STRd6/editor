@@ -168,7 +168,7 @@
 
 (function() {
   this.Filetree = function(I) {
-    var self;
+    var build, buildStyle, compileTemplate, self;
     if (I == null) {
       I = {};
     }
@@ -177,6 +177,53 @@
     });
     self = Model(I).observeAll();
     self.attrObservable("selectedFile");
+    compileTemplate = function(source, name) {
+      var ast;
+      if (name == null) {
+        name = "test";
+      }
+      ast = HAMLjr.parser.parse(source);
+      return HAMLjr.compile(ast, {
+        name: name,
+        compiler: CoffeeScript
+      });
+    };
+    build = function() {
+      var main, models, templates;
+      templates = [];
+      models = [];
+      main = "";
+      self.files.each(function(file) {
+        var name, source;
+        name = file.filename();
+        source = file.content();
+        if (name.extension() === "haml") {
+          return templates.push(compileTemplate(source, name.withoutExtension()));
+        } else if (name.extension() === "coffee") {
+          if (name === "main.coffee") {
+            return main = CoffeeScript.compile(source);
+          } else {
+            return models.push(CoffeeScript.compile(source));
+          }
+        }
+      });
+      return "" + (templates.join("\n")) + "\n" + (models.join("\n")) + "\n" + main;
+    };
+    buildStyle = function() {
+      var styles;
+      styles = [];
+      self.files.each(function(file) {
+        var name, source;
+        name = file.filename();
+        source = file.content();
+        if (name.extension() === "styl") {
+          return styles.push(styl(source, {
+            whitespace: true
+          }).toString());
+        }
+      });
+      return styles.join("\n");
+    };
     self.extend({
       load: function(fileData) {
         var files;
@@ -186,6 +233,22 @@
           return file.filename() !== "style.css" && file.filename() !== "build.js";
         });
         return self.files(files);
+      },
+      fileData: function() {
+        var fileData;
+        fileData = {};
+        self.files.each(function(file) {
+          return fileData[file.filename()] = {
+            content: file.content()
+          };
+        });
+        fileData["build.js"] = {
+          content: build()
+        };
+        fileData["style.css"] = {
+          content: buildStyle()
+        };
+        return fileData;
       }
     });
     return self;
@@ -260,7 +323,7 @@
 }).call(this);
 
 (function() {
-  var $root, actions, build, buildStyle, compileTemplate, filetree, gist, styleContent, _ref;
+  var $root, actions, filetree, gist, styleContent, _ref;
 
   $root = ENV.$root, gist = ENV.gist;
 
@@ -270,71 +333,10 @@
     }));
   }
 
-  compileTemplate = function(source, name) {
-    var ast;
-    if (name == null) {
-      name = "test";
-    }
-    ast = HAMLjr.parser.parse(source);
-    return HAMLjr.compile(ast, {
-      name: name,
-      compiler: CoffeeScript
-    });
-  };
-
-  build = function() {
-    var main, models, templates;
-    templates = [];
-    models = [];
-    main = "";
-    filetree.files.each(function(file) {
-      var name, source;
-      name = file.filename();
-      source = file.content();
-      if (name.extension() === "haml") {
-        return templates.push(compileTemplate(source, name.withoutExtension()));
-      } else if (name.extension() === "coffee") {
-        if (name === "main.coffee") {
-          return main = CoffeeScript.compile(source);
-        } else {
-          return models.push(CoffeeScript.compile(source));
-        }
-      }
-    });
-    return "" + (templates.join("\n")) + "\n" + (models.join("\n")) + "\n" + main;
-  };
-
-  buildStyle = function() {
-    var styles;
-    styles = [];
-    filetree.files.each(function(file) {
-      var name, source;
-      name = file.filename();
-      source = file.content();
-      if (name.extension() === "styl") {
-        return styles.push(styl(source, {
-          whitespace: true
-        }).toString());
-      }
-    });
-    return styles.join("\n");
-  };
-
   actions = {
     save: function() {
       var fileData;
-      fileData = {};
-      filetree.files.each(function(file) {
-        return fileData[file.filename()] = {
-          content: file.content()
-        };
-      });
-      fileData["build.js"] = {
-        content: build()
-      };
-      fileData["style.css"] = {
-        content: buildStyle()
-      };
+      fileData = filetree.fileData();
       return Gistquire.update(gist.id, {
         files: fileData
       });
