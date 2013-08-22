@@ -94,7 +94,7 @@ actions =
         filetree.load(gist.files)
         
   list: ->
-    Gistquire.get "", (data) ->
+    Gistquire.api "gists", (data) ->
       $root.append HAMLjr.templates.gist_list(
         gists: data
       )
