@@ -405,7 +405,9 @@
       text: file.content(),
       el: $root.find('.editor').get(0)
     });
-    return editor.text.observe(file.content);
+    return editor.text.observe(function(value) {
+      return file.content(value);
+    });
   });
 
   $root.append(HAMLjr.templates.main({
