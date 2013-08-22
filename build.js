@@ -359,7 +359,7 @@
       });
       $root.append(demoElement);
       fileData = filetree.fileData();
-      return Function("ENV", fileData["build.js"])({
+      return Function("ENV", fileData["build.js"].content)({
         $root: demoElement,
         gist: {
           files: fileData

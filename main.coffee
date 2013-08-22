@@ -27,7 +27,7 @@ actions =
     
     fileData = filetree.fileData()
     
-    Function("ENV", fileData["build.js"])(
+    Function("ENV", fileData["build.js"].content)(
       $root: demoElement
       gist:
         files: fileData
