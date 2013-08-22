@@ -74,9 +74,11 @@
       # Add build files
       fileData["build.js"] =
         content:  build()
+        filename: "build.js"
   
       fileData["style.css"] =
         content: buildStyle()
+        filename: "style.css"
         
       return fileData
 
