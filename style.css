@@ -1,5 +1,6 @@
 .main {
   position: relative;
+  padding-top: 40px;
   padding-left: 200px;
   -ms-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -35,5 +36,7 @@
 }
 
 .actions {
-  margin-bottom: 1em;
+  position: absolute;
+  top: 0;
+  left: 200px;
 }
