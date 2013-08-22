@@ -366,7 +366,7 @@
 }).call(this);
 
 (function() {
-  var $root, actions, filetree, gist, styleContent, _ref;
+  var $root, actions, builder, filetree, gist, styleContent, _ref;
 
   $root = ENV.$root, gist = ENV.gist;
 
@@ -376,12 +376,19 @@
     }));
   }
 
+  builder = Builder();
+
   actions = {
     save: function() {
-      var fileData;
-      fileData = filetree.fileData();
-      return Gistquire.update(gist.id, {
-        files: fileData
+      return builder.build(filetree.fileData(), {
+        success: function(fileData) {
+          return Gistquire.update(gist.id, {
+            files: fileData
+          });
+        },
+        error: function(errors) {
+          return console.log(errors);
+        }
       });
     },
     test: function() {
@@ -397,17 +404,23 @@
       }
     },
     run: function() {
-      var demoElement, fileData;
+      var demoElement;
       $root.children(".demo").remove();
       demoElement = $("<div>", {
         "class": "demo"
       });
       $root.append(demoElement);
-      fileData = filetree.fileData();
-      return Function("ENV", fileData["build.js"].content)({
-        $root: demoElement,
-        gist: {
-          files: fileData
+      return builder.build(filetree.fileData(), {
+        success: function(fileData) {
+          return Function("ENV", fileData["build.js"].content)({
+            $root: demoElement,
+            gist: {
+              files: fileData
+            }
+          });
+        },
+        error: function(errors) {
+          return console.log(errors);
         }
       });
     },

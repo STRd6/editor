@@ -7,13 +7,18 @@ if styleContent = gist.files["style.css"]?.content
     html: styleContent
   )
 
+builder = Builder()
+
 actions =
   save: ->
-    fileData = filetree.fileData()
+    builder.build filetree.fileData(),
+      success: (fileData) ->
+        Gistquire.update gist.id,
+          files: fileData
+      error: (errors) ->
+        # TODO Error display
+        console.log errors
 
-    Gistquire.update gist.id,
-      files: fileData
-      
   test: ->
     console.log "TEST", gist.id
 
@@ -28,14 +33,17 @@ actions =
     demoElement = $("<div>", class: "demo")
     $root.append(demoElement)
     
-    fileData = filetree.fileData()
-    
-    Function("ENV", fileData["build.js"].content)(
-      $root: demoElement
-      gist:
-        files: fileData
-    )
-
+    builder.build filetree.fileData(),
+      success: (fileData) ->
+        Function("ENV", fileData["build.js"].content)(
+          $root: demoElement
+          gist:
+            files: fileData
+        )
+        
+      error: (errors) ->
+        console.log errors
+        
   load: ->
     if id = prompt("Gist Id", gist.id)
       console.log id
