@@ -42,7 +42,7 @@ actions =
         )
         
       error: (errors) ->
-        console.log errors
+        console.log errors.map((e) -> e.stack).join("\n")
         
   load: ->
     if id = prompt("Gist Id", gist.id)

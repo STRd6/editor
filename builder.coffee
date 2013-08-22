@@ -38,7 +38,7 @@
     errors = []
     
     Object.keys(fileData).each (name) ->
-      source = fileData[name]
+      source = fileData[name].content
       
       try
         if name.extension() is "styl"

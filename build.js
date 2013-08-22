@@ -322,7 +322,7 @@
       errors = [];
       Object.keys(fileData).each(function(name) {
         var error, source;
-        source = fileData[name];
+        source = fileData[name].content;
         try {
           if (name.extension() === "styl") {
             return styles.push(styl(source, {
@@ -420,7 +420,9 @@
           });
         },
         error: function(errors) {
-          return console.log(errors);
+          return console.log(errors.map(function(e) {
+            return e.stack;
+          }).join("\n"));
         }
       });
     },
