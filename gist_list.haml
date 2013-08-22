@@ -1,0 +1,5 @@
+%ul.gists
+  - each @gists, (gist) ->
+    %li= gist.id
+      - on "click", ->
+        - alert gist.id
