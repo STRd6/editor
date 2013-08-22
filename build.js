@@ -74,7 +74,7 @@
       __attribute(__element, "class", "errors");
       __each(this, function(error) {
         __element = document.createTextNode('');
-        __text(__element, error);
+        __text(__element, error.stack);
         __push(__element);
         return __pop();
       });
@@ -423,9 +423,6 @@
         },
         error: errors
       });
-    },
-    test: function() {
-      return console.log("TEST", gist.id);
     },
     "new": function() {
       var name;

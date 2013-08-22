@@ -21,9 +21,6 @@ actions =
         errors([])
       error: errors
 
-  test: ->
-    console.log "TEST", gist.id
-
   new: ->
     if name = prompt("File Name", "newfile.coffee")
       filetree.files.push File
