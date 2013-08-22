@@ -66,8 +66,10 @@
   
       # Merge in each file
       self.files.each (file) ->
-        fileData[file.filename()] =
+        name = file.filename()
+        fileData[name] =
           content: file.content()
+          filename: name
   
       # Add build files
       fileData["build.js"] =

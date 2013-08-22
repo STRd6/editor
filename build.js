@@ -238,8 +238,11 @@
         var fileData;
         fileData = {};
         self.files.each(function(file) {
-          return fileData[file.filename()] = {
-            content: file.content()
+          var name;
+          name = file.filename();
+          return fileData[name] = {
+            content: file.content(),
+            filename: name
           };
         });
         fileData["build.js"] = {
