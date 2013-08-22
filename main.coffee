@@ -24,7 +24,7 @@ actions =
     $root.children(".demo").remove()
     demoElement = $("<div>", class: "demo")
     $root.append(demoElement)
-    Function("ENV", build())(
+    Function("ENV", filetree.build())(
       $root: demoElement
       gist: gist
     )
@@ -60,7 +60,7 @@ filetree.selectedFile.observe (file) ->
     file.content(text)
     
     # Run on every filechange
-    actions.run()
+    # actions.run()
 
 $root
   .append(HAMLjr.templates.main(
