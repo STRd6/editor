@@ -15,9 +15,6 @@
       __attribute(__element, "class", "actions");
       actions = this;
       Object.keys(actions).each(function(name) {
-        if (name === "template") {
-          return;
-        }
         __element = document.createElement("button");
         __push(__element);
         __element = document.createTextNode('');
@@ -290,7 +287,6 @@
   };
 
   actions = {
-    template: "actions",
     save: function() {
       var fileData;
       fileData = {};
@@ -345,8 +341,6 @@
   filetree = Filetree();
 
   filetree.load(gist.files);
-
-  filetree.template = "filetree";
 
   filetree.selectedFile.observe(function(file) {
     var editor;

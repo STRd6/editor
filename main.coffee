@@ -51,7 +51,6 @@ buildStyle = ->
   styles.join("\n")
 
 actions =
-  template: "actions"
   save: ->
     fileData = {}
 
@@ -96,8 +95,6 @@ actions =
 
 filetree = Filetree()
 filetree.load(gist.files)
-# TODO: Autodiscover template
-filetree.template = "filetree"
 
 filetree.selectedFile.observe (file) ->
   # TODO: Scope DOM mutation
