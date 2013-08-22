@@ -358,7 +358,7 @@
         "class": "demo"
       });
       $root.append(demoElement);
-      return Function("ENV", filetree.build())({
+      return Function("ENV", build())({
         $root: demoElement,
         gist: gist
       });
@@ -395,7 +395,8 @@
       el: $root.find('.editor').get(0)
     });
     return editor.text.observe(function(text) {
-      return file.content(text);
+      file.content(text);
+      return actions.run();
     });
   });
 
