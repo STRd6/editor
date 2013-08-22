@@ -5,49 +5,6 @@
   self = Model(I).observeAll()
 
   self.attrObservable "selectedFile"
-  
-  compileTemplate = (source, name="test") ->
-    ast = HAMLjr.parser.parse(source)
-    
-    HAMLjr.compile ast, 
-      name: name
-      compiler: CoffeeScript
-  
-  build = ->  
-    templates = []
-    models = []
-    main = ""
-  
-    self.files.each (file) ->
-      name = file.filename()
-      source = file.content()
-  
-      if name.extension() is "haml"
-        templates.push compileTemplate(source, name.withoutExtension())
-    
-      else if name.extension() is "coffee"
-        if name is "main.coffee"
-          main = CoffeeScript.compile(source)
-        else
-          models.push CoffeeScript.compile(source)
-  
-    """
-      #{templates.join("\n")}
-      #{models.join("\n")}
-      #{main}
-    """
-  
-  buildStyle = ->
-    styles = []
-    
-    self.files.each (file) ->
-      name = file.filename()
-      source = file.content()
-  
-      if name.extension() is "styl"
-        styles.push styl(source, whitespace: true).toString()
-  
-    styles.join("\n")
 
   self.extend
     load: (fileData) ->
@@ -71,15 +28,6 @@
           content: file.content()
           filename: name
   
-      # Add build files
-      fileData["build.js"] =
-        content:  build()
-        filename: "build.js"
-  
-      fileData["style.css"] =
-        content: buildStyle()
-        filename: "style.css"
-        
       return fileData
 
   return self

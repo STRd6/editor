@@ -168,7 +168,7 @@
 
 (function() {
   this.Filetree = function(I) {
-    var build, buildStyle, compileTemplate, self;
+    var self;
     if (I == null) {
       I = {};
     }
@@ -177,53 +177,6 @@
     });
     self = Model(I).observeAll();
     self.attrObservable("selectedFile");
-    compileTemplate = function(source, name) {
-      var ast;
-      if (name == null) {
-        name = "test";
-      }
-      ast = HAMLjr.parser.parse(source);
-      return HAMLjr.compile(ast, {
-        name: name,
-        compiler: CoffeeScript
-      });
-    };
-    build = function() {
-      var main, models, templates;
-      templates = [];
-      models = [];
-      main = "";
-      self.files.each(function(file) {
-        var name, source;
-        name = file.filename();
-        source = file.content();
-        if (name.extension() === "haml") {
-          return templates.push(compileTemplate(source, name.withoutExtension()));
-        } else if (name.extension() === "coffee") {
-          if (name === "main.coffee") {
-            return main = CoffeeScript.compile(source);
-          } else {
-            return models.push(CoffeeScript.compile(source));
-          }
-        }
-      });
-      return "" + (templates.join("\n")) + "\n" + (models.join("\n")) + "\n" + main;
-    };
-    buildStyle = function() {
-      var styles;
-      styles = [];
-      self.files.each(function(file) {
-        var name, source;
-        name = file.filename();
-        source = file.content();
-        if (name.extension() === "styl") {
-          return styles.push(styl(source, {
-            whitespace: true
-          }).toString());
-        }
-      });
-      return styles.join("\n");
-    };
     self.extend({
       load: function(fileData) {
         var files;
@@ -245,14 +198,6 @@
             filename: name
           };
         });
-        fileData["build.js"] = {
-          content: build(),
-          filename: "build.js"
-        };
-        fileData["style.css"] = {
-          content: buildStyle(),
-          filename: "style.css"
-        };
         return fileData;
       }
     });
@@ -324,6 +269,98 @@
       reset: reset
     });
     return self;
+  };
+
+}).call(this);
+
+(function() {
+  this.Builder = function() {
+    var build, buildStyle, compileTemplate;
+    compileTemplate = function(source, name) {
+      var ast;
+      if (name == null) {
+        name = "test";
+      }
+      ast = HAMLjr.parser.parse(source);
+      return HAMLjr.compile(ast, {
+        name: name,
+        compiler: CoffeeScript
+      });
+    };
+    build = function(fileData) {
+      var errors, main, models, templates;
+      templates = [];
+      models = [];
+      main = "";
+      errors = [];
+      Object.keys(fileData).each(function(name) {
+        var error, source;
+        source = fileData[name].content;
+        try {
+          if (name.extension() === "haml") {
+            return templates.push(compileTemplate(source, name.withoutExtension()));
+          } else if (name.extension() === "coffee") {
+            if (name === "main.coffee") {
+              return main = CoffeeScript.compile(source);
+            } else {
+              return models.push(CoffeeScript.compile(source));
+            }
+          }
+        } catch (_error) {
+          error = _error;
+          return errors.push(error);
+        }
+      });
+      return {
+        errors: errors,
+        result: "" + (templates.join("\n")) + "\n" + (models.join("\n")) + "\n" + main
+      };
+    };
+    buildStyle = function(fileData) {
+      var errors, styles;
+      styles = [];
+      errors = [];
+      Object.keys(fileData).each(function(name) {
+        var error, source;
+        source = fileData[name];
+        try {
+          if (name.extension() === "styl") {
+            return styles.push(styl(source, {
+              whitespace: true
+            }).toString());
+          }
+        } catch (_error) {
+          error = _error;
+          return errors.push(error);
+        }
+      });
+      return {
+        errors: errors,
+        result: styles.join("\n")
+      };
+    };
+    return {
+      build: function(fileData, _arg) {
+        var collectedErrors, error, errors, result, success, _ref, _ref1;
+        success = _arg.success, error = _arg.error;
+        _ref = build(fileData), collectedErrors = _ref.errors, result = _ref.result;
+        fileData["build.js"] = {
+          filename: "build.js",
+          content: result
+        };
+        _ref1 = buildStyle(fileData), errors = _ref1.errors, result = _ref1.result;
+        collectedErrors = collectedErrors.concat(errors);
+        fileData["style.css"] = {
+          filename: "style.css",
+          content: result
+        };
+        if (collectedErrors.length) {
+          return error(collectedErrors);
+        } else {
+          return success(fileData);
+        }
+      }
+    };
   };
 
 }).call(this);
