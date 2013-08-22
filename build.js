@@ -394,10 +394,7 @@
       text: file.content(),
       el: $root.find('.editor').get(0)
     });
-    return editor.text.observe(function(text) {
-      file.content(text);
-      return actions.run();
-    });
+    return editor.text.observe(file.content);
   });
 
   $root.append(HAMLjr.templates.main({

@@ -56,11 +56,7 @@ filetree.selectedFile.observe (file) ->
     text: file.content()
     el: $root.find('.editor').get(0)
 
-  editor.text.observe (text) -> 
-    file.content(text)
-    
-    # Run on every filechange
-    actions.run()
+  editor.text.observe file.content
 
 $root
   .append(HAMLjr.templates.main(
