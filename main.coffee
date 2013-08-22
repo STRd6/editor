@@ -13,6 +13,9 @@ actions =
 
     Gistquire.update gist.id,
       files: fileData
+      
+  test: ->
+    console.log "TEST", gist.id
 
   new: ->
     if name = prompt("File Name", "newfile.coffee")

@@ -347,6 +347,9 @@
         files: fileData
       });
     },
+    test: function() {
+      return console.log("TEST", gist.id);
+    },
     "new": function() {
       var name;
       if (name = prompt("File Name", "newfile.coffee")) {
