@@ -24,9 +24,13 @@ actions =
     $root.children(".demo").remove()
     demoElement = $("<div>", class: "demo")
     $root.append(demoElement)
-    Function("ENV", build())(
+    
+    fileData = filetree.fileData()
+    
+    Function("ENV", fileData["build.js"])(
       $root: demoElement
-      gist: gist
+      gist:
+        files: fileData
     )
 
   load: ->

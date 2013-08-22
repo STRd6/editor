@@ -352,15 +352,18 @@
       }
     },
     run: function() {
-      var demoElement;
+      var demoElement, fileData;
       $root.children(".demo").remove();
       demoElement = $("<div>", {
         "class": "demo"
       });
       $root.append(demoElement);
-      return Function("ENV", build())({
+      fileData = filetree.fileData();
+      return Function("ENV", fileData["build.js"])({
         $root: demoElement,
-        gist: gist
+        gist: {
+          files: fileData
+        }
       });
     },
     load: function() {
