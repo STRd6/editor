@@ -15,6 +15,9 @@
       __attribute(__element, "class", "actions");
       actions = this;
       Object.keys(actions).each(function(name) {
+        if (name === "template") {
+          return;
+        }
         __element = document.createElement("button");
         __push(__element);
         __element = document.createTextNode('');

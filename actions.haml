@@ -1,6 +1,7 @@
 .actions
   - actions = this
   - Object.keys(actions).each (name) ->
+    - return if name is "template"
     %button
       = name.titleize()
       - on "click", actions[name]
