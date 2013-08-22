@@ -396,7 +396,7 @@
     });
     return editor.text.observe(function(text) {
       file.content(text);
-      return actions.run();
+      //return actions.run();
     });
   });
 
