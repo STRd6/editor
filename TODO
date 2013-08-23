@@ -2,11 +2,12 @@ TODO
 ----
 Live Update Demo
 Run Demo In Iframe
+Persist state across demo reloads
+
 Gist Lists
 Gist Metadata
 Tests
 Delete Files
-Persist state across demo reloads
 Load from actual git repos
 
 DONE
