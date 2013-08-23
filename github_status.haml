@@ -1,3 +1,5 @@
 .status
-  - if @request and @request.getAllResponseHeaders()
-    = @request.getAllResponseHeaders()
+  - if @request and @request.getAllResponseHeaders().match(/X-RateLimit-Limit: 5000/)
+    Authenticated
+  - else
+    %button Auth
