@@ -181,6 +181,7 @@
         __text(__element, "Auth\n");
         __push(__element);
         __pop();
+        __on("click", Gistquire.auth);
         __pop();
       }
       __pop();
