@@ -1,5 +1,6 @@
+TODO
+----
 Maintain editor state across open files
-Error Log styles
 Live Update Demo
 Run Demo In Iframe
 Gist Lists
@@ -8,3 +9,7 @@ Tests
 Delete Files
 Persist state across demo reloads
 Load from actual git repos
+
+DONE
+----
+Error Log styles
