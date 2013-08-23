@@ -523,15 +523,20 @@
 
   filetree.selectedFile.observe(function(file) {
     var editor;
-    $root.find(".editor-wrap").remove();
-    $root.find(".main").append(HAMLjr.templates.editor());
-    editor = TextEditor({
-      text: file.content(),
-      el: $root.find('.editor').get(0)
-    });
-    return editor.text.observe(function(value) {
-      return file.content(value);
-    });
+    $root.find(".editor-wrap").hide();
+    if (file.editor) {
+      return file.editor.show();
+    } else {
+      $root.find(".main").append(HAMLjr.templates.editor());
+      file.editor = $root.find(".editor-wrap").last();
+      editor = TextEditor({
+        text: file.content(),
+        el: file.editor.find('.editor').get(0)
+      });
+      return editor.text.observe(function(value) {
+        return file.content(value);
+      });
+    }
   });
 
   $root.append(HAMLjr.templates.main({

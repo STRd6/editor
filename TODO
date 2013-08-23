@@ -1,6 +1,5 @@
 TODO
 ----
-Maintain editor state across open files
 Live Update Demo
 Run Demo In Iframe
 Gist Lists
@@ -12,4 +11,5 @@ Load from actual git repos
 
 DONE
 ----
+Maintain editor state across open files
 Error Log styles
