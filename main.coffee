@@ -1,5 +1,5 @@
 # Get stuff from our env
-{$root, gist} = ENV
+{$root, gist, request} = ENV
 
 # Apply our styles
 if styleContent = gist.files["style.css"]?.content
@@ -83,4 +83,5 @@ $root
     filetree: filetree
     actions: actions
     errors: errors
+    request: request
   ))
