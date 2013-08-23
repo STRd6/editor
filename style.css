@@ -56,6 +56,8 @@ body {
   color: red;
   position: absolute;
   bottom: 0;
+  left: 0;
+  right: 0;
   padding-left: 200px;
   height: 100px;
   width: 100%;
