@@ -1,3 +1,4 @@
-%pre.errors
-  - each this, (error) ->
-    = error.stack
+.error-wrap
+  %pre.errors
+    - each this, (error) ->
+      = error.stack

@@ -69,6 +69,9 @@
       var __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;
       _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;
       __push(document.createDocumentFragment());
+      __element = document.createElement("div");
+      __push(__element);
+      __attribute(__element, "class", "error-wrap");
       __element = document.createElement("pre");
       __push(__element);
       __attribute(__element, "class", "errors");
@@ -78,6 +81,7 @@
         __push(__element);
         return __pop();
       });
+      __pop();
       __pop();
       return __pop();
     }).call(data);
