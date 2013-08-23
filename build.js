@@ -522,13 +522,14 @@
   filetree.load(gist.files);
 
   filetree.selectedFile.observe(function(file) {
-    var editor;
-    $root.find(".editor-wrap").hide();
+    var editor, root;
+    root = $root.children(".main");
+    root.find(".editor-wrap").hide();
     if (file.editor) {
       return file.editor.show();
     } else {
-      $root.find(".main").append(HAMLjr.templates.editor());
-      file.editor = $root.find(".editor-wrap").last();
+      root.append(HAMLjr.templates.editor());
+      file.editor = root.find(".editor-wrap").last();
       editor = TextEditor({
         text: file.content(),
         el: file.editor.find('.editor').get(0)

@@ -63,13 +63,14 @@ filetree = Filetree()
 filetree.load(gist.files)
 
 filetree.selectedFile.observe (file) ->
-  $root.find(".editor-wrap").hide()
+  root = $root.children(".main")
+  root.find(".editor-wrap").hide()
   
   if file.editor
     file.editor.show()
   else
-    $root.find(".main").append(HAMLjr.templates.editor())
-    file.editor = $root.find(".editor-wrap").last()
+    root.append(HAMLjr.templates.editor())
+    file.editor = root.find(".editor-wrap").last()
     
     # TODO: Choose correct editor mode
     editor = TextEditor
