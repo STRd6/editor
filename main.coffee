@@ -93,4 +93,4 @@ $root
   ))
 
 if loadId = window.location.href.match(/loadId=(\d+)/)?[1]
-  action.load(null, loadId)
+  actions.load(null, loadId)

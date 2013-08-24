@@ -547,7 +547,7 @@
   }));
 
   if (loadId = (_ref1 = window.location.href.match(/loadId=(\d+)/)) != null ? _ref1[1] : void 0) {
-    action.load(null, loadId);
+    actions.load(null, loadId);
   }
 
 }).call(this);
