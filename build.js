@@ -535,8 +535,7 @@
         el: file.editor.find('.editor').get(0)
       });
       return editor.text.observe(function(value) {
-        file.content(value);
-        return actions.run();
+        return file.content(value);
       });
     }
   });

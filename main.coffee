@@ -82,7 +82,7 @@ filetree.selectedFile.observe (file) ->
       file.content(value)
       
       # Autorun
-      actions.run()
+      # actions.run()
 
 $root
   .append(HAMLjr.templates.main(
