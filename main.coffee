@@ -92,5 +92,5 @@ $root
     request: request
   ))
 
-if loadId = window.location.href.match(/loadId=(d+)/)?[1]
+if loadId = window.location.href.match(/loadId=(\d+)/)?[1]
   action.load(null, loadId)
