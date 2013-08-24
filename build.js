@@ -490,7 +490,7 @@
           $('script.env').each(function() {
             return sandbox.document.write(this.outerHTML);
           });
-          sandbox.document.write("<body><script>\n  Function(\"ENV\", " + (JSON.stringify(fileData["build.js"].content)) + ")\n  ({\n    \"$root\": $('body'), \n    \"gist\": {\n      files: " + (JSON.stringify(fileData)) + "\n    }\n  });\n<\/script>");
+          sandbox.document.write("<body><script>\n  ENV = {\n    \"$root\": $('body'), \n    \"gist\": {\n      files: " + (JSON.stringify(fileData)) + "\n    }\n  };\n  \n  " + fileData["build.js"].content + ";\n<\/script>");
           sandbox.document.close();
           return errors([]);
         },

@@ -37,15 +37,16 @@ actions =
           sandbox.document.write(this.outerHTML)
 
         sandbox.document.write """<body><script>
-          Function(\"ENV\", #{JSON.stringify(fileData["build.js"].content)})
-          ({
+          ENV = {
             "$root": $('body'), 
             "gist": {
               files: #{JSON.stringify(fileData)}
             }
-          });
+          };
+          
+          #{fileData["build.js"].content};
         <\/script>"""
-        
+
         sandbox.document.close()
 
         # TODO: Catch and display runtime errors
