@@ -376,7 +376,7 @@
 }).call(this);
 
 (function() {
-  this.Sandbox = function(code, _arg) {
+  this.Sandbox = function(_arg) {
     var height, methods, sandbox, width, _ref;
     _ref = _arg != null ? _arg : {}, width = _ref.width, height = _ref.height, methods = _ref.methods;
     if (width == null) {
@@ -479,20 +479,27 @@
       }
     },
     run: (function() {
-      var demoElement;
-      $root.children(".demo").remove();
-      demoElement = $("<div>", {
-        "class": "demo"
-      });
-      $root.append(demoElement);
       return builder.build(filetree.fileData(), {
         success: function(fileData) {
-          Function("ENV", fileData["build.js"].content)({
-            $root: demoElement,
-            gist: {
-              files: fileData
-            }
+          var sandbox;
+          sandbox = Sandbox();
+          sandbox.document.open();
+          $('script.env').each(function() {
+            return sandbox.document.write(this.outerHTML);
           });
+          console.log("Watwat");
+          sandbox.document.onload = function() {
+            var sandboxRoot;
+            console.log("Onloaded");
+            sandboxRoot = sandbox.Function("return $('body');")();
+            return sandbox.Function("ENV", fileData["build.js"].content)({
+              $root: sandboxRoot,
+              gist: {
+                files: fileData
+              }
+            });
+          };
+          sandbox.document.close();
           return errors([]);
         },
         error: errors

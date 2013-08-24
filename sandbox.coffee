@@ -1,4 +1,4 @@
-@Sandbox = (code, {width, height, methods}={}) ->
+@Sandbox = ({width, height, methods}={}) ->
   width ?= 800
   height ?= 600
   methods ?= {}

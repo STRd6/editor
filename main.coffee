@@ -28,17 +28,27 @@ actions =
         content: ""
 
   run: (->
-    $root.children(".demo").remove()
-    demoElement = $("<div>", class: "demo")
-    $root.append(demoElement)
-    
     builder.build filetree.fileData(),
       success: (fileData) ->
-        Function("ENV", fileData["build.js"].content)(
-          $root: demoElement
-          gist:
-            files: fileData
-        )
+        sandbox = Sandbox()
+        
+        sandbox.document.open()
+        $('script.env').each ->
+          sandbox.document.write(this.outerHTML)
+        
+        console.log "Watwat"
+        
+        sandbox.document.onload = ->
+          console.log "Onloaded"
+          sandboxRoot = sandbox.Function("return $('body');")()
+          
+          sandbox.Function("ENV", fileData["build.js"].content)(
+            $root: sandboxRoot
+            gist:
+              files: fileData
+          )
+        
+        sandbox.document.close()
 
         # TODO: Catch and display runtime errors
         errors([])
