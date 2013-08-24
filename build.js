@@ -487,18 +487,7 @@
           $('script.env').each(function() {
             return sandbox.document.write(this.outerHTML);
           });
-          console.log("Watwat");
-          sandbox.onload = function() {
-            var sandboxRoot;
-            console.log("Onloaded");
-            sandboxRoot = sandbox.Function("return $('body');")();
-            return sandbox.Function("ENV", fileData["build.js"].content)({
-              $root: sandboxRoot,
-              gist: {
-                files: fileData
-              }
-            });
-          };
+          sandbox.document.write("<body><script>\n  Function(\"ENV\", " + (JSON.stringify(fileData["build.js"].content)) + ")\n  ({\n    \"$root\": $('body'), \n    \"gist\": {\n      files: " + (JSON.stringify(fileData)) + "\n    }\n  });\n<\/script>");
           sandbox.document.close();
           return errors([]);
         },

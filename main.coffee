@@ -35,18 +35,16 @@ actions =
         sandbox.document.open()
         $('script.env').each ->
           sandbox.document.write(this.outerHTML)
-        
-        console.log "Watwat"
-        
-        sandbox.onload = ->
-          console.log "Onloaded"
-          sandboxRoot = sandbox.Function("return $('body');")()
-          
-          sandbox.Function("ENV", fileData["build.js"].content)(
-            $root: sandboxRoot
-            gist:
-              files: fileData
-          )
+
+        sandbox.document.write """<body><script>
+          Function(\"ENV\", #{JSON.stringify(fileData["build.js"].content)})
+          ({
+            "$root": $('body'), 
+            "gist": {
+              files: #{JSON.stringify(fileData)}
+            }
+          });
+        <\/script>"""
         
         sandbox.document.close()
 
