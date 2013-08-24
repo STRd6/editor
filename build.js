@@ -443,7 +443,7 @@
 }).call(this);
 
 (function() {
-  var $root, actions, builder, errors, filetree, gist, request, styleContent, _ref;
+  var $root, actions, builder, errors, filetree, gist, loadId, request, styleContent, _ref, _ref1;
 
   $root = ENV.$root, gist = ENV.gist, request = ENV.request;
 
@@ -498,9 +498,8 @@
         error: errors
       });
     }).debounce(250),
-    load: function() {
-      var id;
-      if (id = prompt("Gist Id", gist.id)) {
+    load: function(e, id) {
+      if (id || (id = prompt("Gist Id", gist.id))) {
         console.log(id);
         return Gistquire.get(id, function(data) {
           gist = data;
@@ -546,5 +545,9 @@
     errors: errors,
     request: request
   }));
+
+  if (loadId = (_ref1 = window.location.href.match(/loadId=(d+)/)) != null ? _ref1[1] : void 0) {
+    action.load(null, loadId);
+  }
 
 }).call(this);

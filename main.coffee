@@ -46,8 +46,8 @@ actions =
       error: errors
     ).debounce(250)
     
-  load: ->
-    if id = prompt("Gist Id", gist.id)
+  load: (e, id) ->
+    if id ||= prompt("Gist Id", gist.id)
       console.log id
       
       Gistquire.get id, (data) ->
@@ -91,3 +91,6 @@ $root
     errors: errors
     request: request
   ))
+
+if loadId = window.location.href.match(/loadId=(d+)/)?[1]
+  action.load(null, loadId)
