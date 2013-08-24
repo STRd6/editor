@@ -484,8 +484,16 @@
     run: (function() {
       return builder.build(filetree.fileData(), {
         success: function(fileData) {
-          var sandbox;
-          sandbox = Sandbox();
+          var config, sandbox;
+          if (fileData["pixie.json"]) {
+            config = JSON.parse(fileData["pixie.json"].content);
+          } else {
+            config = {};
+          }
+          sandbox = Sandbox({
+            width: config.width,
+            height: config.height
+          });
           sandbox.document.open();
           $('script.env').each(function() {
             return sandbox.document.write(this.outerHTML);

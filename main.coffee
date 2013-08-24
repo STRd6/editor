@@ -30,7 +30,14 @@ actions =
   run: (->
     builder.build filetree.fileData(),
       success: (fileData) ->
-        sandbox = Sandbox()
+        if fileData["pixie.json"]
+          config = JSON.parse(fileData["pixie.json"].content)
+        else
+          config = {}
+        
+        sandbox = Sandbox
+          width: config.width
+          height: config.height
         
         sandbox.document.open()
         $('script.env').each ->
