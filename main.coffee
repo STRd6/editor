@@ -27,7 +27,7 @@ actions =
         filename: name
         content: ""
 
-  run: ->
+  run: (->
     $root.children(".demo").remove()
     demoElement = $("<div>", class: "demo")
     $root.append(demoElement)
@@ -44,7 +44,8 @@ actions =
         errors([])
 
       error: errors
-        
+    ).debounce(250)
+    
   load: ->
     if id = prompt("Gist Id", gist.id)
       console.log id
@@ -80,8 +81,8 @@ filetree.selectedFile.observe (file) ->
     editor.text.observe (value) ->
       file.content(value)
       
-      # TODO: Autorun
-      # actions.run()
+      # Autorun
+      actions.run()
 
 $root
   .append(HAMLjr.templates.main(

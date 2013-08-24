@@ -478,7 +478,7 @@
         }));
       }
     },
-    run: function() {
+    run: (function() {
       var demoElement;
       $root.children(".demo").remove();
       demoElement = $("<div>", {
@@ -497,7 +497,7 @@
         },
         error: errors
       });
-    },
+    }).debounce(250),
     load: function() {
       var id;
       if (id = prompt("Gist Id", gist.id)) {
@@ -535,7 +535,8 @@
         el: file.editor.find('.editor').get(0)
       });
       return editor.text.observe(function(value) {
-        return file.content(value);
+        file.content(value);
+        return actions.run();
       });
     }
   });
