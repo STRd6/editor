@@ -488,7 +488,7 @@
             return sandbox.document.write(this.outerHTML);
           });
           console.log("Watwat");
-          sandbox.document.onload = function() {
+          sandbox.onload = function() {
             var sandboxRoot;
             console.log("Onloaded");
             sandboxRoot = sandbox.Function("return $('body');")();

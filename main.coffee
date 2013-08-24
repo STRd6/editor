@@ -38,7 +38,7 @@ actions =
         
         console.log "Watwat"
         
-        sandbox.document.onload = ->
+        sandbox.onload = ->
           console.log "Onloaded"
           sandboxRoot = sandbox.Function("return $('body');")()
           
