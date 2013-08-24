@@ -7,6 +7,9 @@ Persist state across demo reloads
 
 Save Status and error indication
 
+Correct editor type for file types
+File icons
+
 Gist Lists
 Gist Metadata
 Tests
