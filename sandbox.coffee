@@ -1,11 +1,12 @@
-@Sandbox = ({width, height, methods}={}) ->
+@Sandbox = ({name, width, height, methods}={}) ->
+  name ?= "sandbox" + new Date
   width ?= 800
   height ?= 600
   methods ?= {}
 
   sandbox = window.open(
     ""
-    "sandbox"
+    name
     "width=#{width},height=#{height}"
   )
 
