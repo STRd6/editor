@@ -532,13 +532,17 @@
     root = $root.children(".main");
     root.find(".editor-wrap").hide();
     if (file.editor) {
-      return file.editor.show();
+      return file.editor.trigger("show");
     } else {
       root.append(HAMLjr.templates.editor());
       file.editor = root.find(".editor-wrap").last();
       editor = TextEditor({
         text: file.content(),
         el: file.editor.find('.editor').get(0)
+      });
+      file.editor.on("show", function() {
+        file.editor.show();
+        return editor.editor.focus();
       });
       return editor.text.observe(function(value) {
         return file.content(value);

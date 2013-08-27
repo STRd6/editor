@@ -84,7 +84,7 @@ filetree.selectedFile.observe (file) ->
   root.find(".editor-wrap").hide()
   
   if file.editor
-    file.editor.show()
+    file.editor.trigger("show")
   else
     root.append(HAMLjr.templates.editor())
     file.editor = root.find(".editor-wrap").last()
@@ -93,6 +93,10 @@ filetree.selectedFile.observe (file) ->
     editor = TextEditor
       text: file.content()
       el: file.editor.find('.editor').get(0)
+
+    file.editor.on "show", ->
+      file.editor.show()
+      editor.editor.focus()
   
     editor.text.observe (value) ->
       file.content(value)
