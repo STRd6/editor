@@ -386,77 +386,6 @@
 }).call(this);
 
 (function() {
-  this.Sandbox = function(_arg) {
-    var height, methods, name, sandbox, width, _ref;
-    _ref = _arg != null ? _arg : {}, name = _ref.name, width = _ref.width, height = _ref.height, methods = _ref.methods;
-    if (name == null) {
-      name = "sandbox" + new Date;
-    }
-    if (width == null) {
-      width = 800;
-    }
-    if (height == null) {
-      height = 600;
-    }
-    if (methods == null) {
-      methods = {};
-    }
-    sandbox = window.open("", name, "width=" + width + ",height=" + height);
-    Object.extend(sandbox, methods);
-    return sandbox;
-  };
-
-}).call(this);
-
-(function() {
-  this.TextEditor = function(I) {
-    var editor, el, reset, self, updating;
-    Object.reverseMerge(I, {
-      mode: "coffee",
-      text: ""
-    });
-    self = Model(I);
-    el = I.el;
-    delete I.el;
-    editor = ace.edit(el);
-    editor.setFontSize("16px");
-    editor.setTheme("ace/theme/chrome");
-    editor.getSession().setUseWorker(false);
-    editor.getSession().setMode("ace/mode/" + I.mode);
-    editor.getSession().setUseSoftTabs(true);
-    editor.getSession().setTabSize(2);
-    reset = function(content) {
-      if (content == null) {
-        content = "";
-      }
-      editor.setValue(content);
-      editor.moveCursorTo(0, 0);
-      return editor.session.selection.clearSelection();
-    };
-    reset(I.text);
-    self.attrObservable("text");
-    updating = false;
-    editor.getSession().on('change', function() {
-      updating = true;
-      self.text(editor.getValue());
-      return updating = false;
-    });
-    self.text.observe(function(newValue) {
-      if (!updating) {
-        return reset(newValue);
-      }
-    });
-    self.extend({
-      el: el,
-      editor: editor,
-      reset: reset
-    });
-    return self;
-  };
-
-}).call(this);
-
-(function() {
   this.Gistquire = {
     accessToken: null,
     auth: function() {
@@ -532,6 +461,77 @@
       }
       return $.getJSON("https://api.github.com/" + path, data, callback);
     }
+  };
+
+}).call(this);
+
+(function() {
+  this.Sandbox = function(_arg) {
+    var height, methods, name, sandbox, width, _ref;
+    _ref = _arg != null ? _arg : {}, name = _ref.name, width = _ref.width, height = _ref.height, methods = _ref.methods;
+    if (name == null) {
+      name = "sandbox" + new Date;
+    }
+    if (width == null) {
+      width = 800;
+    }
+    if (height == null) {
+      height = 600;
+    }
+    if (methods == null) {
+      methods = {};
+    }
+    sandbox = window.open("", name, "width=" + width + ",height=" + height);
+    Object.extend(sandbox, methods);
+    return sandbox;
+  };
+
+}).call(this);
+
+(function() {
+  this.TextEditor = function(I) {
+    var editor, el, reset, self, updating;
+    Object.reverseMerge(I, {
+      mode: "coffee",
+      text: ""
+    });
+    self = Model(I);
+    el = I.el;
+    delete I.el;
+    editor = ace.edit(el);
+    editor.setFontSize("16px");
+    editor.setTheme("ace/theme/chrome");
+    editor.getSession().setUseWorker(false);
+    editor.getSession().setMode("ace/mode/" + I.mode);
+    editor.getSession().setUseSoftTabs(true);
+    editor.getSession().setTabSize(2);
+    reset = function(content) {
+      if (content == null) {
+        content = "";
+      }
+      editor.setValue(content);
+      editor.moveCursorTo(0, 0);
+      return editor.session.selection.clearSelection();
+    };
+    reset(I.text);
+    self.attrObservable("text");
+    updating = false;
+    editor.getSession().on('change', function() {
+      updating = true;
+      self.text(editor.getValue());
+      return updating = false;
+    });
+    self.text.observe(function(newValue) {
+      if (!updating) {
+        return reset(newValue);
+      }
+    });
+    self.extend({
+      el: el,
+      editor: editor,
+      reset: reset
+    });
+    return self;
   };
 
 }).call(this);
