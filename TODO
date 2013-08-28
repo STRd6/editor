@@ -2,7 +2,6 @@ TODO
 ----
 Load from actual git repos
 - Use a library to handle git api?
-  - Handle js files correctly
 
 Live Update Demo
 - Display Demo Runtime Errors in console
