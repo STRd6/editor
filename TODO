@@ -6,14 +6,15 @@ Persist state across demo reloads
 
 Save Status and error indication
 
+Load from actual git repos
+Move to a real git repo
+List git repos
+
 Correct editor type for file types
 File icons
 
-Gist Lists
-Gist Metadata
 Tests
 Delete Files
-Load from actual git repos
 
 DONE
 ----
