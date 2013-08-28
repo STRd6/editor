@@ -457,6 +457,86 @@
 }).call(this);
 
 (function() {
+  this.Gistquire = {
+    accessToken: null,
+    auth: function() {
+      var url;
+      url = 'https://github.com/login/oauth/authorize?client_id=bc46af967c926ba4ff87&scope=gist,user:email';
+      return window.location = url;
+    },
+    onload: function() {
+      var code, _ref,
+        _this = this;
+      if (code = (_ref = window.location.href.match(/\?code=(.*)/)) != null ? _ref[1] : void 0) {
+        $.getJSON("https://hamljr-auth.herokuapp.com/authenticate/" + code, function(data) {
+          var token;
+          if (token = data.token) {
+            _this.accessToken = token;
+            return localStorage.authToken = token;
+          }
+        });
+      }
+      if (localStorage.authToken) {
+        return this.accessToken = localStorage.authToken;
+      }
+    },
+    update: function(id, _arg) {
+      var data, error, success, url;
+      data = _arg.data, success = _arg.success, error = _arg.error;
+      url = "https://api.github.com/gists/" + id;
+      if (this.accessToken) {
+        url += "?access_token=" + this.accessToken;
+      }
+      return $.ajax({
+        url: url,
+        type: "PATCH",
+        dataType: 'json',
+        data: JSON.stringify(data),
+        success: success,
+        error: error
+      });
+    },
+    create: function(data, callback) {
+      var url;
+      url = "https://api.github.com/gists";
+      if (this.accessToken) {
+        url += "?access_token=" + this.accessToken;
+      }
+      return $.ajax({
+        url: url,
+        type: "POST",
+        dataType: 'json',
+        data: JSON.stringify(data),
+        success: callback
+      });
+    },
+    get: function(id, callback) {
+      var data;
+      if (this.accessToken) {
+        data = {
+          access_token: this.accessToken
+        };
+      } else {
+        data = {};
+      }
+      return $.getJSON("https://api.github.com/gists/" + id, data, callback);
+    },
+    api: function(path, callback) {
+      var data;
+      if (this.accessToken) {
+        data = {
+          access_token: this.accessToken
+        };
+      } else {
+        data = {};
+      }
+      return $.getJSON("https://api.github.com/" + path, data, callback);
+    }
+  };
+
+}).call(this);
+
+(function() {
   var $root, actions, builder, errors, filetree, gist, loadId, notices, request, styleContent, _ref, _ref1;
 
   $root = ENV.$root, gist = ENV.gist, request = ENV.request;
@@ -466,6 +546,8 @@
       html: styleContent
     }));
   }
+
+  Gistquire.onload();
 
   builder = Builder();
 

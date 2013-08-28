@@ -7,6 +7,9 @@ if styleContent = gist.files["style.css"]?.content
     html: styleContent
   )
 
+# Init Github access token stuff
+Gistquire.onload()
+
 builder = Builder()
 
 errors = Observable([])
