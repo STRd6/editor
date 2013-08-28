@@ -661,7 +661,7 @@
     errors: errors
   }));
 
-  Gistquire.api("/rate_limit", {
+  Gistquire.api("rate_limit", {
     complete: function(request, status) {
       return $root.append(HAMLjr.templates.github_status({
         request: request

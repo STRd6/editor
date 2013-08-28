@@ -124,7 +124,7 @@ $root
     errors: errors
   ))
 
-Gistquire.api "/rate_limit", 
+Gistquire.api "rate_limit", 
   complete: (request, status) ->
     $root.append HAMLjr.templates.github_status
       request: request
