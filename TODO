@@ -1,12 +1,17 @@
 TODO
 ----
-Live Update Demo
-Display Demo Runtime Errors in console
-Persist state across demo reloads
-
 Save Status and error indication
 
 Load from actual git repos
+- Use a library to handle git api?
+
+Live Update Demo
+- Display Demo Runtime Errors in console
+
+Persist state across demo reloads
+
+Organize File tree
+
 Move to a real git repo
 List git repos
 
