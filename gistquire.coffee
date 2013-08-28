@@ -58,9 +58,7 @@
     else
       data = {}
 
-    debugger
-
-    Object.extend
+    options = Object.extend
       url: "https://api.github.com/#{path}"
       type: "GET"
       dataType: 'json'
