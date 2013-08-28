@@ -126,6 +126,7 @@ $root
 
 Gistquire.api "/rate_limit", 
   complete: (data, status, request) ->
+    debugger
     $root.append HAMLjr.templates.github_status
       request: request
 

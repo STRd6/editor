@@ -662,6 +662,7 @@
 
   Gistquire.api("/rate_limit", {
     complete: function(data, status, request) {
+      debugger;
       return $root.append(HAMLjr.templates.github_status({
         request: request
       }));
