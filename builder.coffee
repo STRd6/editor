@@ -18,6 +18,13 @@
       try
         if name.extension() is "haml"
           templates.push compileTemplate(source, name.withoutExtension())
+        else if name.extension() is "js"
+          if name is "main.js"
+            main = source
+          else if name is "build.js"
+            # Do nothing
+          else
+            models.push source
         else if name.extension() is "coffee"
           if name is "main.coffee"
             main = CoffeeScript.compile(source)

@@ -265,6 +265,14 @@
         try {
           if (name.extension() === "haml") {
             return templates.push(compileTemplate(source, name.withoutExtension()));
+          } else if (name.extension() === "js") {
+            if (name === "main.js") {
+              return main = source;
+            } else if (name === "build.js") {
+
+            } else {
+              return models.push(source);
+            }
           } else if (name.extension() === "coffee") {
             if (name === "main.coffee") {
               return main = CoffeeScript.compile(source);
