@@ -19,8 +19,11 @@ File icons
 Tests
 Delete Files
 
+Visualize Rate Limit Remaining
+
 DONE
 ----
+Move Gistquire to editor
 Maintain editor state across open files
 Error Log styles
 Tell ace not to use worker becaues it fails to load in iframe
