@@ -1,7 +1,5 @@
 TODO
 ----
-Fix auth status indication
-
 Load from actual git repos
 - Use a library to handle git api?
 
