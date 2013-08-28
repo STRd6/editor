@@ -3,6 +3,8 @@ TODO
 Save error indication
 - Update Gistquire or use a library for Github api
 
+Move full gist loading out of tempest loader and into editor 
+
 Load from actual git repos
 - Use a library to handle git api?
 
