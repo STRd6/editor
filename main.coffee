@@ -10,6 +10,7 @@ if styleContent = gist.files["style.css"]?.content
 builder = Builder()
 
 errors = Observable([])
+notices = Observable(["Loaded!"])
 
 actions =
   save: ->
@@ -17,7 +18,10 @@ actions =
       success: (fileData) ->
         Gistquire.update gist.id,
           files: fileData
+        , ->
+          notices(["Saved!"])
           
+        notices(["Saving..."])
         errors([])
       error: errors
 
@@ -27,7 +31,7 @@ actions =
         filename: name
         content: ""
 
-  run: (->
+  run: (->    
     builder.build filetree.fileData(),
       success: (fileData) ->
         if fileData["pixie.json"]
@@ -56,6 +60,8 @@ actions =
 
         sandbox.document.close()
 
+        # TODO: Display this notice when we receive confirmation from child window
+        notices(["Runnnig!"])
         # TODO: Catch and display runtime errors
         errors([])
 
@@ -108,6 +114,7 @@ $root
   .append(HAMLjr.templates.main(
     filetree: filetree
     actions: actions
+    notices: notices
     errors: errors
     request: request
   ))

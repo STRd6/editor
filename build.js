@@ -71,13 +71,23 @@
       __push(document.createDocumentFragment());
       __element = document.createElement("div");
       __push(__element);
-      __attribute(__element, "class", "error-wrap");
+      __attribute(__element, "class", "console-wrap");
       __element = document.createElement("pre");
       __push(__element);
       __attribute(__element, "class", "errors");
-      __each(this, function(error) {
+      __each(this.errors, function(error) {
         __element = document.createTextNode('');
         __text(__element, error.stack);
+        __push(__element);
+        return __pop();
+      });
+      __pop();
+      __element = document.createElement("pre");
+      __push(__element);
+      __attribute(__element, "class", "notices");
+      __each(this.notices, function(notice) {
+        __element = document.createTextNode('');
+        __text(__element, notice);
         __push(__element);
         return __pop();
       });
@@ -219,7 +229,7 @@
       __push(__element);
       __pop();
       __element = document.createTextNode('');
-      __text(__element, HAMLjr.templates.errors(this.errors));
+      __text(__element, HAMLjr.templates.errors(this));
       __push(__element);
       __pop();
       __element = document.createTextNode('');
@@ -447,7 +457,7 @@
 }).call(this);
 
 (function() {
-  var $root, actions, builder, errors, filetree, gist, loadId, request, styleContent, _ref, _ref1;
+  var $root, actions, builder, errors, filetree, gist, loadId, notices, request, styleContent, _ref, _ref1;
 
   $root = ENV.$root, gist = ENV.gist, request = ENV.request;
 
@@ -461,13 +471,18 @@
 
   errors = Observable([]);
 
+  notices = Observable(["Loaded!"]);
+
   actions = {
     save: function() {
       return builder.build(filetree.fileData(), {
         success: function(fileData) {
           Gistquire.update(gist.id, {
             files: fileData
+          }, function() {
+            return notices(["Saved!"]);
           });
+          notices(["Saving..."]);
           return errors([]);
         },
         error: errors
@@ -501,6 +516,7 @@
           });
           sandbox.document.write("<body><script>\n  ENV = {\n    \"$root\": $('body'), \n    \"gist\": {\n      files: " + (JSON.stringify(fileData)) + "\n    }\n  };\n  \n  " + fileData["build.js"].content + ";\n<\/script>");
           sandbox.document.close();
+          notices(["Runnnig!"]);
           return errors([]);
         },
         error: errors
@@ -554,6 +570,7 @@
   $root.append(HAMLjr.templates.main({
     filetree: filetree,
     actions: actions,
+    notices: notices,
     errors: errors,
     request: request
   }));

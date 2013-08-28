@@ -1,4 +1,7 @@
-.error-wrap
+.console-wrap
   %pre.errors
-    - each this, (error) ->
+    - each @errors, (error) ->
       = error.stack
+  %pre.notices
+    - each @notices, (notice) ->
+      = notice

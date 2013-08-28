@@ -52,8 +52,7 @@ body {
   left: 200px;
 }
 
-.error-wrap {
-  color: red;
+.console-wrap {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -68,8 +67,9 @@ body {
   box-sizing: border-box;
 }
 
-.error-wrap .errors {
+.console-wrap .errors {
   border-top: 1px solid black;
+  color: red;
   -ms-box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;

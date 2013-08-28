@@ -1,6 +1,7 @@
 TODO
 ----
-Save Status and error indication
+Save error indication
+- Update Gistquire or use a library for Github api
 
 Load from actual git repos
 - Use a library to handle git api?
