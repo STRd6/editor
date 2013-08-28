@@ -58,6 +58,8 @@
     else
       data = {}
 
+    debugger
+
     Object.extend
       url: "https://api.github.com/#{path}"
       type: "GET"
