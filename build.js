@@ -232,10 +232,6 @@
       __text(__element, HAMLjr.templates.errors(this));
       __push(__element);
       __pop();
-      __element = document.createTextNode('');
-      __text(__element, HAMLjr.templates.github_status(this));
-      __push(__element);
-      __pop();
       __pop();
       return __pop();
     }).call(data);
@@ -440,18 +436,15 @@
       });
     },
     get: function(id, callback) {
-      var data;
-      if (this.accessToken) {
-        data = {
-          access_token: this.accessToken
-        };
-      } else {
-        data = {};
-      }
-      return $.getJSON("https://api.github.com/gists/" + id, data, callback);
+      return this.api("gists/" + id, {
+        success: callback
+      });
     },
-    api: function(path, callback) {
+    api: function(path, options) {
       var data;
+      if (options == null) {
+        options = {};
+      }
       if (this.accessToken) {
         data = {
           access_token: this.accessToken
@@ -459,7 +452,12 @@
       } else {
         data = {};
       }
-      return $.getJSON("https://api.github.com/" + path, data, callback);
+      Object.extend({
+        url: "https://api.github.com/" + path,
+        type: "GET",
+        dataType: 'json'
+      }, options);
+      return $.ajax(options);
     }
   };
 
@@ -659,9 +657,16 @@
     filetree: filetree,
     actions: actions,
     notices: notices,
-    errors: errors,
-    request: request
+    errors: errors
   }));
+
+  Gistquire.api("/rate_limit", {
+    complete: function(data, status, request) {
+      return $root.append(HAMLjr.templates.github_status({
+        request: request
+      }));
+    }
+  });
 
   if (loadId = (_ref1 = window.location.href.match(/loadId=(\d+)/)) != null ? _ref1[1] : void 0) {
     actions.load(null, loadId);

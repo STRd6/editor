@@ -122,8 +122,12 @@ $root
     actions: actions
     notices: notices
     errors: errors
-    request: request
   ))
+
+Gistquire.api "/rate_limit", 
+  complete: (data, status, request) ->
+    $root.append HAMLjr.templates.github_status
+      request: request
 
 if loadId = window.location.href.match(/loadId=(\d+)/)?[1]
   actions.load(null, loadId)

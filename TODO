@@ -1,7 +1,6 @@
 TODO
 ----
-
-Move full gist loading out of tempest loader and into editor 
+Fix auth status indication
 
 Load from actual git repos
 - Use a library to handle git api?

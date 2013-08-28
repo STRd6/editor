@@ -49,17 +49,19 @@
       success: callback
 
   get: (id, callback) ->
+    @api "gists/#{id}",
+      success: callback
+
+  api: (path, options={}) ->
     if @accessToken
       data = access_token: @accessToken
     else
       data = {}
 
-    $.getJSON "https://api.github.com/gists/#{id}", data, callback
+    Object.extend
+      url: "https://api.github.com/#{path}"
+      type: "GET"
+      dataType: 'json'
+    , options
 
-  api: (path, callback) ->
-    if @accessToken
-      data = access_token: @accessToken
-    else
-      data = {}
-
-    $.getJSON "https://api.github.com/#{path}", data, callback
+    $.ajax options
