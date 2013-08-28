@@ -455,6 +455,7 @@
       options = Object.extend({
         url: "https://api.github.com/" + path,
         type: "GET",
+        data: data,
         dataType: 'json'
       }, options);
       return $.ajax(options);
@@ -661,8 +662,7 @@
   }));
 
   Gistquire.api("/rate_limit", {
-    complete: function(data, status, request) {
-      debugger;
+    complete: function(request, status) {
       return $root.append(HAMLjr.templates.github_status({
         request: request
       }));

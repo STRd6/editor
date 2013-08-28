@@ -61,6 +61,7 @@
     options = Object.extend
       url: "https://api.github.com/#{path}"
       type: "GET"
+      data: data
       dataType: 'json'
     , options
 
