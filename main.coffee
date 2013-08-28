@@ -20,10 +20,13 @@ actions =
     builder.build filetree.fileData(),
       success: (fileData) ->
         Gistquire.update gist.id,
-          files: fileData
-        , ->
-          notices(["Saved!"])
-          
+          data:
+            files: fileData
+          success: ->
+            notices(["Saved!"])
+          error: ->
+            errors(["Save Failed :("])
+
         notices(["Saving..."])
         errors([])
       error: errors

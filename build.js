@@ -560,9 +560,15 @@
       return builder.build(filetree.fileData(), {
         success: function(fileData) {
           Gistquire.update(gist.id, {
-            files: fileData
-          }, function() {
-            return notices(["Saved!"]);
+            data: {
+              files: fileData
+            },
+            success: function() {
+              return notices(["Saved!"]);
+            },
+            error: function() {
+              return errors(["Save Failed :("]);
+            }
           });
           notices(["Saving..."]);
           return errors([]);
