@@ -82,11 +82,14 @@ actions =
         gist = data
         filetree.load(gist.files)
         
-  list: ->
-    Gistquire.api "gists", (data) ->
-      $root.append HAMLjr.templates.gist_list(
-        gists: data
-      )
+  github_test: ->
+    github = new Github
+      token: localStorage.authToken
+
+    repo = github.getRepo("STRd6", "matrix.js")
+    
+    repo.contents "master", "", (error, data) ->
+      notices [JSON.stringify data, null, 2]
 
 filetree = Filetree()
 filetree.load(gist.files)

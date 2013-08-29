@@ -472,77 +472,6 @@
 
 }).call(this);
 
-(function() {
-  this.Sandbox = function(_arg) {
-    var height, methods, name, sandbox, width, _ref;
-    _ref = _arg != null ? _arg : {}, name = _ref.name, width = _ref.width, height = _ref.height, methods = _ref.methods;
-    if (name == null) {
-      name = "sandbox" + new Date;
-    }
-    if (width == null) {
-      width = 800;
-    }
-    if (height == null) {
-      height = 600;
-    }
-    if (methods == null) {
-      methods = {};
-    }
-    sandbox = window.open("", name, "width=" + width + ",height=" + height);
-    Object.extend(sandbox, methods);
-    return sandbox;
-  };
-
-}).call(this);
-
-(function() {
-  this.TextEditor = function(I) {
-    var editor, el, reset, self, updating;
-    Object.reverseMerge(I, {
-      mode: "coffee",
-      text: ""
-    });
-    self = Model(I);
-    el = I.el;
-    delete I.el;
-    editor = ace.edit(el);
-    editor.setFontSize("16px");
-    editor.setTheme("ace/theme/chrome");
-    editor.getSession().setUseWorker(false);
-    editor.getSession().setMode("ace/mode/" + I.mode);
-    editor.getSession().setUseSoftTabs(true);
-    editor.getSession().setTabSize(2);
-    reset = function(content) {
-      if (content == null) {
-        content = "";
-      }
-      editor.setValue(content);
-      editor.moveCursorTo(0, 0);
-      return editor.session.selection.clearSelection();
-    };
-    reset(I.text);
-    self.attrObservable("text");
-    updating = false;
-    editor.getSession().on('change', function() {
-      updating = true;
-      self.text(editor.getValue());
-      return updating = false;
-    });
-    self.text.observe(function(newValue) {
-      if (!updating) {
-        return reset(newValue);
-      }
-    });
-    self.extend({
-      el: el,
-      editor: editor,
-      reset: reset
-    });
-    return self;
-  };
-
-}).call(this);
-
 // Github.js 0.8.0
 // (c) 2013 Michael Aufreiter, Development Seed
 // Github.js is freely distributable under the MIT license.
@@ -1072,6 +1001,77 @@
 }).call(this);
 
 (function() {
+  this.Sandbox = function(_arg) {
+    var height, methods, name, sandbox, width, _ref;
+    _ref = _arg != null ? _arg : {}, name = _ref.name, width = _ref.width, height = _ref.height, methods = _ref.methods;
+    if (name == null) {
+      name = "sandbox" + new Date;
+    }
+    if (width == null) {
+      width = 800;
+    }
+    if (height == null) {
+      height = 600;
+    }
+    if (methods == null) {
+      methods = {};
+    }
+    sandbox = window.open("", name, "width=" + width + ",height=" + height);
+    Object.extend(sandbox, methods);
+    return sandbox;
+  };
+
+}).call(this);
+
+(function() {
+  this.TextEditor = function(I) {
+    var editor, el, reset, self, updating;
+    Object.reverseMerge(I, {
+      mode: "coffee",
+      text: ""
+    });
+    self = Model(I);
+    el = I.el;
+    delete I.el;
+    editor = ace.edit(el);
+    editor.setFontSize("16px");
+    editor.setTheme("ace/theme/chrome");
+    editor.getSession().setUseWorker(false);
+    editor.getSession().setMode("ace/mode/" + I.mode);
+    editor.getSession().setUseSoftTabs(true);
+    editor.getSession().setTabSize(2);
+    reset = function(content) {
+      if (content == null) {
+        content = "";
+      }
+      editor.setValue(content);
+      editor.moveCursorTo(0, 0);
+      return editor.session.selection.clearSelection();
+    };
+    reset(I.text);
+    self.attrObservable("text");
+    updating = false;
+    editor.getSession().on('change', function() {
+      updating = true;
+      self.text(editor.getValue());
+      return updating = false;
+    });
+    self.text.observe(function(newValue) {
+      if (!updating) {
+        return reset(newValue);
+      }
+    });
+    self.extend({
+      el: el,
+      editor: editor,
+      reset: reset
+    });
+    return self;
+  };
+
+}).call(this);
+
+(function() {
   var $root, actions, builder, errors, filetree, gist, loadId, notices, request, styleContent, _ref, _ref1;
 
   $root = ENV.$root, gist = ENV.gist, request = ENV.request;
@@ -1154,11 +1154,14 @@
         });
       }
     },
-    list: function() {
-      return Gistquire.api("gists", function(data) {
-        return $root.append(HAMLjr.templates.gist_list({
-          gists: data
-        }));
+    github_test: function() {
+      var github, repo;
+      github = new Github({
+        token: localStorage.authToken
+      });
+      repo = github.getRepo("STRd6", "matrix.js");
+      return repo.contents("master", "", function(error, data) {
+        return notices([JSON.stringify(data, null, 2)]);
       });
     }
   };
