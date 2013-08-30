@@ -1371,10 +1371,12 @@
         };
         _ref1 = buildStyle(fileData), errors = _ref1.errors, result = _ref1.result;
         collectedErrors = collectedErrors.concat(errors);
-        fileData["style.css"] = {
-          filename: "style.css",
-          content: result
-        };
+        if (result !== "") {
+          fileData["style.css"] = {
+            filename: "style.css",
+            content: result
+          };
+        }
         if (collectedErrors.length) {
           return error(collectedErrors);
         } else {

@@ -66,9 +66,10 @@
     {errors, result} = buildStyle(fileData)
     collectedErrors = collectedErrors.concat errors
     
-    fileData["style.css"] =
-      filename: "style.css"
-      content: result
+    if result != ""
+      fileData["style.css"] =
+        filename: "style.css"
+        content: result
     
     if collectedErrors.length
       error(collectedErrors)
