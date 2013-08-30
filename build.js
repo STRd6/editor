@@ -2192,7 +2192,7 @@
         error: errors
       });
     }).debounce(250),
-    load: function(e, id) {
+    load_gist: function(e, id) {
       if (id || (id = prompt("Gist Id", gist.id))) {
         console.log(id);
         return Gistquire.get(id, function(data) {
@@ -2202,11 +2202,17 @@
       }
     },
     github_test: function() {
-      var github, processDirectory, repo;
+      var github, mapToGist, processDirectory, repo, repoName, userName, _ref1;
       github = new Github({
         token: localStorage.authToken
       });
-      repo = github.getRepo("STRd6", "matrix.js");
+      repoName = prompt("Github repo", "STRd6/matrix.js");
+      if (repoName) {
+        _ref1 = repoName.split("/"), userName = _ref1[0], repoName = _ref1[1];
+      } else {
+        return;
+      }
+      repo = github.getRepo(userName, repoName);
       processDirectory = function(items) {
         return items.each(function(item) {
           if (Array.isArray(item)) {
@@ -2217,6 +2223,20 @@
             }
             item.content = Base64.decode(item.content);
             return item.encoding = "raw";
+          }
+        });
+      };
+      mapToGist = function(tree, files) {
+        if (files == null) {
+          files = {};
+        }
+        return tree.inject(files, function(files, leaf) {
+          if (Array.isArray(leaf)) {
+            return mapToGist(leaf, files);
+          } else {
+            leaf.filename = leaf.name;
+            files[leaf.path] = leaf;
+            return files;
           }
         });
       };
@@ -2232,8 +2252,13 @@
               }
             });
           }, function(error, results) {
+            var files;
             processDirectory(results);
-            return notices([JSON.stringify(results, null, 2)]);
+            files = mapToGist(results);
+            notices([files].map(function(item) {
+              return JSON.stringify(item, null, 2);
+            }));
+            return filetree.load(files);
           });
         } else {
           return errors([

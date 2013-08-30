@@ -3,6 +3,8 @@ TODO
 Load from actual git repos
 - Use a library to handle git api?
 
+Make errors like notices
+
 Deploy a packaged app to gh-pages
 
 Live Update Demo

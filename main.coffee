@@ -74,7 +74,7 @@ actions =
       error: errors
     ).debounce(250)
     
-  load: (e, id) ->
+  load_gist: (e, id) ->
     if id ||= prompt("Gist Id", gist.id)
       console.log id
       
@@ -86,7 +86,15 @@ actions =
     github = new Github
       token: localStorage.authToken
 
-    repo = github.getRepo("STRd6", "matrix.js")
+    repoName = prompt("Github repo", "STRd6/matrix.js")
+    
+    if repoName
+      [userName, repoName] = repoName.split("/")
+    else
+      # TODO: Display error
+      return
+
+    repo = github.getRepo(userName, repoName)
     
     # Decode all content in place
     processDirectory = (items) ->
@@ -99,10 +107,23 @@ actions =
           item.content = Base64.decode(item.content)
           item.encoding = "raw"
     
+    mapToGist = (tree, files={}) ->
+      tree.inject files, (files, leaf) ->
+        if Array.isArray(leaf)
+          mapToGist(leaf, files)
+        else
+          leaf.filename = leaf.name
+          files[leaf.path] = leaf
+          
+          return files
+    
+    # TODO: Need get tree recursively
     repo.contents "master", "", (error, data) ->
       if data
         notices [JSON.stringify data, null, 2]
         
+        # TODO: We should flatten the tree first, then
+        # do our async content gathering
         async.map data, (datum, callback) ->
           path = datum.url.split('/')[3..].join('/')
           Gistquire.api path,
@@ -112,7 +133,15 @@ actions =
         , (error, results) ->
           processDirectory results
           
-          notices [JSON.stringify results, null, 2]
+          files = mapToGist(results)
+          
+          notices [
+            files
+            # Temporary hack to map repo into same structure as gist files
+          ].map (item) ->
+            JSON.stringify(item, null, 2)
+            
+          filetree.load files
 
       else
         errors [stack: error]
