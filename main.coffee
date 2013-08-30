@@ -88,8 +88,34 @@ actions =
 
     repo = github.getRepo("STRd6", "matrix.js")
     
+    # Decode all content in place
+    processDirectory = (items) ->
+      items.each (item) ->
+        if Array.isArray(item)
+          processDirectory(item)
+        else
+          return item unless item.content
+          
+          item.content = Base64.decode(item.content)
+          item.encoding = "raw"
+    
     repo.contents "master", "", (error, data) ->
-      notices [JSON.stringify data, null, 2]
+      if data
+        notices [JSON.stringify data, null, 2]
+        
+        async.map data, (datum, callback) ->
+          path = datum.url.split('/')[3..].join('/')
+          Gistquire.api path,
+            success: (data) ->
+              callback(null, data)
+
+        , (error, results) ->
+          processDirectory results
+          
+          notices [JSON.stringify results, null, 2]
+
+      else
+        errors [stack: error]
 
 filetree = Filetree()
 filetree.load(gist.files)
