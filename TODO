@@ -1,7 +1,6 @@
 TODO
 ----
-Load from actual git repos
-- Use a library to handle git api?
+Save changes back to real git repos
 
 Make errors like notices
 
@@ -27,6 +26,8 @@ Visualize Rate Limit Remaining
 
 DONE
 ----
+Load from actual git repos
+- Use a library to handle git api?
 Move Gistquire to editor
 Maintain editor state across open files
 Error Log styles
