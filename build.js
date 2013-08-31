@@ -77,7 +77,7 @@
       __attribute(__element, "class", "errors");
       __each(this.errors, function(error) {
         __element = document.createTextNode('');
-        __text(__element, error.stack);
+        __text(__element, error);
         __push(__element);
         return __pop();
       });
@@ -1329,7 +1329,7 @@
           }
         } catch (_error) {
           error = _error;
-          return errors.push(error);
+          return errors.push(error.stack);
         }
       });
       return {
@@ -1352,7 +1352,7 @@
           }
         } catch (_error) {
           error = _error;
-          return errors.push(error);
+          return errors.push(error.stack);
         }
       });
       return {
@@ -2121,7 +2121,7 @@
 }).call(this);
 
 (function() {
-  var $root, actions, builder, errors, filetree, gist, loadId, notices, request, styleContent, _ref, _ref1;
+  var $root, actions, appendError, branch, builder, commitMessage, errors, filetree, gist, github, loadId, notices, repo, request, styleContent, _ref, _ref1;
 
   $root = ENV.$root, gist = ENV.gist, request = ENV.request;
 
@@ -2133,27 +2133,53 @@
 
   Gistquire.onload();
 
+  github = new Github({
+    auth: "oauth",
+    token: localStorage.authToken
+  });
+
+  branch = "master";
+
+  commitMessage = "Yolo! (http://strd6.github.io/tempest/)";
+
+  repo = null;
+
   builder = Builder();
 
   errors = Observable([]);
 
   notices = Observable(["Loaded!"]);
 
+  appendError = function(error) {
+    console.log(error);
+    if (error) {
+      return errors.push(error);
+    }
+  };
+
   actions = {
     save: function() {
       return builder.build(filetree.fileData(), {
         success: function(fileData) {
-          Gistquire.update(gist.id, {
-            data: {
-              files: fileData
-            },
-            success: function() {
-              return notices(["Saved!"]);
-            },
-            error: function() {
-              return errors(["Save Failed :("]);
-            }
-          });
+          if (gist) {
+            Gistquire.update(gist.id, {
+              data: {
+                files: fileData
+              },
+              success: function() {
+                return notices(["Saved!"]);
+              },
+              error: function() {
+                return errors(["Save Failed :("]);
+              }
+            });
+          } else {
+            Object.keys(fileData).each(function(path) {
+              var content;
+              content = fileData[path].content;
+              return repo.write(branch, path, content, commitMessage, appendError);
+            });
+          }
           notices(["Saving..."]);
           return errors([]);
         },
@@ -2199,15 +2225,14 @@
         console.log(id);
         return Gistquire.get(id, function(data) {
           gist = data;
-          return filetree.load(gist.files);
+          filetree.load(gist.files);
+          return repo = null;
         });
       }
     },
     load_repo: function() {
-      var github, mapToGist, processDirectory, repo, repoName, userName, _ref1;
-      github = new Github({
-        token: localStorage.authToken
-      });
+      var mapToGist, processDirectory, repoName, userName, _ref1;
+      gist = null;
       repoName = prompt("Github repo", "STRd6/matrix.js");
       if (repoName) {
         _ref1 = repoName.split("/"), userName = _ref1[0], repoName = _ref1[1];
@@ -2263,11 +2288,7 @@
             return filetree.load(files);
           });
         } else {
-          return errors([
-            {
-              stack: error
-            }
-          ]);
+          return errors([error]);
         }
       });
     }

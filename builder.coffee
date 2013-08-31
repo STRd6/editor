@@ -31,7 +31,7 @@
           else
             models.push CoffeeScript.compile(source)
       catch error
-        errors.push error
+        errors.push error.stack
   
     errors: errors
     result: """
@@ -51,7 +51,7 @@
         if name.extension() is "styl"
           styles.push styl(source, whitespace: true).toString()
       catch error
-        errors.push error
+        errors.push error.stack
   
     errors: errors
     result: styles.join("\n")
@@ -64,7 +64,7 @@
       content: result
 
     {errors, result} = buildStyle(fileData)
-    collectedErrors = collectedErrors.concat errors
+    collectedErrors = collectedErrors.concat(errors)
     
     if result != ""
       fileData["style.css"] =

@@ -10,22 +10,42 @@ if styleContent = gist.files["style.css"]?.content
 # Init Github access token stuff
 Gistquire.onload()
 
+# Github api
+github = new Github
+  auth: "oauth"
+  token: localStorage.authToken
+  
+# TODO: Real branch
+branch = "master"
+commitMessage = "Yolo! (http://strd6.github.io/tempest/)"
+repo = null
+
 builder = Builder()
 
 errors = Observable([])
 notices = Observable(["Loaded!"])
 
+appendError = (error) ->
+  console.log error
+  
+  errors.push(error) if error
+
 actions =
   save: ->
     builder.build filetree.fileData(),
       success: (fileData) ->
-        Gistquire.update gist.id,
-          data:
-            files: fileData
-          success: ->
-            notices(["Saved!"])
-          error: ->
-            errors(["Save Failed :("])
+        if gist
+          Gistquire.update gist.id,
+            data:
+              files: fileData
+            success: ->
+              notices(["Saved!"])
+            error: ->
+              errors(["Save Failed :("])
+        else # Repo
+          Object.keys(fileData).each (path) ->
+            content = fileData[path].content
+            repo.write(branch, path, content, commitMessage, appendError)
 
         notices(["Saving..."])
         errors([])
@@ -81,11 +101,10 @@ actions =
       Gistquire.get id, (data) ->
         gist = data
         filetree.load(gist.files)
-        
-  load_repo: ->
-    github = new Github
-      token: localStorage.authToken
+        repo = null
 
+  load_repo: ->
+    gist = null
     repoName = prompt("Github repo", "STRd6/matrix.js")
     
     if repoName
@@ -144,7 +163,7 @@ actions =
           filetree.load files
 
       else
-        errors [stack: error]
+        errors [error]
 
 filetree = Filetree()
 filetree.load(gist.files)
