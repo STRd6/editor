@@ -2367,17 +2367,7 @@
             Object.keys(fileData).each(function(path) {
               var content;
               content = fileData[path].content;
-              return Gistquire.api("repos/" + userName + "/" + repoName + "/contents/" + path + "?ref=" + branch, {
-                method: "PUT",
-                data: JSON.stringify({
-                  path: path,
-                  content: content,
-                  message: commitMessage,
-                  sha: "",
-                  branch: branch
-                }),
-                error: appendError
-              });
+              return repo.write(branch, path, content, commitMessage, appendError);
             });
           }
           notices(["Saving..."]);

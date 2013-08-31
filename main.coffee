@@ -47,16 +47,16 @@ actions =
         else # Repo
           Object.keys(fileData).each (path) ->
             content = fileData[path].content
-            Gistquire.api "repos/#{userName}/#{repoName}/contents/#{path}?ref=#{branch}",
-              method: "PUT"
-              data: JSON.stringify
-                path: path
-                content: content
-                message: commitMessage
-                sha: "" # TODO!
-                branch: branch
-              error: appendError
-            # repo.write(branch, path, content, commitMessage, appendError)
+            #Gistquire.api "repos/#{userName}/#{repoName}/contents/#{path}?ref=#{branch}",
+              #method: "PUT"
+              #data: JSON.stringify
+                #path: path
+                #content: content
+                #message: commitMessage
+                #sha: "" # TODO!
+                #branch: branch
+              #error: appendError
+            repo.write(branch, path, content, commitMessage, appendError)
 
         notices(["Saving..."])
         errors([])
