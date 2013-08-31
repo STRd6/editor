@@ -1,14 +1,5 @@
 TODO
 ----
-Save changes back to real git repos
-- Display Auth Scopes
-- Retry github.js
-  - otherwise
-  - Implement gh save repo content
-
-
-Make errors like notices
-
 Deploy a packaged app to gh-pages
 
 Live Update Demo
@@ -32,8 +23,13 @@ Visualize Rate Limit Remaining
 DONE
 ----
 Load from actual git repos
-- Use a library to handle git api?
+Save changes back to real git repos
+
+Make errors like notices
+Display Auth Scopes
+Do not compile build.js if no js files
+
 Move Gistquire to editor
 Maintain editor state across open files
 Error Log styles
-Tell ace not to use worker becaues it fails to load in iframe
+Tell ace not to use worker becaues it fails to load cross domain

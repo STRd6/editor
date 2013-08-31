@@ -1384,10 +1384,12 @@
         var collectedErrors, error, errors, result, success, _ref, _ref1;
         success = _arg.success, error = _arg.error;
         _ref = build(fileData), collectedErrors = _ref.errors, result = _ref.result;
-        fileData["build.js"] = {
-          filename: "build.js",
-          content: result
-        };
+        if (result.trim() !== "") {
+          fileData["build.js"] = {
+            filename: "build.js",
+            content: result
+          };
+        }
         _ref1 = buildStyle(fileData), errors = _ref1.errors, result = _ref1.result;
         collectedErrors = collectedErrors.concat(errors);
         if (result !== "") {

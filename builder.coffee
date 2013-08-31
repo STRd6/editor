@@ -59,9 +59,10 @@
   build: (fileData, {success, error}) ->
     {errors:collectedErrors, result} = build(fileData)
 
-    fileData["build.js"] = 
-      filename: "build.js"
-      content: result
+    if result.trim() != ""
+      fileData["build.js"] = 
+        filename: "build.js"
+        content: result
 
     {errors, result} = buildStyle(fileData)
     collectedErrors = collectedErrors.concat(errors)
