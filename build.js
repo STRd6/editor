@@ -1498,21 +1498,16 @@
       });
     },
     api: function(path, options) {
-      var data;
       if (options == null) {
         options = {};
       }
+      options.headers || (options.headers = {});
       if (this.accessToken) {
-        data = {
-          access_token: this.accessToken
-        };
-      } else {
-        data = {};
+        options.headers["Authorization"] = "token " + this.accessToken;
       }
       options = Object.extend({
         url: "https://api.github.com/" + path,
         type: "GET",
-        data: data,
         dataType: 'json'
       }, options);
       return $.ajax(options);
@@ -2348,6 +2343,7 @@
             Object.keys(fileData).each(function(path) {
               var content;
               content = fileData[path].content;
+              Gistquire.api;
               return repo.write(branch, path, content, commitMessage, appendError);
             });
           }
@@ -2394,11 +2390,13 @@
     load_gist: function(e, id) {
       if (id || (id = prompt("Gist Id", gist.id))) {
         console.log(id);
-        return Gistquire.get(id, function(data) {
+        Gistquire.get(id, function(data) {
           gist = data;
           filetree.load(gist.files);
-          return repo = null;
+          repo = null;
+          return notices(["Loaded"]);
         });
+        return notices(["Loading..."]);
       }
     },
     load_repo: function() {

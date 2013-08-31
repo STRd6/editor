@@ -53,15 +53,14 @@
       success: callback
 
   api: (path, options={}) ->
+    options.headers ||= {}
+    
     if @accessToken
-      data = access_token: @accessToken
-    else
-      data = {}
+      options.headers["Authorization"] = "token #{@accessToken}"
 
     options = Object.extend
       url: "https://api.github.com/#{path}"
       type: "GET"
-      data: data
       dataType: 'json'
     , options
 

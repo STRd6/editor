@@ -45,6 +45,7 @@ actions =
         else # Repo
           Object.keys(fileData).each (path) ->
             content = fileData[path].content
+            Gistquire.api
             repo.write(branch, path, content, commitMessage, appendError)
 
         notices(["Saving..."])
@@ -102,6 +103,10 @@ actions =
         gist = data
         filetree.load(gist.files)
         repo = null
+        
+        notices ["Loaded"]
+        
+      notices ["Loading..."]
 
   load_repo: ->
     gist = null
