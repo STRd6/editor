@@ -185,7 +185,26 @@
       __attribute(__element, "class", "status");
       if (this.request && this.request.getAllResponseHeaders().match(/X-RateLimit-Limit: 5000/)) {
         __element = document.createTextNode('');
-        __text(__element, "Authenticated\n");
+        __text(__element, "Authenticated Scopes:\n");
+        __push(__element);
+        __pop();
+        __element = document.createTextNode('');
+        __text(__element, this.request.getResponseHeader("X-OAuth-Scopes"));
+        __push(__element);
+        __pop();
+        __element = document.createElement("br");
+        __push(__element);
+        __pop();
+        __element = document.createTextNode('');
+        __text(__element, "Rate Limit Remaining:\n");
+        __push(__element);
+        __pop();
+        __element = document.createTextNode('');
+        __text(__element, this.request.getResponseHeader("X-RateLimit-Remaining"));
+        __push(__element);
+        __pop();
+        __element = document.createTextNode('');
+        __text(__element, " / 5000");
         __push(__element);
         __pop();
       } else {
@@ -1442,8 +1461,9 @@
   this.Gistquire = {
     accessToken: null,
     auth: function() {
-      var url;
-      url = 'https://github.com/login/oauth/authorize?client_id=bc46af967c926ba4ff87&scope=gist,user:email';
+      var scope, url;
+      scope = "gist,repo,user:email";
+      url = "https://github.com/login/oauth/authorize?client_id=bc46af967c926ba4ff87&scope=" + scope;
       return window.location = url;
     },
     onload: function() {
@@ -2287,7 +2307,7 @@
 }).call(this);
 
 (function() {
-  var $root, actions, appendError, branch, builder, commitMessage, errors, filetree, gist, github, loadId, notices, repo, request, styleContent, _ref, _ref1;
+  var $root, actions, appendError, branch, builder, commitMessage, errors, filetree, gist, github, loadId, notices, repo, repoName, request, styleContent, userName, _ref, _ref1;
 
   $root = ENV.$root, gist = ENV.gist, request = ENV.request;
 
@@ -2307,6 +2327,10 @@
   branch = "master";
 
   commitMessage = "Yolo! (http://strd6.github.io/tempest/)";
+
+  userName = null;
+
+  repoName = null;
 
   repo = null;
 
@@ -2343,8 +2367,17 @@
             Object.keys(fileData).each(function(path) {
               var content;
               content = fileData[path].content;
-              Gistquire.api;
-              return repo.write(branch, path, content, commitMessage, appendError);
+              return Gistquire.api("repos/" + userName + "/" + repoName + "/contents/" + path + "?ref=" + branch, {
+                method: "PUT",
+                data: JSON.stringify({
+                  path: path,
+                  content: content,
+                  message: commitMessage,
+                  sha: "",
+                  branch: branch
+                }),
+                error: appendError
+              });
             });
           }
           notices(["Saving..."]);
@@ -2400,7 +2433,7 @@
       }
     },
     load_repo: function() {
-      var mapToGist, processDirectory, repoName, userName, _ref1;
+      var mapToGist, processDirectory, _ref1;
       gist = null;
       repoName = prompt("Github repo", "STRd6/matrix.js");
       if (repoName) {

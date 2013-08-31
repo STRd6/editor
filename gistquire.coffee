@@ -3,7 +3,8 @@
 
   # Calling auth will redirect to github for authentication
   auth: ->
-    url = 'https://github.com/login/oauth/authorize?client_id=bc46af967c926ba4ff87&scope=gist,user:email'
+    scope = "gist,repo,user:email"
+    url = "https://github.com/login/oauth/authorize?client_id=bc46af967c926ba4ff87&scope=#{scope}"
 
     window.location = url
 

@@ -18,6 +18,8 @@ github = new Github
 # TODO: Real branch
 branch = "master"
 commitMessage = "Yolo! (http://strd6.github.io/tempest/)"
+userName = null
+repoName = null
 repo = null
 
 builder = Builder()
@@ -45,8 +47,16 @@ actions =
         else # Repo
           Object.keys(fileData).each (path) ->
             content = fileData[path].content
-            Gistquire.api
-            repo.write(branch, path, content, commitMessage, appendError)
+            Gistquire.api "repos/#{userName}/#{repoName}/contents/#{path}?ref=#{branch}",
+              method: "PUT"
+              data: JSON.stringify
+                path: path
+                content: content
+                message: commitMessage
+                sha: "" # TODO!
+                branch: branch
+              error: appendError
+            # repo.write(branch, path, content, commitMessage, appendError)
 
         notices(["Saving..."])
         errors([])

@@ -1,7 +1,11 @@
 TODO
 ----
 Save changes back to real git repos
-- Implement gh save repo content
+- Display Auth Scopes
+- Retry github.js
+  - otherwise
+  - Implement gh save repo content
+
 
 Make errors like notices
 
