@@ -1,5 +1,10 @@
 TODO
 ----
+Use editor repo as the default rather than the gist
+- Booting from repos?
+
+Handle folders in repos
+
 Deploy a packaged app to gh-pages
 
 Live Update Demo
