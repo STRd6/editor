@@ -82,7 +82,7 @@ actions =
         gist = data
         filetree.load(gist.files)
         
-  github_test: ->
+  load_repo: ->
     github = new Github
       token: localStorage.authToken
 

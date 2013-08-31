@@ -2203,7 +2203,7 @@
         });
       }
     },
-    github_test: function() {
+    load_repo: function() {
       var github, mapToGist, processDirectory, repo, repoName, userName, _ref1;
       github = new Github({
         token: localStorage.authToken
