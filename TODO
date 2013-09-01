@@ -1,11 +1,12 @@
 TODO
 ----
 Use editor repo as the default rather than the gist
-- Booting from repos?
-
-Handle folders in repos
+- Boot from built gh-pages html files.
 
 Deploy a packaged app to gh-pages
+- html page named for branch/sha and with source included
+
+Handle folders in repos
 
 Live Update Demo
 - Display Demo Runtime Errors in console
