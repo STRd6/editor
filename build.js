@@ -2309,9 +2309,9 @@
 }).call(this);
 
 (function() {
-  var $root, actions, appendError, branch, builder, commitMessage, errors, filetree, gist, github, loadId, notices, repo, repoName, request, styleContent, userName, _ref, _ref1;
+  var $root, actions, appendError, branch, builder, commitMessage, errors, filetree, gist, github, loadId, notices, repo, repoName, styleContent, userName, _ref, _ref1;
 
-  $root = ENV.$root, gist = ENV.gist, request = ENV.request;
+  $root = ENV.$root, gist = ENV.gist;
 
   if (styleContent = (_ref = gist.files["style.css"]) != null ? _ref.content : void 0) {
     $root.append($("<style>", {
