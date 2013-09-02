@@ -78,6 +78,7 @@
     # Post an empty tree to use for the base commit
     # TODO: Learn how to post an empty tree
     Gistquire.api "repos/#{owner}/#{repo}/git/trees",
+      type: "POST"
       data: JSON.stringify
         tree: [{
           mode: "1006444"
@@ -87,14 +88,14 @@
       success: (data) ->
         # Create the base commit for the branch
         Gistquire.api "repos/#{owner}/#{repo}/git/commits",
-          method: "POST"
+          type: "POST"
           data: JSON.stringify
             message: "Initial gh-pages commit"
             tree: data.sha
           success: (data) ->
             # Create the branch based on the base commit
             Gistquire.api "repos/#{owner}/#{repo}/git/refs",
-              method: "POST"
+              type: "POST"
               data: JSON.stringify
                 ref: "refs/heads/#{branch}"
                 sha: data.sha

@@ -1558,6 +1558,7 @@
         throw Error("Must pass in an owner and a repo");
       }
       return Gistquire.api("repos/" + owner + "/" + repo + "/git/trees", {
+        type: "POST",
         data: JSON.stringify({
           tree: [
             {
@@ -1569,14 +1570,14 @@
         }),
         success: function(data) {
           return Gistquire.api("repos/" + owner + "/" + repo + "/git/commits", {
-            method: "POST",
+            type: "POST",
             data: JSON.stringify({
               message: "Initial gh-pages commit",
               tree: data.sha
             }),
             success: function(data) {
               return Gistquire.api("repos/" + owner + "/" + repo + "/git/refs", {
-                method: "POST",
+                type: "POST",
                 data: JSON.stringify({
                   ref: "refs/heads/" + branch,
                   sha: data.sha
