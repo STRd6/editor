@@ -81,6 +81,7 @@
     # TODO: Get these from a more robust method than just script tags with classes
     content = $('script.env').map ->
       @outerHTML
+    .get()
 
     entryPoint = "build.js"
     program = fileData[entryPoint].content

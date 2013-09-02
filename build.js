@@ -1408,7 +1408,7 @@
         var content, entryPoint, program;
         content = $('script.env').map(function() {
           return this.outerHTML;
-        });
+        }).get();
         entryPoint = "build.js";
         program = fileData[entryPoint].content;
         content.push("<body><script>\n  Function(\"ENV\", " + (JSON.stringify(program)) + ")({\n    files: " + (JSON.stringify(fileData)) + "\n  });\n<\/script>");
