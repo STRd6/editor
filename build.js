@@ -1543,6 +1543,53 @@
         dataType: 'json'
       }, options);
       return $.ajax(options);
+    },
+    initPagesBranch: function(_arg) {
+      var branch, error, owner, repo, success;
+      owner = _arg.owner, repo = _arg.repo, success = _arg.success, error = _arg.error;
+      if (success == null) {
+        success = function() {};
+      }
+      if (error == null) {
+        error = function() {};
+      }
+      branch = "gh-pages";
+      if (!(owner && repo)) {
+        throw Error("Must pass in an owner and a repo");
+      }
+      return Gistquire.api("repos/" + owner + "/" + repo + "/git/trees", {
+        data: JSON.stringify({
+          tree: [
+            {
+              mode: "1006444",
+              path: "tempest.txt",
+              content: "created by strd6.github.io/tempest"
+            }
+          ]
+        }),
+        success: function(data) {
+          return Gistquire.api("repos/" + owner + "/" + repo + "/git/commits", {
+            method: "POST",
+            data: JSON.stringify({
+              message: "Initial gh-pages commit",
+              tree: data.sha
+            }),
+            success: function(data) {
+              return Gistquire.api("repos/" + owner + "/" + repo + "/git/refs", {
+                method: "POST",
+                data: JSON.stringify({
+                  ref: "refs/heads/" + branch,
+                  sha: data.sha
+                }),
+                success: success,
+                error: error
+              });
+            },
+            error: error
+          });
+        },
+        error: error
+      });
     }
   };
 
