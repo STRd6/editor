@@ -1403,6 +1403,16 @@
         } else {
           return success(fileData);
         }
+      },
+      standAloneHtml: function(fileData) {
+        var content, entryPoint, program;
+        content = $('script.env').map(function() {
+          return this.outerHTML;
+        });
+        entryPoint = "build.js";
+        program = fileData[entryPoint].content;
+        content.push("<body><script>\n  Function(\"ENV\", " + (JSON.stringify(program)) + ")({\n    files: " + (JSON.stringify(fileData)) + "\n  });\n<\/script>");
+        return content.join("\n");
       }
     };
   };
@@ -2309,11 +2319,20 @@
 }).call(this);
 
 (function() {
-  var $root, actions, appendError, branch, builder, commitMessage, errors, filetree, gist, github, loadId, notices, repo, repoName, styleContent, userName, _ref, _ref1;
+  var $root, actions, appendError, branch, builder, commitMessage, errors, files, filetree, gist, github, loadId, notices, repo, repoName, styleContent, userName, _ref, _ref1;
 
-  $root = ENV.$root, gist = ENV.gist;
+  files = ENV.files, gist = ENV.gist;
 
-  if (styleContent = (_ref = gist.files["style.css"]) != null ? _ref.content : void 0) {
+  files || (files = gist != null ? gist.files : void 0);
+
+  gist || (gist = {
+    files: files,
+    id: 6286182
+  });
+
+  $root = $('body');
+
+  if (styleContent = (_ref = files["style.css"]) != null ? _ref.content : void 0) {
     $root.append($("<style>", {
       html: styleContent
     }));
@@ -2401,10 +2420,7 @@
             height: config.height
           });
           sandbox.document.open();
-          $('script.env').each(function() {
-            return sandbox.document.write(this.outerHTML);
-          });
-          sandbox.document.write("<body><script>\n  ENV = {\n    \"$root\": $('body'), \n    \"gist\": {\n      files: " + (JSON.stringify(fileData)) + "\n    }\n  };\n  \n  " + fileData["build.js"].content + ";\n<\/script>");
+          sandbox.document.write(builder.standAloneHtml(fileData));
           sandbox.document.close();
           notices(["Runnnig!"]);
           return errors([]);
@@ -2473,7 +2489,6 @@
               }
             });
           }, function(error, results) {
-            var files;
             processDirectory(results);
             files = mapToGist(results);
             notices([files].map(function(item) {
@@ -2484,6 +2499,18 @@
         } else {
           return errors([error]);
         }
+      });
+    },
+    publish: function() {
+      return builder.build(filetree.fileData(), {
+        success: function(fileData) {
+          var content, publishBranch;
+          content = builder.standAloneHtml(fileData);
+          publishBranch = "gh-pages";
+          commitMessage = "Built " + branch + " in browser in strd6.github.io/tempest";
+          return repo.write(publishBranch, "" + branch + ".html", content, commitMessage, appendError);
+        },
+        error: errors
       });
     }
   };

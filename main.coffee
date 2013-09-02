@@ -1,8 +1,17 @@
 # Get stuff from our env
-{$root, gist} = ENV
+{files, gist} = ENV
+
+files ||= gist?.files
+
+gist ||=
+  files: files
+  id: 6286182
+
+# TODO: Consider passing root from env for components
+$root = $('body')
 
 # Apply our styles
-if styleContent = gist.files["style.css"]?.content
+if styleContent = files["style.css"]?.content
   $root.append $("<style>",
     html: styleContent
   )
@@ -72,19 +81,7 @@ actions =
           height: config.height
         
         sandbox.document.open()
-        $('script.env').each ->
-          sandbox.document.write(this.outerHTML)
-
-        sandbox.document.write """<body><script>
-          ENV = {
-            "$root": $('body'), 
-            "gist": {
-              files: #{JSON.stringify(fileData)}
-            }
-          };
-          
-          #{fileData["build.js"].content};
-        <\/script>"""
+        sandbox.document.write(builder.standAloneHtml(fileData))
 
         sandbox.document.close()
 
@@ -170,6 +167,18 @@ actions =
 
       else
         errors [error]
+        
+  publish: ->
+    # Assuming git repo with gh-pages branch
+    
+    builder.build filetree.fileData(),
+      success: (fileData) ->
+        content = builder.standAloneHtml(fileData)
+        publishBranch = "gh-pages"
+        commitMessage = "Built #{branch} in browser in strd6.github.io/tempest"
+        # create <ref>.html
+        repo.write(publishBranch, "#{branch}.html", content, commitMessage, appendError)
+      error: errors
 
 filetree = Filetree()
 filetree.load(gist.files)

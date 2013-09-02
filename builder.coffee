@@ -77,3 +77,20 @@
     else
       success(fileData)
       
+  standAloneHtml: (fileData) ->
+    # TODO: Get these from a more robust method than just script tags with classes
+    content = $('script.env').map ->
+      @outerHTML
+
+    entryPoint = "build.js"
+    program = fileData[entryPoint].content
+
+    # TODO: Think about nesting, components
+    # TODO?: Exclude build.js from files
+    content.push """<body><script>
+      Function("ENV", #{JSON.stringify(program)})({
+        files: #{JSON.stringify(fileData)}
+      });
+    <\/script>"""
+    
+    content.join "\n"
