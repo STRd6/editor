@@ -126,7 +126,7 @@
               type: "POST"
               data: JSON.stringify
                 parents: [latestCommitSha]
-                message: "Initial gh-pages commit"
+                message: "Testing commit yo"
                 tree: data.sha
               success: (data) ->
                 # Create the branch based on the base commit

@@ -43,7 +43,16 @@ appendError = (error) ->
 
 actions =
   test: ->
-    console.log filetree.gitTree()
+    notices(["Saving..."])
+        
+    Gistquire.commitTree
+      owner: userName
+      repo: repoName
+      tree: filetree.gitTree()
+      success: ->
+        notices(["Saved!"])
+        errors([])
+      error: errors
   save: ->
     builder.build filetree.fileData(),
       success: (fileData) ->

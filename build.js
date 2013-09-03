@@ -1629,7 +1629,7 @@
                 type: "POST",
                 data: JSON.stringify({
                   parents: [latestCommitSha],
-                  message: "Initial gh-pages commit",
+                  message: "Testing commit yo",
                   tree: data.sha
                 }),
                 success: function(data) {
@@ -2478,7 +2478,17 @@
 
   actions = {
     test: function() {
-      return console.log(filetree.gitTree());
+      notices(["Saving..."]);
+      return Gistquire.commitTree({
+        owner: userName,
+        repo: repoName,
+        tree: filetree.gitTree(),
+        success: function() {
+          notices(["Saved!"]);
+          return errors([]);
+        },
+        error: errors
+      });
     },
     save: function() {
       return builder.build(filetree.fileData(), {
