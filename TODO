@@ -2,26 +2,35 @@ TODO
 ----
 Load file data better
 - Handle folders in repos
-- Request files as opened
 
 Live Update Demo
 - Display Demo Runtime Errors in console
 
 Open published page in editor and run live demo with same state as when editor was opened
+- Pass git repo/branch metadata to published page for use in editor
 
 Organize File tree by type
-Correct editor type for file types
 File icons
 
 Persist state across demo reloads
 
 Integrate with Github Issues
 
+.haml and .styl file type support
+
 Tests
 Delete Files
 
+Cache Git trees and files in some form of local storage
+
+Editor plugins
+- static analysis
+- find in files
+
 DONE
 ----
+Handle file types per extension
+
 Save back to repo from gh-pages demo build
 
 Use editor repo as the default rather than the gist

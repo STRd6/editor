@@ -182,10 +182,10 @@ filetree.selectedFile.observe (file) ->
     root.append(HAMLjr.templates.editor())
     file.editor = root.find(".editor-wrap").last()
     
-    # TODO: Choose correct editor mode
     editor = TextEditor
       text: file.content()
       el: file.editor.find('.editor').get(0)
+      mode: file.mode()
 
     file.editor.on "show", ->
       file.editor.show()
