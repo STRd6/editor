@@ -2457,9 +2457,9 @@
 
   commitMessage = "Yolo! (http://strd6.github.io/tempest/)";
 
-  userName = null;
+  userName = "STRd6";
 
-  repoName = null;
+  repoName = "editor";
 
   repo = null;
 
@@ -2613,6 +2613,7 @@
       });
     },
     publish: function() {
+      repo || (repo = github.getRepo(userName, repoName));
       return builder.build(filetree.fileData(), {
         success: function(fileData) {
           var content, publishBranch;

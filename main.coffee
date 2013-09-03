@@ -24,11 +24,11 @@ github = new Github
   auth: "oauth"
   token: localStorage.authToken
   
-# TODO: Real branch
+# TODO: Real branch and repo info, maybe from ENV
 branch = "master"
 commitMessage = "Yolo! (http://strd6.github.io/tempest/)"
-userName = null
-repoName = null
+userName = "STRd6"
+repoName = "editor"
 repo = null
 
 builder = Builder()
@@ -172,6 +172,9 @@ actions =
         
   publish: ->
     # Assuming git repo with gh-pages branch
+    
+    # Get a ref to repo if none exists yet
+    repo ||= github.getRepo(userName, repoName)
     
     builder.build filetree.fileData(),
       success: (fileData) ->
