@@ -104,6 +104,33 @@
           error: error
       error: error
 
+  writeFile: ({owner, repo, branch, path, content, message, success, error}) ->
+    Gistquire.api "repos/#{owner}/#{repo}/contents/#{path}",
+      data:
+        ref: branch
+      success: (data) ->
+        Gistquire.api "repos/#{owner}/#{repo}/contents/#{path}",
+          type: "PUT"
+          data: JSON.stringify
+            content: content
+            sha: data.sha
+            message: message
+            branch: branch
+          success: success
+          error: error
+      error: (request, status) ->
+        if status is "404"
+          Gistquire.api "repos/#{owner}/#{repo}/contents/#{path}",
+            type: "PUT"
+            data: JSON.stringify
+              content: content
+              message: message
+              branch: branch
+            success: success
+            error: error
+        else
+          error(arguments...)
+
   commitTree: ({owner, repo, branch, message, tree, success, error}) ->
     success ?= ->
     error ?= ->
