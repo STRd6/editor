@@ -42,6 +42,8 @@ appendError = (error) ->
   errors.push(error) if error
 
 actions =
+  test: ->
+    console.log filetree.gitTree()
   save: ->
     builder.build filetree.fileData(),
       success: (fileData) ->

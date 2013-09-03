@@ -103,3 +103,40 @@
               error: error
           error: error
       error: error
+
+  commitTree: ({owner, repo, tree, success, error}) ->
+    success ?= ->
+    error ?= ->
+    branch = "master"
+    
+    unless owner and repo and tree
+      throw Error("Must pass in an owner, a tree, and a repo")
+      
+    Gistquire.api "repos/#{owner}/#{repo}/git/refs/heads/#{branch}",
+      success: (data) ->
+        latestCommitSha = data.object.sha
+        
+        Gistquire.api "repos/#{owner}/#{repo}/git/trees",
+          type: "POST"
+          data: JSON.stringify
+            tree: tree
+          success: (data) ->
+            # Create another commit
+            Gistquire.api "repos/#{owner}/#{repo}/git/commits",
+              type: "POST"
+              data: JSON.stringify
+                parents: [latestCommitSha]
+                message: "Initial gh-pages commit"
+                tree: data.sha
+              success: (data) ->
+                # Create the branch based on the base commit
+                Gistquire.api "repos/#{owner}/#{repo}/git/refs",
+                  type: "POST"
+                  data: JSON.stringify
+                    ref: "refs/heads/#{branch}"
+                    sha: data.sha
+                  success: success
+                  error: error
+              error: error
+          error: error
+      error: error

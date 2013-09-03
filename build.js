@@ -1462,6 +1462,16 @@
           };
         });
         return fileData;
+      },
+      gitTree: function() {
+        return self.files.map(function(file) {
+          return {
+            path: file.filename(),
+            mode: "100644",
+            content: file.content(),
+            type: "blob"
+          };
+        });
       }
     });
     return self;
@@ -1583,6 +1593,56 @@
                   sha: data.sha
                 }),
                 success: success,
+                error: error
+              });
+            },
+            error: error
+          });
+        },
+        error: error
+      });
+    },
+    commitTree: function(_arg) {
+      var branch, error, owner, repo, success, tree;
+      owner = _arg.owner, repo = _arg.repo, tree = _arg.tree, success = _arg.success, error = _arg.error;
+      if (success == null) {
+        success = function() {};
+      }
+      if (error == null) {
+        error = function() {};
+      }
+      branch = "master";
+      if (!(owner && repo && tree)) {
+        throw Error("Must pass in an owner, a tree, and a repo");
+      }
+      return Gistquire.api("repos/" + owner + "/" + repo + "/git/refs/heads/" + branch, {
+        success: function(data) {
+          var latestCommitSha;
+          latestCommitSha = data.object.sha;
+          return Gistquire.api("repos/" + owner + "/" + repo + "/git/trees", {
+            type: "POST",
+            data: JSON.stringify({
+              tree: tree
+            }),
+            success: function(data) {
+              return Gistquire.api("repos/" + owner + "/" + repo + "/git/commits", {
+                type: "POST",
+                data: JSON.stringify({
+                  parents: [latestCommitSha],
+                  message: "Initial gh-pages commit",
+                  tree: data.sha
+                }),
+                success: function(data) {
+                  return Gistquire.api("repos/" + owner + "/" + repo + "/git/refs", {
+                    type: "POST",
+                    data: JSON.stringify({
+                      ref: "refs/heads/" + branch,
+                      sha: data.sha
+                    }),
+                    success: success,
+                    error: error
+                  });
+                },
                 error: error
               });
             },
@@ -2417,6 +2477,9 @@
   };
 
   actions = {
+    test: function() {
+      return console.log(filetree.gitTree());
+    },
     save: function() {
       return builder.build(filetree.fileData(), {
         success: function(fileData) {

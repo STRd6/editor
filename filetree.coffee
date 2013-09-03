@@ -29,5 +29,12 @@
           filename: name
   
       return fileData
+      
+    gitTree: ->
+      self.files.map (file) ->
+        path: file.filename()
+        mode: "100644"
+        content: file.content()
+        type: "blob"
 
   return self
