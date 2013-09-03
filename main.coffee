@@ -42,7 +42,7 @@ appendError = (error) ->
   errors.push(error) if error
 
 actions =
-  test: ->
+  commit: ->
     notices(["Saving..."])
         
     Gistquire.commitTree
@@ -51,25 +51,6 @@ actions =
       tree: filetree.gitTree()
       success: ->
         notices(["Saved!"])
-        errors([])
-      error: errors
-  save: ->
-    builder.build filetree.fileData(),
-      success: (fileData) ->
-        if gist
-          Gistquire.update gist.id,
-            data:
-              files: fileData
-            success: ->
-              notices(["Saved!"])
-            error: ->
-              errors(["Save Failed :("])
-        else # Repo
-          Object.keys(fileData).each (path) ->
-            content = fileData[path].content
-            repo.write(branch, path, content, commitMessage, appendError)
-
-        notices(["Saving..."])
         errors([])
       error: errors
 
@@ -103,19 +84,6 @@ actions =
 
       error: errors
     ).debounce(250)
-    
-  load_gist: (e, id) ->
-    if id ||= prompt("Gist Id", gist.id)
-      console.log id
-      
-      Gistquire.get id, (data) ->
-        gist = data
-        filetree.load(gist.files)
-        repo = null
-        
-        notices ["Loaded"]
-        
-      notices ["Loading..."]
 
   load_repo: ->
     gist = null
