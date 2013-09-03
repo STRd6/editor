@@ -1,29 +1,29 @@
 TODO
 ----
-Save back to repo from gh-pages demo build
-
-Handle folders in repos
+Load file data better
+- Handle folders in repos
+- Request files as opened
 
 Live Update Demo
 - Display Demo Runtime Errors in console
 
-Persist state across demo reloads
+Open published page in editor and run live demo with same state as when editor was opened
 
-Organize File tree
-
-Move to a real git repo
-List git repos
-
+Organize File tree by type
 Correct editor type for file types
 File icons
+
+Persist state across demo reloads
+
+Integrate with Github Issues
 
 Tests
 Delete Files
 
-Visualize Rate Limit Remaining
-
 DONE
 ----
+Save back to repo from gh-pages demo build
+
 Use editor repo as the default rather than the gist
 - Boot from built gh-pages html files.
 
@@ -32,6 +32,8 @@ Deploy a packaged app to gh-pages
 
 Load from actual git repos
 Save changes back to real git repos
+
+Visualize Rate Limit Remaining
 
 Make errors like notices
 Display Auth Scopes

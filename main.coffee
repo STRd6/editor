@@ -156,11 +156,11 @@ actions =
     builder.build filetree.fileData(),
       success: (fileData) ->
         # create <ref>.html in gh-pages branch
-        Gistquire.write
+        Gistquire.writeFile
           repo: repoName
           owner: userName
           path: "#{branch}.html"
-          content: builder.standAloneHtml(fileData)
+          content: Base64.encode(builder.standAloneHtml(fileData))
           branch: publishBranch
           message: "Built #{branch} in browser in strd6.github.io/tempest"
           success: ->
