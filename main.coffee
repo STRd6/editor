@@ -149,17 +149,24 @@ actions =
         
   publish: ->
     # Assuming git repo with gh-pages branch
+    publishBranch = "gh-pages"
     
-    # Get a ref to repo if none exists yet
-    repo ||= github.getRepo(userName, repoName)
+    notices ["Publishing..."]
     
     builder.build filetree.fileData(),
       success: (fileData) ->
-        content = builder.standAloneHtml(fileData)
-        publishBranch = "gh-pages"
-        commitMessage = "Built #{branch} in browser in strd6.github.io/tempest"
-        # create <ref>.html
-        repo.write(publishBranch, "#{branch}.html", content, commitMessage, appendError)
+        # create <ref>.html in gh-pages branch
+        Gistquire.write
+          repo: repoName
+          owner: userName
+          path: "#{branch}.html"
+          content: builder.standAloneHtml(fileData)
+          branch: publishBranch
+          message: "Built #{branch} in browser in strd6.github.io/tempest"
+          success: ->
+            notices ["Published"]
+          error: ->
+            errors ["Error Publishing :("]        
       error: errors
 
 filetree = Filetree()
