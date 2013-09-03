@@ -104,10 +104,11 @@
           error: error
       error: error
 
-  commitTree: ({owner, repo, tree, success, error}) ->
+  commitTree: ({owner, repo, branch, message, tree, success, error}) ->
     success ?= ->
     error ?= ->
-    branch = "master"
+    branch ?= "master"
+    message ?= "Updated in browser at strd6.github.io/editor"
     
     unless owner and repo and tree
       throw Error("Must pass in an owner, a tree, and a repo")
@@ -126,7 +127,7 @@
               type: "POST"
               data: JSON.stringify
                 parents: [latestCommitSha]
-                message: "Testing commit"
+                message: message
                 tree: data.sha
               success: (data) ->
                 # Update the branch head
