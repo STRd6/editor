@@ -126,14 +126,13 @@
               type: "POST"
               data: JSON.stringify
                 parents: [latestCommitSha]
-                message: "Testing commit yo"
+                message: "Testing commit"
                 tree: data.sha
               success: (data) ->
-                # Create the branch based on the base commit
-                Gistquire.api "repos/#{owner}/#{repo}/git/refs",
-                  type: "POST"
+                # Update the branch head
+                Gistquire.api "repos/#{owner}/#{repo}/git/refs/heads/#{branch}",
+                  type: "PATCH"
                   data: JSON.stringify
-                    ref: "refs/heads/#{branch}"
                     sha: data.sha
                   success: success
                   error: error
