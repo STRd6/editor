@@ -1,5 +1,5 @@
 %ul.filetree
   - selectedFile = @selectedFile
   - each @files, (file) ->
-    %li= file.filename
+    %li= file.path
       - on "click", -> selectedFile(file)

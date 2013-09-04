@@ -1,8 +1,5 @@
 TODO
 ----
-Load file data better
-- Handle folders in repos
-
 Live Update Demo
 - Display Demo Runtime Errors in console
 
@@ -31,6 +28,9 @@ Editor plugins
 
 DONE
 ----
+Load file data better
+- Handle folders in repos
+
 Handle file types per extension
 
 Save back to repo from gh-pages demo build
