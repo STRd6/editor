@@ -92,49 +92,44 @@ actions =
     if repoName
       [userName, repoName] = repoName.split("/")
     else
-      # TODO: Display error
-      return
+      errors ["No repo given"]
 
-    repo = github.getRepo(userName, repoName)
+      return
     
     # Decode all content in place
     processDirectory = (items) ->
       items.each (item) ->
-        if Array.isArray(item)
-          processDirectory(item)
-        else
-          return item unless item.content
-          
-          item.content = Base64.decode(item.content)
-          item.encoding = "raw"
-    
-    mapToGist = (tree, files={}) ->
-      tree.inject files, (files, leaf) ->
-        if Array.isArray(leaf)
-          mapToGist(leaf, files)
-        else
-          leaf.filename = leaf.name
-          files[leaf.path] = leaf
-          
-          return files
-    
-    # TODO: Need get tree recursively
-    repo.contents "master", "", (error, data) ->
-      if data
-        notices [JSON.stringify data, null, 2]
+        return item unless item.content
         
-        # TODO: We should flatten the tree first, then
-        # do our async content gathering
-        async.map data, (datum, callback) ->
-          path = datum.url.split('/')[3..].join('/')
-          Gistquire.api path,
+        item.content = Base64.decode(item.content)
+        item.encoding = "raw"
+    
+    Gistquire.latestTree
+      branch: "master"
+      repo: repoName
+      owner: userName
+      success: (data) ->
+        notices []
+        
+        # Gather the data for each file
+        async.map data.tree, (datum, callback) ->
+          unless datum.type is "blob"
+            callback(null, datum)
+            return 
+
+          Gistquire.api datum.url,
             success: (data) ->
-              callback(null, data)
+              callback(null, Object.extend(datum, data))
+            error: (error) ->
+              callback(error)
 
         , (error, results) ->
-          processDirectory results
-          
-          files = mapToGist(results)
+          notices ["Radical!"] 
+          if error
+            errors [error]
+            return
+
+          files = processDirectory results
           
           notices [
             files
@@ -143,8 +138,7 @@ actions =
             JSON.stringify(item, null, 2)
             
           filetree.load files
-
-      else
+      error: (error) ->
         errors [error]
         
   publish: ->
