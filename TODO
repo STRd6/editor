@@ -9,6 +9,11 @@ Open published page in editor and run live demo with same state as when editor w
 Organize File tree by type
 File icons
 
+Combine commit/publish step
+- master branch should publish to index.html
+- other branches should publish to <branch>.html
+- Published branch is always latest
+
 Persist state across demo reloads
 
 Integrate with Github Issues
