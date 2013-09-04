@@ -17,8 +17,10 @@ Persist state across demo reloads
 Integrate with Github Issues
 
 .haml and .styl file type support
+- Build our own ace cdn
 
 Tests
+
 Delete Files
 
 Cache Git trees and files in some form of local storage
