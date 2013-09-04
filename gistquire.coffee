@@ -54,13 +54,18 @@
       success: callback
 
   api: (path, options={}) ->
+    if path.match /^http/
+      url = path
+    else
+      url = "https://api.github.com/#{path}"
+    
     options.headers ||= {}
     
     if @accessToken
       options.headers["Authorization"] = "token #{@accessToken}"
 
     options = Object.extend
-      url: "https://api.github.com/#{path}"
+      url: url
       type: "GET"
       dataType: 'json'
     , options
@@ -164,6 +169,21 @@
                     sha: data.sha
                   success: success
                   error: error
+              error: error
+          error: error
+      error: error
+  
+  latestTree: ({owner, repo, branch, success, error}) ->
+    success ?= ->
+    error ?= ->
+    branch ?= "master"
+    
+    Gistquire.api "repos/#{owner}/#{repo}/git/refs/heads/#{branch}",
+      success: (data) ->        
+        Gistquire.api data.object.url,
+          success: (data) ->
+            Gistquire.api "#{data.tree.url}?recursive=1",
+              success: success
               error: error
           error: error
       error: error
