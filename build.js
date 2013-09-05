@@ -1652,7 +1652,6 @@
           });
         },
         error: function(request) {
-          debugger;
           if (request.status === 404) {
             return Gistquire.api("repos/" + owner + "/" + repo + "/contents/" + path, {
               type: "PUT",

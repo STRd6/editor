@@ -127,7 +127,6 @@
           success: success
           error: error
       error: (request) ->
-        debugger
         if request.status is 404
           Gistquire.api "repos/#{owner}/#{repo}/contents/#{path}",
             type: "PUT"
