@@ -92,8 +92,13 @@ arrayToHash = (array) ->
 
   standAloneHtml: (build) ->
     {source, distribution} = build
+    
+    content = []
+
+    content.push "<!doctype html><head>"
+    
     # TODO: Get these from a more robust method than just script tags with classes
-    content = $('script.env').map ->
+    content = content.concat $('script.env').map ->
       @outerHTML
     .get()
   
@@ -102,7 +107,7 @@ arrayToHash = (array) ->
   
     # TODO: Think about nesting, components
     # TODO?: Exclude build.js from files
-    content.push """<body><script>
+    content.push """</head><body><script>
       Function("ENV", #{JSON.stringify(program)})(#{JSON.stringify(build)});
     <\/script>"""
     
