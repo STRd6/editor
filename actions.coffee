@@ -1,6 +1,6 @@
-publish = ({fileData, repo, owner, branch, message}) ->
+publish = ({builder, fileData, repo, owner, branch}) ->
   branch ?= "master"
-  message ?= "Built #{branch} in browser in strd6.github.io/tempest"
+  message = "Built #{branch} in browser in strd6.github.io/tempest"
 
   if branch is "master"
     path = "index.html"
@@ -9,24 +9,26 @@ publish = ({fileData, repo, owner, branch, message}) ->
 
   # Assuming git repo with gh-pages branch
   publishBranch = "gh-pages"
-
-  # create <ref>.html in gh-pages branch
-  Gistquire.writeFile
-    repo: repo
-    owner: owner
-    path: path
-    content: Base64.encode(Builder.standAloneHtml(fileData))
-    branch: publishBranch
-    message: message
+  
+  builder.build fileData, (fileMap) ->
+    # create <ref>.html in gh-pages branch
+    Gistquire.writeFile
+      repo: repo
+      owner: owner
+      path: path
+      content: Base64.encode(builder.standAloneHtml(fileMap))
+      branch: publishBranch
+      message: message
 
 commit = ({fileData, repo, owner, branch, message}) ->
   Gistquire.commitTree
     owner: owner
     repo: repo
     tree: fileData
+    message: message
 
 @Actions =
-  save: ({fileData, repo, owner, branch, message}) ->
-    commit({fileData, repo, owner, branch, message})
+  save: (params) ->
+    commit(params)
       .then ->
-        publish({fileData, repo, owner, branch})
+        publish(params)

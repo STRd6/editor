@@ -47,7 +47,6 @@
     
     fileData.each ({path, content}) ->
       try
-        debugger
         if path.extension() is "styl"
           styles.push styl(content, whitespace: true).toString()
       catch error
@@ -56,7 +55,7 @@
     errors: errors
     result: styles.join("\n")
     
-  build: (fileData, {success, error}) ->
+  build: (fileData, callback) ->
     {errors:collectedErrors, result:compileResult} = build(fileData)
 
     {errors, result} = buildStyle(fileData)
@@ -74,28 +73,28 @@
         content: result
         type: "blob"
 
-    fileMap = fileData.eachWithObject {}, (file, hash) ->
-      hash[file.path] = file
-
     if collectedErrors.length
-      error(collectedErrors)
+      @errors?(collectedErrors)
     else
-      success(fileMap)
-      
-  standAloneHtml: (fileData) ->
+      fileMap = fileData.eachWithObject {}, (file, hash) ->
+        hash[file.path] = file
+
+      callback(fileMap)
+
+  standAloneHtml: (fileMap) ->
     # TODO: Get these from a more robust method than just script tags with classes
     content = $('script.env').map ->
       @outerHTML
     .get()
-
+  
     entryPoint = "build.js"
-    program = fileData[entryPoint].content
-
+    program = fileMap[entryPoint].content
+  
     # TODO: Think about nesting, components
     # TODO?: Exclude build.js from files
     content.push """<body><script>
       Function("ENV", #{JSON.stringify(program)})({
-        files: #{JSON.stringify(fileData)}
+        files: #{JSON.stringify(fileMap)}
       });
     <\/script>"""
     

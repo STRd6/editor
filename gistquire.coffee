@@ -110,6 +110,9 @@
       error: error
 
   writeFile: ({owner, repo, branch, path, content, message, success, error}) ->
+    success ?= ->
+    error ?= ->
+    
     Gistquire.api "repos/#{owner}/#{repo}/contents/#{path}",
       data:
         ref: branch
@@ -123,8 +126,8 @@
             branch: branch
           success: success
           error: error
-      error: (request, status) ->
-        if status is "404"
+      error: (request) ->
+        if request.status is "404"
           Gistquire.api "repos/#{owner}/#{repo}/contents/#{path}",
             type: "PUT"
             data: JSON.stringify

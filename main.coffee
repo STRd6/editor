@@ -29,6 +29,8 @@ builder = Builder()
 errors = Observable([])
 notices = Observable(["Loaded!"])
 
+builder.errors = errors
+
 appendError = (error) ->
   console.log error
   
@@ -42,6 +44,7 @@ actions =
       owner: userName
       repo: repoName
       fileData: filetree.data()
+      builder: builder
     .then ->
       notices ["Saved and published!"]
 
@@ -52,26 +55,27 @@ actions =
         content: ""
 
   run: (->    
-    builder.build filetree.data(),
-      success: (fileData) ->
-        if fileData["pixie.json"]
-          config = JSON.parse(fileData["pixie.json"].content)
-        else
-          config = {}
-        
-        sandbox = Sandbox
-          width: config.width
-          height: config.height
-        
-        sandbox.document.open()
-        sandbox.document.write(builder.standAloneHtml(fileData))
+    notices ["Building..."]
+    
+    builder.build filetree.data(), (fileMap) ->
+      if fileMap["pixie.json"]
+        config = JSON.parse(fileMap["pixie.json"].content)
+      else
+        config = {}
+      
+      sandbox = Sandbox
+        width: config.width
+        height: config.height
+      
+      sandbox.document.open()
+      sandbox.document.write(builder.standAloneHtml(fileMap))
 
-        sandbox.document.close()
+      sandbox.document.close()
 
-        # TODO: Display this notice when we receive confirmation from child window
-        notices(["Runnnig!"])
-        # TODO: Catch and display runtime errors
-        errors([])
+      # TODO: Display this notice when we receive confirmation from child window
+      notices(["Runnnig!"])
+      # TODO: Catch and display runtime errors
+      errors([])
 
       error: errors
     ).debounce(250)

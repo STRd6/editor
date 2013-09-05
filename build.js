@@ -1366,7 +1366,6 @@
         var content, error, path;
         path = _arg.path, content = _arg.content;
         try {
-          debugger;
           if (path.extension() === "styl") {
             return styles.push(styl(content, {
               whitespace: true
@@ -1383,9 +1382,8 @@
       };
     };
     return {
-      build: function(fileData, _arg) {
-        var collectedErrors, compileResult, error, errors, fileMap, result, success, _ref, _ref1;
-        success = _arg.success, error = _arg.error;
+      build: function(fileData, callback) {
+        var collectedErrors, compileResult, errors, fileMap, result, _ref, _ref1;
         _ref = build(fileData), collectedErrors = _ref.errors, compileResult = _ref.result;
         _ref1 = buildStyle(fileData), errors = _ref1.errors, result = _ref1.result;
         collectedErrors = collectedErrors.concat(errors);
@@ -1403,23 +1401,23 @@
             type: "blob"
           });
         }
-        fileMap = fileData.eachWithObject({}, function(file, hash) {
-          return hash[file.path] = file;
-        });
         if (collectedErrors.length) {
-          return error(collectedErrors);
+          return typeof this.errors === "function" ? this.errors(collectedErrors) : void 0;
         } else {
-          return success(fileMap);
+          fileMap = fileData.eachWithObject({}, function(file, hash) {
+            return hash[file.path] = file;
+          });
+          return callback(fileMap);
         }
       },
-      standAloneHtml: function(fileData) {
+      standAloneHtml: function(fileMap) {
         var content, entryPoint, program;
         content = $('script.env').map(function() {
           return this.outerHTML;
         }).get();
         entryPoint = "build.js";
-        program = fileData[entryPoint].content;
-        content.push("<body><script>\n  Function(\"ENV\", " + (JSON.stringify(program)) + ")({\n    files: " + (JSON.stringify(fileData)) + "\n  });\n<\/script>");
+        program = fileMap[entryPoint].content;
+        content.push("<body><script>\n  Function(\"ENV\", " + (JSON.stringify(program)) + ")({\n    files: " + (JSON.stringify(fileMap)) + "\n  });\n<\/script>");
         return content.join("\n");
       }
     };
@@ -1626,6 +1624,12 @@
     writeFile: function(_arg) {
       var branch, content, error, message, owner, path, repo, success;
       owner = _arg.owner, repo = _arg.repo, branch = _arg.branch, path = _arg.path, content = _arg.content, message = _arg.message, success = _arg.success, error = _arg.error;
+      if (success == null) {
+        success = function() {};
+      }
+      if (error == null) {
+        error = function() {};
+      }
       return Gistquire.api("repos/" + owner + "/" + repo + "/contents/" + path, {
         data: {
           ref: branch
@@ -1643,8 +1647,8 @@
             error: error
           });
         },
-        error: function(request, status) {
-          if (status === "404") {
+        error: function(request) {
+          if (request.status === "404") {
             return Gistquire.api("repos/" + owner + "/" + repo + "/contents/" + path, {
               type: "PUT",
               data: JSON.stringify({
@@ -2520,27 +2524,27 @@
   var commit, publish;
 
   publish = function(_arg) {
-    var branch, fileData, message, owner, path, publishBranch, repo;
-    fileData = _arg.fileData, repo = _arg.repo, owner = _arg.owner, branch = _arg.branch, message = _arg.message;
+    var branch, builder, fileData, message, owner, path, publishBranch, repo;
+    builder = _arg.builder, fileData = _arg.fileData, repo = _arg.repo, owner = _arg.owner, branch = _arg.branch;
     if (branch == null) {
       branch = "master";
     }
-    if (message == null) {
-      message = "Built " + branch + " in browser in strd6.github.io/tempest";
-    }
+    message = "Built " + branch + " in browser in strd6.github.io/tempest";
     if (branch === "master") {
       path = "index.html";
     } else {
       path = "" + branch + ".html";
     }
     publishBranch = "gh-pages";
-    return Gistquire.writeFile({
-      repo: repo,
-      owner: owner,
-      path: path,
-      content: Base64.encode(Builder.standAloneHtml(fileData)),
-      branch: publishBranch,
-      message: message
+    return builder.build(fileData, function(fileMap) {
+      return Gistquire.writeFile({
+        repo: repo,
+        owner: owner,
+        path: path,
+        content: Base64.encode(builder.standAloneHtml(fileMap)),
+        branch: publishBranch,
+        message: message
+      });
     });
   };
 
@@ -2550,27 +2554,15 @@
     return Gistquire.commitTree({
       owner: owner,
       repo: repo,
-      tree: fileData
+      tree: fileData,
+      message: message
     });
   };
 
   this.Actions = {
-    save: function(_arg) {
-      var branch, fileData, message, owner, repo;
-      fileData = _arg.fileData, repo = _arg.repo, owner = _arg.owner, branch = _arg.branch, message = _arg.message;
-      return commit({
-        fileData: fileData,
-        repo: repo,
-        owner: owner,
-        branch: branch,
-        message: message
-      }).then(function() {
-        return publish({
-          fileData: fileData,
-          repo: repo,
-          owner: owner,
-          branch: branch
-        });
+    save: function(params) {
+      return commit(params).then(function() {
+        return publish(params);
       });
     }
   };
@@ -2611,6 +2603,8 @@
 
   notices = Observable(["Loaded!"]);
 
+  builder.errors = errors;
+
   appendError = function(error) {
     console.log(error);
     if (error) {
@@ -2624,7 +2618,8 @@
       return Actions.save({
         owner: userName,
         repo: repoName,
-        fileData: filetree.data()
+        fileData: filetree.data(),
+        builder: builder
       }).then(function() {
         return notices(["Saved and published!"]);
       });
@@ -2639,25 +2634,26 @@
       }
     },
     run: (function() {
-      return builder.build(filetree.data(), {
-        success: function(fileData) {
-          var config, sandbox;
-          if (fileData["pixie.json"]) {
-            config = JSON.parse(fileData["pixie.json"].content);
-          } else {
-            config = {};
-          }
-          sandbox = Sandbox({
-            width: config.width,
-            height: config.height
-          });
-          sandbox.document.open();
-          sandbox.document.write(builder.standAloneHtml(fileData));
-          sandbox.document.close();
-          notices(["Runnnig!"]);
-          return errors([]);
-        },
-        error: errors
+      notices(["Building..."]);
+      return builder.build(filetree.data(), function(fileMap) {
+        var config, sandbox;
+        if (fileMap["pixie.json"]) {
+          config = JSON.parse(fileMap["pixie.json"].content);
+        } else {
+          config = {};
+        }
+        sandbox = Sandbox({
+          width: config.width,
+          height: config.height
+        });
+        sandbox.document.open();
+        sandbox.document.write(builder.standAloneHtml(fileMap));
+        sandbox.document.close();
+        notices(["Runnnig!"]);
+        errors([]);
+        return {
+          error: errors
+        };
       });
     }).debounce(250),
     load_repo: function() {
