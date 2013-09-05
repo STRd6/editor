@@ -1,90 +1,143 @@
-(function() {
-  // Lookup arrays for base64 conversions
-  var enc64List, dec64List;
-  // Load the lookup arrays once
-  (function() {
-      enc64List = new Array();
-      dec64List = new Array();
-      var i;
-      for (i = 0; i < 26; i++) {
-          enc64List[enc64List.length] = String.fromCharCode(65 + i);
-      }
-      for (i = 0; i < 26; i++) {
-          enc64List[enc64List.length] = String.fromCharCode(97 + i);
-      }
-      for (i = 0; i < 10; i++) {
-          enc64List[enc64List.length] = String.fromCharCode(48 + i);
-      }
-      enc64List[enc64List.length] = "+";
-      enc64List[enc64List.length] = "/";
-      for (i = 0; i < 128; i++) {
-          dec64List[dec64List.length] = -1;
-      }
-      for (i = 0; i < 64; i++) {
-          dec64List[enc64List[i].charCodeAt(0)] = i;
-      }
-  })();
-
-  window.Base64 = {
-    encode: function(str) {
-        var c, d, e, end = 0;
-        var u, v, w, x;
-        var ptr = -1;
-        var input = str.split("");
-        var output = "";
-        while(end == 0) {
-            c = (typeof input[++ptr] != "undefined") ? input[ptr].charCodeAt(0) :
-                ((end = 1) ? 0 : 0);
-            d = (typeof input[++ptr] != "undefined") ? input[ptr].charCodeAt(0) :
-                ((end += 1) ? 0 : 0);
-            e = (typeof input[++ptr] != "undefined") ? input[ptr].charCodeAt(0) :
-                ((end += 1) ? 0 : 0);
-            u = enc64List[c >> 2];
-            v = enc64List[(0x00000003 & c) << 4 | d >> 4];
-            w = enc64List[(0x0000000F & d) << 2 | e >> 6];
-            x = enc64List[e & 0x0000003F];
-
-            // handle padding to even out unevenly divisible string lengths
-            if (end >= 1) {x = "=";}
-            if (end == 2) {w = "=";}
-
-            if (end < 3) {output += u + v + w + x;}
-        }
-        return output;
-    },
-
-    decode: function(str) {
-        var c=0, d=0, e=0, f=0, i=0, n=0;
-        var input = str.split("");
-        var output = "";
-        var ptr = 0;
-        do {
-            f = input[ptr++].charCodeAt(0);
-            i = dec64List[f];
-            if ( f >= 0 && f < 128 && i != -1 ) {
-                if ( n % 4 == 0 ) {
-                    c = i << 2;
-                } else if ( n % 4 == 1 ) {
-                    c = c | ( i >> 4 );
-                    d = ( i & 0x0000000F ) << 4;
-                } else if ( n % 4 == 2 ) {
-                    d = d | ( i >> 2 );
-                    e = ( i & 0x00000003 ) << 6;
-                } else {
-                    e = e | i;
-                }
-                n++;
-                if ( n % 4 == 0 ) {
-                    output += String.fromCharCode(c) +
-                              String.fromCharCode(d) +
-                              String.fromCharCode(e);
-                }
-            }
-        }
-        while (typeof input[ptr] != "undefined");
-        output += (n % 4 == 3) ? String.fromCharCode(c) + String.fromCharCode(d) :
-                  ((n % 4 == 2) ? String.fromCharCode(c) : "");
-        return output;
-    }
-  };
-}());
+/**
+*
+*  Base64 encode / decode
+*  http://www.webtoolkit.info/
+*
+**/
+ 
+var Base64 = {
+ 
+  // private property
+	_keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+ 
+	// public method for encoding
+	encode : function (input) {
+		var output = "";
+		var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+		var i = 0;
+ 
+		input = Base64._utf8_encode(input);
+ 
+		while (i < input.length) {
+ 
+			chr1 = input.charCodeAt(i++);
+			chr2 = input.charCodeAt(i++);
+			chr3 = input.charCodeAt(i++);
+ 
+			enc1 = chr1 >> 2;
+			enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+			enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+			enc4 = chr3 & 63;
+ 
+			if (isNaN(chr2)) {
+				enc3 = enc4 = 64;
+			} else if (isNaN(chr3)) {
+				enc4 = 64;
+			}
+ 
+			output = output +
+			this._keyStr.charAt(enc1) + this._keyStr.charAt(enc2) +
+			this._keyStr.charAt(enc3) + this._keyStr.charAt(enc4);
+ 
+		}
+ 
+		return output;
+	},
+ 
+	// public method for decoding
+	decode : function (input) {
+		var output = "";
+		var chr1, chr2, chr3;
+		var enc1, enc2, enc3, enc4;
+		var i = 0;
+ 
+		input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+ 
+		while (i < input.length) {
+ 
+			enc1 = this._keyStr.indexOf(input.charAt(i++));
+			enc2 = this._keyStr.indexOf(input.charAt(i++));
+			enc3 = this._keyStr.indexOf(input.charAt(i++));
+			enc4 = this._keyStr.indexOf(input.charAt(i++));
+ 
+			chr1 = (enc1 << 2) | (enc2 >> 4);
+			chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+			chr3 = ((enc3 & 3) << 6) | enc4;
+ 
+			output = output + String.fromCharCode(chr1);
+ 
+			if (enc3 != 64) {
+				output = output + String.fromCharCode(chr2);
+			}
+			if (enc4 != 64) {
+				output = output + String.fromCharCode(chr3);
+			}
+ 
+		}
+ 
+		output = Base64._utf8_decode(output);
+ 
+		return output;
+ 
+	},
+ 
+	// private method for UTF-8 encoding
+	_utf8_encode : function (string) {
+		string = string.replace(/\r\n/g,"\n");
+		var utftext = "";
+ 
+		for (var n = 0; n < string.length; n++) {
+ 
+			var c = string.charCodeAt(n);
+ 
+			if (c < 128) {
+				utftext += String.fromCharCode(c);
+			}
+			else if((c > 127) && (c < 2048)) {
+				utftext += String.fromCharCode((c >> 6) | 192);
+				utftext += String.fromCharCode((c & 63) | 128);
+			}
+			else {
+				utftext += String.fromCharCode((c >> 12) | 224);
+				utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+				utftext += String.fromCharCode((c & 63) | 128);
+			}
+ 
+		}
+ 
+		return utftext;
+	},
+ 
+	// private method for UTF-8 decoding
+	_utf8_decode : function (utftext) {
+		var string = "";
+		var i = 0;
+		var c = c1 = c2 = 0;
+ 
+		while ( i < utftext.length ) {
+ 
+			c = utftext.charCodeAt(i);
+ 
+			if (c < 128) {
+				string += String.fromCharCode(c);
+				i++;
+			}
+			else if((c > 191) && (c < 224)) {
+				c2 = utftext.charCodeAt(i+1);
+				string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+				i += 2;
+			}
+			else {
+				c2 = utftext.charCodeAt(i+1);
+				c3 = utftext.charCodeAt(i+2);
+				string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+				i += 3;
+			}
+ 
+		}
+ 
+		return string;
+	}
+ 
+}
+;

@@ -29,7 +29,7 @@ arrayToHash = (array) ->
           else if name is "build.js"
             # Do nothing
           else
-            models.push source
+            models.push "#{source};"
         else if name.extension() is "coffee"
           if name is "main.coffee"
             main = CoffeeScript.compile(source)

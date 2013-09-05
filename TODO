@@ -3,6 +3,8 @@ TODO
 
 Saving UTF8 Characters gets messed up
 
+Compile Error file and line number in error messages
+
 Integrate with Github Issues
 
 Display Diffs
