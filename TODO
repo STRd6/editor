@@ -1,7 +1,6 @@
 TODO
 ----
-First auth doesn't display in bar
-Auth redirects to /tempest rather than /editor
+Delete Files
 
 Combine commit/publish step
 - master branch should publish to index.html
@@ -30,7 +29,7 @@ Persist state across demo reloads
 
 Tests
 
-Delete Files
+First auth doesn't display in bar
 
 Cache Git trees and files in some form of local storage
 
@@ -40,6 +39,8 @@ Editor plugins
 
 DONE
 ----
+Auth redirects to /tempest rather than /editor
+
 Don't pass directories to filetree
 
 Saving repos with folders

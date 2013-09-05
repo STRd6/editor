@@ -1475,7 +1475,7 @@
     self.extend({
       load: function(fileData) {
         var files;
-        files = Object.keys(fileData).map(function(name) {
+        files = Object.keys(fileData).sort().map(function(name) {
           return File(fileData[name]);
         });
         return self.files(files);
@@ -2577,6 +2577,8 @@
   var $root, actions, branch, builder, errors, files, filetree, github, loadId, notices, repo, repoName, styleContent, userName, _ref, _ref1;
 
   files = ENV.files;
+
+  window.ENV = ENV;
 
   $root = $('body');
 
