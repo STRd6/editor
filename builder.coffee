@@ -95,7 +95,11 @@ arrayToHash = (array) ->
     
     content = []
 
-    content.push "<!doctype html><head>"
+    content.push """
+      <!doctype html>
+      <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    """
     
     # TODO: Get these from a more robust method than just script tags with classes
     content = content.concat $('script.env').map ->
