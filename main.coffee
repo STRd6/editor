@@ -49,31 +49,8 @@ actions =
         filename: name
         content: ""
 
-  run: (->
-    notices ["Building..."]
-    
-    builder.build filetree.data(), (build) ->
-      if configData = build.source["pixie.json"]?.content
-        config = JSON.parse(configData)
-      else
-        config = {}
-      
-      sandbox = Sandbox
-        width: config.width
-        height: config.height
-      
-      sandbox.document.open()
-      sandbox.document.write(builder.standAloneHtml(build))
-
-      sandbox.document.close()
-
-      # TODO: Display this notice when we receive confirmation from child window
-      notices(["Runnnig!"])
-      # TODO: Catch and display runtime errors
-      errors([])
-
-      error: errors
-    ).debounce(250)
+  run: ->
+    Actions.run({builder, filetree})
 
   load_repo: ->
     repoName = prompt("Github repo", "STRd6/matrix.js")

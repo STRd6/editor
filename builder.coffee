@@ -58,7 +58,9 @@ arrayToHash = (array) ->
   
     errors: errors
     result: styles.join("\n")
-    
+
+  I: I
+
   build: (fileData, callback) ->
     I.notices.push "Building..."
     
