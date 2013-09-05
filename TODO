@@ -1,7 +1,5 @@
 TODO
 ----
-Compile Error file and line number in error messages
-
 Integrate with Github Issues
 
 Display Diffs
@@ -32,6 +30,8 @@ Editor plugins
 
 DONE
 ----
+Compile Error file and line number in error messages
+
 Saving UTF8 Characters gets messed up
 
 Delete Files

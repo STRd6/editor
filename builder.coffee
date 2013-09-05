@@ -26,8 +26,6 @@ arrayToHash = (array) ->
         else if name.extension() is "js"
           if name is "main.js"
             main = source
-          else if name is "build.js"
-            # Do nothing
           else
             models.push "#{source};"
         else if name.extension() is "coffee"
@@ -35,9 +33,14 @@ arrayToHash = (array) ->
             main = CoffeeScript.compile(source)
           else
             models.push CoffeeScript.compile(source)
-      catch error
-        errors.push error.stack
-  
+      catch {location, message}
+        if location?
+          message = "Error on line #{location.first_line + 1}: #{message}"
+
+        message = "#{path} - #{message}"
+
+        errors.push message
+
     errors: errors
     result: """
         #{templates.join("\n")}
