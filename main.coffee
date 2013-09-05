@@ -20,7 +20,6 @@ github = new Github
   
 # TODO: Real branch and repo info, maybe from ENV
 branch = "master"
-commitMessage = "Yolo! (http://strd6.github.io/tempest/)"
 userName = "STRd6"
 repoName = "editor"
 repo = null
@@ -36,17 +35,15 @@ appendError = (error) ->
   errors.push(error) if error
 
 actions =
-  commit: ->
-    notices(["Saving..."])
-        
-    Gistquire.commitTree
+  save: ->
+    notices ["Saving..."]
+    
+    Actions.save
       owner: userName
       repo: repoName
-      tree: filetree.data()
-      success: ->
-        notices(["Saved!"])
-        errors([])
-      error: errors
+      fileData: filetree.data()
+    .then ->
+      notices ["Saved and published!"]
 
   new: ->
     if name = prompt("File Name", "newfile.coffee")
