@@ -3,7 +3,19 @@ TODO
 First auth doesn't display in bar
 Auth redirects to /tempest rather than /editor
 
+Combine commit/publish step
+- master branch should publish to index.html
+- other branches should publish to <branch>.html
+- Published branch is always latest
+
+Organize File tree by type
+File icons
+
+Saving UTF8 Characters gets messed up
+
 Integrate with Github Issues
+
+Display Diffs
 
 Live Update Demo
 - Display Demo Runtime Errors in console
@@ -11,17 +23,7 @@ Live Update Demo
 Open published page in editor and run live demo with same state as when editor was opened
 - Pass git repo/branch metadata to published page for use in editor
 
-Organize File tree by type
-File icons
-
-Combine commit/publish step
-- master branch should publish to index.html
-- other branches should publish to <branch>.html
-- Published branch is always latest
-
 Persist state across demo reloads
-
-Saving UTF8 Characters gets messed up
 
 .haml and .styl file type support
 - Build our own ace cdn
