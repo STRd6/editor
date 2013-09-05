@@ -1,10 +1,5 @@
 # Get stuff from our env
-{files, distribution} = ENV
-files ?= ENV.source
-
-distribution ?= files
-
-window.ENV = ENV
+{source:files, distribution} = ENV
 
 # TODO: Consider passing root from env for components
 $root = $('body')
