@@ -1,6 +1,7 @@
 TODO
 ----
-Yolo
+First auth doesn't display in bar
+Auth redirects to /tempest rather than /editor
 
 Live Update Demo
 - Display Demo Runtime Errors in console
