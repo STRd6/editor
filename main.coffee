@@ -1,11 +1,5 @@
 # Get stuff from our env
-{files, gist} = ENV
-
-files ||= gist?.files
-
-gist ||=
-  files: files
-  id: 6286182
+{files} = ENV
 
 # TODO: Consider passing root from env for components
 $root = $('body')
@@ -86,7 +80,6 @@ actions =
     ).debounce(250)
 
   load_repo: ->
-    gist = null
     repoName = prompt("Github repo", "STRd6/matrix.js")
     
     if repoName
@@ -133,7 +126,6 @@ actions =
           
           notices [
             files
-            # Temporary hack to map repo into same structure as gist files
           ].map (item) ->
             JSON.stringify(item, null, 2)
             
@@ -164,7 +156,7 @@ actions =
       error: errors
 
 filetree = Filetree()
-filetree.load(gist.files)
+filetree.load(files)
 
 filetree.selectedFile.observe (file) ->
   root = $root.children(".main")
