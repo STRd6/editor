@@ -3,6 +3,8 @@ TODO
 First auth doesn't display in bar
 Auth redirects to /tempest rather than /editor
 
+Integrate with Github Issues
+
 Live Update Demo
 - Display Demo Runtime Errors in console
 
@@ -19,7 +21,7 @@ Combine commit/publish step
 
 Persist state across demo reloads
 
-Integrate with Github Issues
+Saving UTF8 Characters gets messed up
 
 .haml and .styl file type support
 - Build our own ace cdn
@@ -36,6 +38,8 @@ Editor plugins
 
 DONE
 ----
+Saving repos with folders
+
 Load file data better
 - Handle folders in repos
 

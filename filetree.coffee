@@ -23,6 +23,9 @@
   
       # Merge in each file
       self.files.each (file) ->
+        # TODO: Be better with exclusions
+        return unless file.type() is "blob"
+
         name = file.filename()
         fileData[name] =
           content: file.content()
@@ -31,8 +34,11 @@
       return fileData
       
     gitTree: ->
-      self.files.map (file) ->
-        path: file.filename()
+      self.files().select (file) ->
+        # TODO: Be better with the exclusions
+        file.type() is "blob"
+      .map (file) ->
+        path: file.path()
         mode: "100644"
         content: file.content()
         type: "blob"
