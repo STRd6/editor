@@ -1306,8 +1306,11 @@
 }());
 
 (function() {
-  this.Builder = function() {
+  this.Builder = function(I) {
     var build, buildStyle, compileTemplate;
+    if (I == null) {
+      I = {};
+    }
     compileTemplate = function(source, name) {
       var ast;
       if (name == null) {
@@ -1384,6 +1387,7 @@
     return {
       build: function(fileData, callback) {
         var collectedErrors, compileResult, errors, fileMap, result, _ref, _ref1;
+        I.notices.push("Building...");
         _ref = build(fileData), collectedErrors = _ref.errors, compileResult = _ref.result;
         _ref1 = buildStyle(fileData), errors = _ref1.errors, result = _ref1.result;
         collectedErrors = collectedErrors.concat(errors);
@@ -1402,7 +1406,7 @@
           });
         }
         if (collectedErrors.length) {
-          return typeof this.errors === "function" ? this.errors(collectedErrors) : void 0;
+          return typeof I.errors === "function" ? I.errors(collectedErrors) : void 0;
         } else {
           fileMap = fileData.eachWithObject({}, function(file, hash) {
             return hash[file.path] = file;
@@ -1648,6 +1652,7 @@
           });
         },
         error: function(request) {
+          debugger;
           if (request.status === "404") {
             return Gistquire.api("repos/" + owner + "/" + repo + "/contents/" + path, {
               type: "PUT",
@@ -2570,7 +2575,7 @@
 }).call(this);
 
 (function() {
-  var $root, actions, appendError, branch, builder, errors, files, filetree, github, loadId, notices, repo, repoName, styleContent, userName, _ref, _ref1;
+  var $root, actions, branch, builder, errors, files, filetree, github, loadId, notices, repo, repoName, styleContent, userName, _ref, _ref1;
 
   files = ENV.files;
 
@@ -2597,20 +2602,14 @@
 
   repo = null;
 
-  builder = Builder();
-
   errors = Observable([]);
 
   notices = Observable(["Loaded!"]);
 
-  builder.errors = errors;
-
-  appendError = function(error) {
-    console.log(error);
-    if (error) {
-      return errors.push(error);
-    }
-  };
+  builder = Builder({
+    errors: errors,
+    notices: notices
+  });
 
   actions = {
     save: function() {
@@ -2715,25 +2714,25 @@
       var publishBranch;
       publishBranch = "gh-pages";
       notices(["Publishing..."]);
-      return builder.build(filetree.data(), {
-        success: function(fileData) {
-          return Gistquire.writeFile({
-            repo: repoName,
-            owner: userName,
-            path: "" + branch + ".html",
-            content: Base64.encode(builder.standAloneHtml(fileData)),
-            branch: publishBranch,
-            message: "Built " + branch + " in browser in strd6.github.io/tempest",
-            success: function() {
-              return notices(["Published"]);
-            },
-            error: function() {
-              return errors(["Error Publishing :("]);
-            }
-          });
-        },
-        error: errors
+      builder.build(filetree.data(), function(fileMap) {
+        return Gistquire.writeFile({
+          repo: repoName,
+          owner: userName,
+          path: "" + branch + ".html",
+          content: Base64.encode(builder.standAloneHtml(fileMap)),
+          branch: publishBranch,
+          message: "Built " + branch + " in browser in strd6.github.io/tempest",
+          success: function() {
+            return notices(["Published"]);
+          },
+          error: function() {
+            return errors(["Error Publishing :("]);
+          }
+        });
       });
+      return {
+        error: errors
+      };
     }
   };
 

@@ -1,4 +1,4 @@
-@Builder = ->
+@Builder = (I={}) ->
   compileTemplate = (source, name="test") ->
     ast = HAMLjr.parser.parse(source)
     
@@ -56,6 +56,8 @@
     result: styles.join("\n")
     
   build: (fileData, callback) ->
+    I.notices.push "Building..."
+    
     {errors:collectedErrors, result:compileResult} = build(fileData)
 
     {errors, result} = buildStyle(fileData)
@@ -74,7 +76,7 @@
         type: "blob"
 
     if collectedErrors.length
-      @errors?(collectedErrors)
+      I.errors?(collectedErrors)
     else
       fileMap = fileData.eachWithObject {}, (file, hash) ->
         hash[file.path] = file

@@ -24,17 +24,12 @@ userName = "STRd6"
 repoName = "editor"
 repo = null
 
-builder = Builder()
-
 errors = Observable([])
 notices = Observable(["Loaded!"])
 
-builder.errors = errors
-
-appendError = (error) ->
-  console.log error
-  
-  errors.push(error) if error
+builder = Builder
+  errors: errors
+  notices: notices
 
 actions =
   save: ->
@@ -139,21 +134,20 @@ actions =
     
     notices ["Publishing..."]
     
-    builder.build filetree.data(),
-      success: (fileData) ->
-        # create <ref>.html in gh-pages branch
-        Gistquire.writeFile
-          repo: repoName
-          owner: userName
-          path: "#{branch}.html"
-          content: Base64.encode(builder.standAloneHtml(fileData))
-          branch: publishBranch
-          message: "Built #{branch} in browser in strd6.github.io/tempest"
-          success: ->
-            notices ["Published"]
-          error: ->
-            errors ["Error Publishing :("]        
-      error: errors
+    builder.build filetree.data(), (fileMap) ->
+      # create <ref>.html in gh-pages branch
+      Gistquire.writeFile
+        repo: repoName
+        owner: userName
+        path: "#{branch}.html"
+        content: Base64.encode(builder.standAloneHtml(fileMap))
+        branch: publishBranch
+        message: "Built #{branch} in browser in strd6.github.io/tempest"
+        success: ->
+          notices ["Published"]
+        error: ->
+          errors ["Error Publishing :("]        
+    error: errors
 
 filetree = Filetree()
 filetree.load(files)
