@@ -104,12 +104,11 @@ actions =
       success: (data) ->
         notices []
         
+        treeFiles = data.tree.select (file) ->
+          file.type is "blob"
+        
         # Gather the data for each file
-        async.map data.tree, (datum, callback) ->
-          unless datum.type is "blob"
-            callback(null, datum)
-            return 
-
+        async.map treeFiles, (datum, callback) ->
           Gistquire.api datum.url,
             success: (data) ->
               callback(null, Object.extend(datum, data))
