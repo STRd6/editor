@@ -1,14 +1,6 @@
 TODO
 ----
 
-Combine commit/publish step
-- master branch should publish to index.html
-- other branches should publish to <branch>.html
-- Published branch is always latest
-
-Organize File tree by type
-File icons
-
 Saving UTF8 Characters gets messed up
 
 Integrate with Github Issues
@@ -22,6 +14,9 @@ Open published page in editor and run live demo with same state as when editor w
 - Pass git repo/branch metadata to published page for use in editor
 
 Persist state across demo reloads
+
+Organize File tree by type
+File icons
 
 .haml and .styl file type support
 - Build our own ace cdn
@@ -41,6 +36,11 @@ DONE
 Delete Files
 
 Auth redirects to /tempest rather than /editor
+
+Combine commit/publish step
+- master branch should publish to index.html
+- other branches should publish to <branch>.html
+- Published branch is always latest
 
 Don't pass directories to filetree
 

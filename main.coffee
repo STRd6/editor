@@ -1,8 +1,17 @@
 # Get stuff from our env
 {source:files, distribution} = ENV
 
-# TODO: Consider passing root from env for components
-$root = $('body')
+# TODO: Move to env utils
+currentNode = ->
+  target = document.documentElement
+
+  while (target.childNodes.length and target.lastChild.nodeType == 1)
+    target = target.lastChild
+
+  return target.parentNode
+
+# The root is the node that contains the script file.
+$root = $(currentNode())
 
 # Apply our styles
 if styleContent = distribution["style.css"]?.content
@@ -12,11 +21,6 @@ if styleContent = distribution["style.css"]?.content
 
 # Init Github access token stuff
 Gistquire.onload()
-
-# Github api
-github = new Github
-  auth: "oauth"
-  token: localStorage.authToken
   
 # TODO: Real branch and repo info, maybe from ENV
 branch = "master"
@@ -145,6 +149,3 @@ Gistquire.api "rate_limit",
   complete: (request, status) ->
     $root.append HAMLjr.templates.github_status
       request: request
-
-if loadId = window.location.href.match(/loadId=(\d+)/)?[1]
-  actions.load(null, loadId)
