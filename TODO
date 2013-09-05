@@ -1,6 +1,5 @@
 TODO
 ----
-Delete Files
 
 Combine commit/publish step
 - master branch should publish to index.html
@@ -39,6 +38,8 @@ Editor plugins
 
 DONE
 ----
+Delete Files
+
 Auth redirects to /tempest rather than /editor
 
 Don't pass directories to filetree
