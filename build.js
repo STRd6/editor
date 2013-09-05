@@ -2708,30 +2708,6 @@
           return errors([error]);
         }
       });
-    },
-    publish: function() {
-      var publishBranch;
-      publishBranch = "gh-pages";
-      notices(["Publishing..."]);
-      builder.build(filetree.data(), function(fileMap) {
-        return Gistquire.writeFile({
-          repo: repoName,
-          owner: userName,
-          path: "" + branch + ".html",
-          content: Base64.encode(builder.standAloneHtml(fileMap)),
-          branch: publishBranch,
-          message: "Built " + branch + " in browser in strd6.github.io/tempest",
-          success: function() {
-            return notices(["Published"]);
-          },
-          error: function() {
-            return errors(["Error Publishing :("]);
-          }
-        });
-      });
-      return {
-        error: errors
-      };
     }
   };
 

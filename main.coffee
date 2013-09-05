@@ -1,6 +1,8 @@
 # Get stuff from our env
 {files} = ENV
 
+window.ENV = ENV
+
 # TODO: Consider passing root from env for components
 $root = $('body')
 

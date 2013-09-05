@@ -8,7 +8,7 @@
 
   self.extend
     load: (fileData) ->
-      files = Object.keys(fileData).map (name) ->
+      files = Object.keys(fileData).sort().map (name) ->
         File fileData[name]
 
       self.files(files)
