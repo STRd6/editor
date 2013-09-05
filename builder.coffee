@@ -12,9 +12,10 @@
     main = ""
     errors = []
   
-    Object.keys(fileData).each (name) ->
-      source = fileData[name].content
-  
+    fileData.each ({path, content}) ->
+      name = path.split('/').last()
+      source = content
+
       try
         if name.extension() is "haml"
           templates.push compileTemplate(source, name.withoutExtension())
@@ -44,12 +45,11 @@
     styles = []
     errors = []
     
-    Object.keys(fileData).each (name) ->
-      source = fileData[name].content
-      
+    fileData.each ({path, content}) ->
       try
-        if name.extension() is "styl"
-          styles.push styl(source, whitespace: true).toString()
+        debugger
+        if path.extension() is "styl"
+          styles.push styl(content, whitespace: true).toString()
       catch error
         errors.push error.stack
   
@@ -57,25 +57,30 @@
     result: styles.join("\n")
     
   build: (fileData, {success, error}) ->
-    {errors:collectedErrors, result} = build(fileData)
-
-    if result.trim() != ""
-      fileData["build.js"] = 
-        filename: "build.js"
-        content: result
+    {errors:collectedErrors, result:compileResult} = build(fileData)
 
     {errors, result} = buildStyle(fileData)
     collectedErrors = collectedErrors.concat(errors)
-    
+
+    if compileResult.trim() != ""
+      fileData.push
+        path: "build.js"
+        content: compileResult
+        type: "blob"
+
     if result != ""
-      fileData["style.css"] =
-        filename: "style.css"
+      fileData.push
+        path: "style.css"
         content: result
-    
+        type: "blob"
+
+    fileMap = fileData.eachWithObject {}, (file, hash) ->
+      hash[file.path] = file
+
     if collectedErrors.length
       error(collectedErrors)
     else
-      success(fileData)
+      success(fileMap)
       
   standAloneHtml: (fileData) ->
     # TODO: Get these from a more robust method than just script tags with classes

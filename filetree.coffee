@@ -10,27 +10,10 @@
     load: (fileData) ->
       files = Object.keys(fileData).map (name) ->
         File fileData[name]
-      .select (file) ->
-        file.filename() != "style.css" and
-        file.filename() != "build.js"
 
       self.files(files)
 
-    fileData: ->
-      fileData = {}
-
-      # TODO: Handle deleted files
-  
-      # Merge in each file
-      self.files.each (file) ->
-        name = file.filename()
-        fileData[name] =
-          content: file.content()
-          filename: name
-  
-      return fileData
-      
-    gitTree: ->
+    data: ->
       self.files.map (file) ->
         path: file.filename()
         mode: "100644"

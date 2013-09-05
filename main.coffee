@@ -42,7 +42,7 @@ actions =
     Gistquire.commitTree
       owner: userName
       repo: repoName
-      tree: filetree.gitTree()
+      tree: filetree.data()
       success: ->
         notices(["Saved!"])
         errors([])
@@ -55,7 +55,7 @@ actions =
         content: ""
 
   run: (->    
-    builder.build filetree.fileData(),
+    builder.build filetree.data(),
       success: (fileData) ->
         if fileData["pixie.json"]
           config = JSON.parse(fileData["pixie.json"].content)
@@ -138,7 +138,7 @@ actions =
     
     notices ["Publishing..."]
     
-    builder.build filetree.fileData(),
+    builder.build filetree.data(),
       success: (fileData) ->
         # create <ref>.html in gh-pages branch
         Gistquire.writeFile
