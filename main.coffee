@@ -127,27 +127,6 @@ actions =
           filetree.load files
       error: (error) ->
         errors [error]
-        
-  publish: ->
-    # Assuming git repo with gh-pages branch
-    publishBranch = "gh-pages"
-    
-    notices ["Publishing..."]
-    
-    builder.build filetree.data(), (fileMap) ->
-      # create <ref>.html in gh-pages branch
-      Gistquire.writeFile
-        repo: repoName
-        owner: userName
-        path: "#{branch}.html"
-        content: Base64.encode(builder.standAloneHtml(fileMap))
-        branch: publishBranch
-        message: "Built #{branch} in browser in strd6.github.io/tempest"
-        success: ->
-          notices ["Published"]
-        error: ->
-          errors ["Error Publishing :("]        
-    error: errors
 
 filetree = Filetree()
 filetree.load(files)
