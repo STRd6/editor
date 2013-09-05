@@ -10,13 +10,13 @@ publish = ({builder, fileData, repo, owner, branch}) ->
   # Assuming git repo with gh-pages branch
   publishBranch = "gh-pages"
   
-  builder.build fileData, (fileMap) ->
+  builder.build fileData, (build) ->
     # create <ref>.html in gh-pages branch
     Gistquire.writeFile
       repo: repo
       owner: owner
       path: path
-      content: Base64.encode(builder.standAloneHtml(fileMap))
+      content: Base64.encode(builder.standAloneHtml(build))
       branch: publishBranch
       message: message
 

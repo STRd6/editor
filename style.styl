@@ -35,6 +35,18 @@ html, body
   li
     list-style-type: none
     padding-left: 1em
+    position: relative
+
+    .delete
+      display: none
+      position: absolute
+      right: 0
+
+    &:hover
+      background-color: lightyellow
+
+      .delete
+        display: inline-block
 
 .actions
   position: absolute

@@ -1,3 +1,7 @@
+arrayToHash = (array) ->
+  array.eachWithObject {}, (file, hash) ->
+    hash[file.path] = file
+
 @Builder = (I={}) ->
   compileTemplate = (source, name="test") ->
     ast = HAMLjr.parser.parse(source)
@@ -62,15 +66,17 @@
 
     {errors, result} = buildStyle(fileData)
     collectedErrors = collectedErrors.concat(errors)
+    
+    dist = []
 
     if compileResult.trim() != ""
-      fileData.push
+      dist.push
         path: "build.js"
         content: compileResult
         type: "blob"
 
     if result != ""
-      fileData.push
+      dist.push
         path: "style.css"
         content: result
         type: "blob"
@@ -78,26 +84,24 @@
     if collectedErrors.length
       I.errors?(collectedErrors)
     else
-      fileMap = fileData.eachWithObject {}, (file, hash) ->
-        hash[file.path] = file
+      callback
+        source: arrayToHash(fileData)
+        distribution: arrayToHash(dist)
 
-      callback(fileMap)
-
-  standAloneHtml: (fileMap) ->
+  standAloneHtml: (build) ->
+    {source, distribution} = build
     # TODO: Get these from a more robust method than just script tags with classes
     content = $('script.env').map ->
       @outerHTML
     .get()
   
     entryPoint = "build.js"
-    program = fileMap[entryPoint].content
+    program = distribution[entryPoint].content
   
     # TODO: Think about nesting, components
     # TODO?: Exclude build.js from files
     content.push """<body><script>
-      Function("ENV", #{JSON.stringify(program)})({
-        files: #{JSON.stringify(fileMap)}
-      });
+      Function("ENV", #{JSON.stringify(program)})(#{JSON.stringify(build)});
     <\/script>"""
     
     content.join "\n"

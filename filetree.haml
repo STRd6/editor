@@ -1,5 +1,11 @@
 %ul.filetree
   - selectedFile = @selectedFile
-  - each @files, (file) ->
+  - removeFile = @removeFile
+  - files = @files
+  - each files, (file) ->
     %li= file.path
-      - on "click", -> selectedFile(file)
+      - on "click", (e) -> 
+        - selectedFile(file) if $(e.target).is('li')
+      .delete
+        - on "click", -> files.remove(file)
+        X

@@ -1,5 +1,8 @@
 # Get stuff from our env
-{files} = ENV
+{files, distribution} = ENV
+files ?= ENV.source
+
+distribution ?= files
 
 window.ENV = ENV
 
@@ -7,7 +10,7 @@ window.ENV = ENV
 $root = $('body')
 
 # Apply our styles
-if styleContent = files["style.css"]?.content
+if styleContent = distribution["style.css"]?.content
   $root.append $("<style>",
     html: styleContent
   )
@@ -51,12 +54,12 @@ actions =
         filename: name
         content: ""
 
-  run: (->    
+  run: (->
     notices ["Building..."]
     
-    builder.build filetree.data(), (fileMap) ->
-      if fileMap["pixie.json"]
-        config = JSON.parse(fileMap["pixie.json"].content)
+    builder.build filetree.data(), (build) ->
+      if configData = build.source["pixie.json"]?.content
+        config = JSON.parse(configData)
       else
         config = {}
       
@@ -65,7 +68,7 @@ actions =
         height: config.height
       
       sandbox.document.open()
-      sandbox.document.write(builder.standAloneHtml(fileMap))
+      sandbox.document.write(builder.standAloneHtml(build))
 
       sandbox.document.close()
 
