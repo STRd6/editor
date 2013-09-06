@@ -189,4 +189,4 @@
     .then (data) ->        
       Gistquire.api(data.object.url)
     .then (data) ->
-      Gistquire.api "#{data.tree.url}?recursive=1",
+      Gistquire.api "#{data.tree.url}?recursive=1"
