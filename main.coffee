@@ -73,6 +73,9 @@ actions =
       notices: notices
       errors: errors
       filetree: filetree
+    .then ->
+      Gistquire.api("repos/#{userName}/#{repoName}/issues")
+      .then issues.reset
 
 filetree = Filetree()
 filetree.load(files)
@@ -102,13 +105,19 @@ filetree.selectedFile.observe (file) ->
       # Autorun
       # actions.run()
 
+issues = Issues()
+
+# Load initial issues
+Gistquire.api("repos/#{userName}/#{repoName}/issues")
+.then issues.reset
+
 $root
   .append(HAMLjr.templates.main(
     filetree: filetree
     actions: actions
     notices: notices
     errors: errors
-    issues: Issues()
+    issues: issues
   ))
 
 Gistquire.api "rate_limit", 

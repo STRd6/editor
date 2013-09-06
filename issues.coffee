@@ -12,5 +12,8 @@
 
   self.currentIssue.observe (issue) ->
     console.log issue
+    
+  self.reset = (issueData) ->
+    self.issues issueData.map(Issue)
 
   return self
