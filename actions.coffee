@@ -92,5 +92,6 @@ commit = ({fileData, repo, owner, branch, message}) ->
           notices ["Loaded!"]
             
           filetree.load files
-      error: (error) ->
-        errors [error]
+
+      error: (request, status, message) ->
+        errors ["Error loading #{owner}/#{repo}: #{message}"]
