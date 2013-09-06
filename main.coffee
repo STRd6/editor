@@ -65,49 +65,14 @@ actions =
       errors ["No repo given"]
 
       return
-    
-    # Decode all content in place
-    processDirectory = (items) ->
-      items.each (item) ->
-        return item unless item.content
-        
-        item.content = Base64.decode(item.content)
-        item.encoding = "raw"
-    
-    Gistquire.latestTree
-      branch: "master"
+
+    Actions.load
       repo: repoName
       owner: userName
-      success: (data) ->
-        notices []
-        
-        treeFiles = data.tree.select (file) ->
-          file.type is "blob"
-        
-        # Gather the data for each file
-        async.map treeFiles, (datum, callback) ->
-          Gistquire.api datum.url,
-            success: (data) ->
-              callback(null, Object.extend(datum, data))
-            error: (error) ->
-              callback(error)
-
-        , (error, results) ->
-          notices ["Radical!"] 
-          if error
-            errors [error]
-            return
-
-          files = processDirectory results
-          
-          notices [
-            files
-          ].map (item) ->
-            JSON.stringify(item, null, 2)
-            
-          filetree.load files
-      error: (error) ->
-        errors [error]
+      branch: branch
+      notices: notices
+      errors: errors
+      filetree: filetree
 
 filetree = Filetree()
 filetree.load(files)

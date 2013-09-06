@@ -51,3 +51,46 @@ commit = ({fileData, repo, owner, branch, message}) ->
 
       builder.I.notices? ["Running!"]
       # TODO: Catch and display runtime errors
+
+  load: ({filetree, repo, owner, branch, notices, errors}) ->
+    # Decode all content in place
+    processDirectory = (items) ->
+      items.each (item) ->
+        return item unless item.content
+        
+        item.content = Base64.decode(item.content)
+        item.encoding = "raw"
+    
+    Gistquire.latestTree
+      branch: branch
+      repo: repo
+      owner: owner
+      success: (data) ->
+        notices []
+        
+        treeFiles = data.tree.select (file) ->
+          file.type is "blob"
+        
+        # Gather the data for each file
+        async.map treeFiles, (datum, callback) ->
+          notices.push "Loading #{datum.url}\n"
+          
+          Gistquire.api datum.url,
+            success: (data) ->
+              callback(null, Object.extend(datum, data))
+            error: (error) ->
+              callback(error)
+
+        , (error, results) ->
+          notices ["Radical!"] 
+          if error
+            errors [error]
+            return
+
+          files = processDirectory results
+          
+          notices ["Loaded!"]
+            
+          filetree.load files
+      error: (error) ->
+        errors [error]
