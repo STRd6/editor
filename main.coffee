@@ -108,6 +108,7 @@ $root
     actions: actions
     notices: notices
     errors: errors
+    issues: Issues()
   ))
 
 Gistquire.api "rate_limit", 

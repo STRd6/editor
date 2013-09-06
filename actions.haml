@@ -1,6 +1,8 @@
 .actions
-  - actions = this
+  - actions = @actions
   - Object.keys(actions).each (name) ->
     %button
       = name.titleize()
       - on "click", actions[name]
+
+  = HAMLjr.templates.issue_selector @issues
