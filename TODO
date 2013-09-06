@@ -1,8 +1,11 @@
 TODO
 ----
 Integrate with Github Issues
-
-Display Diffs
+- Select active issue
+- Auto-create branch for issue
+- Include issue number in commits
+- Commit/deploy to branch for issue
+- TODO figure out how to handle merges (github interface, then reload and redeploy from master?)
 
 Literate Code
 
@@ -23,6 +26,8 @@ File icons
 - Build our own ace cdn
 
 Tests
+
+Display Diffs
 
 Gistquire promises refactor
 
