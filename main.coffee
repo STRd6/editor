@@ -47,14 +47,14 @@ actions =
     .then ->
       notices ["Saved and published!"]
 
-  new: ->
+  run: ->
+    Actions.run({builder, filetree})
+
+  new_file: ->
     if name = prompt("File Name", "newfile.coffee")
       filetree.files.push File
         filename: name
         content: ""
-
-  run: ->
-    Actions.run({builder, filetree})
 
   load_repo: ->
     repoName = prompt("Github repo", "STRd6/matrix.js")
