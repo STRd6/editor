@@ -3,3 +3,6 @@
   %option
   - each @issues, ->
     %option= @optionText()
+
+%button New Issue
+  - on "click", @newIssue

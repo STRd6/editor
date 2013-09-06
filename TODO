@@ -3,6 +3,7 @@ TODO
 Integrate with Github Issues
 - Select active issue
 - Display issue text in console
+- Create issues from editor
 - Auto-create branch for issue
 - Include issue number in commits
 - Commit/deploy to branch for issue

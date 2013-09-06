@@ -1,9 +1,6 @@
 @Issues = (I={}) ->
   Object.defaults I,
-    issues: [
-      title: "Test Issue"
-      number: "2"
-    ]
+    issues: []
 
   notices = null
   errors = null
@@ -23,5 +20,10 @@
     # TODO: Explore and refine piping conventions
     pipe: (streams) ->
       {notices, errors} = streams
+
+    newIssue: ->
+      if title = prompt("Issue title")
+        console.log title
+        # Gistquire.api ""
 
   return self
