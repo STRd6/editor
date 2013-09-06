@@ -9,8 +9,6 @@ Integrate with Github Issues
 - Commit/deploy to branch for issue
 - TODO figure out how to handle merges (github interface, then reload and redeploy from master?)
 
-Repository Object to encapsulate repo/branch and make creating/loading trees and issues easier
-
 Literate Code
 
 Generate Docs

@@ -1,8 +1,6 @@
 # Get stuff from our env
 {source:files, distribution} = ENV
 
-window.ENV = ENV
-
 # TODO: Move to env utils
 currentNode = ->
   target = document.documentElement
@@ -36,23 +34,6 @@ notices = Observable(["Loaded!"])
 builder = Builder
   errors: errors
   notices: notices
-
-# Repo metadata for env
-builder.addPostProcessor (data) ->
-  # TODO: Track commit SHA as well
-  data.repository =
-    repo: repoName
-    owner: userName
-    branch: branch
-
-  data
-
-builder.addPostProcessor (data) ->
-  # TODO: Think about a robust way to get 'self' and set it as progenitor data
-  data.progenitor =
-    url: "http://strd6.github.io/editor/"
-
-  data
 
 actions =
   save: ->
