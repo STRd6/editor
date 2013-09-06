@@ -65,33 +65,33 @@ commit = ({fileData, repo, owner, branch, message}) ->
       branch: branch
       repo: repo
       owner: owner
-      success: (data) ->
-        notices []
+    .then (data) ->
+      notices []
+      
+      treeFiles = data.tree.select (file) ->
+        file.type is "blob"
+      
+      # Gather the data for each file
+      async.map treeFiles, (datum, callback) ->
+        notices.push "Loading #{datum.url}\n"
         
-        treeFiles = data.tree.select (file) ->
-          file.type is "blob"
+        Gistquire.api datum.url,
+          success: (data) ->
+            callback(null, Object.extend(datum, data))
+          error: (error) ->
+            callback(error)
+
+      , (error, results) ->
+        notices ["Radical!"] 
+        if error
+          errors [error]
+          return
+
+        files = processDirectory results
         
-        # Gather the data for each file
-        async.map treeFiles, (datum, callback) ->
-          notices.push "Loading #{datum.url}\n"
+        notices ["Loaded!"]
           
-          Gistquire.api datum.url,
-            success: (data) ->
-              callback(null, Object.extend(datum, data))
-            error: (error) ->
-              callback(error)
+        filetree.load files
 
-        , (error, results) ->
-          notices ["Radical!"] 
-          if error
-            errors [error]
-            return
-
-          files = processDirectory results
-          
-          notices ["Loaded!"]
-            
-          filetree.load files
-
-      error: (request, status, message) ->
-        errors ["Error loading #{owner}/#{repo}: #{message}"]
+    .fail (request, status, message) ->
+      errors ["Error loading #{owner}/#{repo}: #{message}"]

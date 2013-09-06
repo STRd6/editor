@@ -182,9 +182,7 @@
           error: error
       error: error
   
-  latestTree: ({owner, repo, branch, success, error}) ->
-    success ?= ->
-    error ?= ->
+  latestTree: ({owner, repo, branch}) ->
     branch ?= "master"
     
     Gistquire.api("repos/#{owner}/#{repo}/git/refs/heads/#{branch}")
@@ -192,4 +190,3 @@
       Gistquire.api(data.object.url)
     .then (data) ->
       Gistquire.api "#{data.tree.url}?recursive=1",
-    .then success
