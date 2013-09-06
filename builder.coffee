@@ -62,7 +62,12 @@ arrayToHash = (array) ->
     errors: errors
     result: styles.join("\n")
 
+  postProcessors = []
+
   I: I
+  
+  addPostProcessor: (fn) ->
+    postProcessors.push fn
 
   build: (fileData, callback) ->
     I.notices.push "Building..."
@@ -89,7 +94,7 @@ arrayToHash = (array) ->
     if collectedErrors.length
       I.errors?(collectedErrors)
     else
-      callback
+      callback postProcessors.pipeline
         source: arrayToHash(fileData)
         distribution: arrayToHash(dist)
 
