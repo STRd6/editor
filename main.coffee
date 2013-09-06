@@ -106,6 +106,7 @@ filetree.selectedFile.observe (file) ->
       # actions.run()
 
 issues = Issues()
+issues.pipe({notices, errors})
 
 # Load initial issues
 Gistquire.api("repos/#{userName}/#{repoName}/issues")

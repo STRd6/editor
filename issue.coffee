@@ -1,7 +1,15 @@
 @Issue = (I={}) ->
   self = Model(I)
 
-  self.optionText = ->
-    "#{I.number} - #{I.title}"
+  self.extend
+    optionText: ->
+      "#{I.number} - #{I.title}"
+    
+    fullDescription: ->
+      """
+        #{self.optionText()}
+        #{I.html_url}
+        #{I.body}
+      """
 
   return self
