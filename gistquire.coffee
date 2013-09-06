@@ -88,7 +88,7 @@
         tree: [{
           mode: "1006444"
           path: "tempest.txt"
-          content: "created by strd6.github.io/tempest"
+          content: "created by strd6.github.io/editor"
         }]
       success: (data) ->
         # Create the base commit for the branch
@@ -127,7 +127,13 @@
           success: success
           error: error
       error: (request) ->
-        if request.status is 404
+        if request.responseJSON?.message is "No commit found for the ref gh-pages"
+          Gistquire.initPagesBranch({
+            owner: owner
+            repo: repo
+          }).then ->
+            Gistquire.writeFile({owner, repo, branch, path, content, message, success, error})
+        else if request.status is 404
           Gistquire.api "repos/#{owner}/#{repo}/contents/#{path}",
             type: "PUT"
             data: JSON.stringify
