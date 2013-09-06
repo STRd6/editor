@@ -1,7 +1,8 @@
 # Get stuff from our env
 {source:files, distribution} = ENV
 
-window.ENV = ENV
+# For debugging
+# window.ENV = ENV
 
 # TODO: Move to env utils
 currentNode = ->

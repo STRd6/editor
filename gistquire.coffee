@@ -187,12 +187,9 @@
     error ?= ->
     branch ?= "master"
     
-    Gistquire.api "repos/#{owner}/#{repo}/git/refs/heads/#{branch}",
-      success: (data) ->        
-        Gistquire.api data.object.url,
-          success: (data) ->
-            Gistquire.api "#{data.tree.url}?recursive=1",
-              success: success
-              error: error
-          error: error
-      error: error
+    Gistquire.api("repos/#{owner}/#{repo}/git/refs/heads/#{branch}")
+    .then (data) ->        
+      Gistquire.api(data.object.url)
+    .then (data) ->
+      Gistquire.api "#{data.tree.url}?recursive=1",
+    .then success
