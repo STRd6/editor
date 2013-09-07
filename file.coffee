@@ -12,6 +12,8 @@
       switch extension = self.extension()
         when "js"
           "javascript"
+        when ""
+          "text"
         else
           extension
 
