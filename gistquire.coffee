@@ -22,37 +22,6 @@
     if localStorage.authToken
       @accessToken = localStorage.authToken
 
-  update: (id, {data, success, error}) ->
-    url = "https://api.github.com/gists/#{id}"
-
-    if @accessToken
-      url += "?access_token=#{@accessToken}"
-
-    $.ajax
-      url: url
-      type: "PATCH"
-      dataType: 'json'
-      data: JSON.stringify(data)
-      success: success
-      error: error
-
-  create: (data, callback) ->
-    url = "https://api.github.com/gists"
-
-    if @accessToken
-      url += "?access_token=#{@accessToken}"
-
-    $.ajax
-      url: url
-      type: "POST"
-      dataType: 'json'
-      data: JSON.stringify(data)
-      success: callback
-
-  get: (id, callback) ->
-    @api "gists/#{id}",
-      success: callback
-
   api: (path, options={}) ->
     if path.match /^http/
       url = path

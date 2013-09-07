@@ -1,4 +1,4 @@
-publish = ({builder, fileData, repo, owner, branch}) ->
+publish = ({builder, fileData, repository, branch}) ->
   branch ?= "master"
   message = "Built #{branch} in browser in strd6.github.io/tempest"
 
@@ -12,18 +12,14 @@ publish = ({builder, fileData, repo, owner, branch}) ->
   
   builder.build fileData, (build) ->
     # create <ref>.html in gh-pages branch
-    Gistquire.writeFile
-      repo: repo
-      owner: owner
+    repository.writeFile
       path: path
       content: Base64.encode(builder.standAloneHtml(build))
       branch: publishBranch
       message: message
 
-commit = ({fileData, repo, owner, branch, message}) ->
-  Gistquire.commitTree
-    owner: owner
-    repo: repo
+commit = ({fileData, repository, branch, message}) ->
+  repository.commitTree
     tree: fileData
     message: message
 
@@ -52,7 +48,7 @@ commit = ({fileData, repo, owner, branch, message}) ->
       builder.I.notices? ["Running!"]
       # TODO: Catch and display runtime errors
 
-  load: ({filetree, repo, owner, branch, notices, errors}) ->
+  load: ({filetree, repository, branch, notices, errors}) ->
     # Decode all content in place
     processDirectory = (items) ->
       items.each (item) ->
@@ -61,10 +57,7 @@ commit = ({fileData, repo, owner, branch, message}) ->
         item.content = Base64.decode(item.content)
         item.encoding = "raw"
     
-    Gistquire.latestTree
-      branch: branch
-      repo: repo
-      owner: owner
+    repository.latestTree(branch)
     .then (data) ->
       notices []
       

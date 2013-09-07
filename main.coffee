@@ -2,7 +2,7 @@
 {source:files, distribution} = ENV
 
 # For debugging
-# window.ENV = ENV
+window.ENV = ENV
 
 # TODO: Move to env utils
 currentNode = ->
@@ -26,10 +26,12 @@ if styleContent = distribution["style.css"]?.content
 Gistquire.onload()
   
 # TODO: Real branch and repo info, maybe from ENV
-branch = "master"
-userName = "STRd6"
-repoName = "editor"
-repo = null
+{owner, repo, branch, full_name:fullName} = ENV.repository
+
+fullName ||= "#{owner}/#{repo}"
+
+repository = Repository
+  url: "repos/#{fullName}"
 
 errors = Observable([])
 notices = Observable(["Loaded!"])
@@ -42,8 +44,7 @@ builder = Builder
 builder.addPostProcessor (data) ->
   # TODO: Track commit SHA as well
   data.repository =
-    repo: repoName
-    owner: userName
+    full_name: fullName
     branch: branch
 
   data
@@ -60,8 +61,7 @@ actions =
     notices ["Saving..."]
     
     Actions.save
-      owner: userName
-      repo: repoName
+      repository: repository
       fileData: filetree.data()
       builder: builder
     .then ->
@@ -77,25 +77,24 @@ actions =
         content: ""
 
   load_repo: ->
-    repoName = prompt("Github repo", "STRd6/matrix.js")
+    fullName = prompt("Github repo", "STRd6/issues")
     
-    if repoName
-      [userName, repoName] = repoName.split("/")
+    if fullName
+      repository = Repository
+        url: "repos/#{fullName}"
     else
       errors ["No repo given"]
 
       return
 
     Actions.load
-      repo: repoName
-      owner: userName
+      repository: repository
       branch: branch
       notices: notices
       errors: errors
       filetree: filetree
     .then ->
-      Gistquire.api("repos/#{userName}/#{repoName}/issues")
-      .then issues.reset
+      repository.issues().then issues.reset
 
 filetree = Filetree()
 filetree.load(files)
@@ -129,8 +128,7 @@ issues = Issues()
 issues.pipe({notices, errors})
 
 # Load initial issues
-Gistquire.api("repos/#{userName}/#{repoName}/issues")
-.then issues.reset
+repository.issues().then issues.reset
 
 $root
   .append(HAMLjr.templates.main(
