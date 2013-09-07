@@ -137,8 +137,6 @@ issues.currentIssue.observe (issue) ->
       Actions.load
         repository: repository
         filetree: filetree
-    , ->
-      debugger
 
   else
     notices ["No issue selected"]
