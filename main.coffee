@@ -94,6 +94,7 @@ actions =
       errors: errors
       filetree: filetree
     .then ->
+      issues.repository = repository
       repository.issues().then issues.reset
 
 filetree = Filetree()
@@ -126,6 +127,7 @@ filetree.selectedFile.observe (file) ->
 
 issues = Issues()
 issues.pipe({notices, errors})
+issues.repository = repository
 
 # Load initial issues
 repository.issues().then issues.reset

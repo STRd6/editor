@@ -24,6 +24,7 @@
     newIssue: ->
       if title = prompt("Issue title")
         console.log title
-        # Gistquire.api ""
+        self.repository.createIssue
+          title: title
 
   return self
