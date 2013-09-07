@@ -1,19 +1,27 @@
 TODO
 ----
-Integrate with Github Issues
-- Select active issue
-- Display issue text in console
-- Create issues from editor
-- Auto-create branch for issue
-- Include issue number in commits
-- Commit/deploy to branch for issue
-- TODO figure out how to handle merges (github interface, then reload and redeploy from master?)
-
 Track modified state for files and prompt before losing unsaved data
+
+Figure out how to handle merges (github interface, then reload and redeploy from master?)
 
 Literate Code
 
 Generate Docs
+
+Publish build js files separate from HTML housing
+- Builds should be named <sha>.js and live in gh-pages
+- HTML should contain the Tempest environment
+- HTML should link to the <sha>.js for the branch it was built in
+
+Dependencies
+- Dependencies should live in other git repos
+- Should be able to edit dependencies in a new editor easily
+- Track sha and version requirements
+- Build dependencies into published script
+- Dependencies shouldn't be in source
+- Dependency metadata should appear in publish script
+- Should dependency source files appear in publish metadata?
+- Allow remote and bundled dependencies?
 
 Live Update Demo
 - Display Demo Runtime Errors in console
@@ -45,6 +53,13 @@ Editor plugins
 
 DONE
 ----
+Integrate with Github Issues
+- Select active issue
+- Display issue text in console
+- Create issues from editor
+- Auto-create branch for issue
+- Commit/deploy to branch for issue
+
 Gistquire promises refactor
 
 Repository Object to encapsulate repo/branch and make creating/loading trees and issues easier
