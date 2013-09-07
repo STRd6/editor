@@ -9,6 +9,8 @@ Integrate with Github Issues
 - Commit/deploy to branch for issue
 - TODO figure out how to handle merges (github interface, then reload and redeploy from master?)
 
+Track modified state for files and prompt before losing unsaved data
+
 Literate Code
 
 Generate Docs
@@ -34,6 +36,8 @@ Display Diffs
 First auth doesn't display in bar
 
 Cache Git trees and files in some form of local storage
+
+Sometimes editor appears blank when switching files
 
 Editor plugins
 - static analysis

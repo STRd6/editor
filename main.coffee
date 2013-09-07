@@ -126,8 +126,16 @@ filetree.selectedFile.observe (file) ->
       # actions.run()
 
 issues = Issues()
-issues.pipe({notices, errors})
 issues.repository = repository
+
+issues.currentIssue.observe (issue) ->
+  if issue
+    notices [issue.fullDescription()]
+    
+    # Switch to branch for working on the issue
+    repository.switchToBranch issue.branchName()
+  else
+    notices ["No issue selected"]
 
 # Load initial issues
 repository.issues().then issues.reset

@@ -2,24 +2,15 @@
   Object.defaults I,
     issues: []
 
-  notices = null
-  errors = null
-
   self = Model(I)
 
   self.attrModels "issues"
   self.attrObservable "currentIssue"
 
-  self.currentIssue.observe (issue) ->
-    # TODO: We may want to be more cautious about who can clear what streams
-    notices? [issue.fullDescription()]
-
   self.extend
     reset: (issueData) ->
+      self.currentIssue(undefined)
       self.issues issueData.map(Issue)
-    # TODO: Explore and refine piping conventions
-    pipe: (streams) ->
-      {notices, errors} = streams
 
     newIssue: ->
       if title = prompt("Issue title")

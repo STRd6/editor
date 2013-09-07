@@ -1,5 +1,10 @@
 @Repository = (I={}) ->
+  Object.defaults I,
+    branch: "master"
+
   self = Model(I).observeAll()
+  
+  self.attrObservable "branch"
   
   # TODO: Extract all of these methods to an API generator
   requestOptions = (type, data) ->
@@ -84,13 +89,13 @@
 
     latestTree: (branch="master") ->
       get("git/refs/heads/#{branch}")
-      .then (data) ->        
+      .then (data) ->
         get data.object.url
       .then (data) ->
         get "#{data.tree.url}?recursive=1"
 
     commitTree: ({branch, message, tree}) ->
-      branch ?= "master"
+      branch ?= self.branch()
       message ?= "Updated in browser at strd6.github.io/editor"
       
       unless tree
@@ -115,5 +120,28 @@
         # Update the branch head
         patch "git/refs/heads/#{branch}",
           sha: data.sha
+
+    switchToBranch: (branch) ->
+      ref = "refs/heads/#{branch}"
+      
+      get("git/#{ref}")
+      .then (data) ->
+        # Branch exists
+
+        # TODO: Check out the branch as our working copy
+        ;
+      .fail (request) ->
+        branchNotFound = (request.status is 404)
+
+        if branchNotFound
+          # Create branch if it doesn't exist
+          # Use our current branch as a base
+          get("git/refs/heads/#{self.branch()}")
+          .then (data) ->
+            post "git/refs",
+              ref: ref
+              sha: data.object.sha
+        else
+          $.Deferred().reject(arguments...)
 
   return self
