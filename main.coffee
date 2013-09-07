@@ -89,13 +89,12 @@ actions =
 
     Actions.load
       repository: repository
-      branch: branch
-      notices: notices
-      errors: errors
       filetree: filetree
     .then ->
       issues.repository = repository
       repository.issues().then issues.reset
+    .fail ->
+      errors ["Error loading #{repository.url()}"]
 
 filetree = Filetree()
 filetree.load(files)
@@ -133,7 +132,9 @@ issues.currentIssue.observe (issue) ->
     notices [issue.fullDescription()]
     
     # Switch to branch for working on the issue
-    repository.switchToBranch issue.branchName()
+    repository.switchToBranch(issue.branchName())
+    .then (ref) ->
+      
   else
     notices ["No issue selected"]
 

@@ -124,12 +124,13 @@
     switchToBranch: (branch) ->
       ref = "refs/heads/#{branch}"
       
-      get("git/#{ref}")
-      .then (data) ->
-        # Branch exists
+      setBranch = (data) ->
+        self.branch(branch)
+        
+        return data
 
-        # TODO: Check out the branch as our working copy
-        ;
+      get("git/#{ref}")
+      .then(setBranch)
       .fail (request) ->
         branchNotFound = (request.status is 404)
 
@@ -141,6 +142,7 @@
             post "git/refs",
               ref: ref
               sha: data.object.sha
+          .then(setBranch)
         else
           $.Deferred().reject(arguments...)
 
