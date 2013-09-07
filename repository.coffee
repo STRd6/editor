@@ -73,7 +73,7 @@
           sha: data.sha
           message: message
           branch: branch
-      .fail (request) ->
+      , (request) ->
         # If we fail because the gh-pages branch doesn't exist try creating it and retrying
         if request.responseJSON?.message is "No commit found for the ref gh-pages"
           self.initPagesBranch().then ->
@@ -86,7 +86,7 @@
             message: message
             branch: branch
         else
-          ;#TODO Return a promise in the correct state
+          Deferred().reject(arguments...)
 
     latestTree: (branch="master") ->
       get("git/refs/heads/#{branch}")
@@ -131,13 +131,14 @@
         return data
 
       get("git/#{ref}")
-      .then(setBranch)
-      .fail (request) ->
+      .then setBranch # Success
+      , (request) -> # Failure
         branchNotFound = (request.status is 404)
 
         if branchNotFound
           # Create branch if it doesn't exist
           # Use our current branch as a base
+          # TODO: Should we always branch from the repo's default branch?
           get("git/refs/heads/#{self.branch()}")
           .then (data) ->
             post "git/refs",

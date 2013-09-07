@@ -14,8 +14,6 @@
 
     newIssue: ->
       if title = prompt("Issue title")
-        console.log title
-        
         self.repository.createIssue
           title: title
         .then (data) ->
