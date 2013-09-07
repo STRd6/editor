@@ -9,8 +9,6 @@ Integrate with Github Issues
 - Commit/deploy to branch for issue
 - TODO figure out how to handle merges (github interface, then reload and redeploy from master?)
 
-Repository Object to encapsulate repo/branch and make creating/loading trees and issues easier
-
 Literate Code
 
 Generate Docs
@@ -33,8 +31,6 @@ Tests
 
 Display Diffs
 
-Gistquire promises refactor
-
 First auth doesn't display in bar
 
 Cache Git trees and files in some form of local storage
@@ -45,6 +41,10 @@ Editor plugins
 
 DONE
 ----
+Gistquire promises refactor
+
+Repository Object to encapsulate repo/branch and make creating/loading trees and issues easier
+
 Compile Error file and line number in error messages
 
 Saving UTF8 Characters gets messed up
