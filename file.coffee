@@ -17,4 +17,12 @@
         else
           extension
 
+    modified: Observable(false)
+
+    displayName: Observable(self.path())
+
+  self.content.observe ->
+    self.modified(true)
+    self.displayName("*#{self.path()}")
+
   return self

@@ -2,7 +2,7 @@
   - selectedFile = @selectedFile
   - files = @files
   - each files, (file) ->
-    %li= file.path
+    %li= file.displayName
       - on "click", (e) -> 
         - selectedFile(file) if $(e.target).is('li')
       .delete
