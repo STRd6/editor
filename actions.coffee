@@ -1,5 +1,5 @@
-publish = ({builder, fileData, repository, branch}) ->
-  branch ?= "master"
+publish = ({builder, fileData, repository}) ->
+  branch = repository.branch()
   message = "Built #{branch} in browser in strd6.github.io/tempest"
 
   if branch is "master"
@@ -18,7 +18,7 @@ publish = ({builder, fileData, repository, branch}) ->
       branch: publishBranch
       message: message
 
-commit = ({fileData, repository, branch, message}) ->
+commit = ({fileData, repository, message}) ->
   repository.commitTree
     tree: fileData
     message: message

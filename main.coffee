@@ -130,11 +130,14 @@ issues.repository = repository
 issues.currentIssue.observe (issue) ->
   if issue
     notices [issue.fullDescription()]
-    
+
     # Switch to branch for working on the issue
     repository.switchToBranch(issue.branchName())
-    .then (ref) ->
-      
+    .then ->
+      Actions.load
+        repository: repository
+        filetree: filetree
+
   else
     notices ["No issue selected"]
 

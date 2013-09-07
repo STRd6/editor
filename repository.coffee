@@ -4,6 +4,7 @@
 
   self = Model(I).observeAll()
   
+  # The currently active branch in the working copy
   self.attrObservable "branch"
   
   # TODO: Extract all of these methods to an API generator
@@ -94,8 +95,8 @@
       .then (data) ->
         get "#{data.tree.url}?recursive=1"
 
-    commitTree: ({branch, message, tree}) ->
-      branch ?= self.branch()
+    commitTree: ({message, tree}) ->
+      branch = self.branch()
       message ?= "Updated in browser at strd6.github.io/editor"
       
       unless tree
