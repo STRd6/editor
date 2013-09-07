@@ -15,7 +15,15 @@
     newIssue: ->
       if title = prompt("Issue title")
         console.log title
+        
         self.repository.createIssue
           title: title
+        .then (data) ->
+          issue = Issue(data)
+
+          self.issues.push issue
+          self.currentIssue(issue)
+      else
+        Deferred().reject("No title given")
 
   return self
