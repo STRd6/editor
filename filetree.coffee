@@ -25,4 +25,9 @@
         file.modified()
       .length
 
+    # TODO: Use git trees and content shas to robustly manage changed state
+    markSaved: ->
+      files.each (file) ->
+        file.modified(false)
+
   return self
