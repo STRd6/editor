@@ -27,7 +27,7 @@
 
     # TODO: Use git trees and content shas to robustly manage changed state
     markSaved: ->
-      files.each (file) ->
+      self.files().each (file) ->
         file.modified(false)
 
   return self
