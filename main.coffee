@@ -82,24 +82,26 @@ actions =
         content: ""
 
   load_repo: ->
-    fullName = prompt("Github repo", "STRd6/issues")
-    
-    if fullName
-      repository = Repository
-        url: "repos/#{fullName}"
-    else
-      errors ["No repo given"]
-
-      return
-
-    Actions.load
-      repository: repository
-      filetree: filetree
+    Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
     .then ->
-      issues.repository = repository
-      repository.issues().then issues.reset
-    .fail ->
-      errors ["Error loading #{repository.url()}"]
+      fullName = prompt("Github repo", "STRd6/issues")
+      
+      if fullName
+        repository = Repository
+          url: "repos/#{fullName}"
+      else
+        errors ["No repo given"]
+  
+        return
+  
+      Actions.load
+        repository: repository
+        filetree: filetree
+      .then ->
+        issues.repository = repository
+        repository.issues().then issues.reset
+      .fail ->
+        errors ["Error loading #{repository.url()}"]
 
 filetree = Filetree()
 filetree.load(files)
@@ -135,13 +137,24 @@ issues.repository = repository
 issues.currentIssue.observe (issue) ->
   if issue
     notices [issue.fullDescription()]
+    
+    previousBranch = repository.branch()
 
-    # Switch to branch for working on the issue
-    repository.switchToBranch(issue.branchName())
+    Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
     .then ->
-      Actions.load
-        repository: repository
-        filetree: filetree
+      # Switch to branch for working on the issue
+      repository.switchToBranch(issue.branchName())
+      .then ->
+        Actions.load
+          repository: repository
+          filetree: filetree
+    , ->
+      # TODO: Issue will appear as being selected even though we cancelled
+      # To correctly handle this we may need to really beef up our observables.
+      # One possibility is to extend observables to full fledged deferreds
+      # which can be rejected by listeners added to the chain.
+      
+      repository.branch(previousBranch)
 
   else
     notices ["No issue selected"]
