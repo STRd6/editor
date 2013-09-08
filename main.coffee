@@ -65,6 +65,11 @@ actions =
       fileData: filetree.data()
       builder: builder
     .then ->
+      # TODO: This could get slightly out of sync if there were changes
+      # during the async call
+      # The correct solution will be to use git shas to determine changed status
+      # but that's a little heavy duty for right now.
+      filetree.markSaved()
       notices ["Saved and published!"]
 
   run: ->
@@ -157,3 +162,7 @@ Gistquire.api "rate_limit",
   complete: (request, status) ->
     $root.append HAMLjr.templates.github_status
       request: request
+
+window.onbeforeunload = ->
+  if filetree.hasUnsavedChanges()
+    "You have some unsaved changes, if you leave now you will lose your work."
