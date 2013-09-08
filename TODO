@@ -1,7 +1,5 @@
 TODO
 ----
-Track modified state for files and prompt before losing unsaved data
-
 Figure out how to handle merges (github interface, then reload and redeploy from master?)
 
 Literate Code
