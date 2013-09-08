@@ -33,4 +33,14 @@
         content: file.content()
         type: "blob"
 
+    hasUnsavedChanges: ->
+      self.files().select (file) ->
+        file.modified()
+      .length
+
+    # TODO: Use git trees and content shas to robustly manage changed state
+    markSaved: ->
+      self.files().each (file) ->
+        file.modified(false)
+
   return self

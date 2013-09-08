@@ -23,6 +23,11 @@
 
   self.content.observe ->
     self.modified(true)
-    self.displayName("*#{self.path()}")
+    
+  self.modified.observe (modified) ->
+    if modified
+      self.displayName("*#{self.path()}")
+    else
+      self.displayName(self.path())
 
   return self
