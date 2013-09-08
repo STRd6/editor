@@ -21,7 +21,7 @@
         type: "blob"
 
     hasUnsavedChanges: ->
-      files.select (file) ->
+      self.files().select (file) ->
         file.modified()
       .length
 
