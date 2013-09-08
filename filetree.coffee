@@ -20,4 +20,9 @@
         content: file.content()
         type: "blob"
 
+    hasUnsavedChanges: ->
+      files.select (file) ->
+        file.modified()
+      .length
+
   return self

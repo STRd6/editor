@@ -157,3 +157,7 @@ Gistquire.api "rate_limit",
   complete: (request, status) ->
     $root.append HAMLjr.templates.github_status
       request: request
+
+window.onbeforeunload = ->
+  if filetree.hasUnsavedChanges()
+    "You have some unsaved changes, if you leave now you will lose your work."
