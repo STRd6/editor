@@ -4,6 +4,7 @@
 # For debugging
 window.ENV = ENV
 
+# TODO: Move notifications stuff into its own class
 classicError = (request) ->
   notices []
   
@@ -13,6 +14,10 @@ classicError = (request) ->
     message = "Error"
 
   errors [message]
+
+notify = (message) ->
+  notices [message]
+  errors []
 
 # TODO: Move to env utils
 currentNode = ->
@@ -189,18 +194,16 @@ issues.repository = repository
 issues.currentIssue.observe (issue) ->
   # TODO: Formalize this later
   return if issues.silent
-
-  if issue
-    notices [issue.fullDescription()]
-    
+  
+  changeBranch = (branchName) ->
     previousBranch = repository.branch()
 
     Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
     .then ->
       # Switch to branch for working on the issue
-      repository.switchToBranch(issue.branchName())
+      repository.switchToBranch(branchName)
       .then ->
-        notices.push "\nLoading branch..."
+        notices.push "\nLoading branch #{branchName}..."
         
         Actions.load
           repository: repository
@@ -215,8 +218,16 @@ issues.currentIssue.observe (issue) ->
       
       repository.branch(previousBranch)
 
-  else
-    notices ["No issue selected"]
+      errors ["Error switching to #{branchName}, still on #{previousBranch}"]
+
+  if issue
+    notify issue.fullDescription()
+    
+    changeBranch issue.branchName()
+  else    
+    notify "Default branch selected"
+    
+    changeBranch repository.defaultBranch()
 
 # Load initial issues
 repository.issues().then issues.reset
