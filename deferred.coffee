@@ -4,24 +4,33 @@
 # This let's us swap our our Deferred provider more easily later.
 @Deferred = $.Deferred
 
-Deferred.Confirm = (message) ->
+withDeferrence = (fn) ->
   deferred = Deferred()
 
-  (->
+  try
+    fn.defer(deferred)
+  catch e
+    deferred.reject(e)
+
+  return deferred.promise()
+
+Deferred.Confirm = (message) ->
+  withDeferrence ->
     if window.confirm(message)
       deferred.resolve()
     else
       deferred.reject()
-  ).defer()
-
-  return deferred.promise()
 
 Deferred.ConfirmIf = (flag, message) ->
   if flag
     return Deferred.Confirm(message)
   else
-    deferred = Deferred()
+    withDeferrence (deferred) ->
+      deferred.resolve()
 
-    (-> deferred.resolve()).defer()
-
-    return deferred.promise()
+Deferred.ExecuteIf = (flag, callback) ->
+  withDeferrence (deferred) ->
+    if flag
+      callback().then deferred.resolve
+    else
+      deferred.resolve()

@@ -12,6 +12,7 @@
       self.currentIssue(undefined)
       self.issues issueData.map(Issue)
 
+    # TODO: Move this button into actions bar
     newIssue: ->
       if title = prompt("Issue title")
         self.repository.createIssue
@@ -23,8 +24,5 @@
           self.currentIssue(issue)
       else
         Deferred().reject("No title given")
-
-    mergeIntoMaster: ->
-      self.repository.mergeInto()
 
   return self
