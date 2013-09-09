@@ -4,6 +4,16 @@
 # For debugging
 window.ENV = ENV
 
+classicError = (request) ->
+  notices []
+  
+  if request.responseJSON
+    message = JSON.stringify(request.responseJSON, null, 2)
+  else
+    message = "Error"
+
+  errors [message]
+
 # TODO: Move to env utils
 currentNode = ->
   target = document.documentElement
@@ -107,6 +117,27 @@ actions =
       .fail ->
         errors ["Error loading #{repository.url()}"]
         
+  new_feature: ->
+    if title = prompt("Description")
+      notices ["Creating feature branch..."]
+    
+      repository.createIssue
+        title: title
+      .then (data) ->
+        issue = Issue(data)
+        issues.issues.push issue
+
+        # TODO: Standardize this like backbone or something
+        # or think about using deferreds in some crazy way
+        issues.silent = true
+        issues.currentIssue issue
+        issues.silent = false
+
+        notices.push "Created!"
+      .fail classicError
+    else
+      errors [""]
+        
   "master <<": ->
     # Save to our current branch if we have unsaved changes
     Deferred.ExecuteIf(filetree.hasUnsavedChanges(), actions.save)
@@ -156,6 +187,9 @@ issues = Issues()
 issues.repository = repository
 
 issues.currentIssue.observe (issue) ->
+  # TODO: Formalize this later
+  return if issues.silent
+
   if issue
     notices [issue.fullDescription()]
     

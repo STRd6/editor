@@ -12,17 +12,4 @@
       self.currentIssue(undefined)
       self.issues issueData.map(Issue)
 
-    # TODO: Move this button into actions bar
-    newIssue: ->
-      if title = prompt("Issue title")
-        self.repository.createIssue
-          title: title
-        .then (data) ->
-          issue = Issue(data)
-
-          self.issues.push issue
-          self.currentIssue(issue)
-      else
-        Deferred().reject("No title given")
-
   return self
