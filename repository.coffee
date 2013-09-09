@@ -148,4 +148,9 @@
         else
           $.Deferred().reject(arguments...)
 
+    mergeInto: (branch="master") ->
+      post "merges",
+        base: branch
+        head: self.branch()
+
   return self

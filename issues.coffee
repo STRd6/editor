@@ -24,4 +24,7 @@
       else
         Deferred().reject("No title given")
 
+    mergeIntoMaster: ->
+      self.repository.mergeInto()
+
   return self
