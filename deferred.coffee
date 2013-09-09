@@ -16,7 +16,7 @@ withDeferrence = (fn) ->
   return deferred.promise()
 
 Deferred.Confirm = (message) ->
-  withDeferrence ->
+  withDeferrence (deferred) ->
     if window.confirm(message)
       deferred.resolve()
     else
