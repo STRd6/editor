@@ -131,7 +131,7 @@ actions =
     if title = prompt("Description")
       notices ["Creating feature branch..."]
     
-      repository.createIssue
+      repository.createPullRequest
         title: title
       .then (data) ->
         issue = Issue(data)
