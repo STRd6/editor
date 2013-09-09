@@ -41,6 +41,7 @@
       head = title.dasherize()
 
       self.switchToBranch(head)
+      .then(self.commitEmpty)
       .then ->
         post "pulls",
           base: I.defaultBranch
@@ -125,6 +126,26 @@
           parents: [latestCommitSha]
           message: message
           tree: data.sha
+      .then (data) ->
+        # Update the branch head
+        patch "git/refs/heads/#{branch}",
+          sha: data.sha
+    
+    # TODO: this is currently a hack because we can't create a pull request
+    # if there are no different commits
+    commitEmpty: ->
+      branch = self.branch()
+      latestCommit = null
+      
+      get("git/refs/heads/#{branch}")
+      .then (data) ->
+        get data.object.url
+      .then (data) ->
+        # Create another commit
+        post "git/commits",
+          parents: [data.sha]
+          message: message
+          tree: data.tree.sha
       .then (data) ->
         # Update the branch head
         patch "git/refs/heads/#{branch}",
