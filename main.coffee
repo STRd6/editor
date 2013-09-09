@@ -81,16 +81,14 @@ actions =
         filename: name
         content: ""
 
-  # TODO: If this branch is not given it should be the repository default branch
-  load_repo: (branch="master") ->
+  load_repo: (skipPrompt) ->
     Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
     .then ->
-      fullName = prompt("Github repo", "STRd6/issues")
-      
+      fullName = prompt("Github repo", fullName) unless skipPrompt
+
       if fullName
         repository = Repository
           url: "repos/#{fullName}"
-          branch: branch
       else
         errors ["No repo given"]
   
