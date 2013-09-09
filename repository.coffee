@@ -144,7 +144,7 @@
         # Create another commit
         post "git/commits",
           parents: [data.sha]
-          message: message
+          message: "This commit intentionally left blank"
           tree: data.tree.sha
       .then (data) ->
         # Update the branch head
