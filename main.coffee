@@ -117,7 +117,7 @@ actions =
       notices ["Merged"]
       # TODO: Should CI build and deploy master branch?
       # Switch to master branch and deploy
-      actions.load_repo()
+      actions.load_repo(true)
       .then actions.save
       
     , (request) ->
