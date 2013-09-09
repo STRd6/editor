@@ -119,8 +119,6 @@ compileFile = ({path, content}) ->
         path: "style.css"
         content: distStyle
         type: "blob"
-        
-    debugger
 
     callback postProcessors.pipeline
       source: arrayToHash(fileData)
