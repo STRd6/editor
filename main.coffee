@@ -8,7 +8,7 @@ classicError = (request) ->
   notices []
   
   if request.responseJSON
-    message = JSON.stringify(request.responseJSON)
+    message = JSON.stringify(request.responseJSON, null, 2)
   else
     message = "Error"
 
