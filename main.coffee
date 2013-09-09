@@ -168,9 +168,13 @@ issues.currentIssue.observe (issue) ->
       # Switch to branch for working on the issue
       repository.switchToBranch(issue.branchName())
       .then ->
+        notices.push "\nLoading branch..."
+        
         Actions.load
           repository: repository
           filetree: filetree
+        .then ->
+          notices.push "Loaded!"
     , ->
       # TODO: Issue will appear as being selected even though we cancelled
       # To correctly handle this we may need to really beef up our observables.
