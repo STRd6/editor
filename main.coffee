@@ -60,7 +60,10 @@ repositoryLoaded = (repository) ->
   repository.pullRequests().then issues.reset
   
   notices ["Finished loading!"]
-        
+  
+confirmUnsaved = ->
+  Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
+
 issues = Issues()
 
 # Repo metadata for env
@@ -105,7 +108,7 @@ actions =
         content: ""
 
   load_repo: (skipPrompt) ->
-    Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
+    confirmUnsaved()
     .then ->
       fullName = prompt("Github repo", fullName) unless skipPrompt
 
@@ -144,9 +147,25 @@ actions =
         issues.silent = false
 
         notices.push "Created!"
-      .fail classicError
-    else
-      errors [""]
+      , classicError
+      
+  pull_master: ->
+    confirmUnsaved()
+    .then( ->
+      notify "Merging in default branch..."
+      repository.pullFromBranch()
+    , classicError
+    ).then ->
+      notices.push "Merged!"
+      
+      branchName = repository.branch()
+      notices.push "\nReloading branch #{branchName}..."
+        
+      Actions.load
+        repository: repository
+        filetree: filetree
+      .then ->
+        notices.push "Loaded!"
 
 filetree = Filetree()
 filetree.load(files)
@@ -185,7 +204,7 @@ issues.currentIssue.observe (issue) ->
   changeBranch = (branchName) ->
     previousBranch = repository.branch()
 
-    Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
+    confirmUnsaved()
     .then ->
       # Switch to branch for working on the issue
       repository.switchToBranch(branchName)
