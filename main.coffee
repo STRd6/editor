@@ -81,7 +81,8 @@ actions =
         filename: name
         content: ""
 
-  load_repo: ->
+  # TODO: If this branch is not given it should be the repository default branch
+  load_repo: (branch="master") ->
     Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
     .then ->
       fullName = prompt("Github repo", "STRd6/issues")
@@ -89,10 +90,13 @@ actions =
       if fullName
         repository = Repository
           url: "repos/#{fullName}"
+          branch: branch
       else
         errors ["No repo given"]
   
         return
+  
+      notices ["Loading repo..."]
   
       Actions.load
         repository: repository
@@ -100,15 +104,24 @@ actions =
       .then ->
         issues.repository = repository
         repository.issues().then issues.reset
+        
+        notices ["Finished loading!"]
       .fail ->
         errors ["Error loading #{repository.url()}"]
         
   "master <<": ->
-    repository.mergeInto()
+    # Save to our current branch if we have unsaved changes
+    Deferred.ExecuteIf(filetree.hasUnsavedChanges(), actions.save)
+    .then ->
+      notices ["Merging"]
+      repository.mergeInto()
     .then ->
       notices ["Merged"]
-      # TODO: Switch to master branch, build and deploy
-      # OR: CI should build and deploy master
+      # TODO: Should CI build and deploy master branch?
+      # Switch to master branch and deploy
+      actions.load_repo()
+      .then actions.save
+      
     , (request) ->
       notices []
       errors [request.responseJSON or "Error merging"]
