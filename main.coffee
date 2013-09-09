@@ -113,7 +113,7 @@ actions =
         title: title
       .then (data) ->
         issue = Issue(data)
-        issues.push issue
+        issues.issues.push issue
 
         # TODO: Standardize this like backbone or something
         # or think about using deferreds in some crazy way
