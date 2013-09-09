@@ -85,7 +85,6 @@ compileFile = ({path, content}) ->
       result.error
 
     if errors.length
-      debugger
       I.errors errors
 
       return
