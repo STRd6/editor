@@ -177,10 +177,15 @@
         else
           Deferred().reject(arguments...)
 
-    mergeInto: (branch="master") ->
+    mergeInto: (branch=self.defaultBranch()) ->
       # TODO: Use default branch rather than master
       post "merges",
         base: branch
         head: self.branch()
+        
+    pullFromBranch: (branch=self.defaultBranch()) ->
+      post "merges",
+        base: self.branch()
+        head: branch
 
   return self
