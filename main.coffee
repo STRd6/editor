@@ -55,6 +55,14 @@ builder = Builder
   errors: errors
   notices: notices
 
+repositoryLoaded = (repository) ->
+  issues.repository = repository
+  repository.pullRequests().then issues.reset
+  
+  notices ["Finished loading!"]
+        
+issues = Issues()
+
 # Repo metadata for env
 builder.addPostProcessor (data) ->
   # TODO: Track commit SHA as well
@@ -115,10 +123,7 @@ actions =
         repository: repository
         filetree: filetree
       .then ->
-        issues.repository = repository
-        repository.issues().then issues.reset
-        
-        notices ["Finished loading!"]
+        repositoryLoaded(repository)
       .fail ->
         errors ["Error loading #{repository.url()}"]
         
@@ -126,7 +131,7 @@ actions =
     if title = prompt("Description")
       notices ["Creating feature branch..."]
     
-      repository.createIssue
+      repository.createPullRequest
         title: title
       .then (data) ->
         issue = Issue(data)
@@ -142,23 +147,6 @@ actions =
       .fail classicError
     else
       errors [""]
-        
-  "master <<": ->
-    # Save to our current branch if we have unsaved changes
-    Deferred.ExecuteIf(filetree.hasUnsavedChanges(), actions.save)
-    .then ->
-      notices ["Merging"]
-      repository.mergeInto()
-    .then ->
-      notices ["Merged"]
-      # TODO: Should CI build and deploy master branch?
-      # Switch to master branch and deploy
-      actions.load_repo(true)
-      .then actions.save
-      
-    , (request) ->
-      notices []
-      errors [request.responseJSON or "Error merging"]
 
 filetree = Filetree()
 filetree.load(files)
@@ -188,8 +176,7 @@ filetree.selectedFile.observe (file) ->
       # Autorun
       # actions.run()
 
-issues = Issues()
-issues.repository = repository
+repositoryLoaded(repository)
 
 issues.currentIssue.observe (issue) ->
   # TODO: Formalize this later
@@ -228,9 +215,6 @@ issues.currentIssue.observe (issue) ->
     notify "Default branch selected"
     
     changeBranch repository.defaultBranch()
-
-# Load initial issues
-repository.issues().then issues.reset
 
 $root
   .append(HAMLjr.templates.main(
