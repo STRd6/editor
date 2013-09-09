@@ -4,6 +4,10 @@
 # For debugging
 window.ENV = ENV
 
+classicError = (request) ->
+  notices []
+  errors [request.responseJSON or "Error"]
+
 # TODO: Move to env utils
 currentNode = ->
   target = document.documentElement
@@ -109,6 +113,8 @@ actions =
         
   new_feature: ->
     if title = prompt("Description")
+      notices ["Creating feature branch..."]
+    
       repository.createIssue
         title: title
       .then (data) ->
@@ -121,8 +127,10 @@ actions =
         issues.currentIssue issue
         issues.silent = false
 
+        notices.push "Created!"
+      .fail classicError
     else
-      Deferred().reject("No title given")
+      errors [""]
         
   "master <<": ->
     # Save to our current branch if we have unsaved changes
