@@ -225,13 +225,13 @@ issues.currentIssue.observe (issue) ->
       errors ["Error switching to #{branchName}, still on #{previousBranch}"]
 
   if issue
-    notices [issue.fullDescription()]
+    notify issue.fullDescription()
     
     changeBranch issue.branchName()
 
-  else
-    resetNotifications()
-    
+  else    
+    notify "Default branch selected"
+
     defaultBranch = repository.defaultBranch()
     
     changeBranch defaultBranch
