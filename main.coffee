@@ -102,6 +102,16 @@ actions =
         repository.issues().then issues.reset
       .fail ->
         errors ["Error loading #{repository.url()}"]
+        
+    "merge to master": ->
+      repository.mergeInto()
+      .then ->
+        notices ["Merged"]
+        # TODO: Switch to master branch, build and deploy
+        # OR: CI should build and deploy master
+      , (request) ->
+        notices []
+        errors [request.responseJSON or "Error merging"]
 
 filetree = Filetree()
 filetree.load(files)

@@ -149,6 +149,7 @@
           $.Deferred().reject(arguments...)
 
     mergeInto: (branch="master") ->
+      # TODO: Use default branch rather than master
       post "merges",
         base: branch
         head: self.branch()
