@@ -228,13 +228,10 @@ issues.currentIssue.observe (issue) ->
     notify issue.fullDescription()
     
     changeBranch issue.branchName()
-
   else    
     notify "Default branch selected"
-
-    defaultBranch = repository.defaultBranch()
     
-    changeBranch defaultBranch
+    changeBranch repository.defaultBranch()
 
 # Load initial issues
 repository.issues().then issues.reset
