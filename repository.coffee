@@ -34,10 +34,10 @@
     api path, requestOptions("PATCH", data)
 
   self.extend
-    issues: ->
-      get "issues"
+    pullRequests: ->
+      get "pulls"
 
-    createIssue: ({title}) ->
+    createPullRequest: ({title}) ->
       head = title.dasherize()
 
       self.switchToBranch(head)

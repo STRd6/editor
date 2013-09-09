@@ -5,7 +5,7 @@
 
   self.extend
     optionText: ->
-      "#{I.number} - #{I.title}"
+      "#{I.title}"
 
     fullDescription: ->
       """
@@ -15,6 +15,6 @@
       """
 
     branchName: ->
-      I.head?.ref? or "issue-#{I.number}"
+      I.head?.ref or "issue-#{I.number}"
 
   return self
