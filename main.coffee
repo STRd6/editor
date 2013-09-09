@@ -107,6 +107,23 @@ actions =
       .fail ->
         errors ["Error loading #{repository.url()}"]
         
+  new_feature: ->
+    if title = prompt("Description")
+      repository.createIssue
+        title: title
+      .then (data) ->
+        issue = Issue(data)
+        issues.push issue
+
+        # TODO: Standardize this like backbone or something
+        # or think about using deferreds in some crazy way
+        issues.silent = true
+        issues.currentIssue issue
+        issues.silent = false
+
+    else
+      Deferred().reject("No title given")
+        
   "master <<": ->
     # Save to our current branch if we have unsaved changes
     Deferred.ExecuteIf(filetree.hasUnsavedChanges(), actions.save)
@@ -156,6 +173,9 @@ issues = Issues()
 issues.repository = repository
 
 issues.currentIssue.observe (issue) ->
+  # TODO: Formalize this later
+  return if issues.silent
+
   if issue
     notices [issue.fullDescription()]
     

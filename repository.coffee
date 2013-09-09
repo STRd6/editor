@@ -1,6 +1,7 @@
 @Repository = (I={}) ->
   Object.defaults I,
     branch: "master"
+    defaultBranch: "master"
 
   self = Model(I).observeAll()
   
@@ -36,9 +37,16 @@
     issues: ->
       get "issues"
 
-    createIssue: (params) ->
-      post "issues", params
-      
+    createIssue: ({title}) ->
+      head = title.dasherize()
+
+      self.switchToBranch(head)
+      .then ->
+        post "pulls",
+          base: I.defaultBranch
+          head: head
+          title: title
+
     initPagesBranch: ->
       branch = "gh-pages"
     
@@ -146,7 +154,7 @@
               sha: data.object.sha
           .then(setBranch)
         else
-          $.Deferred().reject(arguments...)
+          Deferred().reject(arguments...)
 
     mergeInto: (branch="master") ->
       # TODO: Use default branch rather than master
