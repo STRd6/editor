@@ -18,10 +18,6 @@ classicError = (request) ->
 notify = (message) ->
   notices [message]
   errors []
-  
-resetNotifications = ->
-  notices []
-  errors []
 
 # TODO: Move to env utils
 currentNode = ->
