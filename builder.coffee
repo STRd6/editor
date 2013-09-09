@@ -8,6 +8,7 @@ stripMarkdown = (content) ->
       line[match[0].length..]
     else
       ""
+  .join("\n")
 
 compileTemplate = (source, name="test") ->
   ast = HAMLjr.parser.parse(source)
@@ -36,7 +37,7 @@ compileFile = ({path, content}) ->
       when "md"
         # Separate out code and call compile again
         compileFile
-          name: name
+          path: name
           content: stripMarkdown(content)
       else
         {}
@@ -44,6 +45,8 @@ compileFile = ({path, content}) ->
   Object.defaults result,
     name: name
     extension: extension
+
+  Object.extend result,
     path: path
 
 @Builder = (I={}) ->
