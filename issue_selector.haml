@@ -1,8 +1,5 @@
 %select
   - on "change", @currentIssue
-  %option
+  %option= "- Default Branch -"
   - each @issues, ->
     %option= @optionText()
-
-%button New Issue
-  - on "click", @newIssue

@@ -4,6 +4,21 @@
 # For debugging
 window.ENV = ENV
 
+# TODO: Move notifications stuff into its own class
+classicError = (request) ->
+  notices []
+  
+  if request.responseJSON
+    message = JSON.stringify(request.responseJSON, null, 2)
+  else
+    message = "Error"
+
+  errors [message]
+
+notify = (message) ->
+  notices [message]
+  errors []
+
 # TODO: Move to env utils
 currentNode = ->
   target = document.documentElement
@@ -39,6 +54,17 @@ notices = Observable(["Loaded!"])
 builder = Builder
   errors: errors
   notices: notices
+
+repositoryLoaded = (repository) ->
+  issues.repository = repository
+  repository.pullRequests().then issues.reset
+  
+  notices ["Finished loading!"]
+  
+confirmUnsaved = ->
+  Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
+
+issues = Issues()
 
 # Repo metadata for env
 builder.addPostProcessor (data) ->
@@ -82,7 +108,7 @@ actions =
         content: ""
 
   load_repo: (skipPrompt) ->
-    Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
+    confirmUnsaved()
     .then ->
       fullName = prompt("Github repo", fullName) unless skipPrompt
 
@@ -100,29 +126,46 @@ actions =
         repository: repository
         filetree: filetree
       .then ->
-        issues.repository = repository
-        repository.issues().then issues.reset
-        
-        notices ["Finished loading!"]
+        repositoryLoaded(repository)
       .fail ->
         errors ["Error loading #{repository.url()}"]
         
-  "master <<": ->
-    # Save to our current branch if we have unsaved changes
-    Deferred.ExecuteIf(filetree.hasUnsavedChanges(), actions.save)
-    .then ->
-      notices ["Merging"]
-      repository.mergeInto()
-    .then ->
-      notices ["Merged"]
-      # TODO: Should CI build and deploy master branch?
-      # Switch to master branch and deploy
-      actions.load_repo(true)
-      .then actions.save
+  new_feature: ->
+    if title = prompt("Description")
+      notices ["Creating feature branch..."]
+    
+      repository.createPullRequest
+        title: title
+      .then (data) ->
+        issue = Issue(data)
+        issues.issues.push issue
+
+        # TODO: Standardize this like backbone or something
+        # or think about using deferreds in some crazy way
+        issues.silent = true
+        issues.currentIssue issue
+        issues.silent = false
+
+        notices.push "Created!"
+      , classicError
       
-    , (request) ->
-      notices []
-      errors [request.responseJSON or "Error merging"]
+  pull_master: ->
+    confirmUnsaved()
+    .then( ->
+      notify "Merging in default branch..."
+      repository.pullFromBranch()
+    , classicError
+    ).then ->
+      notices.push "Merged!"
+      
+      branchName = repository.branch()
+      notices.push "\nReloading branch #{branchName}..."
+        
+      Actions.load
+        repository: repository
+        filetree: filetree
+      .then ->
+        notices.push "Loaded!"
 
 filetree = Filetree()
 filetree.load(files)
@@ -152,21 +195,21 @@ filetree.selectedFile.observe (file) ->
       # Autorun
       # actions.run()
 
-issues = Issues()
-issues.repository = repository
+repositoryLoaded(repository)
 
 issues.currentIssue.observe (issue) ->
-  if issue
-    notices [issue.fullDescription()]
-    
+  # TODO: Formalize this later
+  return if issues.silent
+  
+  changeBranch = (branchName) ->
     previousBranch = repository.branch()
 
-    Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
+    confirmUnsaved()
     .then ->
       # Switch to branch for working on the issue
-      repository.switchToBranch(issue.branchName())
+      repository.switchToBranch(branchName)
       .then ->
-        notices.push "\nLoading branch..."
+        notices.push "\nLoading branch #{branchName}..."
         
         Actions.load
           repository: repository
@@ -181,11 +224,16 @@ issues.currentIssue.observe (issue) ->
       
       repository.branch(previousBranch)
 
-  else
-    notices ["No issue selected"]
+      errors ["Error switching to #{branchName}, still on #{previousBranch}"]
 
-# Load initial issues
-repository.issues().then issues.reset
+  if issue
+    notify issue.fullDescription()
+    
+    changeBranch issue.branchName()
+  else    
+    notify "Default branch selected"
+    
+    changeBranch repository.defaultBranch()
 
 $root
   .append(HAMLjr.templates.main(

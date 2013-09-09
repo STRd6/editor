@@ -7,6 +7,7 @@
 withDeferrence = (fn) ->
   deferred = Deferred()
 
+  # TODO: This try catch may be useless from deferring the fn
   try
     fn.defer(deferred)
   catch e

@@ -1,6 +1,7 @@
 @Repository = (I={}) ->
   Object.defaults I,
     branch: "master"
+    defaultBranch: "master"
 
   self = Model(I).observeAll()
   
@@ -33,12 +34,20 @@
     api path, requestOptions("PATCH", data)
 
   self.extend
-    issues: ->
-      get "issues"
+    pullRequests: ->
+      get "pulls"
 
-    createIssue: (params) ->
-      post "issues", params
-      
+    createPullRequest: ({title}) ->
+      head = title.dasherize()
+
+      self.switchToBranch(head)
+      .then(self.commitEmpty)
+      .then ->
+        post "pulls",
+          base: I.defaultBranch
+          head: head
+          title: title
+
     initPagesBranch: ->
       branch = "gh-pages"
     
@@ -121,6 +130,26 @@
         # Update the branch head
         patch "git/refs/heads/#{branch}",
           sha: data.sha
+    
+    # TODO: this is currently a hack because we can't create a pull request
+    # if there are no different commits
+    commitEmpty: ->
+      branch = self.branch()
+      latestCommit = null
+      
+      get("git/refs/heads/#{branch}")
+      .then (data) ->
+        get data.object.url
+      .then (data) ->
+        # Create another commit
+        post "git/commits",
+          parents: [data.sha]
+          message: "This commit intentionally left blank"
+          tree: data.tree.sha
+      .then (data) ->
+        # Update the branch head
+        patch "git/refs/heads/#{branch}",
+          sha: data.sha
 
     switchToBranch: (branch) ->
       ref = "refs/heads/#{branch}"
@@ -146,12 +175,17 @@
               sha: data.object.sha
           .then(setBranch)
         else
-          $.Deferred().reject(arguments...)
+          Deferred().reject(arguments...)
 
-    mergeInto: (branch="master") ->
+    mergeInto: (branch=self.defaultBranch()) ->
       # TODO: Use default branch rather than master
       post "merges",
         base: branch
         head: self.branch()
+        
+    pullFromBranch: (branch=self.defaultBranch()) ->
+      post "merges",
+        base: self.branch()
+        head: branch
 
   return self
