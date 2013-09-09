@@ -6,7 +6,13 @@ window.ENV = ENV
 
 classicError = (request) ->
   notices []
-  errors [request.responseJSON or "Error"]
+  
+  if request.responseJSON
+    message = JSON.stringify(request.responseJSON)
+  else
+    message = "Error"
+
+  errors [message]
 
 # TODO: Move to env utils
 currentNode = ->
