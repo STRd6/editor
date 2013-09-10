@@ -12,6 +12,8 @@
       switch extension = self.extension()
         when "js"
           "javascript"
+        when "md" # TODO: See about nested markdown code modes for .haml.md, .js.md, and .coffee.md
+          "markdown"
         when ""
           "text"
         else
