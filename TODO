@@ -1,9 +1,9 @@
 TODO
 ----
 Publish build js files separate from HTML housing
-- Builds should be named <sha>.js and live in gh-pages
+- Builds should be named <branch>.js and live in gh-pages
 - HTML should contain the Tempest environment
-- HTML should link to the <sha>.js for the branch it was built in
+- HTML should link to the <branch>.js for the branch it was built in
 
 Dependencies
 - Dependencies should live in other git repos
