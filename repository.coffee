@@ -199,4 +199,33 @@
         base: self.branch()
         head: branch
 
+    publish: ({html, script}) ->
+      branch = self.branch()
+      message = "Built #{branch} in browser in strd6.github.io/tempest"
+
+      if branch is "master"
+        path = "index.html"
+      else
+        path = "#{branch}.html"
+
+      # Assuming git repo with gh-pages branch
+      publishBranch = "gh-pages"
+
+      # create <branch>.html
+      promise = self.writeFile
+        path: path
+        content: Base64.encode(html)
+        branch: publishBranch
+        message: message
+
+      # Create <branch>.js
+      if script
+        promise.then self.writeFile
+          path: "#{branch}.js"
+          content: Base64.encode(script)
+          branch: publishBranch
+          message: message
+      else
+        promise
+
   return self

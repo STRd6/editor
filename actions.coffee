@@ -1,23 +1,10 @@
 publish = ({builder, fileData, repository}) ->
-  branch = repository.branch()
-  message = "Built #{branch} in browser in strd6.github.io/tempest"
+  
+    builder.build(fileData)
+    .then (build) ->
+      branch = repository.branch()
 
-  if branch is "master"
-    path = "index.html"
-  else
-    path = "#{branch}.html"
-
-  # Assuming git repo with gh-pages branch
-  publishBranch = "gh-pages"
-
-  builder.build(fileData)
-  .then (build) ->
-    # create <ref>.html in gh-pages branch
-    repository.writeFile
-      path: path
-      content: Base64.encode(builder.standAloneHtml(build))
-      branch: publishBranch
-      message: message
+      repository.publish builder.standAlone(build, branch)
 
 commit = ({fileData, repository, message}) ->
   repository.commitTree
@@ -38,13 +25,14 @@ commit = ({fileData, repository, message}) ->
       else
         config = {}
       
+      html = builder.standAlone(build).html
+      
       sandbox = Sandbox
         width: config.width
         height: config.height
-      
-      sandbox.document.open()
-      sandbox.document.write(builder.standAloneHtml(build))
 
+      sandbox.document.open()
+      sandbox.document.write(html)
       sandbox.document.close()
 
       builder.I.notices? ["Running!"]

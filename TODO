@@ -1,13 +1,9 @@
 TODO
 ----
-Literate Code
-
-Generate Docs
-
 Publish build js files separate from HTML housing
-- Builds should be named <sha>.js and live in gh-pages
+- Builds should be named <branch>.js and live in gh-pages
 - HTML should contain the Tempest environment
-- HTML should link to the <sha>.js for the branch it was built in
+- HTML should link to the <branch>.js for the branch it was built in
 
 Dependencies
 - Dependencies should live in other git repos
@@ -18,6 +14,10 @@ Dependencies
 - Dependency metadata should appear in publish script
 - Should dependency source files appear in publish metadata?
 - Allow remote and bundled dependencies?
+
+Generate Docs
+
+Highlighting for Literate Code
 
 Live Update Demo
 - Display Demo Runtime Errors in console
