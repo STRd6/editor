@@ -80,7 +80,7 @@ documentFile = (content, path) ->
     [errors, data] = results.partition (result) -> result.error
     
     if errors.length
-      Deferred().resolve(errors.map (e) -> e.error)
+      Deferred().reject(errors.map (e) -> e.error)
     else
       Deferred().resolve(data)
 
@@ -105,7 +105,7 @@ documentFile = (content, path) ->
   build: (fileData) ->
     I.notices.push "Building..."
 
-    build(fileData).then (items) ->
+    build(fileData).done (items) ->
       results =
         code: []
         style: []
