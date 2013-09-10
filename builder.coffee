@@ -21,8 +21,7 @@ compileStyl = (source) ->
   styl(source, whitespace: true).toString()
 
 compileFile = ({path, content}) ->
-  name = path.split('/').last()
-  [name, extension] = [name.withoutExtension(), name.extension()]
+  [name, extension] = [path.withoutExtension(), path.extension()]
   
   result =
     switch extension
