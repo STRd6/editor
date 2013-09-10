@@ -64,7 +64,7 @@ documentFile = (content, path) ->
       compiler: CoffeeScript
   
   build = (fileData) ->    
-    fileData.map ({path, content}) ->
+    results = fileData.map ({path, content}) ->
       try
         # TODO: Separate out tests
 
@@ -76,6 +76,13 @@ documentFile = (content, path) ->
           message = "Error on line #{location.first_line + 1}: #{message}"
 
         error: "#{path} - #{message}"
+        
+    [errors, data] = results.partition (result) -> result.error
+    
+    if errors.length
+      Deferred().resolve(errors.map (e) -> e.error)
+    else
+      Deferred().resolve(data)
 
   postProcessors = []
 
@@ -95,53 +102,46 @@ documentFile = (content, path) ->
 
         error: "#{path} - #{message}"
 
-  build: (fileData, callback) ->
+  build: (fileData) ->
     I.notices.push "Building..."
 
-    [errors, builtItems] = build(fileData).partition (result) ->
-      result.error
+    build(fileData).then (items) ->
+      results =
+        code: []
+        style: []
+        main: []
 
-    if errors.length
-      I.errors errors
-
-      return
-
-    results =
-      code: []
-      style: []
-      main: []
-
-    builtItems.eachWithObject results, (item, hash) ->
-      if code = item.code
-        if item.name is "main" and (item.extension is "js" or item.extension is "coffee")
-          hash.main.push code
+      items.eachWithObject results, (item, hash) ->
+        if code = item.code
+          if item.name is "main" and (item.extension is "js" or item.extension is "coffee")
+            hash.main.push code
+          else
+            hash.code.push code
+        else if style = item.style
+          hash.style.push style
         else
-          hash.code.push code
-      else if style = item.style
-        hash.style.push style
-      else
-        # Do nothing, we don't know about this item
-    
-    distCode = results.code.concat(results.main).join(';').trim()
-    distStyle = results.style.join('').trim()
-
-    dist = []
-
-    unless distCode.blank()
-      dist.push
-        path: "build.js"
-        content: distCode
-        type: "blob"
-
-    unless distStyle.blank()
-      dist.push
-        path: "style.css"
-        content: distStyle
-        type: "blob"
-
-    callback postProcessors.pipeline
-      source: arrayToHash(fileData)
-      distribution: arrayToHash(dist)
+          # Do nothing, we don't know about this item
+      
+      distCode = results.code.concat(results.main).join(';').trim()
+      distStyle = results.style.join('').trim()
+  
+      dist = []
+  
+      unless distCode.blank()
+        dist.push
+          path: "build.js"
+          content: distCode
+          type: "blob"
+  
+      unless distStyle.blank()
+        dist.push
+          path: "style.css"
+          content: distStyle
+          type: "blob"
+  
+      Deferred().resolve postProcessors.pipeline
+        source: arrayToHash(fileData)
+        distribution: arrayToHash(dist)
 
   standAloneHtml: (build) ->
     {source, distribution} = build

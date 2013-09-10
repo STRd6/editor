@@ -9,8 +9,9 @@ publish = ({builder, fileData, repository}) ->
 
   # Assuming git repo with gh-pages branch
   publishBranch = "gh-pages"
-  
-  builder.build fileData, (build) ->
+
+  builder.build(fileData)
+  .then (build) ->
     # create <ref>.html in gh-pages branch
     repository.writeFile
       path: path
@@ -26,11 +27,12 @@ commit = ({fileData, repository, message}) ->
 @Actions =
   save: (params) ->
     commit(params)
-      .then ->
-        publish(params)
+    .then ->
+      publish(params)
 
   run: ({builder, filetree}) ->
-    builder.build filetree.data(), (build) ->
+    builder.build(filetree.data())
+    .then (build) ->
       if configData = build.source["pixie.json"]?.content
         config = JSON.parse(configData)
       else
