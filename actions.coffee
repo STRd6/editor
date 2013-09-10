@@ -66,22 +66,11 @@ commit = ({fileData, repository, message}) ->
         file.type is "blob"
 
       # Gather the data for each file
-      async.map treeFiles, (datum, callback) ->
+      $.when.apply(null, treeFiles.map (datum, callback) ->
         Gistquire.api(datum.url)
-        .then (data) ->
-          callback(null, Object.extend(datum, data))
-        .fail (request, error, message) ->
-          callback(message)
+      ).then (results...) ->
+        # Results include status and xhr as well as the data
+        fileData = results.map (result) -> result.first()
 
-      , (error, results) ->
-        if error
-          deferred.reject(error)
-
-          return
-
-        files = processDirectory results
+        files = processDirectory fileData
         filetree.load files
-
-        deferred.resolve(treeFiles)
-
-      deferred = $.Deferred()
