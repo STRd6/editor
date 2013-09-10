@@ -161,7 +161,9 @@ documentFile = (content, path) ->
   
     entryPoint = "build.js"
     program = distribution[entryPoint].content
-
+  
+    # TODO: Think about nesting, components
+    # TODO?: Exclude build.js from files
     content.push """</head><body><script>
       Function("ENV", #{JSON.stringify(program)})(#{JSON.stringify(build)});
     <\/script>"""
