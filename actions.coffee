@@ -9,8 +9,9 @@ publish = ({builder, fileData, repository}) ->
 
   # Assuming git repo with gh-pages branch
   publishBranch = "gh-pages"
-  
-  builder.build fileData, (build) ->
+
+  builder.build(fileData)
+  .then (build) ->
     # create <ref>.html in gh-pages branch
     repository.writeFile
       path: path
@@ -26,11 +27,12 @@ commit = ({fileData, repository, message}) ->
 @Actions =
   save: (params) ->
     commit(params)
-      .then ->
-        publish(params)
+    .then ->
+      publish(params)
 
   run: ({builder, filetree}) ->
-    builder.build filetree.data(), (build) ->
+    builder.build(filetree.data())
+    .then (build) ->
       if configData = build.source["pixie.json"]?.content
         config = JSON.parse(configData)
       else
@@ -57,31 +59,7 @@ commit = ({fileData, repository, message}) ->
         item.content = Base64.decode(item.content)
         item.encoding = "raw"
 
-    branch = repository.branch()
-
-    repository.latestTree(branch)
-    .then (data) ->
-
-      treeFiles = data.tree.select (file) ->
-        file.type is "blob"
-
-      # Gather the data for each file
-      async.map treeFiles, (datum, callback) ->
-        Gistquire.api(datum.url)
-        .then (data) ->
-          callback(null, Object.extend(datum, data))
-        .fail (request, error, message) ->
-          callback(message)
-
-      , (error, results) ->
-        if error
-          deferred.reject(error)
-
-          return
-
-        files = processDirectory results
-        filetree.load files
-
-        deferred.resolve(treeFiles)
-
-      deferred = $.Deferred()
+    repository.latestTree()
+    .then (results) ->
+      files = processDirectory results
+      filetree.load files

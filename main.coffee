@@ -100,6 +100,7 @@ actions =
 
   run: ->
     Actions.run({builder, filetree})
+    .fail errors
 
   new_file: ->
     if name = prompt("File Name", "newfile.coffee")
