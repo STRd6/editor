@@ -66,11 +66,10 @@ commit = ({fileData, repository, message}) ->
         file.type is "blob"
 
       # Gather the data for each file
-      $.when.apply(null, treeFiles.map (datum, callback) ->
+      $.when.apply(null, treeFiles.map (datum) ->
         Gistquire.api(datum.url)
+        .then (data) ->
+          Object.extend(datum, data)
       ).then (results...) ->
-        # Results include status and xhr as well as the data
-        fileData = results.map (result) -> result.first()
-
-        files = processDirectory fileData
+        files = processDirectory results
         filetree.load files
