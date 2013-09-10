@@ -97,12 +97,24 @@
         else
           Deferred().reject(arguments...)
 
-    latestTree: (branch="master") ->
+    latestTree: (branch=self.defaultBranch()) ->
       get("git/refs/heads/#{branch}")
       .then (data) ->
         get data.object.url
       .then (data) ->
         get "#{data.tree.url}?recursive=1"
+      .then (data) ->
+        files = data.tree.select (file) ->
+          file.type is "blob"
+  
+        # Gather the data for each file
+        $.when.apply(null, files.map (datum) ->
+          get(datum.url)
+          .then (data) ->
+            Object.extend(datum, data)
+        )
+      .then (results...) -> 
+        results
 
     commitTree: ({message, tree}) ->
       branch = self.branch()
@@ -167,7 +179,6 @@
         if branchNotFound
           # Create branch if it doesn't exist
           # Use our current branch as a base
-          # TODO: Should we always branch from the repo's default branch?
           get("git/refs/heads/#{self.branch()}")
           .then (data) ->
             post "git/refs",

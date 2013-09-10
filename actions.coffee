@@ -59,19 +59,7 @@ commit = ({fileData, repository, message}) ->
         item.content = Base64.decode(item.content)
         item.encoding = "raw"
 
-    branch = repository.branch()
-
-    repository.latestTree(branch)
-    .then (data) ->
-
-      treeFiles = data.tree.select (file) ->
-        file.type is "blob"
-
-      # Gather the data for each file
-      $.when.apply(null, treeFiles.map (datum) ->
-        Gistquire.api(datum.url)
-        .then (data) ->
-          Object.extend(datum, data)
-      ).then (results...) ->
-        files = processDirectory results
-        filetree.load files
+    repository.latestTree()
+    .then (results) ->
+      files = processDirectory results
+      filetree.load files
