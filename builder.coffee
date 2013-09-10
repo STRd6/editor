@@ -48,6 +48,13 @@ compileFile = ({path, content}) ->
   Object.extend result,
     path: path
 
+# TODO: Maybe doc more files than just .md?
+documentFile = (content, path) ->
+  if path.extension() is "md"
+    marked(content)
+  else
+    ""
+
 @Builder = (I={}) ->
   compileTemplate = (source, name="test") ->
     ast = HAMLjr.parser.parse(source)
@@ -76,6 +83,17 @@ compileFile = ({path, content}) ->
   
   addPostProcessor: (fn) ->
     postProcessors.push fn
+    
+  buildDocs: (fileData) ->
+    fileData.map ({path, content}) ->
+      try
+        path: path
+        documentation: documentFile(content, path)
+      catch {location, message}
+        if location?
+          message = "Error on line #{location.first_line + 1}: #{message}"
+
+        error: "#{path} - #{message}"
 
   build: (fileData, callback) ->
     I.notices.push "Building..."
