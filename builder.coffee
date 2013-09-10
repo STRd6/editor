@@ -2,6 +2,59 @@ arrayToHash = (array) ->
   array.eachWithObject {}, (file, hash) ->
     hash[file.path] = file
 
+stripMarkdown = (content) ->
+  content.split("\n").map (line) ->
+    if match = (/^([ ]{4}|\t)/).exec line
+      line[match[0].length..]
+    else
+      ""
+  .join("\n")
+
+compileTemplate = (source, name="test") ->
+  ast = HAMLjr.parser.parse(source)
+  
+  HAMLjr.compile ast, 
+    name: name
+    compiler: CoffeeScript
+    
+compileStyl = (source) ->
+  styl(source, whitespace: true).toString()
+
+compileFile = ({path, content}) ->
+  [name, extension] = [path.withoutExtension(), path.extension()]
+  
+  result =
+    switch extension
+      when "js"
+        code: content
+      when "coffee"
+        code: CoffeeScript.compile(content)
+      when "haml"
+        code: compileTemplate(content, name)
+      when "styl"
+        style: compileStyl(content)
+      when "md"
+        # Separate out code and call compile again
+        compileFile
+          path: name
+          content: stripMarkdown(content)
+      else
+        {}
+
+  Object.defaults result,
+    name: name
+    extension: extension
+
+  Object.extend result,
+    path: path
+
+# TODO: Maybe doc more files than just .md?
+documentFile = (content, path) ->
+  if path.extension() is "md"
+    marked(content)
+  else
+    ""
+
 @Builder = (I={}) ->
   compileTemplate = (source, name="test") ->
     ast = HAMLjr.parser.parse(source)
@@ -10,57 +63,19 @@ arrayToHash = (array) ->
       name: name
       compiler: CoffeeScript
   
-  build = (fileData) ->
-    templates = []
-    models = []
-    main = ""
-    errors = []
-  
-    fileData.each ({path, content}) ->
-      name = path.split('/').last()
-      source = content
-
+  build = (fileData) ->    
+    fileData.map ({path, content}) ->
       try
-        if name.extension() is "haml"
-          templates.push compileTemplate(source, name.withoutExtension())
-        else if name.extension() is "js"
-          if name is "main.js"
-            main = source
-          else
-            models.push "#{source};"
-        else if name.extension() is "coffee"
-          if name is "main.coffee"
-            main = CoffeeScript.compile(source)
-          else
-            models.push CoffeeScript.compile(source)
+        # TODO: Separate out tests
+
+        compileFile
+          path: path
+          content: content
       catch {location, message}
         if location?
           message = "Error on line #{location.first_line + 1}: #{message}"
 
-        message = "#{path} - #{message}"
-
-        errors.push message
-
-    errors: errors
-    result: """
-        #{templates.join("\n")}
-        #{models.join("\n")}
-        #{main}
-      """
-  
-  buildStyle = (fileData) ->
-    styles = []
-    errors = []
-    
-    fileData.each ({path, content}) ->
-      try
-        if path.extension() is "styl"
-          styles.push styl(content, whitespace: true).toString()
-      catch error
-        errors.push error.stack
-  
-    errors: errors
-    result: styles.join("\n")
+        error: "#{path} - #{message}"
 
   postProcessors = []
 
@@ -68,35 +83,65 @@ arrayToHash = (array) ->
   
   addPostProcessor: (fn) ->
     postProcessors.push fn
+    
+  buildDocs: (fileData) ->
+    fileData.map ({path, content}) ->
+      try
+        path: path
+        documentation: documentFile(content, path)
+      catch {location, message}
+        if location?
+          message = "Error on line #{location.first_line + 1}: #{message}"
+
+        error: "#{path} - #{message}"
 
   build: (fileData, callback) ->
     I.notices.push "Building..."
-    
-    {errors:collectedErrors, result:compileResult} = build(fileData)
 
-    {errors, result} = buildStyle(fileData)
-    collectedErrors = collectedErrors.concat(errors)
+    [errors, builtItems] = build(fileData).partition (result) ->
+      result.error
+
+    if errors.length
+      I.errors errors
+
+      return
+
+    results =
+      code: []
+      style: []
+      main: []
+
+    builtItems.eachWithObject results, (item, hash) ->
+      if code = item.code
+        if item.name is "main" and (item.extension is "js" or item.extension is "coffee")
+          hash.main.push code
+        else
+          hash.code.push code
+      else if style = item.style
+        hash.style.push style
+      else
+        # Do nothing, we don't know about this item
     
+    distCode = results.code.concat(results.main).join(';').trim()
+    distStyle = results.style.join('').trim()
+
     dist = []
 
-    if compileResult.trim() != ""
+    unless distCode.blank()
       dist.push
         path: "build.js"
-        content: compileResult
+        content: distCode
         type: "blob"
 
-    if result != ""
+    unless distStyle.blank()
       dist.push
         path: "style.css"
-        content: result
+        content: distStyle
         type: "blob"
 
-    if collectedErrors.length
-      I.errors?(collectedErrors)
-    else
-      callback postProcessors.pipeline
-        source: arrayToHash(fileData)
-        distribution: arrayToHash(dist)
+    callback postProcessors.pipeline
+      source: arrayToHash(fileData)
+      distribution: arrayToHash(dist)
 
   standAloneHtml: (build) ->
     {source, distribution} = build
