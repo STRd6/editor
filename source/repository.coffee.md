@@ -204,7 +204,6 @@ Currently the only parameter needed to initialize a repository instance is a
               Deferred().reject(arguments...)
     
         mergeInto: (branch=self.defaultBranch()) ->
-          # TODO: Use default branch rather than master
           post "merges",
             base: branch
             head: self.branch()
