@@ -1,10 +1,5 @@
 TODO
 ----
-Publish build js files separate from HTML housing
-- Builds should be named <branch>.js and live in gh-pages
-- HTML should contain the Tempest environment
-- HTML should link to the <branch>.js for the branch it was built in
-
 Dependencies
 - Dependencies should live in other git repos
 - Should be able to edit dependencies in a new editor easily
@@ -13,6 +8,7 @@ Dependencies
 - Dependencies shouldn't be in source
 - Dependency metadata should appear in publish script
 - Should dependency source files appear in publish metadata?
+- Should dependency build files appear in publish metadata?
 - Allow remote and bundled dependencies?
 
 Generate Docs
