@@ -201,7 +201,7 @@
 
     publish: ({html, script}) ->
       branch = self.branch()
-      message = "Built #{branch} in browser in strd6.github.io/tempest"
+      message = "Built #{branch} in browser in strd6.github.io/editor"
 
       if branch is "master"
         path = "index.html"
