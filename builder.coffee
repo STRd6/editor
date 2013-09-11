@@ -55,14 +55,6 @@ documentFile = (content, path) ->
   else
     ""
 
-# TODO: May want to move this to the environment so any program can read its
-# config
-readConfig = (build) ->
-  if configData = build.source["pixie.json"]?.content
-    JSON.parse(configData)
-  else
-    {}
-
 @Builder = (I={}) ->
   compileTemplate = (source, name="test") ->
     ast = HAMLjr.parser.parse(source)
@@ -193,7 +185,7 @@ readConfig = (build) ->
 
     scriptTag = if ref
       makeScript
-        src: "#{ref}.js"
+        src: "#{ref}.js?#{+new Date}"
     else
       """
       <script>
@@ -211,3 +203,15 @@ readConfig = (build) ->
 
     html: content.join "\n"
     script: program
+
+# TODO: May want to move this to the environment so any program can read its
+# config
+readConfig = (build) ->
+  if configData = build.source["pixie.cson"]?.content
+    CSON.parse(configData)
+  else if configData = build.source["pixie.json"]?.content
+    JSON.parse(configData)
+  else
+    {}
+
+Builder.readConfig = readConfig

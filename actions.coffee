@@ -20,13 +20,10 @@ commit = ({fileData, repository, message}) ->
   run: ({builder, filetree}) ->
     builder.build(filetree.data())
     .then (build) ->
-      if configData = build.source["pixie.json"]?.content
-        config = JSON.parse(configData)
-      else
-        config = {}
-      
+      config = Builder.readConfig(build)
+
       html = builder.standAlone(build).html
-      
+
       sandbox = Sandbox
         width: config.width
         height: config.height
