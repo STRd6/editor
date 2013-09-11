@@ -191,9 +191,7 @@ postprocessors, etc.
         program = distribution[entryPoint].content
     
         """
-          (function (ENV) {
-          #{program}
-          }(#{JSON.stringify(build, null, 2)}));
+          Function("ENV", #{JSON.stringify(program)})(#{JSON.stringify(build)});
         """
     
       standAlone: (build, ref) ->

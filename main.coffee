@@ -181,6 +181,8 @@ filetree.selectedFile.observe (file) ->
     root.append(HAMLjr.render "text_editor")
     file.editor = root.find(".editor-wrap").last()
     
+    debugger
+    
     editor = TextEditor
       text: file.content()
       el: file.editor.find('.editor').get(0)
