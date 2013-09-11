@@ -42,8 +42,6 @@ A deferred that encapsulates a conditional execution of a block that returns a
 promise. If the condition is met the promise returning block is executed,
 otherwise the deferred is marked as resolved and the block is not executed.
 
-
-
     Deferred.ExecuteIf = (flag, callback) ->
       withDeferrence (deferred) ->
         if flag
