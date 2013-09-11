@@ -143,9 +143,19 @@ documentFile = (content, path) ->
         source: arrayToHash(fileData)
         distribution: arrayToHash(dist)
 
-  standAloneHtml: (build) ->
+  program: (build) ->
+    {distribution} = build
+
+    entryPoint = "build.js"
+    program = distribution[entryPoint].content
+
+    """
+      Function("ENV", #{JSON.stringify(program)})(#{JSON.stringify(build)});
+    """
+
+  standAlone: (build, ref) ->
     {source, distribution} = build
-    
+
     content = []
 
     content.push """
@@ -158,14 +168,28 @@ documentFile = (content, path) ->
     content = content.concat $('script.env').map ->
       @outerHTML
     .get()
-  
-    entryPoint = "build.js"
-    program = distribution[entryPoint].content
-  
-    # TODO: Think about nesting, components
-    # TODO?: Exclude build.js from files
-    content.push """</head><body><script>
-      Function("ENV", #{JSON.stringify(program)})(#{JSON.stringify(build)});
-    <\/script>"""
-    
-    content.join "\n"
+
+    program = @program(build)
+
+    scriptTag = if ref
+      tag = document.createElement "script"
+      tag.src = "#{ref}.js"
+      
+      tag.outerHTML
+    else
+      """
+      <script>
+      #{program}
+      <\/script>
+      """
+
+    content.push """
+      </head>
+      <body>
+      #{scriptTag}
+      </body>
+      </html>
+    """
+
+    html: content.join "\n"
+    script: program
