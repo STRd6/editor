@@ -6,4 +6,4 @@
       - on "click", ->
         - actions[name]()
 
-  = HAMLjr.templates["templates/issues"] @issues
+  = HAMLjr.render "issues", @issues

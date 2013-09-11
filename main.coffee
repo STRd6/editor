@@ -237,13 +237,13 @@ issues.currentIssue.observe (issue) ->
     changeBranch repository.defaultBranch()
 
 $root
-  .append(HAMLjr.templates.main(
+  .append(HAMLjr.render "main",
     filetree: filetree
     actions: actions
     notices: notices
     errors: errors
     issues: issues
-  ))
+  )
 
 Gistquire.api "rate_limit", 
   complete: (request, status) ->
