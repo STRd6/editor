@@ -247,10 +247,10 @@ $root
     issues: issues
   )
 
-Gistquire.api "rate_limit", 
-  complete: (request, status) ->
-    $root.append HAMLjr.templates.github_status
-      request: request
+Gistquire.api("rate_limit")
+.then (data, status, request) ->
+  $root.append HAMLjr.render "github_status",
+    request: request
 
 window.onbeforeunload = ->
   if filetree.hasUnsavedChanges()
