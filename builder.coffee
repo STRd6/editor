@@ -185,7 +185,7 @@ documentFile = (content, path) ->
 
     scriptTag = if ref
       makeScript
-        src: "#{ref}.js"
+        src: "#{ref}.js?#{+new Date}"
     else
       """
       <script>
