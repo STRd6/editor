@@ -97,7 +97,7 @@
         else
           Deferred().reject(arguments...)
 
-    latestTree: (branch=self.branch()) ->
+    latestTree: (branch=self.defaultBranch()) ->
       get("git/refs/heads/#{branch}")
       .then (data) ->
         get data.object.url
@@ -201,7 +201,7 @@
 
     publish: ({html, script}) ->
       branch = self.branch()
-      message = "Built #{branch} in browser in strd6.github.io/tempest"
+      message = "Built #{branch} in browser in strd6.github.io/editor"
 
       if branch is "master"
         path = "index.html"
