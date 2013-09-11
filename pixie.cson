@@ -7,4 +7,5 @@ remoteDependencies: [
   "//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js"
   "http://strd6.github.io/tempest/javascripts/envweb.js"
   "http://strd6.github.io/sandbox/master.js"
+  "http://strd6.github.io/sandbox/master.js"
 ]
