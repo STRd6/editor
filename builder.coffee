@@ -55,6 +55,14 @@ documentFile = (content, path) ->
   else
     ""
 
+# TODO: May want to move this to the environment so any program can read its
+# config
+readConfig = (build) ->
+  if configData = build.source["pixie.json"]?.content
+    JSON.parse(configData)
+  else
+    {}
+
 @Builder = (I={}) ->
   compileTemplate = (source, name="test") ->
     ast = HAMLjr.parser.parse(source)
@@ -156,6 +164,9 @@ documentFile = (content, path) ->
   standAlone: (build, ref) ->
     {source, distribution} = build
 
+    makeScript = (attrs) -> 
+      $("<script>", attrs).prop('outerHTML')
+
     content = []
 
     content.push """
@@ -163,19 +174,26 @@ documentFile = (content, path) ->
       <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     """
+    
+    remoteDependencies = readConfig(build).remoteDependencies
 
-    # TODO: Get these from a more robust method than just script tags with classes
-    content = content.concat $('script.env').map ->
-      @outerHTML
-    .get()
+    dependencyScripts = if remoteDependencies
+      remoteDependencies.map (src) ->
+        makeScript
+          class: "env"
+          src: src
+    else # Carry forward our own env if no dependencies specified
+      $('script.env').map ->
+        @outerHTML
+      .get()
+
+    content = content.concat dependencyScripts
 
     program = @program(build)
 
     scriptTag = if ref
-      tag = document.createElement "script"
-      tag.src = "#{ref}.js"
-      
-      tag.outerHTML
+      makeScript
+        src: "#{ref}.js"
     else
       """
       <script>

@@ -1,6 +1,7 @@
 TODO
 ----
 Dependencies
+- Allow remote and bundled dependencies
 - Dependencies should live in other git repos
 - Should be able to edit dependencies in a new editor easily
 - Track sha and version requirements
@@ -9,7 +10,6 @@ Dependencies
 - Dependency metadata should appear in publish script
 - Should dependency source files appear in publish metadata?
 - Should dependency build files appear in publish metadata?
-- Allow remote and bundled dependencies?
 
 Generate Docs
 
