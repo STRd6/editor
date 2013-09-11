@@ -178,8 +178,10 @@ filetree.selectedFile.observe (file) ->
   if file.editor
     file.editor.trigger("show")
   else
-    root.append(HAMLjr.templates.editor())
+    root.append(HAMLjr.render "text_editor")
     file.editor = root.find(".editor-wrap").last()
+    
+    debugger
     
     editor = TextEditor
       text: file.content()
@@ -237,18 +239,18 @@ issues.currentIssue.observe (issue) ->
     changeBranch repository.defaultBranch()
 
 $root
-  .append(HAMLjr.templates.main(
+  .append(HAMLjr.render "editor",
     filetree: filetree
     actions: actions
     notices: notices
     errors: errors
     issues: issues
-  ))
+  )
 
-Gistquire.api "rate_limit", 
-  complete: (request, status) ->
-    $root.append HAMLjr.templates.github_status
-      request: request
+Gistquire.api("rate_limit")
+.then (data, status, request) ->
+  $root.append HAMLjr.render "github_status",
+    request: request
 
 window.onbeforeunload = ->
   if filetree.hasUnsavedChanges()
