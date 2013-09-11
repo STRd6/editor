@@ -1,21 +1,17 @@
 TODO
 ----
-Dependencies
-- Allow remote and bundled dependencies
-- Dependencies should live in other git repos
-- Should be able to edit dependencies in a new editor easily
-- Track sha and version requirements
-- Build dependencies into published script
-- Dependencies shouldn't be in source
-- Dependency metadata should appear in publish script
-- Should dependency source files appear in publish metadata?
+Bundled Dependencies
+- Build bundled dependencies into published script
+- Dependency source should not be in revision control
 - Should dependency build files appear in publish metadata?
+- One day we'll need to implement a bundleresque system, but not today
 
 Generate Docs
 
 Highlighting for Literate Code
 
 Live Update Demo
+- Hot reload css
 - Display Demo Runtime Errors in console
 
 Open published page in editor and run live demo with same state as when editor was opened
@@ -42,60 +38,4 @@ Sometimes editor appears blank when switching files
 Editor plugins
 - static analysis
 - find in files
-
-DONE
-----
-Integrate with Github Issues
-- Select active issue
-- Display issue text in console
-- Create issues from editor
-- Auto-create branch for issue
-- Commit/deploy to branch for issue
-
-Gistquire promises refactor
-
-Repository Object to encapsulate repo/branch and make creating/loading trees and issues easier
-
-Compile Error file and line number in error messages
-
-Saving UTF8 Characters gets messed up
-
-Delete Files
-
-Auth redirects to /tempest rather than /editor
-
-Combine commit/publish step
-- master branch should publish to index.html
-- other branches should publish to <branch>.html
-- Published branch is always latest
-
-Don't pass directories to filetree
-
-Saving repos with folders
-
-Load file data better
-- Handle folders in repos
-
-Handle file types per extension
-
-Save back to repo from gh-pages demo build
-
-Use editor repo as the default rather than the gist
-- Boot from built gh-pages html files.
-
-Deploy a packaged app to gh-pages
-- html page named for branch/sha and with source included
-
-Load from actual git repos
-Save changes back to real git repos
-
-Visualize Rate Limit Remaining
-
-Make errors like notices
-Display Auth Scopes
-Do not compile build.js if no js files
-
-Move Gistquire to editor
-Maintain editor state across open files
-Error Log styles
-Tell ace not to use worker becaues it fails to load cross domain
+- source file hygiene
