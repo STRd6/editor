@@ -14,7 +14,7 @@ selected.
       self.extend
         
 Load files either from an array of file data objects or from an object with
-filenames as keys and file data objects as values.
+paths as keys and file data objects as values.
 
 The files are sorted by name after loading.
 
@@ -33,8 +33,8 @@ observable.
             .map File
     
           else
-            files = Object.keys(fileData).sort().map (name) ->
-              File fileData[name]
+            files = Object.keys(fileData).sort().map (path) ->
+              File fileData[path]
     
           self.files(files)
 
@@ -45,7 +45,7 @@ The objects have a `path`, `content`, `type`, and `mode`.
 
         data: ->
           self.files.map (file) ->
-            path: file.filename()
+            path: file.path()
             mode: "100644"
             content: file.content()
             type: "blob"

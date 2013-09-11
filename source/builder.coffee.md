@@ -144,8 +144,8 @@ postprocessors, etc.
             error: "#{path} - #{message}"
     
       build: (fileData) ->
-        I.notices.push "Building..."
-    
+        I.notices.push "Building..."              
+
         build(fileData).then (items) ->
           results =
             code: []
