@@ -97,7 +97,7 @@
         else
           Deferred().reject(arguments...)
 
-    latestTree: (branch=self.defaultBranch()) ->
+    latestTree: (branch=self.branch()) ->
       get("git/refs/heads/#{branch}")
       .then (data) ->
         get data.object.url
