@@ -44,3 +44,17 @@ The current hack of using JSON works because JSON is valid CSON.
           value = representation[key]
           "#{key}: #{JSON.stringify(value)}"
         .join("\n")
+        
+Adds a `render` helper method to HAMLjr. This should work it's way back into the
+HAMLjr runtime.
+
+`render` Looks up a template and renders it with the given object.
+
+    HAMLjr.render = (templateName, object) ->
+      templates = HAMLjr.templates
+      template = templates[templateName] or templates["templates/#{templateName}"]
+
+      if template
+        template(object)
+      else
+        throw "Could not find template named #{templateName}"
