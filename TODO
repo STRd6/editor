@@ -21,8 +21,6 @@ File icons
 .haml and .styl file type support
 - Build our own ace cdn
 
-Tests
-
 Display Diffs
 
 First auth doesn't display in bar
