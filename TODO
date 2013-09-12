@@ -4,6 +4,7 @@ Bundled Dependencies
 - Build bundled dependencies into published script
 - Dependency source should not be in revision control
 - requires and module.exports
+- inter-component and intra-component dependencies
 - One day we'll need to implement a bundleresque system, but not today
 
 Live Update Demo
