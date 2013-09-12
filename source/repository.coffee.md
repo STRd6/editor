@@ -112,7 +112,7 @@ Currently the only parameter needed to initialize a repository instance is a
             else
               Deferred().reject(arguments...)
     
-        latestTree: (branch=self.defaultBranch()) ->
+        latestTree: (branch=self.branch()) ->
           get("git/refs/heads/#{branch}")
           .then (data) ->
             get data.object.url
