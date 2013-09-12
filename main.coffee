@@ -87,6 +87,14 @@ actions =
     Actions.run({builder, filetree})
     .fail errors
 
+  test: ->
+    notify "Running tests..."
+
+    builder.testsCode(filetree.data())
+    .then (testsCode) ->
+      TestRunner.launch(testsCode)
+    .fail errors
+
   new_file: ->
     if name = prompt("File Name", "newfile.coffee")
       filetree.files.push File

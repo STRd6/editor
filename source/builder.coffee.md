@@ -69,7 +69,13 @@ TODO: Allow for files to generate docs and code at the same time.
       Object.defaults result,
         name: name
         extension: extension
-    
+
+Separate out test code from regular files.
+
+      if path.match /^test\//
+        result.test = result.code
+        delete result.code
+
       Object.extend result,
         path: path
 
@@ -151,7 +157,8 @@ postprocessors, etc.
             code: []
             style: []
             main: []
-    
+            test: []
+
           items.eachWithObject results, (item, hash) ->
             if code = item.code
               if item.name is "main" and (item.extension is "js" or item.extension is "coffee")
@@ -160,10 +167,13 @@ postprocessors, etc.
                 hash.code.push code
             else if style = item.style
               hash.style.push style
+            else if test = item.test
+              hash.test.push test 
             else
               # Do nothing, we don't know about this item
           
           distCode = results.code.concat(results.main).join(';').trim()
+          distTest = results.code.concat(results.test).join(';').trim()
           distStyle = results.style.join('').trim()
       
           dist = []
@@ -178,6 +188,12 @@ postprocessors, etc.
             dist.push
               path: "style.css"
               content: distStyle
+              type: "blob"
+              
+          unless distTest.blank()
+            dist.push
+              path: "test.js"
+              content: distTest
               type: "blob"
       
           Deferred().resolve postProcessors.pipeline
@@ -195,7 +211,11 @@ postprocessors, etc.
           #{program}
           }(#{JSON.stringify(build, null, 2)}));
         """
-    
+
+      testsCode: (fileData) ->
+        @build(fileData).then ({distribution}) ->
+          distribution["test.js"]
+
       standAlone: (build, ref) ->
         {source, distribution} = build
     
