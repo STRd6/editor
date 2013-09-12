@@ -6,10 +6,6 @@ Bundled Dependencies
 - Should dependency build files appear in publish metadata?
 - One day we'll need to implement a bundleresque system, but not today
 
-Generate Docs
-
-Highlighting for Literate Code
-
 Live Update Demo
 - Hot reload css
 - Display Demo Runtime Errors in console
