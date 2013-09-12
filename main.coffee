@@ -19,28 +19,13 @@ notify = (message) ->
   notices [message]
   errors []
 
-# TODO: Move to env utils
-currentNode = ->
-  target = document.documentElement
-
-  while (target.childNodes.length and target.lastChild.nodeType == 1)
-    target = target.lastChild
-
-  return target.parentNode
-
 # The root is the node that contains the script file.
-$root = $(currentNode())
-
-# Apply our styles
-if styleContent = distribution["style.css"]?.content
-  $root.append $("<style>",
-    html: styleContent
-  )
+$root = $(Runtime(ENV).boot())
 
 # Init Github access token stuff
 Gistquire.onload()
   
-# TODO: Real branch and repo info, maybe from ENV
+# Real branch and repo info, from ENV
 {owner, repo, branch, full_name:fullName} = ENV.repository
 
 fullName ||= "#{owner}/#{repo}"
@@ -100,6 +85,14 @@ actions =
 
   run: ->
     Actions.run({builder, filetree})
+    .fail errors
+
+  test: ->
+    notify "Running tests..."
+
+    builder.testScripts(filetree.data())
+    .then (testScripts) ->
+      TestRunner.launch(testScripts)
     .fail errors
 
   new_file: ->
