@@ -12,8 +12,6 @@ The primary actions of the editor. This should eventually become a mixin.
       repository.commitTree
         tree: fileData
         message: message
-        
-Keep a list of all running instances for piping data in and out.
 
     @Actions =
       save: (params) ->
