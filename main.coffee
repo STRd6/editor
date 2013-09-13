@@ -54,7 +54,7 @@ builder.addPostProcessor (data) ->
   # TODO: Track commit SHA as well
   data.repository =
     full_name: fullName
-    branch: branch
+    branch: repository.branch()
 
   data
 
