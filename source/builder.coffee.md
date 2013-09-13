@@ -226,6 +226,9 @@ postprocessors, etc.
         entryPoint = "build.js"
         program = distribution[entryPoint].content
     
+        @envWrapper(program, build)
+        
+      envWrapper: (program, build) ->
         """
           (function (ENV) {
           #{program}
@@ -240,14 +243,16 @@ postprocessors, etc.
           content = distribution["style.css"]?.content or ""
 
       testScripts: (fileData) ->
-        @build(fileData).then (build) ->
+        @build(fileData).then (build) =>
           {distribution} = build
 
           content = distribution["test.js"]?.content or ""
           
+          testProgram = @envWrapper(content, build)
+          
           """
             #{dependencyScripts(build)}
-            <script>#{content}<\/script>
+            <script>#{testProgram}<\/script>
           """
           
       runnable: (fileData) ->
