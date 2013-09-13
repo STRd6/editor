@@ -34,17 +34,15 @@ repository = Repository
   url: "repos/#{fullName}"
 
 errors = Observable([])
-notices = Observable(["Loaded!"])
+notices = Observable([])
 
-builder = Builder
-  errors: errors
-  notices: notices
+builder = Builder()
 
 repositoryLoaded = (repository) ->
   issues.repository = repository
   repository.pullRequests().then issues.reset
   
-  notices ["Finished loading!"]
+  notify "Finished loading!"
   
 confirmUnsaved = ->
   Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
@@ -81,7 +79,7 @@ actions =
       # The correct solution will be to use git shas to determine changed status
       # but that's a little heavy duty for right now.
       filetree.markSaved()
-      notices ["Saved and published!"]
+      notify "Saved and published!"
     .fail (args...) ->
       errors args
 
@@ -116,7 +114,7 @@ actions =
   
         return
   
-      notices ["Loading repo..."]
+      notify "Loading repo..."
   
       Actions.load
         repository: repository
@@ -128,8 +126,8 @@ actions =
         
   new_feature: ->
     if title = prompt("Description")
-      notices ["Creating feature branch..."]
-    
+      notify "Creating feature branch..."
+
       repository.createPullRequest
         title: title
       .then (data) ->
