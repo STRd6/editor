@@ -74,7 +74,7 @@ Separate out test code from regular files.
 
       if path.match /^test\//
         if result.code
-          result.test = "#{(result.test or "")};#{result.code}"
+          result.test = result.code
           delete result.code
 
       Object.extend result,

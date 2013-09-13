@@ -145,9 +145,10 @@ actions =
         issues.currentIssue issue
         issues.silent = false
 
+        errors []
         notices.push "Created!"
       , classicError
-      
+
   pull_master: ->
     confirmUnsaved()
     .then( ->
