@@ -31,5 +31,3 @@ time how the css changes affect each one.
           $(window.document).find("style.#{styleClass}").html(css)
           
           return true
-          
-        console.log(css)
