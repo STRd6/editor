@@ -82,6 +82,8 @@ actions =
       # but that's a little heavy duty for right now.
       filetree.markSaved()
       notices ["Saved and published!"]
+    .fail (args...) ->
+      errors args
 
   run: ->
     Actions.run({builder, filetree})
