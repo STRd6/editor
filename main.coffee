@@ -69,8 +69,8 @@ builder.addPostProcessor (data) ->
 
 actions =
   save: ->
-    notices ["Saving..."]
-    
+    notify "Saving..."
+
     Actions.save
       repository: repository
       fileData: filetree.data()
