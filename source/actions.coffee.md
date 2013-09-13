@@ -12,7 +12,9 @@ The primary actions of the editor. This should eventually become a mixin.
       repository.commitTree
         tree: fileData
         message: message
-    
+        
+Keep a list of all running instances for piping data in and out.
+
     @Actions =
       save: (params) ->
         commit(params)
@@ -20,23 +22,9 @@ The primary actions of the editor. This should eventually become a mixin.
           publish(params)
     
       run: ({builder, filetree}) ->
-        builder.build(filetree.data())
-        .then (build) ->
-          config = Builder.readConfig(build)
-    
-          html = builder.standAlone(build).html
-    
-          sandbox = Sandbox
-            width: config.width
-            height: config.height
-    
-          sandbox.document.open()
-          sandbox.document.write(html)
-          sandbox.document.close()
-    
-          builder.I.notices? ["Running!"]
-          # TODO: Catch and display runtime errors
-    
+        builder.runnable(filetree.data())
+        .then Runner.run
+
       load: ({filetree, repository}) ->
         # Decode all content in place
         processDirectory = (items) ->

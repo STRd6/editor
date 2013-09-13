@@ -24,7 +24,7 @@ writing anything to the document.
         if styleContent = ENV.distribution["style.css"]?.content
           styleNode = document.createElement("style")
           styleNode.innerHTML = styleContent
-          styleNode.className = "styleClass"
+          styleNode.className = styleClass
           
           root.appendChild(styleNode)
 

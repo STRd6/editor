@@ -186,8 +186,15 @@ filetree.selectedFile.observe (file) ->
     editor.text.observe (value) ->
       file.content(value)
       
-      # Autorun
-      # actions.run()
+      # TODO May want to move this into a collection listener for all files
+      # in the filetree
+      if file.path().match(/\.styl$/)
+        hotReloadCSS()
+
+hotReloadCSS = (->
+  builder.buildStyle(filetree.data())
+  .then Runner.hotReloadCSS
+).debounce(500)
 
 repositoryLoaded(repository)
 
