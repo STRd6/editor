@@ -160,6 +160,8 @@ actions =
         filetree: filetree
       .then ->
         notices.push "Loaded!"
+      .fail ->
+        errors ["Error loading #{repository.url()}"]
 
 filetree = Filetree()
 filetree.load(files)
