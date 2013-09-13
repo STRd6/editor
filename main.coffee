@@ -97,9 +97,11 @@ actions =
 
   new_file: ->
     if name = prompt("File Name", "newfile.coffee")
-      filetree.files.push File
+      file = File
         filename: name
         content: ""
+      filetree.files.push file
+      filetree.selectedFile file      
 
   load_repo: (skipPrompt) ->
     confirmUnsaved()
