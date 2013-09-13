@@ -70,13 +70,6 @@ TODO: Allow for files to generate docs and code at the same time.
         name: name
         extension: extension
 
-Separate out test code from regular files.
-
-      if path.match /^test\//
-        if result.code
-          result.test = result.code
-          delete result.code
-
       Object.extend result,
         path: path
 
@@ -169,51 +162,38 @@ postprocessors, etc.
               message = "Error on line #{location.first_line + 1}: #{message}"
     
             error: "#{path} - #{message}"
-    
+
+Compile and build a tree of file data into a distribution. The distribution should
+include source files, compiled files, and documentation.
+
       build: (fileData) ->
         build(fileData)
         .then (items) ->
           results =
             code: []
             style: []
-            main: []
-            test: []
 
           items.eachWithObject results, (item, hash) ->
-            if code = item.code
-              if item.name is "main" and (item.extension is "js" or item.extension is "coffee")
-                hash.main.push code
-              else
-                hash.code.push code
+            if item.code
+              hash.code.push item
             else if style = item.style
               hash.style.push style
-            else if test = item.test
-              hash.test.push test 
             else
               # Do nothing, we don't know about this item
-          
-          distCode = results.code.concat(results.main).join(';').trim()
-          distTest = results.code.concat(results.test).join(';').trim()
-          distStyle = results.style.join('').trim()
-      
+
           dist = []
-      
-          unless distCode.blank()
+
+          results.code.each (item) ->
             dist.push
-              path: "build.js"
-              content: distCode
+              path: item.name
+              content: item.code
               type: "blob"
-      
+          
+          distStyle = results.style.join('').trim()
           unless distStyle.blank()
             dist.push
               path: "style.css"
               content: distStyle
-              type: "blob"
-              
-          unless distTest.blank()
-            dist.push
-              path: "test.js"
-              content: distTest
               type: "blob"
       
           Deferred().resolve postProcessors.pipeline
@@ -222,8 +202,9 @@ postprocessors, etc.
     
       program: (build) ->
         {distribution} = build
-    
-        entryPoint = "build.js"
+
+        # TODO: Allow for specifing different entry points
+        entryPoint = "main"
         program = distribution[entryPoint].content
     
         @envWrapper(program, build)

@@ -4,6 +4,8 @@
 # For debugging
 window.ENV = ENV
 
+# Runtime = require("./runtime")
+
 # TODO: Move notifications stuff into its own class
 classicError = (request) ->
   notices []
