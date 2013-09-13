@@ -85,6 +85,8 @@ actions =
 
   run: ->
     Actions.run({builder, filetree})
+    .then ->
+      notify "Running!"
     .fail errors
 
   test: ->
