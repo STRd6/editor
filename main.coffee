@@ -34,6 +34,7 @@ fullName ||= "#{owner}/#{repo}"
 
 repository = Repository
   url: "repos/#{fullName}"
+  branch: branch
 
 errors = Observable([])
 notices = Observable([])
