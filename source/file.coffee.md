@@ -24,6 +24,8 @@ The `mode` of the file is what editor mode to use for our text editor.
               "javascript"
             when "md" # TODO: See about nested markdown code modes for .haml.md, .js.md, and .coffee.md
               "markdown"
+            when "cson"
+              "coffee"
             when ""
               "text"
             else
