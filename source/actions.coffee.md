@@ -1,6 +1,6 @@
 The primary actions of the editor. This should eventually become a mixin.
 
-    publish = ({builder, fileData, repository}) ->,.p.,p,.p,p
+    publish = ({builder, fileData, repository}) ->
       
         builder.build(fileData)
         .then (build) ->
