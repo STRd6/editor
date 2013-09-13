@@ -69,8 +69,8 @@ builder.addPostProcessor (data) ->
 
 actions =
   save: ->
-    notices ["Saving..."]
-    
+    notify "Saving..."
+
     Actions.save
       repository: repository
       fileData: filetree.data()
@@ -81,7 +81,9 @@ actions =
       # The correct solution will be to use git shas to determine changed status
       # but that's a little heavy duty for right now.
       filetree.markSaved()
-      notices ["Saved and published!"]
+      notify "Saved and published!"
+    .fail (args...) ->
+      errors args
 
   run: ->
     Actions.run({builder, filetree})
@@ -114,7 +116,7 @@ actions =
   
         return
   
-      notices ["Loading repo..."]
+      notify "Loading repo..."
   
       Actions.load
         repository: repository
