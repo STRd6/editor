@@ -234,6 +234,13 @@ postprocessors, etc.
           }(#{JSON.stringify(build, null, 2)}));
         """
 
+      buildStyle: (fileData) ->
+        @build(fileData)
+        .then (build) ->
+          {distribution} = build
+
+          content = distribution["style.css"]?.content or ""
+
       testScripts: (fileData) ->
         @build(fileData).then (build) ->
           {distribution} = build
@@ -244,6 +251,14 @@ postprocessors, etc.
             #{dependencyScripts(build)}
             <script>#{content}<\/script>
           """
+          
+      runnable: (fileData) ->
+        @build(fileData)
+        .then (build) =>
+          standAlone = @standAlone(build)
+          standAlone.config = Builder.readConfig(build)
+
+          return standAlone
 
       standAlone: (build, ref) ->
         {source, distribution} = build
