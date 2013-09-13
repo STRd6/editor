@@ -123,6 +123,9 @@ actions =
         filetree: filetree
       .then ->
         repositoryLoaded(repository)
+        
+        root = $root.children(".main")
+        root.find(".editor-wrap").remove()
       .fail ->
         errors ["Error loading #{repository.url()}"]
         
