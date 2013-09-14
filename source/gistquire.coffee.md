@@ -1,6 +1,6 @@
 Gistquire handles our connection to the Github API.
 
-    @Gistquire =
+    Gistquire =
       accessToken: null
 
 Calling auth will redirect to github for authentication.
@@ -56,3 +56,7 @@ We attach our `accessToken` if present.
         , options
     
         $.ajax options
+
+Exports
+
+    module.exports = Gistquire

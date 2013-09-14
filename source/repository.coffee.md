@@ -7,13 +7,15 @@ data for the local working copy such as the current branch.
 All of the methods return promises to allow for easy chaining and error
 reporting.
 
+    Gistquire = require "./gistquire"
+
 Constructor
 -----------
 
 Currently the only parameter needed to initialize a repository instance is a
 `url`. This url is used as a base for the api calls.
 
-    @Repository = (I={}) ->
+    Repository = (I={}) ->
       Object.defaults I,
         branch: "master"
         defaultBranch: "master"
@@ -243,3 +245,5 @@ Currently the only parameter needed to initialize a repository instance is a
             promise
     
       return self
+
+    module.exports = Repository

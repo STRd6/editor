@@ -1,7 +1,7 @@
 The `File` model represents a file in a file system. It is populated by data
 returned from the Github API.
 
-    @File = (I={}) ->
+    File = (I={}) ->
       I.path ?= I.filename
       I.filename ?= I.path.split("/").last()
     
@@ -56,3 +56,10 @@ indication.
           self.displayName(self.path())
     
       return self
+
+Exports
+
+    if module?
+      module.exports = File
+    else
+      window.File = File

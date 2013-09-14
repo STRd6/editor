@@ -30,8 +30,8 @@ file's path is a key and the fileData is the object.
 
     compileTemplate = (source, name="test") ->
       ast = HAMLjr.parser.parse(source)
-      
-      HAMLjr.compile ast, 
+
+      HAMLjr.compile ast,
         name: name
         compiler: CoffeeScript
 
@@ -47,7 +47,7 @@ TODO: Allow for files to generate docs and code at the same time.
 
     compileFile = ({path, content}) ->
       [name, extension] = [path.withoutExtension(), path.extension()]
-      
+
       result =
         switch extension
           when "js"
@@ -65,17 +65,10 @@ TODO: Allow for files to generate docs and code at the same time.
               content: stripMarkdown(content)
           else
             {}
-    
+
       Object.defaults result,
         name: name
         extension: extension
-
-Separate out test code from regular files.
-
-      if path.match /^test\//
-        if result.code
-          result.test = "#{(result.test or "")};#{result.code}"
-          delete result.code
 
       Object.extend result,
         path: path
@@ -93,7 +86,7 @@ TODO: Maybe doc more files than just .md?
 
 `makeScript` returns a string representation of a script tag.
 
-    makeScript = (attrs) -> 
+    makeScript = (attrs) ->
       $("<script>", attrs).prop('outerHTML')
 
 `dependencyScripts` returns a string containing the script tags that are
@@ -101,7 +94,7 @@ the dependencies of this build.
 
     dependencyScripts = (build) ->
       remoteDependencies = readConfig(build).remoteDependencies
-  
+
       (if remoteDependencies
         remoteDependencies.map (src) ->
           makeScript
@@ -125,40 +118,40 @@ TODO: Standardize interface to use promises.
 TODO: Allow configuration of builder instances, adding additional compilers,
 postprocessors, etc.
 
-    @Builder = ->
+    Builder = ->
       compileTemplate = (source, name="test") ->
         ast = HAMLjr.parser.parse(source)
-        
-        HAMLjr.compile ast, 
+
+        HAMLjr.compile ast,
           name: name
           compiler: CoffeeScript
-      
-      build = (fileData) ->    
+
+      build = (fileData) ->
         results = fileData.map ({path, content}) ->
           try
             # TODO: Separate out tests
-    
+
             compileFile
               path: path
               content: content
           catch {location, message}
             if location?
               message = "Error on line #{location.first_line + 1}: #{message}"
-    
+
             error: "#{path} - #{message}"
-            
+
         [errors, data] = results.partition (result) -> result.error
-        
+
         if errors.length
           Deferred().reject(errors.map (e) -> e.error)
         else
           Deferred().resolve(data)
-    
+
       postProcessors = []
-      
+
       addPostProcessor: (fn) ->
         postProcessors.push fn
-        
+
       buildDocs: (fileData) ->
         fileData.map ({path, content}) ->
           try
@@ -167,69 +160,63 @@ postprocessors, etc.
           catch {location, message}
             if location?
               message = "Error on line #{location.first_line + 1}: #{message}"
-    
+
             error: "#{path} - #{message}"
-    
+
+Compile and build a tree of file data into a distribution. The distribution should
+include source files, compiled files, and documentation.
+
       build: (fileData) ->
         build(fileData)
         .then (items) ->
           results =
             code: []
             style: []
-            main: []
-            test: []
 
           items.eachWithObject results, (item, hash) ->
-            if code = item.code
-              if item.name is "main" and (item.extension is "js" or item.extension is "coffee")
-                hash.main.push code
-              else
-                hash.code.push code
+            if item.code
+              hash.code.push item
             else if style = item.style
               hash.style.push style
-            else if test = item.test
-              hash.test.push test 
             else
               # Do nothing, we don't know about this item
-          
-          distCode = results.code.concat(results.main).join(';').trim()
-          distTest = results.code.concat(results.test).join(';').trim()
-          distStyle = results.style.join('').trim()
-      
+
           dist = []
-      
-          unless distCode.blank()
+
+          results.code.each (item) ->
             dist.push
-              path: "build.js"
-              content: distCode
+              path: item.name
+              content: item.code
               type: "blob"
-      
+
+          distStyle = results.style.join('').trim()
           unless distStyle.blank()
             dist.push
               path: "style.css"
               content: distStyle
               type: "blob"
-              
-          unless distTest.blank()
-            dist.push
-              path: "test.js"
-              content: distTest
-              type: "blob"
-      
+
+          # TODO: We should be able to put a lot of this into postProcessors
+
+          source = arrayToHash(fileData)
+
+          # TODO: Optionally bundle dependencies
+          dependencies = readConfig(source: source).dependencies or {}
+
           Deferred().resolve postProcessors.pipeline
-            source: arrayToHash(fileData)
+            source: source
             distribution: arrayToHash(dist)
-    
+            entryPoint: "main"
+            dependencies: dependencies
+
       program: (build) ->
-        {distribution} = build
-    
-        entryPoint = "build.js"
+        {distribution, entryPoint} = build
+
         program = distribution[entryPoint].content
-    
+
+      envDeclaration: (build) ->
         """
-          (function (ENV) {
-          #{program}
-          }(#{JSON.stringify(build, null, 2)}));
+          ENV = #{JSON.stringify(build, null, 2)};
         """
 
       buildStyle: (fileData) ->
@@ -240,16 +227,23 @@ postprocessors, etc.
           content = distribution["style.css"]?.content or ""
 
       testScripts: (fileData) ->
-        @build(fileData).then (build) ->
+        @build(fileData).then (build) =>
           {distribution} = build
 
-          content = distribution["test.js"]?.content or ""
-          
+          testProgram = Object.keys(distribution).select (path) ->
+            path.match /test\//
+          .map (testPath) ->
+            distribution[testPath].content
+          .join "\n"
+
           """
             #{dependencyScripts(build)}
-            <script>#{content}<\/script>
+            <script>
+              #{@envDeclaration(build)}
+              #{testProgram}
+            <\/script>
           """
-          
+
       runnable: (fileData) ->
         @build(fileData)
         .then (build) =>
@@ -260,9 +254,9 @@ postprocessors, etc.
 
       standAlone: (build, ref) ->
         {source, distribution} = build
-    
+
         content = []
-    
+
         content.push """
           <!doctype html>
           <head>
@@ -270,30 +264,28 @@ postprocessors, etc.
         """
 
         content = content.concat dependencyScripts(build)
-    
+
         program = @program(build)
-    
+
         scriptTag = if ref
           makeScript
             src: "#{ref}.js?#{+new Date}"
         else
-          """
-          <script>
-          #{program}
-          <\/script>
-          """
-    
+          makeScript
+            html: program
+
         content.push """
           </head>
           <body>
+          #{srciptTag html: @envDeclaration(build)}
           #{scriptTag}
           </body>
           </html>
         """
-    
+
         html: content.join "\n"
         script: program
-    
+
 TODO: May want to move this to the environment so any program can read its
 config
 
@@ -304,5 +296,10 @@ config
         JSON.parse(configData)
       else
         {}
-    
+
     Builder.readConfig = readConfig
+
+    if module?
+      module.exports = Builder
+    else
+      window.Builder = Builder

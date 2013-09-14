@@ -1,8 +1,25 @@
 # Get stuff from our env
-{source:files, distribution} = ENV
+{source:files, distribution, repository} = ENV.root
 
 # For debugging
 window.ENV = ENV
+
+require("./source/duct_tape")
+
+# Templates
+require("./templates/actions")
+require("./templates/editor")
+require("./templates/filetree")
+require("./templates/github_status")
+require("./templates/notices")
+require("./templates/text_editor")
+
+require("./source/runtime")
+require("./source/gistquire")
+require("./source/repository")
+require("./source/builder")
+require("./source/filetree")
+require("./source/file")
 
 # TODO: Move notifications stuff into its own class
 classicError = (request) ->
@@ -20,18 +37,19 @@ notify = (message) ->
   errors []
 
 # The root is the node that contains the script file.
-$root = $(Runtime(ENV).boot())
+$root = $(Runtime(ENV.root).boot())
 
 # Init Github access token stuff
 Gistquire.onload()
   
 # Real branch and repo info, from ENV
-{owner, repo, branch, full_name:fullName} = ENV.repository
+{owner, repo, branch, full_name:fullName} = repository
 
 fullName ||= "#{owner}/#{repo}"
 
 repository = Repository
   url: "repos/#{fullName}"
+  branch: branch
 
 errors = Observable([])
 notices = Observable([])
@@ -85,6 +103,8 @@ actions =
 
   run: ->
     Actions.run({builder, filetree})
+    .then ->
+      notify "Running!"
     .fail errors
 
   test: ->
@@ -145,9 +165,10 @@ actions =
         issues.currentIssue issue
         issues.silent = false
 
+        errors []
         notices.push "Created!"
       , classicError
-      
+
   pull_master: ->
     confirmUnsaved()
     .then( ->
