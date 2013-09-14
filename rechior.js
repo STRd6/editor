@@ -1622,7 +1622,7 @@
   },
   "repository": {
     "full_name": "STRd6/editor",
-    "branch": "master"
+    "branch": "rechior"
   },
   "progenitor": {
     "url": "http://strd6.github.io/editor/"
