@@ -4,6 +4,16 @@
 # For debugging
 window.ENV = ENV
 
+require("./source/duct_tape")
+
+# Templates
+require("./templates/actions")
+require("./templates/editor")
+require("./templates/filetree")
+require("./templates/github_status")
+require("./templates/notices")
+require("./templates/text_editor")
+
 Runtime = require("./source/runtime")
 Gistquire = require("./source/gistquire")
 Repository = require("./source/repository")
