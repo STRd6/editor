@@ -30,8 +30,8 @@ file's path is a key and the fileData is the object.
 
     compileTemplate = (source, name="test") ->
       ast = HAMLjr.parser.parse(source)
-      
-      HAMLjr.compile ast, 
+
+      HAMLjr.compile ast,
         name: name
         compiler: CoffeeScript
 
@@ -47,7 +47,7 @@ TODO: Allow for files to generate docs and code at the same time.
 
     compileFile = ({path, content}) ->
       [name, extension] = [path.withoutExtension(), path.extension()]
-      
+
       result =
         switch extension
           when "js"
@@ -65,7 +65,7 @@ TODO: Allow for files to generate docs and code at the same time.
               content: stripMarkdown(content)
           else
             {}
-    
+
       Object.defaults result,
         name: name
         extension: extension
@@ -86,7 +86,7 @@ TODO: Maybe doc more files than just .md?
 
 `makeScript` returns a string representation of a script tag.
 
-    makeScript = (attrs) -> 
+    makeScript = (attrs) ->
       $("<script>", attrs).prop('outerHTML')
 
 `dependencyScripts` returns a string containing the script tags that are
@@ -94,7 +94,7 @@ the dependencies of this build.
 
     dependencyScripts = (build) ->
       remoteDependencies = readConfig(build).remoteDependencies
-  
+
       (if remoteDependencies
         remoteDependencies.map (src) ->
           makeScript
@@ -121,37 +121,37 @@ postprocessors, etc.
     Builder = ->
       compileTemplate = (source, name="test") ->
         ast = HAMLjr.parser.parse(source)
-        
-        HAMLjr.compile ast, 
+
+        HAMLjr.compile ast,
           name: name
           compiler: CoffeeScript
-      
-      build = (fileData) ->    
+
+      build = (fileData) ->
         results = fileData.map ({path, content}) ->
           try
             # TODO: Separate out tests
-    
+
             compileFile
               path: path
               content: content
           catch {location, message}
             if location?
               message = "Error on line #{location.first_line + 1}: #{message}"
-    
+
             error: "#{path} - #{message}"
-            
+
         [errors, data] = results.partition (result) -> result.error
-        
+
         if errors.length
           Deferred().reject(errors.map (e) -> e.error)
         else
           Deferred().resolve(data)
-    
+
       postProcessors = []
-      
+
       addPostProcessor: (fn) ->
         postProcessors.push fn
-        
+
       buildDocs: (fileData) ->
         fileData.map ({path, content}) ->
           try
@@ -160,7 +160,7 @@ postprocessors, etc.
           catch {location, message}
             if location?
               message = "Error on line #{location.first_line + 1}: #{message}"
-    
+
             error: "#{path} - #{message}"
 
 Compile and build a tree of file data into a distribution. The distribution should
@@ -188,27 +188,27 @@ include source files, compiled files, and documentation.
               path: item.name
               content: item.code
               type: "blob"
-          
+
           distStyle = results.style.join('').trim()
           unless distStyle.blank()
             dist.push
               path: "style.css"
               content: distStyle
               type: "blob"
-      
+
           # TODO: We should be able to put a lot of this into postProcessors
-      
+
           source = arrayToHash(fileData)
-      
+
           # TODO: Optionally bundle dependencies
           dependencies = readConfig(source: source).dependencies or {}
-      
+
           Deferred().resolve postProcessors.pipeline
             source: source
             distribution: arrayToHash(dist)
             entryPoint: "main"
             dependencies: dependencies
-    
+
       program: (build) ->
         {distribution, entryPoint} = build
 
@@ -216,7 +216,7 @@ include source files, compiled files, and documentation.
 
       envDeclaration: (build) ->
         """
-          ENV = #{JSON.stringify({root: build}, null, 2)};
+          ENV = #{JSON.stringify(build, null, 2)};
         """
 
       buildStyle: (fileData) ->
@@ -235,7 +235,7 @@ include source files, compiled files, and documentation.
           .map (testPath) ->
             distribution[testPath].content
           .join "\n"
-          
+
           """
             #{dependencyScripts(build)}
             <script>
@@ -243,7 +243,7 @@ include source files, compiled files, and documentation.
               #{testProgram}
             <\/script>
           """
-          
+
       runnable: (fileData) ->
         @build(fileData)
         .then (build) =>
@@ -254,9 +254,9 @@ include source files, compiled files, and documentation.
 
       standAlone: (build, ref) ->
         {source, distribution} = build
-    
+
         content = []
-    
+
         content.push """
           <!doctype html>
           <head>
@@ -264,30 +264,28 @@ include source files, compiled files, and documentation.
         """
 
         content = content.concat dependencyScripts(build)
-    
+
         program = @program(build)
-    
+
         scriptTag = if ref
           makeScript
             src: "#{ref}.js?#{+new Date}"
         else
           makeScript
-            html: """
-              #{@envDeclaration(build)}
-              #{program}
-            """
-    
+            html: program
+
         content.push """
           </head>
           <body>
+          #{srciptTag html: @envDeclaration(build)}
           #{scriptTag}
           </body>
           </html>
         """
-    
+
         html: content.join "\n"
         script: program
-    
+
 TODO: May want to move this to the environment so any program can read its
 config
 
@@ -298,7 +296,7 @@ config
         JSON.parse(configData)
       else
         {}
-    
+
     Builder.readConfig = readConfig
 
     module.exports = Builder
