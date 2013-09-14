@@ -247,9 +247,14 @@ include source files, compiled files, and documentation.
 
           return standAlone
 
-      standAlone: (build, ref) ->
-        {source, distribution} = build
-    
+Create a standalone html page that includes the package as the environment. 
+
+Also returns a standalone .json package that can be used as a dependency in
+other apps.
+
+      standAlone: (pkg) ->
+        {source, distribution} = pkg
+
         content = []
     
         content.push """
@@ -258,29 +263,23 @@ include source files, compiled files, and documentation.
           <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         """
 
-        content = content.concat dependencyScripts(build)
-    
-        program = @program(build)
-    
-        scriptTag = if ref
-          makeScript
-            src: "#{ref}.js?#{+new Date}"
-        else
-          makeScript
-            html: program
-    
+        content = content.concat dependencyScripts(pkg)
+
+        program = @program(pkg)
+
         content.push """
           </head>
           <body>
-          #{makeScript html: @envDeclaration(build)}
-          #{scriptTag}
+          #{makeScript html: @envDeclaration(pkg)}
+          #{makeScript html: program}
           </body>
           </html>
         """
     
         html: content.join "\n"
         script: program
-    
+        package: JSON.stringify(pkg, null, 2)
+
 TODO: May want to move this to the environment so any program can read its
 config
 
