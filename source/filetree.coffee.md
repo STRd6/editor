@@ -1,6 +1,6 @@
 We depend on file.
 
-    File = require "./file"
+    require "./file"
 
 The `Filetree` model represents a tree of files.
 
@@ -75,4 +75,7 @@ TODO: Use git trees and content shas to robustly manage changed state.
 
 Export
 
-    module.exports = Filetree
+    if module?
+      module.exports = Filetree
+    else
+      window.Filetree = Filetree

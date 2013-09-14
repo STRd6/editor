@@ -59,4 +59,7 @@ indication.
 
 Exports
 
-    module.exports = File
+    if module?
+      module.exports = File
+    else
+      window.File = File
