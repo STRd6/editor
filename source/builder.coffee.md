@@ -32,8 +32,9 @@ file's path is a key and the fileData is the object.
       program = HAMLjr.compile source,
         compiler: CoffeeScript
 
-      # TOOD: Transitional require, making templates global until `require` is
-      # in
+      # TOOD: Transitional require, making templates global until `require`
+      console.log "builder template"
+
       "(HAMLjr.templates || (HAMLjr.templates = {}))[#{JSON.stringify(name)}] = #{program};"
 
 `compileStyl` compiles a styl file into css.
@@ -120,13 +121,6 @@ TODO: Allow configuration of builder instances, adding additional compilers,
 postprocessors, etc.
 
     Builder = ->
-      compileTemplate = (source, name="test") ->
-        ast = HAMLjr.parser.parse(source)
-        
-        HAMLjr.compile ast, 
-          name: name
-          compiler: CoffeeScript
-      
       build = (fileData) ->    
         results = fileData.map ({path, content}) ->
           try

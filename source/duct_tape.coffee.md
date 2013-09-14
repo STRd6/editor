@@ -61,6 +61,7 @@ HAMLjr runtime.
         # Try loading it from the distribution
         templateName = "templates/#{templateName}"
         if template = Function("return #{ENV.distribution[templateName].content}")()
+          console.log "transitional require"
           templates[templateName] = template
           template(object)
         else
