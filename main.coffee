@@ -1,10 +1,11 @@
 # Get stuff from our env
-{source:files, distribution} = ENV
+{source:files, distribution} = ENV.root
 
 # For debugging
 window.ENV = ENV
 
-# Runtime = require("./runtime")
+Runtime = require("./source/runtime")
+Gistquire = require("./source/gistquire")
 
 # TODO: Move notifications stuff into its own class
 classicError = (request) ->
@@ -22,7 +23,7 @@ notify = (message) ->
   errors []
 
 # The root is the node that contains the script file.
-$root = $(Runtime(ENV).boot())
+$root = $(Runtime(ENV.root).boot())
 
 # Init Github access token stuff
 Gistquire.onload()

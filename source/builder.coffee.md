@@ -271,11 +271,11 @@ include source files, compiled files, and documentation.
           makeScript
             src: "#{ref}.js?#{+new Date}"
         else
-          """
-          <script>
-          #{program}
-          <\/script>
-          """
+          makeScript
+            html: """
+              #{@envDeclaration(build)}
+              #{program}
+            """
     
         content.push """
           </head>
