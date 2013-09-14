@@ -8,5 +8,5 @@ remoteDependencies: [
   "http://strd6.github.io/sandbox/master.js"
   "http://strd6.github.io/issues/master.js"
   "http://strd6.github.io/tests/master.js"
-  "http://strd6.github.io/require/master.js?1"
+  "http://strd6.github.io/require/master.js?11"
 ]
