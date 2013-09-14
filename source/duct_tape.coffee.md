@@ -57,4 +57,12 @@ HAMLjr runtime.
       if template
         template(object)
       else
-        throw "Could not find template named #{templateName}"
+        debugger
+        # TODO: Transitional Require
+        # Try loading it from the distribution
+        templateName = "templates/#{templateName}"
+        if template = Function("return #{ENV.distribution[templateName].content}")()
+          templates[templateName] = template
+          template(object)
+        else
+          throw "Could not find template named #{templateName}"
