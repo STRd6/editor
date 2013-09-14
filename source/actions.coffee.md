@@ -13,7 +13,7 @@ The primary actions of the editor. This should eventually become a mixin.
         tree: fileData
         message: message
 
-    @Actions =
+    Actions =
       save: (params) ->
         commit(params)
         .then ->
@@ -36,3 +36,8 @@ The primary actions of the editor. This should eventually become a mixin.
         .then (results) ->
           files = processDirectory results
           filetree.load files
+
+    if module?
+      module.exports = Actions
+    else
+      window.Actions = Actions

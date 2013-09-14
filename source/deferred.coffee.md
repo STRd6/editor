@@ -3,7 +3,7 @@ stay insulated by not blasting the $ all over our code
 that doesn't really depend on jQuery
 This let's us swap our our Deferred provider more easily later.
 
-    @Deferred = $.Deferred
+    window.Deferred = $.Deferred
 
 A helper to return a promise that may be resolved or rejected by the passed
 code block.
