@@ -259,11 +259,12 @@ include source files, compiled files, and documentation.
 
         program = @program(pkg)
 
+        # TODO: Get entry point from config
         content.push """
           </head>
           <body>
           #{makeScript html: @envDeclaration(pkg)}
-          #{makeScript html: program}
+          #{makeScript html: "require('./main')"}
           </body>
           </html>
         """
