@@ -28,6 +28,7 @@ require("./source/repository")
 require("./source/builder")
 require("./source/filetree")
 require("./source/file")
+require("./source/text_editor")
 
 # TODO: Move notifications stuff into its own class
 classicError = (request) ->
