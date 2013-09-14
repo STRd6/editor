@@ -27,6 +27,8 @@
 
   require("./source/actions");
 
+  require("./source/builder");
+
   require("./source/deferred");
 
   require("./source/runner");
@@ -36,8 +38,6 @@
   require("./source/gistquire");
 
   require("./source/repository");
-
-  require("./source/builder");
 
   require("./source/filetree");
 
