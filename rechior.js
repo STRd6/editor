@@ -1,5 +1,5 @@
 (function() {
-  var $root, Builder, Gistquire, Repository, Runtime, actions, branch, builder, classicError, confirmUnsaved, distribution, errors, files, filetree, fullName, hotReloadCSS, issues, notices, notify, owner, repo, repository, repositoryLoaded, _ref,
+  var $root, Builder, File, Filetree, Gistquire, Repository, Runtime, actions, branch, builder, classicError, confirmUnsaved, distribution, errors, files, filetree, fullName, hotReloadCSS, issues, notices, notify, owner, repo, repository, repositoryLoaded, _ref,
     __slice = [].slice;
 
   _ref = ENV.root, files = _ref.source, distribution = _ref.distribution, repository = _ref.repository;
@@ -13,6 +13,10 @@
   Repository = require("./source/repository");
 
   Builder = require("./source/builder");
+
+  Filetree = require("./source/filetree");
+
+  File = require("./source/file");
 
   classicError = function(request) {
     var message;
