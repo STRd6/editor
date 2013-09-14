@@ -1,14 +1,18 @@
 (function() {
-  var $root, Gistquire, Runtime, actions, branch, builder, classicError, confirmUnsaved, distribution, errors, files, filetree, fullName, hotReloadCSS, issues, notices, notify, owner, repo, repository, repositoryLoaded, _ref, _ref1,
+  var $root, Builder, Gistquire, Repository, Runtime, actions, branch, builder, classicError, confirmUnsaved, distribution, errors, files, filetree, fullName, hotReloadCSS, issues, notices, notify, owner, repo, repository, repositoryLoaded, _ref,
     __slice = [].slice;
 
-  _ref = ENV.root, files = _ref.source, distribution = _ref.distribution;
+  _ref = ENV.root, files = _ref.source, distribution = _ref.distribution, repository = _ref.repository;
 
   window.ENV = ENV;
 
   Runtime = require("./source/runtime");
 
   Gistquire = require("./source/gistquire");
+
+  Repository = require("./source/repository");
+
+  Builder = require("./source/builder");
 
   classicError = function(request) {
     var message;
@@ -30,7 +34,7 @@
 
   Gistquire.onload();
 
-  _ref1 = ENV.repository, owner = _ref1.owner, repo = _ref1.repo, branch = _ref1.branch, fullName = _ref1.full_name;
+  owner = repository.owner, repo = repository.repo, branch = repository.branch, fullName = repository.full_name;
 
   fullName || (fullName = "" + owner + "/" + repo);
 
