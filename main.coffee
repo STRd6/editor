@@ -7,6 +7,11 @@ window.ENV = ENV
 require("./source/duct_tape")
 require("./source/deferred")
 
+try
+  require("issues")
+catch e
+  debugger
+
 
 # Load and attach Templates
 templates = (HAMLjr.templates ||= {})
