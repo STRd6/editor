@@ -196,24 +196,27 @@ include source files, compiled files, and documentation.
               content: distStyle
               type: "blob"
       
+          # TODO: We should be able to put a lot of this into postProcessors
+      
+          source = arrayToHash(fileData)
+      
+          # TODO: Optionally bundle dependencies
+          dependencies = readConfig(source: source).dependencies or {}
+      
           Deferred().resolve postProcessors.pipeline
-            source: arrayToHash(fileData)
+            source: source
             distribution: arrayToHash(dist)
+            entryPoint: "main"
+            dependencies: dependencies
     
       program: (build) ->
-        {distribution} = build
+        {distribution, entryPoint} = build
 
-        # TODO: Allow for specifing different entry points
-        entryPoint = "main"
         program = distribution[entryPoint].content
-    
-        @envWrapper(program, build)
-        
-      envWrapper: (program, build) ->
+
+      envDeclaration: (build) ->
         """
-          (function (ENV) {
-          #{program}
-          }(#{JSON.stringify(build, null, 2)}));
+          ENV = #{JSON.stringify({root: build}, null, 2)};
         """
 
       buildStyle: (fileData) ->
@@ -227,13 +230,18 @@ include source files, compiled files, and documentation.
         @build(fileData).then (build) =>
           {distribution} = build
 
-          content = distribution["test.js"]?.content or ""
-          
-          testProgram = @envWrapper(content, build)
+          testProgram = Object.keys(distribution).select (path) ->
+            path.match /test\//
+          .map (testPath) ->
+            distribution[testPath].content
+          .join "\n"
           
           """
             #{dependencyScripts(build)}
-            <script>#{testProgram}<\/script>
+            <script>
+              #{@envDeclaration(build)}
+              #{testProgram}
+            <\/script>
           """
           
       runnable: (fileData) ->
