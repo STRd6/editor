@@ -4,6 +4,23 @@
 # For debugging
 window.ENV = ENV
 
+require("./source/duct_tape")
+
+# Templates
+require("./templates/actions")
+require("./templates/editor")
+require("./templates/filetree")
+require("./templates/github_status")
+require("./templates/notices")
+require("./templates/text_editor")
+
+require("./source/runtime")
+require("./source/gistquire")
+require("./source/repository")
+require("./source/builder")
+require("./source/filetree")
+require("./source/file")
+
 # TODO: Move notifications stuff into its own class
 classicError = (request) ->
   notices []
