@@ -10,7 +10,7 @@ time how the css changes affect each one.
 
     runningWindows = []
 
-    @Runner =
+    Runner =
       run: ({config, html}) ->
         sandbox = Sandbox
           width: config.width
@@ -31,3 +31,5 @@ time how the css changes affect each one.
           $(window.document).find("style.#{styleClass}").html(css)
           
           return true
+
+    module.exports = Runner
