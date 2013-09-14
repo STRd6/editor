@@ -118,7 +118,7 @@ TODO: Standardize interface to use promises.
 TODO: Allow configuration of builder instances, adding additional compilers,
 postprocessors, etc.
 
-    @Builder = ->
+    Builder = ->
       compileTemplate = (source, name="test") ->
         ast = HAMLjr.parser.parse(source)
         
@@ -300,3 +300,5 @@ config
         {}
     
     Builder.readConfig = readConfig
+
+    module.exports = Builder

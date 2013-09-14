@@ -1,11 +1,13 @@
 # Get stuff from our env
-{source:files, distribution} = ENV.root
+{source:files, distribution, repository} = ENV.root
 
 # For debugging
 window.ENV = ENV
 
 Runtime = require("./source/runtime")
 Gistquire = require("./source/gistquire")
+Repository = require("./source/repository")
+Builder = require("./source/builder")
 
 # TODO: Move notifications stuff into its own class
 classicError = (request) ->
@@ -29,7 +31,7 @@ $root = $(Runtime(ENV.root).boot())
 Gistquire.onload()
   
 # Real branch and repo info, from ENV
-{owner, repo, branch, full_name:fullName} = ENV.repository
+{owner, repo, branch, full_name:fullName} = repository
 
 fullName ||= "#{owner}/#{repo}"
 
