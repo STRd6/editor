@@ -301,4 +301,7 @@ config
     
     Builder.readConfig = readConfig
 
-    module.exports = Builder
+    if module?
+      module.exports = Builder
+    else
+      window.Builder = Builder
