@@ -247,11 +247,6 @@ include source files, compiled files, and documentation.
 
           return standAlone
 
-Create a standalone html page that includes the package as the environment. 
-
-Also returns a standalone .json package that can be used as a dependency in
-other apps.
-
       standAlone: (pkg) ->
         {source, distribution} = pkg
 
@@ -278,7 +273,6 @@ other apps.
     
         html: content.join "\n"
         script: program
-        package: JSON.stringify(pkg, null, 2)
 
 TODO: May want to move this to the environment so any program can read its
 config
