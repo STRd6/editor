@@ -4,12 +4,8 @@
 # For debugging
 window.ENV = ENV
 
-# Transitional require
-window.require = require = (path) ->
-  console.log path
-  Function(distribution[path.substring(2)].content)()
-
 require("./source/duct_tape")
+require("./source/deferred")
 
 # Templates
 require("./templates/actions")
@@ -19,16 +15,15 @@ require("./templates/github_status")
 require("./templates/notices")
 require("./templates/text_editor")
 
-require("./source/actions")
-require("./source/builder")
-require("./source/deferred")
-require("./source/runner")
-require("./source/runtime")
-require("./source/gistquire")
-require("./source/repository")
-require("./source/filetree")
-require("./source/file")
-require("./source/text_editor")
+Actions = require("./source/actions")
+Builder = require("./source/builder")
+Runner = require("./source/runner")
+Runtime = require("./source/runtime")
+Gistquire = require("./source/gistquire")
+Repository = require("./source/repository")
+Filetree = require("./source/filetree")
+File = require("./source/file")
+TextEditor = require("./source/text_editor")
 
 # TODO: Move notifications stuff into its own class
 classicError = (request) ->

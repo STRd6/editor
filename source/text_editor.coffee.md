@@ -2,7 +2,7 @@ The `TextEditor` is a model for editing a text file. Currently it uses the Ace
 editor, but we may switch in the future. All the editor specific things live in
 here.
 
-    @TextEditor = (I) ->
+    TextEditor = (I) ->
       Object.reverseMerge I,
         mode: "coffee"
         text: ""
@@ -68,3 +68,5 @@ We expose some properties and methods.
         reset: reset
     
       return self
+
+    module.exports = TextEditor
