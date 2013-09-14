@@ -216,7 +216,7 @@ include source files, compiled files, and documentation.
 
       envDeclaration: (build) ->
         """
-          ENV = #{JSON.stringify({root: build}, null, 2)};
+          ENV = #{JSON.stringify(build, null, 2)};
         """
 
       buildStyle: (fileData) ->

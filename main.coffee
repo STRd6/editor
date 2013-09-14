@@ -4,6 +4,11 @@
 # For debugging
 window.ENV = ENV
 
+# Transitional require
+require = (path) ->
+  console.log "path"
+  Function(distribution[path.substring(2)])()
+
 require("./source/duct_tape")
 
 # Templates
