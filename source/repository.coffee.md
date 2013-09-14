@@ -7,6 +7,8 @@ data for the local working copy such as the current branch.
 All of the methods return promises to allow for easy chaining and error
 reporting.
 
+    Gistquire = require "./gistquire"
+
 Constructor
 -----------
 

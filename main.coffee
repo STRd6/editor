@@ -8,6 +8,8 @@ Runtime = require("./source/runtime")
 Gistquire = require("./source/gistquire")
 Repository = require("./source/repository")
 Builder = require("./source/builder")
+Filetree = require("./source/filetree")
+File = require("./source/file")
 
 # TODO: Move notifications stuff into its own class
 classicError = (request) ->
