@@ -13,7 +13,7 @@ Convert a string with spaces and mixed case into all lower case with spaces repl
 
 UTF-8 Enabled base64 encoding and decoding.
 
-    global.Base64 =
+    @Base64 =
       encode: (s) ->
         btoa(unescape(encodeURIComponent(s)))
     
@@ -26,7 +26,7 @@ formalized later if it proves useful.
 Another downside is that it depends on the CoffeeScript compiler when it should
 be a simple parser of its own.
 
-    global.CSON =
+    @CSON =
       parse: (source) ->
         Function("return #{CoffeeScript.compile(source, bare: true)}")()
 

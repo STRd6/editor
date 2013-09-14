@@ -1,8 +1,6 @@
-    File = require("./file")
-
 The `Filetree` model represents a tree of files.
 
-    Filetree = (I={}) ->
+    @Filetree = (I={}) ->
       Object.defaults I,
         files: []
     
@@ -70,7 +68,3 @@ TODO: Use git trees and content shas to robustly manage changed state.
             file.modified(false)
     
       return self
-
-Export
-
-    module.exports = Filetree
