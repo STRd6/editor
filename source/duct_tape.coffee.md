@@ -9,17 +9,6 @@ Convert a string with spaces and mixed case into all lower case with spaces repl
         .replace(/\s+/g, "-")
         .toLowerCase()
 
-`Base64` should be moved into a browser polyfil library.
-
-UTF-8 Enabled base64 encoding and decoding.
-
-    global.Base64 =
-      encode: (s) ->
-        btoa(unescape(encodeURIComponent(s)))
-    
-      decode: (s) ->
-        decodeURIComponent(escape(atob(s.replace(/\s/g, ''))))
-
 `CSON` parses CoffeeScript object literals. This is a big hack, but can be 
 formalized later if it proves useful.
 
