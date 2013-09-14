@@ -1,14 +1,17 @@
 (function() {
-  var $root, Actions, Builder, File, Filetree, Gistquire, Repository, Runner, Runtime, TextEditor, actions, branch, builder, classicError, confirmUnsaved, distribution, errors, files, filetree, fullName, hotReloadCSS, issues, notices, notify, owner, repo, repository, repositoryLoaded, _ref,
+  var $root, actions, branch, builder, classicError, confirmUnsaved, distribution, errors, files, filetree, fullName, hotReloadCSS, issues, notices, notify, owner, repo, repository, repositoryLoaded, require, _ref,
     __slice = [].slice;
 
   files = ENV.source, distribution = ENV.distribution;
 
   window.ENV = ENV;
 
-  require("./source/duct_tape");
+  window.require = require = function(path) {
+    console.log(path);
+    return Function(distribution[path.substring(2)].content)();
+  };
 
-  require("./source/deferred");
+  require("./source/duct_tape");
 
   require("./templates/actions");
 
@@ -22,23 +25,25 @@
 
   require("./templates/text_editor");
 
-  Actions = require("./source/actions");
+  require("./source/actions");
 
-  Builder = require("./source/builder");
+  require("./source/builder");
 
-  Runner = require("./source/runner");
+  require("./source/deferred");
 
-  Runtime = require("./source/runtime");
+  require("./source/runner");
 
-  Gistquire = require("./source/gistquire");
+  require("./source/runtime");
 
-  Repository = require("./source/repository");
+  require("./source/gistquire");
 
-  Filetree = require("./source/filetree");
+  require("./source/repository");
 
-  File = require("./source/file");
+  require("./source/filetree");
 
-  TextEditor = require("./source/text_editor");
+  require("./source/file");
+
+  require("./source/text_editor");
 
   classicError = function(request) {
     var message;
