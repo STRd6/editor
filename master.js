@@ -43,6 +43,8 @@
 
   require("./source/file");
 
+  require("./source/text_editor");
+
   classicError = function(request) {
     var message;
     notices([]);
