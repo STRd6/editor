@@ -29,11 +29,12 @@ file's path is a key and the fileData is the object.
 `compileTemplate` compiles a haml file into a HAMLjr program.
 
     compileTemplate = (source, name="test") ->
-      ast = HAMLjr.parser.parse(source)
-      
-      HAMLjr.compile ast, 
-        name: name
+      program = HAMLjr.compile source,
         compiler: CoffeeScript
+
+      # TOOD: Transitional require, making templates global until `require` is
+      # in
+      "(HAMLjr.templates || (HAMLjr.templates = {}))[#{JSON.stringify(name)}] = #{program};"
 
 `compileStyl` compiles a styl file into css.
 
