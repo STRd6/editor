@@ -57,7 +57,6 @@ HAMLjr runtime.
       if template
         template(object)
       else
-        debugger
         # TODO: Transitional Require
         # Try loading it from the distribution
         templateName = "templates/#{templateName}"
