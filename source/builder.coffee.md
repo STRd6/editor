@@ -247,9 +247,9 @@ include source files, compiled files, and documentation.
 
           return standAlone
 
-      standAlone: (pkg) ->
-        {source, distribution} = pkg
-
+      standAlone: (build, ref) ->
+        {source, distribution} = build
+    
         content = []
     
         content.push """
@@ -258,22 +258,29 @@ include source files, compiled files, and documentation.
           <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         """
 
-        content = content.concat dependencyScripts(pkg)
-
-        program = @program(pkg)
-
+        content = content.concat dependencyScripts(build)
+    
+        program = @program(build)
+    
+        scriptTag = if ref
+          makeScript
+            src: "#{ref}.js?#{+new Date}"
+        else
+          makeScript
+            html: program
+    
         content.push """
           </head>
           <body>
-          #{makeScript html: @envDeclaration(pkg)}
-          #{makeScript html: program}
+          #{makeScript html: @envDeclaration(build)}
+          #{scriptTag}
           </body>
           </html>
         """
     
         html: content.join "\n"
         script: program
-
+    
 TODO: May want to move this to the environment so any program can read its
 config
 
