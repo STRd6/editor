@@ -215,7 +215,7 @@ Currently the only parameter needed to initialize a repository instance is a
             base: self.branch()
             head: branch
     
-        publish: ({html, script}) ->
+        publish: ({html, script, json}) ->
           branch = self.branch()
           message = "Built #{branch} in browser in strd6.github.io/editor"
     
@@ -227,22 +227,25 @@ Currently the only parameter needed to initialize a repository instance is a
           # Assuming git repo with gh-pages branch
           publishBranch = "gh-pages"
     
+          # TODO: Make this one commit rather than a sequence of write files
           # create <branch>.html
-          promise = self.writeFile
+          self.writeFile
             path: path
             content: Base64.encode(html)
             branch: publishBranch
             message: message
-    
-          # Create <branch>.js
-          if script
-            promise.then self.writeFile
+          .then ->
+            self.writeFile
               path: "#{branch}.js"
               content: Base64.encode(script)
               branch: publishBranch
               message: message
-          else
-            promise
+          .then ->
+            self.writeFile
+              path: "#{branch}.json"
+              content: Base64.encode(json)
+              branch: publishBranch
+              message: message
     
       return self
 
