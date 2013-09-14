@@ -32,10 +32,7 @@ file's path is a key and the fileData is the object.
       program = HAMLjr.compile source,
         compiler: CoffeeScript
 
-      # TOOD: Transitional require, making templates global until `require`
-      console.log "builder template"
-
-      "(HAMLjr.templates || (HAMLjr.templates = {}))[#{JSON.stringify(name)}] = #{program};"
+      "module.exports = #{program};"
 
 `compileStyl` compiles a styl file into css.
 

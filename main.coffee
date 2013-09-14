@@ -7,13 +7,21 @@ window.ENV = ENV
 require("./source/duct_tape")
 require("./source/deferred")
 
-# Templates
-require("./templates/actions")
-require("./templates/editor")
-require("./templates/filetree")
-require("./templates/github_status")
-require("./templates/notices")
-require("./templates/text_editor")
+
+# Load and attach Templates
+templates = (HAMLjr.templates ||= {})
+[
+  "actions"
+  "editor"
+  "filetree"
+  "github_status"
+  "notices"
+  "text_editor"
+].each (name) ->
+  template = require("./templates/#{name}")
+  # TODO Transitional type check
+  if typeof template is "function"
+    templates[name] = template
 
 Actions = require("./source/actions")
 Builder = require("./source/builder")
