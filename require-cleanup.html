@@ -209,32 +209,32 @@
     },
     "templates/actions": {
       "path": "templates/actions",
-      "content": "(HAMLjr.templates || (HAMLjr.templates = {}))[\"templates/actions\"] = (function(data) {\n  return (function() {\n    var actions, __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;\n    _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;\n    __push(document.createDocumentFragment());\n    __element = document.createElement(\"div\");\n    __push(__element);\n    __attribute(__element, \"class\", \"actions\");\n    actions = this.actions;\n    Object.keys(actions).each(function(name) {\n      __element = document.createElement(\"button\");\n      __push(__element);\n      __element = document.createTextNode('');\n      __text(__element, name.titleize());\n      __push(__element);\n      __pop();\n      __on(\"click\", function() {\n        return actions[name]();\n      });\n      return __pop();\n    });\n    __element = document.createTextNode('');\n    __text(__element, HAMLjr.render(\"issues\", this.issues));\n    __push(__element);\n    __pop();\n    __pop();\n    return __pop();\n  }).call(data);\n});\n;",
+      "content": "module.exports = (function(data) {\n  return (function() {\n    var actions, __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;\n    _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;\n    __push(document.createDocumentFragment());\n    __element = document.createElement(\"div\");\n    __push(__element);\n    __attribute(__element, \"class\", \"actions\");\n    actions = this.actions;\n    Object.keys(actions).each(function(name) {\n      __element = document.createElement(\"button\");\n      __push(__element);\n      __element = document.createTextNode('');\n      __text(__element, name.titleize());\n      __push(__element);\n      __pop();\n      __on(\"click\", function() {\n        return actions[name]();\n      });\n      return __pop();\n    });\n    __element = document.createTextNode('');\n    __text(__element, HAMLjr.render(\"issues\", this.issues));\n    __push(__element);\n    __pop();\n    __pop();\n    return __pop();\n  }).call(data);\n});\n;",
       "type": "blob"
     },
     "templates/editor": {
       "path": "templates/editor",
-      "content": "(HAMLjr.templates || (HAMLjr.templates = {}))[\"templates/editor\"] = (function(data) {\n  return (function() {\n    var __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;\n    _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;\n    __push(document.createDocumentFragment());\n    __element = document.createElement(\"div\");\n    __push(__element);\n    __attribute(__element, \"class\", \"main\");\n    __element = document.createTextNode('');\n    __text(__element, HAMLjr.render(\"actions\", {\n      actions: this.actions,\n      issues: this.issues\n    }));\n    __push(__element);\n    __pop();\n    __element = document.createTextNode('');\n    __text(__element, HAMLjr.render(\"filetree\", this.filetree));\n    __push(__element);\n    __pop();\n    __element = document.createTextNode('');\n    __text(__element, HAMLjr.render(\"notices\", this));\n    __push(__element);\n    __pop();\n    __pop();\n    return __pop();\n  }).call(data);\n});\n;",
+      "content": "module.exports = (function(data) {\n  return (function() {\n    var __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;\n    _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;\n    __push(document.createDocumentFragment());\n    __element = document.createElement(\"div\");\n    __push(__element);\n    __attribute(__element, \"class\", \"main\");\n    __element = document.createTextNode('');\n    __text(__element, HAMLjr.render(\"actions\", {\n      actions: this.actions,\n      issues: this.issues\n    }));\n    __push(__element);\n    __pop();\n    __element = document.createTextNode('');\n    __text(__element, HAMLjr.render(\"filetree\", this.filetree));\n    __push(__element);\n    __pop();\n    __element = document.createTextNode('');\n    __text(__element, HAMLjr.render(\"notices\", this));\n    __push(__element);\n    __pop();\n    __pop();\n    return __pop();\n  }).call(data);\n});\n;",
       "type": "blob"
     },
     "templates/filetree": {
       "path": "templates/filetree",
-      "content": "(HAMLjr.templates || (HAMLjr.templates = {}))[\"templates/filetree\"] = (function(data) {\n  return (function() {\n    var files, selectedFile, __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;\n    _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;\n    __push(document.createDocumentFragment());\n    __element = document.createElement(\"ul\");\n    __push(__element);\n    __attribute(__element, \"class\", \"filetree\");\n    selectedFile = this.selectedFile;\n    files = this.files;\n    __each(files, function(file) {\n      __element = document.createElement(\"li\");\n      __push(__element);\n      __element = document.createTextNode('');\n      __text(__element, file.displayName);\n      __push(__element);\n      __pop();\n      __on(\"click\", function(e) {\n        if ($(e.target).is('li')) {\n          return selectedFile(file);\n        }\n      });\n      __element = document.createElement(\"div\");\n      __push(__element);\n      __attribute(__element, \"class\", \"delete\");\n      __on(\"click\", function() {\n        if (confirm(\"Delete \" + (file.path()) + \"?\")) {\n          return files.remove(file);\n        }\n      });\n      __element = document.createTextNode('');\n      __text(__element, \"X\\n\");\n      __push(__element);\n      __pop();\n      __pop();\n      return __pop();\n    });\n    __pop();\n    return __pop();\n  }).call(data);\n});\n;",
+      "content": "module.exports = (function(data) {\n  return (function() {\n    var files, selectedFile, __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;\n    _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;\n    __push(document.createDocumentFragment());\n    __element = document.createElement(\"ul\");\n    __push(__element);\n    __attribute(__element, \"class\", \"filetree\");\n    selectedFile = this.selectedFile;\n    files = this.files;\n    __each(files, function(file) {\n      __element = document.createElement(\"li\");\n      __push(__element);\n      __element = document.createTextNode('');\n      __text(__element, file.displayName);\n      __push(__element);\n      __pop();\n      __on(\"click\", function(e) {\n        if ($(e.target).is('li')) {\n          return selectedFile(file);\n        }\n      });\n      __element = document.createElement(\"div\");\n      __push(__element);\n      __attribute(__element, \"class\", \"delete\");\n      __on(\"click\", function() {\n        if (confirm(\"Delete \" + (file.path()) + \"?\")) {\n          return files.remove(file);\n        }\n      });\n      __element = document.createTextNode('');\n      __text(__element, \"X\\n\");\n      __push(__element);\n      __pop();\n      __pop();\n      return __pop();\n    });\n    __pop();\n    return __pop();\n  }).call(data);\n});\n;",
       "type": "blob"
     },
     "templates/github_status": {
       "path": "templates/github_status",
-      "content": "(HAMLjr.templates || (HAMLjr.templates = {}))[\"templates/github_status\"] = (function(data) {\n  return (function() {\n    var __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;\n    _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;\n    __push(document.createDocumentFragment());\n    __element = document.createElement(\"div\");\n    __push(__element);\n    __attribute(__element, \"class\", \"status\");\n    if (this.request && this.request.getAllResponseHeaders().match(/X-RateLimit-Limit: 5000/)) {\n      __element = document.createTextNode('');\n      __text(__element, \"Authenticated Scopes:\\n\");\n      __push(__element);\n      __pop();\n      __element = document.createTextNode('');\n      __text(__element, this.request.getResponseHeader(\"X-OAuth-Scopes\"));\n      __push(__element);\n      __pop();\n      __element = document.createElement(\"br\");\n      __push(__element);\n      __pop();\n      __element = document.createTextNode('');\n      __text(__element, \"Rate Limit Remaining:\\n\");\n      __push(__element);\n      __pop();\n      __element = document.createTextNode('');\n      __text(__element, this.request.getResponseHeader(\"X-RateLimit-Remaining\"));\n      __push(__element);\n      __pop();\n      __element = document.createTextNode('');\n      __text(__element, \" / 5000\");\n      __push(__element);\n      __pop();\n    } else {\n      __element = document.createElement(\"button\");\n      __push(__element);\n      __element = document.createTextNode('');\n      __text(__element, \"Auth\\n\");\n      __push(__element);\n      __pop();\n      __on(\"click\", Gistquire.auth);\n      __pop();\n    }\n    __pop();\n    return __pop();\n  }).call(data);\n});\n;",
+      "content": "module.exports = (function(data) {\n  return (function() {\n    var __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;\n    _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;\n    __push(document.createDocumentFragment());\n    __element = document.createElement(\"div\");\n    __push(__element);\n    __attribute(__element, \"class\", \"status\");\n    if (this.request && this.request.getAllResponseHeaders().match(/X-RateLimit-Limit: 5000/)) {\n      __element = document.createTextNode('');\n      __text(__element, \"Authenticated Scopes:\\n\");\n      __push(__element);\n      __pop();\n      __element = document.createTextNode('');\n      __text(__element, this.request.getResponseHeader(\"X-OAuth-Scopes\"));\n      __push(__element);\n      __pop();\n      __element = document.createElement(\"br\");\n      __push(__element);\n      __pop();\n      __element = document.createTextNode('');\n      __text(__element, \"Rate Limit Remaining:\\n\");\n      __push(__element);\n      __pop();\n      __element = document.createTextNode('');\n      __text(__element, this.request.getResponseHeader(\"X-RateLimit-Remaining\"));\n      __push(__element);\n      __pop();\n      __element = document.createTextNode('');\n      __text(__element, \" / 5000\");\n      __push(__element);\n      __pop();\n    } else {\n      __element = document.createElement(\"button\");\n      __push(__element);\n      __element = document.createTextNode('');\n      __text(__element, \"Auth\\n\");\n      __push(__element);\n      __pop();\n      __on(\"click\", Gistquire.auth);\n      __pop();\n    }\n    __pop();\n    return __pop();\n  }).call(data);\n});\n;",
       "type": "blob"
     },
     "templates/notices": {
       "path": "templates/notices",
-      "content": "(HAMLjr.templates || (HAMLjr.templates = {}))[\"templates/notices\"] = (function(data) {\n  return (function() {\n    var __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;\n    _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;\n    __push(document.createDocumentFragment());\n    __element = document.createElement(\"div\");\n    __push(__element);\n    __attribute(__element, \"class\", \"console-wrap\");\n    __element = document.createElement(\"pre\");\n    __push(__element);\n    __attribute(__element, \"class\", \"errors\");\n    __each(this.errors, function(error) {\n      __element = document.createTextNode('');\n      __text(__element, error);\n      __push(__element);\n      return __pop();\n    });\n    __pop();\n    __element = document.createElement(\"pre\");\n    __push(__element);\n    __attribute(__element, \"class\", \"notices\");\n    __each(this.notices, function(notice) {\n      __element = document.createTextNode('');\n      __text(__element, notice);\n      __push(__element);\n      return __pop();\n    });\n    __pop();\n    __pop();\n    return __pop();\n  }).call(data);\n});\n;",
+      "content": "module.exports = (function(data) {\n  return (function() {\n    var __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;\n    _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;\n    __push(document.createDocumentFragment());\n    __element = document.createElement(\"div\");\n    __push(__element);\n    __attribute(__element, \"class\", \"console-wrap\");\n    __element = document.createElement(\"pre\");\n    __push(__element);\n    __attribute(__element, \"class\", \"errors\");\n    __each(this.errors, function(error) {\n      __element = document.createTextNode('');\n      __text(__element, error);\n      __push(__element);\n      return __pop();\n    });\n    __pop();\n    __element = document.createElement(\"pre\");\n    __push(__element);\n    __attribute(__element, \"class\", \"notices\");\n    __each(this.notices, function(notice) {\n      __element = document.createTextNode('');\n      __text(__element, notice);\n      __push(__element);\n      return __pop();\n    });\n    __pop();\n    __pop();\n    return __pop();\n  }).call(data);\n});\n;",
       "type": "blob"
     },
     "templates/text_editor": {
       "path": "templates/text_editor",
-      "content": "(HAMLjr.templates || (HAMLjr.templates = {}))[\"templates/text_editor\"] = (function(data) {\n  return (function() {\n    var __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;\n    _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;\n    __push(document.createDocumentFragment());\n    __element = document.createElement(\"div\");\n    __push(__element);\n    __attribute(__element, \"class\", \"editor-wrap\");\n    __element = document.createElement(\"div\");\n    __push(__element);\n    __attribute(__element, \"class\", \"editor\");\n    __pop();\n    __pop();\n    return __pop();\n  }).call(data);\n});\n;",
+      "content": "module.exports = (function(data) {\n  return (function() {\n    var __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;\n    _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;\n    __push(document.createDocumentFragment());\n    __element = document.createElement(\"div\");\n    __push(__element);\n    __attribute(__element, \"class\", \"editor-wrap\");\n    __element = document.createElement(\"div\");\n    __push(__element);\n    __attribute(__element, \"class\", \"editor\");\n    __pop();\n    __pop();\n    return __pop();\n  }).call(data);\n});\n;",
       "type": "blob"
     },
     "test/test": {
@@ -258,302 +258,6 @@
     "url": "http://strd6.github.io/editor/"
   }
 };</script></script>
-<script>(function() {
-  var $root, Actions, Builder, File, Filetree, Gistquire, Repository, Runner, Runtime, TextEditor, actions, branch, builder, classicError, confirmUnsaved, distribution, errors, files, filetree, fullName, hotReloadCSS, issues, notices, notify, owner, repo, repository, repositoryLoaded, templates, _ref,
-    __slice = [].slice;
-
-  files = ENV.source, distribution = ENV.distribution;
-
-  window.ENV = ENV;
-
-  require("./source/duct_tape");
-
-  require("./source/deferred");
-
-  templates = (HAMLjr.templates || (HAMLjr.templates = {}));
-
-  ["actions", "editor", "filetree", "github_status", "notices", "text_editor"].each(function(name) {
-    var template;
-    template = require("./templates/" + name);
-    if (typeof template === "function") {
-      return templates[name] = template;
-    }
-  });
-
-  Actions = require("./source/actions");
-
-  Builder = require("./source/builder");
-
-  Runner = require("./source/runner");
-
-  Runtime = require("./source/runtime");
-
-  Gistquire = require("./source/gistquire");
-
-  Repository = require("./source/repository");
-
-  Filetree = require("./source/filetree");
-
-  File = require("./source/file");
-
-  TextEditor = require("./source/text_editor");
-
-  classicError = function(request) {
-    var message;
-    notices([]);
-    if (request.responseJSON) {
-      message = JSON.stringify(request.responseJSON, null, 2);
-    } else {
-      message = "Error";
-    }
-    return errors([message]);
-  };
-
-  notify = function(message) {
-    notices([message]);
-    return errors([]);
-  };
-
-  $root = $(Runtime(ENV).boot());
-
-  Gistquire.onload();
-
-  _ref = ENV.repository, owner = _ref.owner, repo = _ref.repo, branch = _ref.branch, fullName = _ref.full_name;
-
-  fullName || (fullName = "" + owner + "/" + repo);
-
-  repository = Repository({
-    url: "repos/" + fullName,
-    branch: branch
-  });
-
-  errors = Observable([]);
-
-  notices = Observable([]);
-
-  builder = Builder();
-
-  repositoryLoaded = function(repository) {
-    issues.repository = repository;
-    repository.pullRequests().then(issues.reset);
-    return notify("Finished loading!");
-  };
-
-  confirmUnsaved = function() {
-    return Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?");
-  };
-
-  issues = Issues();
-
-  builder.addPostProcessor(function(data) {
-    data.repository = {
-      full_name: fullName,
-      branch: repository.branch()
-    };
-    return data;
-  });
-
-  builder.addPostProcessor(function(data) {
-    data.progenitor = {
-      url: "http://strd6.github.io/editor/"
-    };
-    return data;
-  });
-
-  actions = {
-    save: function() {
-      notify("Saving...");
-      return Actions.save({
-        repository: repository,
-        fileData: filetree.data(),
-        builder: builder
-      }).then(function() {
-        filetree.markSaved();
-        return notify("Saved and published!");
-      }).fail(function() {
-        var args;
-        args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-        return errors(args);
-      });
-    },
-    run: function() {
-      return Actions.run({
-        builder: builder,
-        filetree: filetree
-      }).fail(errors);
-    },
-    test: function() {
-      notify("Running tests...");
-      return builder.testScripts(filetree.data()).then(function(testScripts) {
-        return TestRunner.launch(testScripts);
-      }).fail(errors);
-    },
-    new_file: function() {
-      var file, name;
-      if (name = prompt("File Name", "newfile.coffee")) {
-        file = File({
-          filename: name,
-          content: ""
-        });
-        filetree.files.push(file);
-        return filetree.selectedFile(file);
-      }
-    },
-    load_repo: function(skipPrompt) {
-      return confirmUnsaved().then(function() {
-        if (!skipPrompt) {
-          fullName = prompt("Github repo", fullName);
-        }
-        if (fullName) {
-          repository = Repository({
-            url: "repos/" + fullName
-          });
-        } else {
-          errors(["No repo given"]);
-          return;
-        }
-        notify("Loading repo...");
-        return Actions.load({
-          repository: repository,
-          filetree: filetree
-        }).then(function() {
-          var root;
-          repositoryLoaded(repository);
-          root = $root.children(".main");
-          return root.find(".editor-wrap").remove();
-        }).fail(function() {
-          return errors(["Error loading " + (repository.url())]);
-        });
-      });
-    },
-    new_feature: function() {
-      var title;
-      if (title = prompt("Description")) {
-        notify("Creating feature branch...");
-        return repository.createPullRequest({
-          title: title
-        }).then(function(data) {
-          var issue;
-          issue = Issue(data);
-          issues.issues.push(issue);
-          issues.silent = true;
-          issues.currentIssue(issue);
-          issues.silent = false;
-          return notices.push("Created!");
-        }, classicError);
-      }
-    },
-    pull_master: function() {
-      return confirmUnsaved().then(function() {
-        notify("Merging in default branch...");
-        return repository.pullFromBranch();
-      }, classicError).then(function() {
-        var branchName;
-        notices.push("Merged!");
-        branchName = repository.branch();
-        notices.push("\nReloading branch " + branchName + "...");
-        return Actions.load({
-          repository: repository,
-          filetree: filetree
-        }).then(function() {
-          return notices.push("Loaded!");
-        }).fail(function() {
-          return errors(["Error loading " + (repository.url())]);
-        });
-      });
-    }
-  };
-
-  filetree = Filetree();
-
-  filetree.load(files);
-
-  filetree.selectedFile.observe(function(file) {
-    var editor, root;
-    root = $root.children(".main");
-    root.find(".editor-wrap").hide();
-    if (file.editor) {
-      return file.editor.trigger("show");
-    } else {
-      root.append(HAMLjr.render("text_editor"));
-      file.editor = root.find(".editor-wrap").last();
-      editor = TextEditor({
-        text: file.content(),
-        el: file.editor.find('.editor').get(0),
-        mode: file.mode()
-      });
-      file.editor.on("show", function() {
-        file.editor.show();
-        return editor.editor.focus();
-      });
-      return editor.text.observe(function(value) {
-        file.content(value);
-        if (file.path().match(/\.styl$/)) {
-          return hotReloadCSS();
-        }
-      });
-    }
-  });
-
-  hotReloadCSS = (function() {
-    return builder.buildStyle(filetree.data()).then(Runner.hotReloadCSS);
-  }).debounce(500);
-
-  repositoryLoaded(repository);
-
-  issues.currentIssue.observe(function(issue) {
-    var changeBranch;
-    if (issues.silent) {
-      return;
-    }
-    changeBranch = function(branchName) {
-      var previousBranch;
-      previousBranch = repository.branch();
-      return confirmUnsaved().then(function() {
-        return repository.switchToBranch(branchName).then(function() {
-          notices.push("\nLoading branch " + branchName + "...");
-          return Actions.load({
-            repository: repository,
-            filetree: filetree
-          }).then(function() {
-            return notices.push("Loaded!");
-          });
-        });
-      }, function() {
-        repository.branch(previousBranch);
-        return errors(["Error switching to " + branchName + ", still on " + previousBranch]);
-      });
-    };
-    if (issue) {
-      notify(issue.fullDescription());
-      return changeBranch(issue.branchName());
-    } else {
-      notify("Default branch selected");
-      return changeBranch(repository.defaultBranch());
-    }
-  });
-
-  $root.append(HAMLjr.render("editor", {
-    filetree: filetree,
-    actions: actions,
-    notices: notices,
-    errors: errors,
-    issues: issues
-  }));
-
-  Gistquire.api("rate_limit").then(function(data, status, request) {
-    return $root.append(HAMLjr.render("github_status", {
-      request: request
-    }));
-  });
-
-  window.onbeforeunload = function() {
-    if (filetree.hasUnsavedChanges()) {
-      return "You have some unsaved changes, if you leave now you will lose your work.";
-    }
-  };
-
-}).call(this);
-</script>
+<script>require('./main')</script>
 </body>
 </html>
