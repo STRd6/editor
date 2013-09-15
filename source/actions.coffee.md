@@ -1,4 +1,5 @@
     Runner = require("./runner")
+    Builder = require("./builder")
 
 The primary actions of the editor. This should eventually become a mixin.
 
@@ -22,8 +23,14 @@ The primary actions of the editor. This should eventually become a mixin.
           publish(params)
     
       run: ({builder, filetree}) ->
+        sandbox = Runner.run
+          config: Builder.readConfig(ENV) # TODO: Get config from actual file
+
         builder.runnable(filetree.data())
-        .then Runner.run
+        .then ({html}) ->
+          sandbox.document.open()
+          sandbox.document.write(html)
+          sandbox.document.close()
 
       load: ({filetree, repository}) ->
         # Decode all content in place
