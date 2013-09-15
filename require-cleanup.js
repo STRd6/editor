@@ -1,5 +1,5 @@
 (function() {
-  var $root, Actions, Builder, File, Filetree, Gistquire, Repository, Runner, Runtime, TextEditor, actions, branch, builder, classicError, confirmUnsaved, distribution, e, errors, files, filetree, fullName, hotReloadCSS, issues, notices, notify, owner, repo, repository, repositoryLoaded, templates, _ref,
+  var $root, Actions, Builder, File, Filetree, Gistquire, Repository, Runner, Runtime, TextEditor, actions, branch, builder, classicError, confirmUnsaved, distribution, e, errors, files, filetree, fullName, hotReloadCSS, notices, notify, owner, repo, repository, repositoryLoaded, templates, _ref,
     __slice = [].slice;
 
   files = ENV.source, distribution = ENV.distribution;
@@ -81,16 +81,12 @@
   builder = Builder();
 
   repositoryLoaded = function(repository) {
-    issues.repository = repository;
-    repository.pullRequests().then(issues.reset);
     return notify("Finished loading!");
   };
 
   confirmUnsaved = function() {
     return Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?");
   };
-
-  issues = Issues();
 
   builder.addPostProcessor(function(data) {
     data.repository = {
@@ -248,44 +244,45 @@
 
   repositoryLoaded(repository);
 
-  issues.currentIssue.observe(function(issue) {
-    var changeBranch;
-    if (issues.silent) {
-      return;
-    }
-    changeBranch = function(branchName) {
-      var previousBranch;
-      previousBranch = repository.branch();
-      return confirmUnsaved().then(function() {
-        return repository.switchToBranch(branchName).then(function() {
-          notices.push("\nLoading branch " + branchName + "...");
-          return Actions.load({
-            repository: repository,
-            filetree: filetree
-          }).then(function() {
-            return notices.push("Loaded!");
+  if (typeof issues !== "undefined" && issues !== null) {
+    issues.currentIssue.observe(function(issue) {
+      var changeBranch;
+      if (issues.silent) {
+        return;
+      }
+      changeBranch = function(branchName) {
+        var previousBranch;
+        previousBranch = repository.branch();
+        return confirmUnsaved().then(function() {
+          return repository.switchToBranch(branchName).then(function() {
+            notices.push("\nLoading branch " + branchName + "...");
+            return Actions.load({
+              repository: repository,
+              filetree: filetree
+            }).then(function() {
+              return notices.push("Loaded!");
+            });
           });
+        }, function() {
+          repository.branch(previousBranch);
+          return errors(["Error switching to " + branchName + ", still on " + previousBranch]);
         });
-      }, function() {
-        repository.branch(previousBranch);
-        return errors(["Error switching to " + branchName + ", still on " + previousBranch]);
-      });
-    };
-    if (issue) {
-      notify(issue.fullDescription());
-      return changeBranch(issue.branchName());
-    } else {
-      notify("Default branch selected");
-      return changeBranch(repository.defaultBranch());
-    }
-  });
+      };
+      if (issue) {
+        notify(issue.fullDescription());
+        return changeBranch(issue.branchName());
+      } else {
+        notify("Default branch selected");
+        return changeBranch(repository.defaultBranch());
+      }
+    });
+  }
 
   $root.append(HAMLjr.render("editor", {
     filetree: filetree,
     actions: actions,
     notices: notices,
-    errors: errors,
-    issues: issues
+    errors: errors
   }));
 
   Gistquire.api("rate_limit").then(function(data, status, request) {
