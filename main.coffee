@@ -12,7 +12,6 @@ try
 catch e
   debugger
 
-
 # Load and attach Templates
 templates = (HAMLjr.templates ||= {})
 [
@@ -39,13 +38,14 @@ File = require("./source/file")
 TextEditor = require("./source/text_editor")
 
 # TODO: Move notifications stuff into its own class
-classicError = (request) ->
+classicError = (request, error, message) ->
+  debugger
   notices []
   
   if request.responseJSON
     message = JSON.stringify(request.responseJSON, null, 2)
   else
-    message = "Error"
+    message ?= request
 
   errors [message]
 
@@ -161,9 +161,8 @@ actions =
         
         root = $root.children(".main")
         root.find(".editor-wrap").remove()
-      .fail ->
-        errors ["Error loading #{repository.url()}"]
-        
+      .fail classicError
+
   new_feature: ->
     if title = prompt("Description")
       notify "Creating feature branch..."
@@ -202,6 +201,13 @@ actions =
         notices.push "Loaded!"
       .fail ->
         errors ["Error loading #{repository.url()}"]
+        
+  testDeps: ->
+    packager = require("./source/packager")()
+    packager.collectDependencies(Builder.readConfig(ENV).dependencies)
+    .then (bundledDeps) ->
+      console.log(bundledDeps)
+    .fail classicError
 
 filetree = Filetree()
 filetree.load(files)
