@@ -1,5 +1,5 @@
 (function() {
-  var $root, Actions, Builder, File, Filetree, Gistquire, Repository, Runner, Runtime, TextEditor, actions, branch, builder, classicError, confirmUnsaved, distribution, e, errors, files, filetree, fullName, hotReloadCSS, notices, notify, owner, repo, repository, repositoryLoaded, templates, _ref,
+  var $root, Actions, Builder, File, Filetree, Gistquire, Repository, Runner, Runtime, TextEditor, actions, branch, builder, classicError, confirmUnsaved, distribution, errors, files, filetree, fullName, hotReloadCSS, notices, notify, owner, repo, repository, repositoryLoaded, templates, _ref,
     __slice = [].slice;
 
   files = ENV.source, distribution = ENV.distribution;
@@ -9,13 +9,6 @@
   require("./source/duct_tape");
 
   require("./source/deferred");
-
-  try {
-    require("issues");
-  } catch (_error) {
-    e = _error;
-    debugger;
-  }
 
   templates = (HAMLjr.templates || (HAMLjr.templates = {}));
 
@@ -205,12 +198,9 @@
         });
       });
     },
-    testDeps: function() {
-      var packager;
-      packager = require("./source/packager")();
-      return packager.collectDependencies(Builder.readConfig(ENV).dependencies).then(function(bundledDeps) {
-        return console.log(bundledDeps);
-      }).fail(classicError);
+    testReq: function() {
+      debugger;
+      return require('issues');
     }
   };
 
