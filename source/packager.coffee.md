@@ -24,8 +24,6 @@ package.
           
           bundledDependencies = {}
 
-          debugger
-
           names.each (name, i) ->
             bundledDependencies[name] = results[i][0]
 
