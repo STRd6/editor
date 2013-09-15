@@ -74,15 +74,15 @@ notices = Observable([])
 builder = Builder()
 
 repositoryLoaded = (repository) ->
-  issues.repository = repository
-  repository.pullRequests().then issues.reset
+  # issues.repository = repository
+  # repository.pullRequests().then issues.reset
   
   notify "Finished loading!"
   
 confirmUnsaved = ->
   Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
 
-issues = Issues()
+# issues = Issues()
 
 # Repo metadata for env
 builder.addPostProcessor (data) ->
@@ -240,7 +240,7 @@ hotReloadCSS = (->
 
 repositoryLoaded(repository)
 
-issues.currentIssue.observe (issue) ->
+issues?.currentIssue.observe (issue) ->
   # TODO: Formalize this later
   return if issues.silent
   
@@ -284,7 +284,7 @@ $root
     actions: actions
     notices: notices
     errors: errors
-    issues: issues
+    # issues: issues
   )
 
 Gistquire.api("rate_limit")
