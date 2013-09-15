@@ -252,7 +252,6 @@
     css = styl(file.content(), {
       whitespace: true
     }).toString();
-    console.log(css, file);
     return Runner.hotReloadCSS(css, file.path());
   }).debounce(500);
 
