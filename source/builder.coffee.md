@@ -6,6 +6,13 @@ build products.
 
 This should be extracted to a separate library eventually.
 
+Dependencies
+------------
+
+This guy helps package our app and manage dependencies.
+
+    packager = require('./packager')()
+
 Helpers
 -------
 
@@ -192,14 +199,21 @@ include source files, compiled files, and documentation.
       
           source = arrayToHash(fileData)
       
-          # TODO: Optionally bundle dependencies
+          # TODO: Robustify bundled dependencies
+          # Right now we're always loading them from remote urls during the
+          # build step. The default http caching is probably fine to speed this
+          # up, but we may want to look into keeping our own cache during dev
+          # in addition to using the package's existing dependencies rather
+          # than always updating
           dependencies = readConfig(source: source).dependencies or {}
-      
-          Deferred().resolve postProcessors.pipeline
-            source: source
-            distribution: arrayToHash(dist)
-            entryPoint: "main"
-            dependencies: dependencies
+          
+          packager.collectDependencies(dependencies)
+          .then (bundledDependencies) ->
+            postProcessors.pipeline
+              source: source
+              distribution: arrayToHash(dist)
+              entryPoint: "main"
+              dependencies: bundledDependencies
     
       program: (build) ->
         {distribution, entryPoint} = build

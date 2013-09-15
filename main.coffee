@@ -7,11 +7,6 @@ window.ENV = ENV
 require("./source/duct_tape")
 require("./source/deferred")
 
-try
-  require("issues")
-catch e
-  debugger
-
 # Load and attach Templates
 templates = (HAMLjr.templates ||= {})
 [
@@ -82,6 +77,8 @@ repositoryLoaded = (repository) ->
 confirmUnsaved = ->
   Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
 
+# {models:{Issue, Issues}, templates:{issues:issuesTemplate}} = require("issues")
+# templates["issues"] = issuesTemplate
 # issues = Issues()
 
 # Repo metadata for env
@@ -201,13 +198,10 @@ actions =
         notices.push "Loaded!"
       .fail ->
         errors ["Error loading #{repository.url()}"]
-        
-  testDeps: ->
-    packager = require("./source/packager")()
-    packager.collectDependencies(Builder.readConfig(ENV).dependencies)
-    .then (bundledDeps) ->
-      console.log(bundledDeps)
-    .fail classicError
+
+  testReq: ->
+    debugger
+    require('issues')
 
 filetree = Filetree()
 filetree.load(files)
