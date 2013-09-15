@@ -45,13 +45,15 @@
 
   TextEditor = require("./source/text_editor");
 
-  classicError = function(request) {
-    var message;
+  classicError = function(request, error, message) {
+    debugger;
     notices([]);
     if (request.responseJSON) {
       message = JSON.stringify(request.responseJSON, null, 2);
     } else {
-      message = "Error";
+      if (message == null) {
+        message = request;
+      }
     }
     return errors([message]);
   };
@@ -164,9 +166,7 @@
           repositoryLoaded(repository);
           root = $root.children(".main");
           return root.find(".editor-wrap").remove();
-        }).fail(function() {
-          return errors(["Error loading " + (repository.url())]);
-        });
+        }).fail(classicError);
       });
     },
     new_feature: function() {
@@ -204,6 +204,13 @@
           return errors(["Error loading " + (repository.url())]);
         });
       });
+    },
+    testDeps: function() {
+      var packager;
+      packager = require("./source/packager")();
+      return packager.collectDependencies(Builder.readConfig(ENV).dependencies).then(function(bundledDeps) {
+        return console.log(bundledDeps);
+      }).fail(classicError);
     }
   };
 
