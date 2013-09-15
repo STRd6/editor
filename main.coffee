@@ -7,13 +7,20 @@ window.ENV = ENV
 require("./source/duct_tape")
 require("./source/deferred")
 
-# Templates
-require("./templates/actions")
-require("./templates/editor")
-require("./templates/filetree")
-require("./templates/github_status")
-require("./templates/notices")
-require("./templates/text_editor")
+# Load and attach Templates
+templates = (HAMLjr.templates ||= {})
+[
+  "actions"
+  "editor"
+  "filetree"
+  "github_status"
+  "notices"
+  "text_editor"
+].each (name) ->
+  template = require("./templates/#{name}")
+  # TODO Transitional type check
+  if typeof template is "function"
+    templates[name] = template
 
 Actions = require("./source/actions")
 Builder = require("./source/builder")
@@ -26,13 +33,14 @@ File = require("./source/file")
 TextEditor = require("./source/text_editor")
 
 # TODO: Move notifications stuff into its own class
-classicError = (request) ->
+classicError = (request, error, message) ->
+  debugger
   notices []
   
   if request.responseJSON
     message = JSON.stringify(request.responseJSON, null, 2)
   else
-    message = "Error"
+    message ?= request
 
   errors [message]
 
@@ -69,6 +77,8 @@ repositoryLoaded = (repository) ->
 confirmUnsaved = ->
   Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
 
+{models:{Issue, Issues}, templates:{issues:issuesTemplate}} = require("issues")
+templates["issues"] = issuesTemplate
 issues = Issues()
 
 # Repo metadata for env
@@ -148,9 +158,8 @@ actions =
         
         root = $root.children(".main")
         root.find(".editor-wrap").remove()
-      .fail ->
-        errors ["Error loading #{repository.url()}"]
-        
+      .fail classicError
+
   new_feature: ->
     if title = prompt("Description")
       notify "Creating feature branch..."
@@ -227,7 +236,7 @@ hotReloadCSS = (->
 
 repositoryLoaded(repository)
 
-issues.currentIssue.observe (issue) ->
+issues?.currentIssue.observe (issue) ->
   # TODO: Formalize this later
   return if issues.silent
   

@@ -39,7 +39,4 @@ The primary actions of the editor. This should eventually become a mixin.
           files = processDirectory results
           filetree.load files
 
-    if module?
-      module.exports = Actions
-    else
-      window.Actions = Actions
+    module.exports = Actions

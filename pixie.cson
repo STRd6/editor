@@ -6,7 +6,8 @@ remoteDependencies: [
   "//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"
   "http://strd6.github.io/tempest/javascripts/envweb.js"
   "http://strd6.github.io/sandbox/master.js"
-  "http://strd6.github.io/issues/master.js"
   "http://strd6.github.io/tests/master.js"
-  "http://strd6.github.io/require/master.js?11"
+  "http://strd6.github.io/require/master.js?01"
 ]
+dependencies:
+  issues: "http://strd6.github.io/issues/master.json?0000"
