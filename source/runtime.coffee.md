@@ -17,17 +17,6 @@ writing anything to the document.
       
         return target.parentNode
 
-      applyStyleSheet = (root) ->
-        styleClass = "primary"
-      
-        # Apply our styles
-        if styleContent = ENV.distribution["style.css"]?.content
-          styleNode = document.createElement("style")
-          styleNode.innerHTML = styleContent
-          styleNode.className = styleClass
-          
-          root.appendChild(styleNode)
-
 Display a promo in the console linking back to the creator of this app.
 
       promo = ->
@@ -54,14 +43,20 @@ promo.
 
       boot: ->
         root = currentNode()
-        applyStyleSheet(root)
-        
+
         promo()
 
 Returns the root element, where the app should append all of the elements it
 creates.
 
         return root
+        
+      applyStyleSheet: (root, name) ->
+        styleNode = document.createElement("style")
+        styleNode.innerHTML = require(name)
+        styleNode.className = name
+        
+        root.appendChild(styleNode)
 
 Export
 
