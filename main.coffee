@@ -236,8 +236,6 @@ filetree.selectedFile.observe (file) ->
 
 hotReloadCSS = ( (file) ->
   css = styl(file.content(), whitespace: true).toString()
-  
-  console.log css, file
 
   Runner.hotReloadCSS(css, file.path())
 ).debounce(500)

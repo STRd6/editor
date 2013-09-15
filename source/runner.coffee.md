@@ -20,10 +20,10 @@ time how the css changes affect each one.
 
         return sandbox
 
-      hotReloadCSS: (css, path) ->
+      hotReloadCSS: (css, path) ->      
         runningWindows = runningWindows.partition (window) ->
           return false if window.closed
-          
+                    
           # TODO: We're assuming only one style in the body
           # which is reasonable in most cases, but we may want
           # to scope it by the path of the specific css file
@@ -31,5 +31,6 @@ time how the css changes affect each one.
           $(window.document).find("body style:eq(0)").html(css)
           
           return true
+        .first()
 
     module.exports = Runner
