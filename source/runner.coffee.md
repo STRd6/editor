@@ -11,16 +11,14 @@ time how the css changes affect each one.
     runningWindows = []
 
     Runner =
-      run: ({config, html}) ->
+      run: ({config}) ->
         sandbox = Sandbox
           width: config.width
           height: config.height
-  
-        sandbox.document.open()
-        sandbox.document.write(html)
-        sandbox.document.close()
-        
+
         runningWindows.push sandbox
+
+        return sandbox
 
       hotReloadCSS: (css, path) ->
         runningWindows = runningWindows.partition (window) ->
