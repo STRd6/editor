@@ -1,5 +1,5 @@
 (function() {
-  var $root, Actions, Builder, File, Filetree, Gistquire, Repository, Runner, Runtime, TextEditor, actions, branch, builder, classicError, confirmUnsaved, distribution, errors, files, filetree, fullName, hotReloadCSS, notices, notify, owner, repo, repository, repositoryLoaded, templates, _ref,
+  var $root, Actions, Builder, File, Filetree, Gistquire, Issue, Issues, Repository, Runner, Runtime, TextEditor, actions, branch, builder, classicError, confirmUnsaved, distribution, errors, files, filetree, fullName, hotReloadCSS, issues, issuesTemplate, notices, notify, owner, repo, repository, repositoryLoaded, templates, _ref, _ref1, _ref2, _ref3,
     __slice = [].slice;
 
   files = ENV.source, distribution = ENV.distribution;
@@ -76,12 +76,20 @@
   builder = Builder();
 
   repositoryLoaded = function(repository) {
+    issues.repository = repository;
+    repository.pullRequests().then(issues.reset);
     return notify("Finished loading!");
   };
 
   confirmUnsaved = function() {
     return Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?");
   };
+
+  _ref1 = require("issues"), (_ref2 = _ref1.models, Issue = _ref2.Issue, Issues = _ref2.Issues), (_ref3 = _ref1.templates, issuesTemplate = _ref3.issues);
+
+  templates["issues"] = issuesTemplate;
+
+  issues = Issues();
 
   builder.addPostProcessor(function(data) {
     data.repository = {
@@ -197,10 +205,6 @@
           return errors(["Error loading " + (repository.url())]);
         });
       });
-    },
-    testReq: function() {
-      debugger;
-      return require('issues');
     }
   };
 
@@ -241,7 +245,7 @@
 
   repositoryLoaded(repository);
 
-  if (typeof issues !== "undefined" && issues !== null) {
+  if (issues != null) {
     issues.currentIssue.observe(function(issue) {
       var changeBranch;
       if (issues.silent) {
@@ -279,7 +283,8 @@
     filetree: filetree,
     actions: actions,
     notices: notices,
-    errors: errors
+    errors: errors,
+    issues: issues
   }));
 
   Gistquire.api("rate_limit").then(function(data, status, request) {
