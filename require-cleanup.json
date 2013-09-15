@@ -15,7 +15,7 @@
     "pixie.cson": {
       "path": "pixie.cson",
       "mode": "100644",
-      "content": "width: 960\nheight: 800\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/sandbox/master.js\"\n  \"http://strd6.github.io/tests/master.js\"\n  \"http://strd6.github.io/require/master.js?11\"\n]\ndependencies:\n  issues: \"http://strd6.github.io/issues/master.json?2\"\n",
+      "content": "width: 960\nheight: 800\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/sandbox/master.js\"\n  \"http://strd6.github.io/tests/master.js\"\n  \"http://strd6.github.io/require/master.js?01\"\n]\ndependencies:\n  issues: \"http://strd6.github.io/issues/master.json?2\"\n",
       "type": "blob"
     },
     "source/actions.coffee.md": {
@@ -58,6 +58,12 @@
       "path": "source/gistquire.coffee.md",
       "mode": "100644",
       "content": "Gistquire handles our connection to the Github API.\n\n    Gistquire =\n      accessToken: null\n\nCalling auth will redirect to github for authentication.\n\nTODO: parameterize the method to allow for different `scope`s or `client_id`s.\n\n      auth: ->\n        scope = \"gist,repo,user:email\"\n        url = \"https://github.com/login/oauth/authorize?client_id=bc46af967c926ba4ff87&scope=#{scope}\"\n    \n        window.location = url\n    \nCall onload to check for the code returned from github authentication\nand to get our access token from our authorization app.\n\nTODO: Maybe think about returning a deferred?\n\n      onload: ->\n        # TODO: Namespace local storage key\n    \n        if code = window.location.href.match(/\\?code=(.*)/)?[1]\n          $.getJSON \"https://hamljr-auth.herokuapp.com/authenticate/#{code}\", (data) =>\n            if token = data.token\n              @accessToken = token\n              localStorage.authToken = token\n    \n        if localStorage.authToken\n          @accessToken = localStorage.authToken\n\nMake a call to the github API. The path can be either a relative path such as\n`users/STRd6` or an absolute path like `https://api.github.com/users/octocat` or\n`user.url`.\n\nWe attach our `accessToken` if present.\n\n`api` returns a promise for easy chaining.\n\n      api: (path, options={}) ->\n        if path.match /^http/\n          url = path\n        else\n          url = \"https://api.github.com/#{path}\"\n        \n        options.headers ||= {}\n        \n        if @accessToken\n          options.headers[\"Authorization\"] = \"token #{@accessToken}\"\n    \n        options = Object.extend\n          url: url\n          type: \"GET\"\n          dataType: 'json'\n        , options\n    \n        $.ajax options\n\n    module.exports = Gistquire\n",
+      "type": "blob"
+    },
+    "source/packager.coffee.md": {
+      "path": "source/packager.coffee.md",
+      "mode": "100644",
+      "content": "This guy is resopnsible for packaging things, probably related to the builder.\n\nJust putting some things here to try and sort them out.\n\nThe main responsibilities will be bundling dependencies, and creating the\npackage.\n\n    Packager = ->\n      collectDependencies: (dependencies) ->\n        names = Object.keys(dependencies)\n      \n        $.when.apply(null, names.map (name) ->\n          value = dependencies[name]\n          \n          if typeof value is \"string\"\n            $.getJSON(value)\n          else\n            Deferred().reject(\"Can only handle url string dependencies right now\")\n        ).then (results...) ->\n          # WTF: jQuery.when behaves differently for one argument than it does for\n          # two or more.\n          if names.length is 1\n            results = [results]\n          \n          bundledDependencies = {}\n\n          debugger\n\n          names.each (name, i) ->\n            bundledDependencies[name] = results[i][0]\n\n          return bundledDependencies\n\n    module.exports = Packager\n",
       "type": "blob"
     },
     "source/repository.coffee.md": {
@@ -131,12 +137,6 @@
       "mode": "100644",
       "content": "Starting with just an assert true to test that testing works at all.\n\n    describe \"editor\", ->\n      it \"should test things\", ->\n        assert true\n",
       "type": "blob"
-    },
-    "source/packager.coffee.md": {
-      "path": "source/packager.coffee.md",
-      "mode": "100644",
-      "content": "This guy is resopnsible for packaging things, probably related to the builder.\n\nJust putting some things here to try and sort them out.\n\nThe main responsibilities will be bundling dependencies, and creating the\npackage.\n\n    Packager = ->\n      collectDependencies: (dependencies) ->\n        names = Object.keys(dependencies)\n      \n        $.when.apply(null, names.map (name) ->\n          value = dependencies[name]\n          \n          if typeof value is \"string\"\n            $.getJSON(value)\n          else\n            Deferred().reject(\"Can only handle url string dependencies right now\")\n        ).then (results...) ->\n          # WTF: jQuery.when behaves differently for one argument than it does for\n          # two or more.\n          if names.length is 1\n            results = [results]\n          \n          bundledDependencies = {}\n\n          debugger\n\n          names.each (name, i) ->\n            bundledDependencies[name] = results[i][0]\n\n          return bundledDependencies\n\n    module.exports = Packager\n",
-      "type": "blob"
     }
   },
   "distribution": {
@@ -178,6 +178,11 @@
     "source/gistquire": {
       "path": "source/gistquire",
       "content": "(function() {\n  var Gistquire;\n\n  Gistquire = {\n    accessToken: null,\n    auth: function() {\n      var scope, url;\n      scope = \"gist,repo,user:email\";\n      url = \"https://github.com/login/oauth/authorize?client_id=bc46af967c926ba4ff87&scope=\" + scope;\n      return window.location = url;\n    },\n    onload: function() {\n      var code, _ref,\n        _this = this;\n      if (code = (_ref = window.location.href.match(/\\?code=(.*)/)) != null ? _ref[1] : void 0) {\n        $.getJSON(\"https://hamljr-auth.herokuapp.com/authenticate/\" + code, function(data) {\n          var token;\n          if (token = data.token) {\n            _this.accessToken = token;\n            return localStorage.authToken = token;\n          }\n        });\n      }\n      if (localStorage.authToken) {\n        return this.accessToken = localStorage.authToken;\n      }\n    },\n    api: function(path, options) {\n      var url;\n      if (options == null) {\n        options = {};\n      }\n      if (path.match(/^http/)) {\n        url = path;\n      } else {\n        url = \"https://api.github.com/\" + path;\n      }\n      options.headers || (options.headers = {});\n      if (this.accessToken) {\n        options.headers[\"Authorization\"] = \"token \" + this.accessToken;\n      }\n      options = Object.extend({\n        url: url,\n        type: \"GET\",\n        dataType: 'json'\n      }, options);\n      return $.ajax(options);\n    }\n  };\n\n  module.exports = Gistquire;\n\n}).call(this);\n",
+      "type": "blob"
+    },
+    "source/packager": {
+      "path": "source/packager",
+      "content": "(function() {\n  var Packager,\n    __slice = [].slice;\n\n  Packager = function() {\n    return {\n      collectDependencies: function(dependencies) {\n        var names;\n        names = Object.keys(dependencies);\n        return $.when.apply(null, names.map(function(name) {\n          var value;\n          value = dependencies[name];\n          if (typeof value === \"string\") {\n            return $.getJSON(value);\n          } else {\n            return Deferred().reject(\"Can only handle url string dependencies right now\");\n          }\n        })).then(function() {\n          var bundledDependencies, results;\n          results = 1 <= arguments.length ? __slice.call(arguments, 0) : [];\n          if (names.length === 1) {\n            results = [results];\n          }\n          bundledDependencies = {};\n          debugger;\n          names.each(function(name, i) {\n            return bundledDependencies[name] = results[i][0];\n          });\n          return bundledDependencies;\n        });\n      }\n    };\n  };\n\n  module.exports = Packager;\n\n}).call(this);\n",
       "type": "blob"
     },
     "source/repository": {
@@ -235,11 +240,6 @@
       "content": "(function() {\n  describe(\"editor\", function() {\n    return it(\"should test things\", function() {\n      return assert(true);\n    });\n  });\n\n}).call(this);\n",
       "type": "blob"
     },
-    "source/packager": {
-      "path": "source/packager",
-      "content": "(function() {\n  var Packager,\n    __slice = [].slice;\n\n  Packager = function() {\n    return {\n      collectDependencies: function(dependencies) {\n        var names;\n        names = Object.keys(dependencies);\n        return $.when.apply(null, names.map(function(name) {\n          var value;\n          value = dependencies[name];\n          if (typeof value === \"string\") {\n            return $.getJSON(value);\n          } else {\n            return Deferred().reject(\"Can only handle url string dependencies right now\");\n          }\n        })).then(function() {\n          var bundledDependencies, results;\n          results = 1 <= arguments.length ? __slice.call(arguments, 0) : [];\n          if (names.length === 1) {\n            results = [results];\n          }\n          bundledDependencies = {};\n          debugger;\n          names.each(function(name, i) {\n            return bundledDependencies[name] = results[i][0];\n          });\n          return bundledDependencies;\n        });\n      }\n    };\n  };\n\n  module.exports = Packager;\n\n}).call(this);\n",
-      "type": "blob"
-    },
     "style.css": {
       "path": "style.css",
       "content": "html,\nbody {\n  margin: 0;\n  height: 100%;\n}\n\n.main {\n  position: relative;\n  padding-top: 40px;\n  padding-left: 200px;\n  padding-bottom: 100px;\n  height: 100%;\n  -ms-box-sizing: border-box;\n  -moz-box-sizing: border-box;\n  -webkit-box-sizing: border-box;\n  box-sizing: border-box;\n}\n\n.editor-wrap {\n  background-color: white;\n  width: 100%;\n  height: 100%;\n  position: relative;\n}\n\n.editor-wrap > div {\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n}\n\n.filetree {\n  margin: 0;\n  padding: 0;\n  width: 200px;\n  position: absolute;\n  left: 0;\n  top: 40px;\n  z-index: 2;\n}\n\n.filetree li .delete {\n  display: none;\n  position: absolute;\n  right: 0;\n  top: 0;\n}\n\n.filetree li:hover .delete {\n  display: inline-block;\n}\n\n.filetree li:hover {\n  background-color: lightyellow;\n}\n\n.filetree li {\n  list-style-type: none;\n  padding-left: 1em;\n  position: relative;\n}\n\n.actions {\n  position: absolute;\n  top: 0;\n  left: 200px;\n}\n\n.console-wrap {\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  padding-left: 200px;\n  height: 100px;\n  width: 100%;\n  margin: 0;\n  -ms-box-sizing: border-box;\n  -moz-box-sizing: border-box;\n  -webkit-box-sizing: border-box;\n  box-sizing: border-box;\n}\n\n.console-wrap .errors {\n  border-top: 1px solid black;\n  color: red;\n  -ms-box-sizing: border-box;\n  -moz-box-sizing: border-box;\n  -webkit-box-sizing: border-box;\n  box-sizing: border-box;\n}\n\n.status {\n  top: 0;\n  right: 0;\n  position: absolute;\n}",
@@ -248,7 +248,71 @@
   },
   "entryPoint": "main",
   "dependencies": {
-    "issues": "http://strd6.github.io/issues/master.json?2"
+    "issues": {
+      "source": {
+        "README.md": {
+          "path": "README.md",
+          "mode": "100644",
+          "content": "issues\n======\n\nGithub's got issues\n\nGoal\n----\n\nCurrently just provides a dropdown list for choosing an issue from.\n\nMay later expand to forms to create/show/comment on issues for a project.\n",
+          "type": "blob"
+        },
+        "main.coffee.md": {
+          "path": "main.coffee.md",
+          "mode": "100644",
+          "content": "Our main entry point which exports all of our Issue models and templates.\n\n    module.exports =\n      models:\n        Issue: require(\"./source/issue\")\n        Issues: require(\"./source/issues\")\n      templates:\n        issues: require(\"./templates/issues\")\n",
+          "type": "blob"
+        },
+        "source/issue.coffee.md": {
+          "path": "source/issue.coffee.md",
+          "mode": "100644",
+          "content": "A tempest model that wraps issues from github.\n\n    Issue = (I={}) ->\n      self = Model(I)\n    \n      self.extend\n\nThe option text is what appears in the dropdown menu.\n\n        optionText: ->\n          \"#{I.title}\"\n\n        fullDescription: ->\n          \"\"\"\n            #{self.optionText()}\n            #{I.html_url}\n            #{I.body}\n          \"\"\"\n\nA helper method to get a standard branch name for an issue. Pull requests have\ntheir own branches, but an issue branch is generated based on issue number.\n\n        branchName: ->\n          I.head?.ref or \"issue-#{I.number}\"\n    \n      return self\n\n    module.exports = Issue\n",
+          "type": "blob"
+        },
+        "source/issues.coffee.md": {
+          "path": "source/issues.coffee.md",
+          "mode": "100644",
+          "content": "    Issue = require \"./issue\"\n\nA collection of issues including a `currentIssue` to represent the actively\nselected issue.\n\nWe may want to formalize this collection pattern later, but for now lets just\nsee how it goes.\n\n    Issues = (I={}) ->\n      Object.defaults I,\n        issues: []\n\n      self = Model(I)\n\nOur `issues` method is a list of `Issue` models.\n\n      self.attrModels \"issues\"\n\nWe want to expose the currently selected issue as an observable as well.\n\n      self.attrObservable \"currentIssue\"\n\n      self.extend\n\nThe reset method accepts an array of raw issue data, converts it into an array\nof issue objects, replaces the previous issues with the new ones and clears the \nselected issue.\n\n        reset: (issueData) ->\n          self.currentIssue(undefined)\n          self.issues issueData.map(Issue)\n    \n      return self\n\n    module.exports = Issues\n",
+          "type": "blob"
+        },
+        "templates/issues.haml.md": {
+          "path": "templates/issues.haml.md",
+          "mode": "100644",
+          "content": "A simple select element to allow choosing of issues.\n\n    %select\n      - on \"change\", @currentIssue\n      %option= \"- Default Branch -\"\n      - each @issues, ->\n        %option= @optionText()\n",
+          "type": "blob"
+        }
+      },
+      "distribution": {
+        "main": {
+          "path": "main",
+          "content": "(function() {\n  module.exports = {\n    models: {\n      Issue: require(\"./source/issue\"),\n      Issues: require(\"./source/issues\")\n    },\n    templates: {\n      issues: require(\"./templates/issues\")\n    }\n  };\n\n}).call(this);\n",
+          "type": "blob"
+        },
+        "source/issue": {
+          "path": "source/issue",
+          "content": "(function() {\n  var Issue;\n\n  Issue = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    self = Model(I);\n    self.extend({\n      optionText: function() {\n        return \"\" + I.title;\n      },\n      fullDescription: function() {\n        return \"\" + (self.optionText()) + \"\\n\" + I.html_url + \"\\n\" + I.body;\n      },\n      branchName: function() {\n        var _ref;\n        return ((_ref = I.head) != null ? _ref.ref : void 0) || (\"issue-\" + I.number);\n      }\n    });\n    return self;\n  };\n\n  module.exports = Issue;\n\n}).call(this);\n",
+          "type": "blob"
+        },
+        "source/issues": {
+          "path": "source/issues",
+          "content": "(function() {\n  var Issue, Issues;\n\n  Issue = require(\"./issue\");\n\n  Issues = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    Object.defaults(I, {\n      issues: []\n    });\n    self = Model(I);\n    self.attrModels(\"issues\");\n    self.attrObservable(\"currentIssue\");\n    self.extend({\n      reset: function(issueData) {\n        self.currentIssue(void 0);\n        return self.issues(issueData.map(Issue));\n      }\n    });\n    return self;\n  };\n\n  module.exports = Issues;\n\n}).call(this);\n",
+          "type": "blob"
+        },
+        "templates/issues": {
+          "path": "templates/issues",
+          "content": "module.exports = (function(data) {\n  return (function() {\n    var __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;\n    _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;\n    __push(document.createDocumentFragment());\n    __element = document.createElement(\"select\");\n    __push(__element);\n    __on(\"change\", this.currentIssue);\n    __element = document.createElement(\"option\");\n    __push(__element);\n    __element = document.createTextNode('');\n    __text(__element, \"- Default Branch -\");\n    __push(__element);\n    __pop();\n    __pop();\n    __each(this.issues, function() {\n      __element = document.createElement(\"option\");\n      __push(__element);\n      __element = document.createTextNode('');\n      __text(__element, this.optionText());\n      __push(__element);\n      __pop();\n      return __pop();\n    });\n    __pop();\n    return __pop();\n  }).call(data);\n});\n;",
+          "type": "blob"
+        }
+      },
+      "entryPoint": "main",
+      "dependencies": {},
+      "repository": {
+        "full_name": "STRd6/issues",
+        "branch": "master"
+      },
+      "progenitor": {
+        "url": "http://strd6.github.io/editor/"
+      }
+    }
   },
   "repository": {
     "full_name": "STRd6/editor",
