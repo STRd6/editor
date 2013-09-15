@@ -1,5 +1,5 @@
 (function() {
-  var $root, Actions, Builder, File, Filetree, Gistquire, Issue, Issues, Repository, Runner, Runtime, TextEditor, actions, branch, builder, classicError, confirmUnsaved, distribution, errors, files, filetree, fullName, hotReloadCSS, issues, issuesTemplate, notices, notify, owner, repo, repository, repositoryLoaded, templates, _ref, _ref1, _ref2, _ref3,
+  var $root, Actions, Builder, File, Filetree, Gistquire, Issue, Issues, Repository, Runner, Runtime, TextEditor, actions, branch, builder, classicError, confirmUnsaved, distribution, errors, files, filetree, fullName, hotReloadCSS, issues, issuesTemplate, notices, notify, owner, repo, repository, repositoryLoaded, rootNode, runtime, templates, _ref, _ref1, _ref2, _ref3,
     __slice = [].slice;
 
   files = ENV.source, distribution = ENV.distribution;
@@ -56,7 +56,15 @@
     return errors([]);
   };
 
-  $root = $(Runtime(ENV).boot());
+  runtime = Runtime(ENV);
+
+  rootNode = runtime.boot();
+
+  try {
+    runtime.applyStyleSheet(rootNode, '../style');
+  } catch (_error) {}
+
+  $root = $(rootNode);
 
   Gistquire.onload();
 
