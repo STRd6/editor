@@ -44,7 +44,9 @@ file's path is a key and the fileData is the object.
 `compileStyl` compiles a styl file into css.
 
     compileStyl = (source) ->
-      styl(source, whitespace: true).toString()
+      styleContent = styl(source, whitespace: true).toString()
+      
+      "module.exports = #{JSON.stringify(styleContent)}"
 
 `compileFile` take a fileData and returns a buildData. A buildData has a `path`,
 and properties for what type of content was built.
@@ -63,7 +65,7 @@ TODO: Allow for files to generate docs and code at the same time.
           when "haml"
             code: compileTemplate(content, name)
           when "styl"
-            style: compileStyl(content)
+            code: compileStyl(content)
           when "md"
             # Separate out code and call compile again
             compileFile
@@ -168,32 +170,18 @@ include source files, compiled files, and documentation.
       build: (fileData) ->
         build(fileData)
         .then (items) ->
-          results =
-            code: []
-            style: []
+          results = []
 
           items.eachWithObject results, (item, hash) ->
             if item.code
-              hash.code.push item
-            else if style = item.style
-              hash.style.push style
+              results.push item
             else
               # Do nothing, we don't know about this item
 
-          dist = []
-
-          results.code.each (item) ->
-            dist.push
-              path: item.name
-              content: item.code
-              type: "blob"
-          
-          distStyle = results.style.join('').trim()
-          unless distStyle.blank()
-            dist.push
-              path: "style.css"
-              content: distStyle
-              type: "blob"
+          results = results.map (item) ->
+            path: item.name
+            content: item.code
+            type: "blob"
       
           # TODO: We should be able to put a lot of this into postProcessors
       
@@ -211,7 +199,7 @@ include source files, compiled files, and documentation.
           .then (bundledDependencies) ->
             postProcessors.pipeline
               source: source
-              distribution: arrayToHash(dist)
+              distribution: arrayToHash(results)
               entryPoint: "main"
               dependencies: bundledDependencies
     
