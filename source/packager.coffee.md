@@ -7,7 +7,6 @@ package.
 
     Packager = ->
       collectDependencies: (dependencies) ->
-        debugger
         names = Object.keys(dependencies)
       
         $.when.apply(null, names.map (name) ->
@@ -18,9 +17,18 @@ package.
           else
             Deferred().reject("Can only handle url string dependencies right now")
         ).then (results...) ->
+          # WTF: jQuery.when behaves differently for one argument than it does for
+          # two or more.
+          if names.length is 1
+            results = [results]
+          
           bundledDependencies = {}
 
+          debugger
+
           names.each (name, i) ->
-            bundledDependencies[name] = results[i]
+            bundledDependencies[name] = results[i][0]
+
+          return bundledDependencies
 
     module.exports = Packager
