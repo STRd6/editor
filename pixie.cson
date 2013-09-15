@@ -10,4 +10,4 @@ remoteDependencies: [
   "http://strd6.github.io/require/master.js?01"
 ]
 dependencies:
-  issues: "http://strd6.github.io/issues/master.json?2"
+  issues: "http://strd6.github.io/issues/master.json?0000"

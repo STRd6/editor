@@ -69,17 +69,17 @@ notices = Observable([])
 builder = Builder()
 
 repositoryLoaded = (repository) ->
-  # issues.repository = repository
-  # repository.pullRequests().then issues.reset
+  issues.repository = repository
+  repository.pullRequests().then issues.reset
   
   notify "Finished loading!"
   
 confirmUnsaved = ->
   Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
 
-# {models:{Issue, Issues}, templates:{issues:issuesTemplate}} = require("issues")
-# templates["issues"] = issuesTemplate
-# issues = Issues()
+{models:{Issue, Issues}, templates:{issues:issuesTemplate}} = require("issues")
+templates["issues"] = issuesTemplate
+issues = Issues()
 
 # Repo metadata for env
 builder.addPostProcessor (data) ->
@@ -199,10 +199,6 @@ actions =
       .fail ->
         errors ["Error loading #{repository.url()}"]
 
-  testReq: ->
-    debugger
-    require('issues')
-
 filetree = Filetree()
 filetree.load(files)
 
@@ -284,7 +280,7 @@ $root
     actions: actions
     notices: notices
     errors: errors
-    # issues: issues
+    issues: issues
   )
 
 Gistquire.api("rate_limit")

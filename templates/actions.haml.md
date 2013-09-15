@@ -17,4 +17,4 @@ In our click handler we don't pass any event data to the action.
 
 The issues selector is also rendered in the actions bar.
 
-      -# HAMLjr.render "issues", @issues
+      = HAMLjr.render "issues", @issues
