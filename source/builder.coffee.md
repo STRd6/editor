@@ -6,6 +6,13 @@ build products.
 
 This should be extracted to a separate library eventually.
 
+Dependencies
+------------
+
+This guy helps package our app and manage dependencies.
+
+    packager = require('./packager')()
+
 Helpers
 -------
 
@@ -32,10 +39,7 @@ file's path is a key and the fileData is the object.
       program = HAMLjr.compile source,
         compiler: CoffeeScript
 
-      # TOOD: Transitional require, making templates global until `require`
-      console.log "builder template"
-
-      "(HAMLjr.templates || (HAMLjr.templates = {}))[#{JSON.stringify(name)}] = #{program};"
+      "module.exports = #{program};"
 
 `compileStyl` compiles a styl file into css.
 
@@ -195,14 +199,21 @@ include source files, compiled files, and documentation.
       
           source = arrayToHash(fileData)
       
-          # TODO: Optionally bundle dependencies
+          # TODO: Robustify bundled dependencies
+          # Right now we're always loading them from remote urls during the
+          # build step. The default http caching is probably fine to speed this
+          # up, but we may want to look into keeping our own cache during dev
+          # in addition to using the package's existing dependencies rather
+          # than always updating
           dependencies = readConfig(source: source).dependencies or {}
-      
-          Deferred().resolve postProcessors.pipeline
-            source: source
-            distribution: arrayToHash(dist)
-            entryPoint: "main"
-            dependencies: dependencies
+          
+          packager.collectDependencies(dependencies)
+          .then (bundledDependencies) ->
+            postProcessors.pipeline
+              source: source
+              distribution: arrayToHash(dist)
+              entryPoint: "main"
+              dependencies: bundledDependencies
     
       program: (build) ->
         {distribution, entryPoint} = build
@@ -247,6 +258,10 @@ include source files, compiled files, and documentation.
 
           return standAlone
 
+Create the standalone components of this package. An html page that loads the 
+main entry point for demonstration purposes and a json package that can be
+used as a dependency in other packages.
+
       standAlone: (pkg) ->
         {source, distribution} = pkg
 
@@ -262,17 +277,22 @@ include source files, compiled files, and documentation.
 
         program = @program(pkg)
 
+Get entry point from package configuration
+
+        entryPoint = readConfig(pkg).entryPoint or "main"
+        
         content.push """
           </head>
           <body>
           #{makeScript html: @envDeclaration(pkg)}
-          #{makeScript html: program}
+          #{makeScript html: "require('./#{entryPoint}')"}
           </body>
           </html>
         """
-    
+
         html: content.join "\n"
         script: program
+        json: JSON.stringify(pkg, null, 2)
 
 TODO: May want to move this to the environment so any program can read its
 config
@@ -287,7 +307,4 @@ config
     
     Builder.readConfig = readConfig
 
-    if module?
-      module.exports = Builder
-    else
-      window.Builder = Builder
+    module.exports = Builder

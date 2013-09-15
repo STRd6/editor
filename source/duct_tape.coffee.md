@@ -46,12 +46,4 @@ HAMLjr runtime.
       if template
         template(object)
       else
-        # TODO: Transitional Require
-        # Try loading it from the distribution
-        templateName = "templates/#{templateName}"
-        if template = Function("return #{ENV.distribution[templateName].content}")()
-          console.log "transitional require"
-          templates[templateName] = template
-          template(object)
-        else
-          throw "Could not find template named #{templateName}"
+        throw "Could not find template named #{templateName}"
