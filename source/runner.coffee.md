@@ -11,25 +11,26 @@ time how the css changes affect each one.
     runningWindows = []
 
     Runner =
-      run: ({config, html}) ->
+      run: ({config}) ->
         sandbox = Sandbox
           width: config.width
           height: config.height
-  
-        sandbox.document.open()
-        sandbox.document.write(html)
-        sandbox.document.close()
-        
+
         runningWindows.push sandbox
 
-      hotReloadCSS: (css) ->
+        return sandbox
+
+      hotReloadCSS: (css, path) ->      
         runningWindows = runningWindows.partition (window) ->
           return false if window.closed
-          
-          # TODO: Reference this from some other place rather than magic constant
-          styleClass = "primary"
-          $(window.document).find("style.#{styleClass}").html(css)
+                    
+          # TODO: We're assuming only one style in the body
+          # which is reasonable in most cases, but we may want
+          # to scope it by the path of the specific css file
+          # to handle a wider range of situations
+          $(window.document).find("body style:eq(0)").html(css)
           
           return true
+        .first()
 
     module.exports = Runner

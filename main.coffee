@@ -232,11 +232,12 @@ filetree.selectedFile.observe (file) ->
       # TODO May want to move this into a collection listener for all files
       # in the filetree
       if file.path().match(/\.styl$/)
-        hotReloadCSS()
+        hotReloadCSS(file)
 
-hotReloadCSS = (->
-  builder.buildStyle(filetree.data())
-  .then Runner.hotReloadCSS
+hotReloadCSS = ( (file) ->
+  css = styl(file.content(), whitespace: true).toString()
+
+  Runner.hotReloadCSS(css, file.path())
 ).debounce(500)
 
 repositoryLoaded(repository)
