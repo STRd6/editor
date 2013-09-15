@@ -241,14 +241,18 @@
       return editor.text.observe(function(value) {
         file.content(value);
         if (file.path().match(/\.styl$/)) {
-          return hotReloadCSS();
+          return hotReloadCSS(file);
         }
       });
     }
   });
 
-  hotReloadCSS = (function() {
-    return builder.buildStyle(filetree.data()).then(Runner.hotReloadCSS);
+  hotReloadCSS = (function(file) {
+    var css;
+    css = styl(file.content(), {
+      whitespace: true
+    }).toString();
+    return Runner.hotReloadCSS(css, file.path());
   }).debounce(500);
 
   repositoryLoaded(repository);
