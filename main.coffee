@@ -51,9 +51,10 @@ notify = (message) ->
 # The root is the node that contains the script file.
 runtime = Runtime(ENV)
 rootNode = runtime.boot()
-# TODO: This path is slightly off, need to fix absolute require paths
+
 try
-  runtime.applyStyleSheet(rootNode, '../style')
+  runtime.applyStyleSheet(rootNode, '/style')
+
 $root = $(rootNode)
 
 # Init Github access token stuff
