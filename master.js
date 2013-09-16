@@ -6,6 +6,8 @@
 
   window.ENV = ENV;
 
+  global.Sandbox = require('sandbox');
+
   require("./source/duct_tape");
 
   require("./source/deferred");
