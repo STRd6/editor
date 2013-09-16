@@ -51,6 +51,9 @@ Currently the only parameter needed to initialize a repository instance is a
         api path, requestOptions("PATCH", data)
     
       self.extend
+        infoDisplay: ->
+          "#{I.fullName} (#{I.branch})"
+
         pullRequests: ->
           get "pulls"
     

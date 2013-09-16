@@ -17,6 +17,7 @@ templates = (HAMLjr.templates ||= {})
   "github_status"
   "notices"
   "text_editor"
+  "repo_info"
 ].each (name) ->
   template = require("./templates/#{name}")
   # TODO Transitional type check
@@ -67,6 +68,7 @@ Gistquire.onload()
 fullName ||= "#{owner}/#{repo}"
 
 repository = Repository
+  fullName: fullName
   url: "repos/#{fullName}"
   branch: branch
 
@@ -287,6 +289,7 @@ $root
     notices: notices
     errors: errors
     issues: issues
+    repository: repository
   )
 
 Gistquire.api("rate_limit")
