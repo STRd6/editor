@@ -128,9 +128,7 @@ actions =
   test: ->
     notify "Running tests..."
 
-    builder.testScripts(filetree.data())
-    .then (testScripts) ->
-      TestRunner.launch(testScripts)
+    Actions.test({builder, filetree})
     .fail errors
 
   new_file: ->
