@@ -61,7 +61,7 @@
   rootNode = runtime.boot();
 
   try {
-    runtime.applyStyleSheet(rootNode, '../style');
+    runtime.applyStyleSheet(rootNode, '/style');
   } catch (_error) {}
 
   $root = $(rootNode);
