@@ -5,9 +5,9 @@ remoteDependencies: [
   "//code.jquery.com/jquery-1.10.1.min.js"
   "//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"
   "http://strd6.github.io/tempest/javascripts/envweb.js"
-  "http://strd6.github.io/sandbox/master.js"
   "http://strd6.github.io/require/master.js?01"
 ]
 dependencies:
   issues: "http://strd6.github.io/issues/master.json"
   test_runner: "http://strd6.github.io/tests/master.json"
+  sandbox: "http://strd6.github.io/sandbox/master.json"
