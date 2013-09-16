@@ -227,7 +227,7 @@ include source files, compiled files, and documentation.
           testProgram = Object.keys(distribution).select (path) ->
             path.match /test\//
           .map (testPath) ->
-            distribution[testPath].content
+            "require('./#{testPath}')"
           .join "\n"
           
           """
