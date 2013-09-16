@@ -138,8 +138,9 @@
     },
     test: function() {
       notify("Running tests...");
-      return builder.testScripts(filetree.data()).then(function(testScripts) {
-        return TestRunner.launch(testScripts);
+      return Actions.test({
+        builder: builder,
+        filetree: filetree
       }).fail(errors);
     },
     new_file: function() {
