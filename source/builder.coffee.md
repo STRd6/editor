@@ -208,9 +208,14 @@ include source files, compiled files, and documentation.
 
         program = distribution[entryPoint].content
 
-      envDeclaration: (build) ->
+      packageWrapper: (build, code) ->
         """
-          ENV = #{JSON.stringify(build, null, 2)};
+          ;(function(PACKAGE) {
+          // TODO: Remove transitional ENV
+          ENV = PACKAGE
+          require = Require.generateFor(PACKAGE)
+          #{code}
+          })(#{JSON.stringify(build, null, 2)});
         """
 
       buildStyle: (fileData) ->
@@ -233,8 +238,7 @@ include source files, compiled files, and documentation.
           """
             #{dependencyScripts(build)}
             <script>
-              #{@envDeclaration(build)}
-              #{testProgram}
+              #{@packageWrapper(build, testProgram)}
             <\/script>
           """
           
@@ -272,8 +276,7 @@ Get entry point from package configuration
         content.push """
           </head>
           <body>
-          #{makeScript html: @envDeclaration(pkg)}
-          #{makeScript html: "require('./#{entryPoint}')"}
+          #{makeScript html: @packageWrapper(pkg, "require('./#{entryPoint}')")}
           </body>
           </html>
         """

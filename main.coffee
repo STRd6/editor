@@ -1,8 +1,5 @@
 # Get stuff from our env
-{source:files, distribution} = ENV
-
-# For debugging
-window.ENV = ENV
+{source:files, distribution} = ENV ? PACKAGE
 
 global.Sandbox = require 'sandbox'
 require("./source/duct_tape")
