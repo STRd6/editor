@@ -12,6 +12,7 @@ Dependencies
 This guy helps package our app and manage dependencies.
 
     packager = require('./packager')()
+    {readSourceConfig} = require('./util')
 
 Helpers
 -------
@@ -101,7 +102,7 @@ TODO: Maybe doc more files than just .md?
 the dependencies of this build.
 
     dependencyScripts = (build) ->
-      remoteDependencies = readConfig(build).remoteDependencies
+      remoteDependencies = readSourceConfig(build).remoteDependencies
   
       (if remoteDependencies
         remoteDependencies.map (src) ->
@@ -193,7 +194,7 @@ include source files, compiled files, and documentation.
           # up, but we may want to look into keeping our own cache during dev
           # in addition to using the package's existing dependencies rather
           # than always updating
-          dependencies = readConfig(source: source).dependencies or {}
+          dependencies = readSourceConfig(source: source).dependencies or {}
           
           packager.collectDependencies(dependencies)
           .then (bundledDependencies) ->
@@ -208,9 +209,12 @@ include source files, compiled files, and documentation.
 
         program = distribution[entryPoint].content
 
-      envDeclaration: (build) ->
+      packageWrapper: (build, code) ->
         """
-          ENV = #{JSON.stringify(build, null, 2)};
+          ;(function(PACKAGE) {
+          require = Require.generateFor(PACKAGE)
+          #{code}
+          })(#{JSON.stringify(build, null, 2)});
         """
 
       buildStyle: (fileData) ->
@@ -233,8 +237,7 @@ include source files, compiled files, and documentation.
           """
             #{dependencyScripts(build)}
             <script>
-              #{@envDeclaration(build)}
-              #{testProgram}
+              #{@packageWrapper(build, testProgram)}
             <\/script>
           """
           
@@ -242,7 +245,7 @@ include source files, compiled files, and documentation.
         @build(fileData)
         .then (build) =>
           standAlone = @standAlone(build)
-          standAlone.config = Builder.readConfig(build)
+          standAlone.config = readSourceConfig(build)
 
           return standAlone
 
@@ -267,13 +270,12 @@ used as a dependency in other packages.
 
 Get entry point from package configuration
 
-        entryPoint = readConfig(pkg).entryPoint or "main"
+        entryPoint = readSourceConfig(pkg).entryPoint or "main"
         
         content.push """
           </head>
           <body>
-          #{makeScript html: @envDeclaration(pkg)}
-          #{makeScript html: "require('./#{entryPoint}')"}
+          #{makeScript html: @packageWrapper(pkg, "require('./#{entryPoint}')")}
           </body>
           </html>
         """
@@ -281,18 +283,5 @@ Get entry point from package configuration
         html: content.join "\n"
         script: program
         json: JSON.stringify(pkg, null, 2)
-
-TODO: May want to move this to the environment so any program can read its
-config
-
-    readConfig = (build) ->
-      if configData = build.source["pixie.cson"]?.content
-        CSON.parse(configData)
-      else if configData = build.source["pixie.json"]?.content
-        JSON.parse(configData)
-      else
-        {}
-    
-    Builder.readConfig = readConfig
 
     module.exports = Builder
