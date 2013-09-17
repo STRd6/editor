@@ -212,8 +212,6 @@ include source files, compiled files, and documentation.
       packageWrapper: (build, code) ->
         """
           ;(function(PACKAGE) {
-          // TODO: Remove transitional ENV
-          ENV = PACKAGE
           require = Require.generateFor(PACKAGE)
           #{code}
           })(#{JSON.stringify(build, null, 2)});
