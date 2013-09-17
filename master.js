@@ -14,7 +14,7 @@
 
   templates = (HAMLjr.templates || (HAMLjr.templates = {}));
 
-  ["actions", "editor", "filetree", "github_status", "notices", "text_editor"].each(function(name) {
+  ["actions", "editor", "filetree", "github_status", "notices", "text_editor", "repo_info"].each(function(name) {
     var template;
     template = require("./templates/" + name);
     if (typeof template === "function") {
@@ -75,6 +75,7 @@
   fullName || (fullName = "" + owner + "/" + repo);
 
   repository = Repository({
+    fullName: fullName,
     url: "repos/" + fullName,
     branch: branch
   });
@@ -299,7 +300,8 @@
     actions: actions,
     notices: notices,
     errors: errors,
-    issues: issues
+    issues: issues,
+    repository: repository
   }));
 
   Gistquire.api("rate_limit").then(function(data, status, request) {
