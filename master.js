@@ -1,10 +1,8 @@
 (function() {
-  var $root, Actions, Builder, File, Filetree, Gistquire, Issue, Issues, Repository, Runner, Runtime, TextEditor, actions, branch, builder, classicError, confirmUnsaved, distribution, errors, files, filetree, fullName, hotReloadCSS, issues, issuesTemplate, notices, notify, owner, repo, repository, repositoryLoaded, rootNode, runtime, templates, _ref, _ref1, _ref2, _ref3,
+  var $root, Actions, Builder, File, Filetree, Gistquire, Issue, Issues, Repository, Runner, Runtime, TextEditor, actions, branch, builder, classicError, confirmUnsaved, errors, files, filetree, fullName, hotReloadCSS, issues, issuesTemplate, notices, notify, owner, repo, repository, repositoryLoaded, rootNode, runtime, templates, _ref, _ref1, _ref2, _ref3,
     __slice = [].slice;
 
-  files = ENV.source, distribution = ENV.distribution;
-
-  window.ENV = ENV;
+  files = PACKAGE.source;
 
   global.Sandbox = require('sandbox');
 
@@ -41,7 +39,6 @@
   TextEditor = require("./source/text_editor");
 
   classicError = function(request, error, message) {
-    debugger;
     notices([]);
     if (request.responseJSON) {
       message = JSON.stringify(request.responseJSON, null, 2);
@@ -58,7 +55,7 @@
     return errors([]);
   };
 
-  runtime = Runtime(ENV);
+  runtime = Runtime(PACKAGE);
 
   rootNode = runtime.boot();
 
@@ -70,7 +67,7 @@
 
   Gistquire.onload();
 
-  _ref = ENV.repository, owner = _ref.owner, repo = _ref.repo, branch = _ref.branch, fullName = _ref.full_name;
+  _ref = PACKAGE.repository, owner = _ref.owner, repo = _ref.repo, branch = _ref.branch, fullName = _ref.full_name;
 
   fullName || (fullName = "" + owner + "/" + repo);
 
@@ -102,19 +99,19 @@
 
   issues = Issues();
 
-  builder.addPostProcessor(function(data) {
-    data.repository = {
+  builder.addPostProcessor(function(pkg) {
+    pkg.repository = {
       full_name: fullName,
       branch: repository.branch()
     };
-    return data;
+    return pkg;
   });
 
-  builder.addPostProcessor(function(data) {
-    data.progenitor = {
+  builder.addPostProcessor(function(pkg) {
+    pkg.progenitor = {
       url: "http://strd6.github.io/editor/"
     };
-    return data;
+    return pkg;
   });
 
   actions = {
