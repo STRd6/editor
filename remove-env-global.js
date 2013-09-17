@@ -1,8 +1,8 @@
 (function() {
-  var $root, Actions, Builder, File, Filetree, Gistquire, Issue, Issues, Repository, Runner, Runtime, TextEditor, actions, branch, builder, classicError, confirmUnsaved, distribution, errors, files, filetree, fullName, hotReloadCSS, issues, issuesTemplate, notices, notify, owner, repo, repository, repositoryLoaded, rootNode, runtime, templates, _ref, _ref1, _ref2, _ref3, _ref4,
+  var $root, Actions, Builder, File, Filetree, Gistquire, Issue, Issues, Repository, Runner, Runtime, TextEditor, actions, branch, builder, classicError, confirmUnsaved, errors, files, filetree, fullName, hotReloadCSS, issues, issuesTemplate, notices, notify, owner, repo, repository, repositoryLoaded, rootNode, runtime, templates, _ref, _ref1, _ref2, _ref3,
     __slice = [].slice;
 
-  _ref = typeof ENV !== "undefined" && ENV !== null ? ENV : PACKAGE, files = _ref.source, distribution = _ref.distribution;
+  files = PACKAGE.source;
 
   global.Sandbox = require('sandbox');
 
@@ -39,7 +39,6 @@
   TextEditor = require("./source/text_editor");
 
   classicError = function(request, error, message) {
-    debugger;
     notices([]);
     if (request.responseJSON) {
       message = JSON.stringify(request.responseJSON, null, 2);
@@ -56,7 +55,7 @@
     return errors([]);
   };
 
-  runtime = Runtime(ENV);
+  runtime = Runtime(PACKAGE);
 
   rootNode = runtime.boot();
 
@@ -68,7 +67,7 @@
 
   Gistquire.onload();
 
-  _ref1 = ENV.repository, owner = _ref1.owner, repo = _ref1.repo, branch = _ref1.branch, fullName = _ref1.full_name;
+  _ref = PACKAGE.repository, owner = _ref.owner, repo = _ref.repo, branch = _ref.branch, fullName = _ref.full_name;
 
   fullName || (fullName = "" + owner + "/" + repo);
 
@@ -94,25 +93,25 @@
     return Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?");
   };
 
-  _ref2 = require("issues"), (_ref3 = _ref2.models, Issue = _ref3.Issue, Issues = _ref3.Issues), (_ref4 = _ref2.templates, issuesTemplate = _ref4.issues);
+  _ref1 = require("issues"), (_ref2 = _ref1.models, Issue = _ref2.Issue, Issues = _ref2.Issues), (_ref3 = _ref1.templates, issuesTemplate = _ref3.issues);
 
   templates["issues"] = issuesTemplate;
 
   issues = Issues();
 
-  builder.addPostProcessor(function(data) {
-    data.repository = {
+  builder.addPostProcessor(function(pkg) {
+    pkg.repository = {
       full_name: fullName,
       branch: repository.branch()
     };
-    return data;
+    return pkg;
   });
 
-  builder.addPostProcessor(function(data) {
-    data.progenitor = {
+  builder.addPostProcessor(function(pkg) {
+    pkg.progenitor = {
       url: "http://strd6.github.io/editor/"
     };
-    return data;
+    return pkg;
   });
 
   actions = {
