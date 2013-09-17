@@ -1,5 +1,5 @@
-# Get stuff from our env
-{source:files, distribution} = ENV ? PACKAGE
+# Get stuff from our package
+{source:files} = PACKAGE
 
 global.Sandbox = require 'sandbox'
 require("./source/duct_tape")
@@ -33,7 +33,6 @@ TextEditor = require("./source/text_editor")
 
 # TODO: Move notifications stuff into its own class
 classicError = (request, error, message) ->
-  debugger
   notices []
   
   if request.responseJSON
@@ -48,7 +47,7 @@ notify = (message) ->
   errors []
 
 # The root is the node that contains the script file.
-runtime = Runtime(ENV)
+runtime = Runtime(PACKAGE)
 rootNode = runtime.boot()
 
 try
@@ -58,9 +57,9 @@ $root = $(rootNode)
 
 # Init Github access token stuff
 Gistquire.onload()
-  
-# Real branch and repo info, from ENV
-{owner, repo, branch, full_name:fullName} = ENV.repository
+
+# Real branch and repo info, from package
+{owner, repo, branch, full_name:fullName} = PACKAGE.repository
 
 fullName ||= "#{owner}/#{repo}"
 
@@ -87,21 +86,21 @@ confirmUnsaved = ->
 templates["issues"] = issuesTemplate
 issues = Issues()
 
-# Repo metadata for env
-builder.addPostProcessor (data) ->
+# Attach repo metadata to package
+builder.addPostProcessor (pkg) ->
   # TODO: Track commit SHA as well
-  data.repository =
+  pkg.repository =
     full_name: fullName
     branch: repository.branch()
 
-  data
+  pkg
 
-builder.addPostProcessor (data) ->
+builder.addPostProcessor (pkg) ->
   # TODO: Think about a robust way to get 'self' and set it as progenitor data
-  data.progenitor =
+  pkg.progenitor =
     url: "http://strd6.github.io/editor/"
 
-  data
+  pkg
 
 actions =
   save: ->

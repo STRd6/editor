@@ -1,6 +1,7 @@
     Runner = require("./runner")
     Builder = require("./builder")
     TestRunner = require("test_runner")
+    {readSourceConfig} = require("./util")
 
 The primary actions of the editor. This should eventually become a mixin.
 
@@ -25,7 +26,7 @@ The primary actions of the editor. This should eventually become a mixin.
     
       run: ({builder, filetree}) ->
         sandbox = Runner.run
-          config: Builder.readConfig(ENV) # TODO: Get config from actual file
+          config: readSourceConfig(PACKAGE)
 
         builder.runnable(filetree.data())
         .then ({html}) ->
@@ -35,7 +36,7 @@ The primary actions of the editor. This should eventually become a mixin.
           
       test: ({builder, filetree}) ->
         sandbox = Runner.run
-          config: Builder.readConfig(ENV) # TODO: Get config from actual file
+          config: readSourceConfig(PACKAGE)
 
         builder.testScripts(filetree.data())
         .then (testScripts) ->
