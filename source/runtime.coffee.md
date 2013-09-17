@@ -2,7 +2,7 @@ The runtime holds utilities to assist with an apps running environment.
 
 It should me moved into it's own component one day.
 
-    Runtime = (ENV) ->
+    Runtime = (pkg) ->
 
 Returns the node that is the parent of the script element that contains the code
 that calls this function. If `document.write` has been called before this then the
@@ -20,12 +20,12 @@ writing anything to the document.
 Display a promo in the console linking back to the creator of this app.
 
       promo = ->
-        console.log("%c You should meet my creator #{ENV.progenitor.url}", """
+        console.log("%c You should meet my creator #{pkg.progenitor.url}", """
           background: #000; 
           color: white; 
           font-size: 2em;
           line-height: 2em;
-          padding: 40px 100px;
+          padding: 10px 100px;
           margin-bottom: 1em;
           text-shadow: 
             0 0 0.05em #fff, 
