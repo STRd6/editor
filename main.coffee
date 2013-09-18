@@ -12,7 +12,6 @@ templates = (HAMLjr.templates ||= {})
   "editor"
   "filetree"
   "github_status"
-  "notices"
   "text_editor"
   "repo_info"
 ].each (name) ->
@@ -31,20 +30,9 @@ Filetree = require("./source/filetree")
 File = require("./source/file")
 TextEditor = require("./source/text_editor")
 
-# TODO: Move notifications stuff into its own class
-classicError = (request, error, message) ->
-  notices []
-  
-  if request.responseJSON
-    message = JSON.stringify(request.responseJSON, null, 2)
-  else
-    message ?= request
-
-  errors [message]
-
-notify = (message) ->
-  notices [message]
-  errors []
+notifications = require("notifications")()
+templates.notifications = notifications.template
+{classicError, notify, errors} = notifications
 
 # The root is the node that contains the script file.
 runtime = Runtime(PACKAGE)
@@ -67,9 +55,6 @@ repository = Repository
   fullName: fullName
   url: "repos/#{fullName}"
   branch: branch
-
-errors = Observable([])
-notices = Observable([])
 
 builder = Builder()
 
@@ -147,7 +132,7 @@ actions =
         repository = Repository
           url: "repos/#{fullName}"
       else
-        errors ["No repo given"]
+        classicError "No repo given"
   
         return
   
@@ -179,7 +164,7 @@ actions =
         issues.currentIssue issue
         issues.silent = false
 
-        notices.push "Created!"
+        notifications.push "Created!"
       , classicError
       
   pull_master: ->
@@ -189,18 +174,18 @@ actions =
       repository.pullFromBranch()
     , classicError
     ).then ->
-      notices.push "Merged!"
+      notifications.push "Merged!"
       
       branchName = repository.branch()
-      notices.push "\nReloading branch #{branchName}..."
+      notifications.push "\nReloading branch #{branchName}..."
         
       Actions.load
         repository: repository
         filetree: filetree
       .then ->
-        notices.push "Loaded!"
+        notifications.push "Loaded!"
       .fail ->
-        errors ["Error loading #{repository.url()}"]
+        classicError "Error loading #{repository.url()}"
 
 filetree = Filetree()
 filetree.load(files)
@@ -252,13 +237,13 @@ issues?.currentIssue.observe (issue) ->
       # Switch to branch for working on the issue
       repository.switchToBranch(branchName)
       .then ->
-        notices.push "\nLoading branch #{branchName}..."
+        notifications.push "\nLoading branch #{branchName}..."
         
         Actions.load
           repository: repository
           filetree: filetree
         .then ->
-          notices.push "Loaded!"
+          notifications.push "Loaded!"
     , ->
       # TODO: Issue will appear as being selected even though we cancelled
       # To correctly handle this we may need to really beef up our observables.
@@ -267,7 +252,7 @@ issues?.currentIssue.observe (issue) ->
       
       repository.branch(previousBranch)
 
-      errors ["Error switching to #{branchName}, still on #{previousBranch}"]
+      classicError "Error switching to #{branchName}, still on #{previousBranch}"
 
   if issue
     notify issue.fullDescription()
@@ -282,8 +267,7 @@ $root
   .append(HAMLjr.render "editor",
     filetree: filetree
     actions: actions
-    notices: notices
-    errors: errors
+    notifications: notifications
     issues: issues
     repository: repository
   )
