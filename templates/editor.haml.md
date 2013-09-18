@@ -5,3 +5,4 @@ The main editor template renders all the other sub-templates.
       = HAMLjr.render "filetree", @filetree
       = HAMLjr.render "notifications", @notifications
       = HAMLjr.render "repo_info", @repository
+      = HAMLjr.render "github_status", @github
