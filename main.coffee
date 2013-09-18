@@ -1,6 +1,8 @@
 # Get stuff from our package
 {source:files} = PACKAGE
 
+github = require("github")()
+
 global.Sandbox = require 'sandbox'
 require("./source/duct_tape")
 require("./source/deferred")
@@ -24,8 +26,6 @@ Actions = require("./source/actions")
 Builder = require("./source/builder")
 Runner = require("./source/runner")
 Runtime = require("./source/runtime")
-Gistquire = require("./source/gistquire")
-Repository = require("./source/repository")
 Filetree = require("./source/filetree")
 File = require("./source/file")
 TextEditor = require("./source/text_editor")
@@ -43,40 +43,34 @@ try
 
 $root = $(rootNode)
 
-# Init Github access token stuff
-Gistquire.onload()
-
-# Real branch and repo info, from package
-{owner, repo, branch, full_name:fullName} = PACKAGE.repository
-
-fullName ||= "#{owner}/#{repo}"
-
-repository = Repository
-  fullName: fullName
-  url: "repos/#{fullName}"
-  branch: branch
-
-builder = Builder()
-
-repositoryLoaded = (repository) ->
-  issues.repository = repository
-  repository.pullRequests().then issues.reset
-  
-  notify "Finished loading!"
-  
-confirmUnsaved = ->
-  Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
-
+# Branch Chooser using pull requests
 {models:{Issue, Issues}, templates:{issues:issuesTemplate}} = require("issues")
 templates["issues"] = issuesTemplate
 issues = Issues()
 
+# Github repository observable
+repository = Observable()
+
+repository.observe (repository) ->
+  issues.repository = repository
+  repository.pullRequests().then issues.reset
+  
+  notify "Loaded repository: #{repository.full_name()}"
+
+PACKAGE.repository.url ||= "repos/#{PACKAGE.repository.full_name}"
+
+repository github.Repository(PACKAGE.repository)
+
+builder = Builder()
+  
+confirmUnsaved = ->
+  Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
+
+# TODO: Clean up these builder processors
 # Attach repo metadata to package
 builder.addPostProcessor (pkg) ->
   # TODO: Track commit SHA as well
-  pkg.repository =
-    full_name: fullName
-    branch: repository.branch()
+  pkg.repository = repository().toJSON()
 
   pkg
 
@@ -126,33 +120,33 @@ actions =
   load_repo: (skipPrompt) ->
     confirmUnsaved()
     .then ->
-      fullName = prompt("Github repo", fullName) unless skipPrompt
+      currentRepositoryName = repository().full_name()
+
+      fullName = prompt("Github repo", currentRepositoryName)
 
       if fullName
-        repository = Repository
-          url: "repos/#{fullName}"
+        # Here repository is the observable, below it is the instance
+        github.repository(fullName).then repository
       else
-        classicError "No repo given"
-  
-        return
-  
-      notify "Loading repo..."
+        Deferred().reject("No repo given")
+    .then (repository) ->
+      notify "Loading files..."
   
       Actions.load
         repository: repository
         filetree: filetree
       .then ->
-        repositoryLoaded(repository)
-        
         root = $root.children(".main")
         root.find(".editor-wrap").remove()
-      .fail classicError
+        
+        notifications.push "Loaded"
+    .fail classicError
 
   new_feature: ->
     if title = prompt("Description")
       notify "Creating feature branch..."
 
-      repository.createPullRequest
+      repository().createPullRequest
         title: title
       .then (data) ->
         issue = Issue(data)
@@ -223,8 +217,6 @@ hotReloadCSS = ( (file) ->
   Runner.hotReloadCSS(css, file.path())
 ).debounce(500)
 
-repositoryLoaded(repository)
-
 issues?.currentIssue.observe (issue) ->
   # TODO: Formalize this later
   return if issues.silent
@@ -269,13 +261,9 @@ $root
     actions: actions
     notifications: notifications
     issues: issues
+    github: github
     repository: repository
   )
-
-Gistquire.api("rate_limit")
-.then (data, status, request) ->
-  $root.append HAMLjr.render "github_status",
-    request: request
 
 window.onbeforeunload = ->
   if filetree.hasUnsavedChanges()
