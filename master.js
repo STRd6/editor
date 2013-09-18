@@ -1,5 +1,5 @@
 (function() {
-  var $root, Actions, Builder, File, Filetree, Gistquire, Issue, Issues, Repository, Runner, Runtime, TextEditor, actions, branch, builder, classicError, confirmUnsaved, errors, files, filetree, fullName, hotReloadCSS, issues, issuesTemplate, notices, notify, owner, repo, repository, repositoryLoaded, rootNode, runtime, templates, _ref, _ref1, _ref2, _ref3,
+  var $root, Actions, Builder, File, Filetree, Gistquire, Issue, Issues, Repository, Runner, Runtime, TextEditor, actions, branch, builder, classicError, confirmUnsaved, errors, files, filetree, fullName, hotReloadCSS, issues, issuesTemplate, notifications, notify, owner, repo, repository, repositoryLoaded, rootNode, runtime, templates, _ref, _ref1, _ref2, _ref3,
     __slice = [].slice;
 
   files = PACKAGE.source;
@@ -12,7 +12,7 @@
 
   templates = (HAMLjr.templates || (HAMLjr.templates = {}));
 
-  ["actions", "editor", "filetree", "github_status", "notices", "text_editor", "repo_info"].each(function(name) {
+  ["actions", "editor", "filetree", "github_status", "text_editor", "repo_info"].each(function(name) {
     var template;
     template = require("./templates/" + name);
     if (typeof template === "function") {
@@ -38,22 +38,11 @@
 
   TextEditor = require("./source/text_editor");
 
-  classicError = function(request, error, message) {
-    notices([]);
-    if (request.responseJSON) {
-      message = JSON.stringify(request.responseJSON, null, 2);
-    } else {
-      if (message == null) {
-        message = request;
-      }
-    }
-    return errors([message]);
-  };
+  notifications = require("notifications")();
 
-  notify = function(message) {
-    notices([message]);
-    return errors([]);
-  };
+  templates.notifications = notifications.template;
+
+  classicError = notifications.classicError, notify = notifications.notify, errors = notifications.errors;
 
   runtime = Runtime(PACKAGE);
 
@@ -76,10 +65,6 @@
     url: "repos/" + fullName,
     branch: branch
   });
-
-  errors = Observable([]);
-
-  notices = Observable([]);
 
   builder = Builder();
 
@@ -164,7 +149,7 @@
             url: "repos/" + fullName
           });
         } else {
-          errors(["No repo given"]);
+          classicError("No repo given");
           return;
         }
         notify("Loading repo...");
@@ -192,7 +177,7 @@
           issues.silent = true;
           issues.currentIssue(issue);
           issues.silent = false;
-          return notices.push("Created!");
+          return notifications.push("Created!");
         }, classicError);
       }
     },
@@ -202,16 +187,16 @@
         return repository.pullFromBranch();
       }, classicError).then(function() {
         var branchName;
-        notices.push("Merged!");
+        notifications.push("Merged!");
         branchName = repository.branch();
-        notices.push("\nReloading branch " + branchName + "...");
+        notifications.push("\nReloading branch " + branchName + "...");
         return Actions.load({
           repository: repository,
           filetree: filetree
         }).then(function() {
-          return notices.push("Loaded!");
+          return notifications.push("Loaded!");
         }).fail(function() {
-          return errors(["Error loading " + (repository.url())]);
+          return classicError("Error loading " + (repository.url()));
         });
       });
     }
@@ -269,17 +254,17 @@
         previousBranch = repository.branch();
         return confirmUnsaved().then(function() {
           return repository.switchToBranch(branchName).then(function() {
-            notices.push("\nLoading branch " + branchName + "...");
+            notifications.push("\nLoading branch " + branchName + "...");
             return Actions.load({
               repository: repository,
               filetree: filetree
             }).then(function() {
-              return notices.push("Loaded!");
+              return notifications.push("Loaded!");
             });
           });
         }, function() {
           repository.branch(previousBranch);
-          return errors(["Error switching to " + branchName + ", still on " + previousBranch]);
+          return classicError("Error switching to " + branchName + ", still on " + previousBranch);
         });
       };
       if (issue) {
@@ -295,8 +280,7 @@
   $root.append(HAMLjr.render("editor", {
     filetree: filetree,
     actions: actions,
-    notices: notices,
-    errors: errors,
+    notifications: notifications,
     issues: issues,
     repository: repository
   }));
