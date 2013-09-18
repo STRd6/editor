@@ -4,13 +4,13 @@
 
   files = PACKAGE.source;
 
-  github = require("github")();
-
   global.Sandbox = require('sandbox');
 
   require("./source/duct_tape");
 
   require("./source/deferred");
+
+  github = require("github")(require("./source/github_auth")());
 
   templates = (HAMLjr.templates || (HAMLjr.templates = {}));
 
@@ -92,7 +92,7 @@
     save: function() {
       notify("Saving...");
       return Actions.save({
-        repository: repository,
+        repository: repository(),
         fileData: filetree.data(),
         builder: builder
       }).then(function() {
@@ -138,10 +138,10 @@
         } else {
           return Deferred().reject("No repo given");
         }
-      }).then(function(repository) {
+      }).then(function(repositoryInstance) {
         notify("Loading files...");
         return Actions.load({
-          repository: repository,
+          repository: repositoryInstance,
           filetree: filetree
         }).then(function() {
           var root;
@@ -171,19 +171,19 @@
     pull_master: function() {
       return confirmUnsaved().then(function() {
         notify("Merging in default branch...");
-        return repository.pullFromBranch();
+        return repository().pullFromBranch();
       }, classicError).then(function() {
         var branchName;
         notifications.push("Merged!");
-        branchName = repository.branch();
+        branchName = repository().branch();
         notifications.push("\nReloading branch " + branchName + "...");
         return Actions.load({
-          repository: repository,
+          repository: repository(),
           filetree: filetree
         }).then(function() {
           return notifications.push("Loaded!");
         }).fail(function() {
-          return classicError("Error loading " + (repository.url()));
+          return classicError("Error loading " + (repository().url()));
         });
       });
     }
@@ -236,12 +236,12 @@
       }
       changeBranch = function(branchName) {
         var previousBranch;
-        previousBranch = repository.branch();
+        previousBranch = repository().branch();
         return confirmUnsaved().then(function() {
-          return repository.switchToBranch(branchName).then(function() {
+          return repository().switchToBranch(branchName).then(function() {
             notifications.push("\nLoading branch " + branchName + "...");
             return Actions.load({
-              repository: repository,
+              repository: repository(),
               filetree: filetree
             }).then(function() {
               return notifications.push("Loaded!");
@@ -257,7 +257,7 @@
         return changeBranch(issue.branchName());
       } else {
         notify("Default branch selected");
-        return changeBranch(repository.defaultBranch());
+        return changeBranch(repository().defaultBranch());
       }
     });
   }
