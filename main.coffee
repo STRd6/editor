@@ -1,11 +1,12 @@
 # Get stuff from our package
 {source:files} = PACKAGE
 
-github = require("github")()
-
 global.Sandbox = require 'sandbox'
 require("./source/duct_tape")
 require("./source/deferred")
+
+# Create and auth a github API
+github = require("github")(require("./source/github_auth")())
 
 # Load and attach Templates
 templates = (HAMLjr.templates ||= {})
@@ -86,7 +87,7 @@ actions =
     notify "Saving..."
 
     Actions.save
-      repository: repository
+      repository: repository()
       fileData: filetree.data()
       builder: builder
     .then ->
@@ -125,15 +126,14 @@ actions =
       fullName = prompt("Github repo", currentRepositoryName)
 
       if fullName
-        # Here repository is the observable, below it is the instance
         github.repository(fullName).then repository
       else
         Deferred().reject("No repo given")
-    .then (repository) ->
+    .then (repositoryInstance) ->
       notify "Loading files..."
   
       Actions.load
-        repository: repository
+        repository: repositoryInstance
         filetree: filetree
       .then ->
         root = $root.children(".main")
@@ -165,21 +165,21 @@ actions =
     confirmUnsaved()
     .then( ->
       notify "Merging in default branch..."
-      repository.pullFromBranch()
+      repository().pullFromBranch()
     , classicError
     ).then ->
       notifications.push "Merged!"
-      
-      branchName = repository.branch()
+
+      branchName = repository().branch()
       notifications.push "\nReloading branch #{branchName}..."
-        
+
       Actions.load
-        repository: repository
+        repository: repository()
         filetree: filetree
       .then ->
         notifications.push "Loaded!"
       .fail ->
-        classicError "Error loading #{repository.url()}"
+        classicError "Error loading #{repository().url()}"
 
 filetree = Filetree()
 filetree.load(files)
@@ -222,17 +222,17 @@ issues?.currentIssue.observe (issue) ->
   return if issues.silent
   
   changeBranch = (branchName) ->
-    previousBranch = repository.branch()
+    previousBranch = repository().branch()
 
     confirmUnsaved()
     .then ->
       # Switch to branch for working on the issue
-      repository.switchToBranch(branchName)
+      repository().switchToBranch(branchName)
       .then ->
         notifications.push "\nLoading branch #{branchName}..."
         
         Actions.load
-          repository: repository
+          repository: repository()
           filetree: filetree
         .then ->
           notifications.push "Loaded!"
@@ -253,7 +253,7 @@ issues?.currentIssue.observe (issue) ->
   else    
     notify "Default branch selected"
     
-    changeBranch repository.defaultBranch()
+    changeBranch repository().defaultBranch()
 
 $root
   .append(HAMLjr.render "editor",

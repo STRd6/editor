@@ -3,7 +3,7 @@ Display information about the current Github api session.
 
     .status
       - github = this
-      - with @request, ->
+      - with @lastRequest, ->
         %div
           - if @getAllResponseHeaders and @getAllResponseHeaders().match(/X-RateLimit-Limit: 5000/)
             Authenticated Scopes:
