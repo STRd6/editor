@@ -1,5 +1,5 @@
 (function() {
-  var $root, Actions, Builder, File, Filetree, Gistquire, Issue, Issues, Repository, Runner, Runtime, TextEditor, actions, branch, builder, classicError, confirmUnsaved, errors, files, filetree, fullName, hotReloadCSS, issues, issuesTemplate, notifications, notify, owner, repo, repository, repositoryLoaded, rootNode, runtime, templates, _ref, _ref1, _ref2, _ref3,
+  var $root, Actions, Builder, File, Filetree, Issue, Issues, Runner, Runtime, TextEditor, actions, builder, classicError, confirmUnsaved, errors, files, filetree, github, hotReloadCSS, issues, issuesTemplate, notifications, notify, repository, rootNode, runtime, templates, _base, _ref, _ref1, _ref2,
     __slice = [].slice;
 
   files = PACKAGE.source;
@@ -9,6 +9,8 @@
   require("./source/duct_tape");
 
   require("./source/deferred");
+
+  github = require("github")(require("./source/github_auth")());
 
   templates = (HAMLjr.templates || (HAMLjr.templates = {}));
 
@@ -27,10 +29,6 @@
   Runner = require("./source/runner");
 
   Runtime = require("./source/runtime");
-
-  Gistquire = require("./source/gistquire");
-
-  Repository = require("./source/repository");
 
   Filetree = require("./source/filetree");
 
@@ -54,41 +52,32 @@
 
   $root = $(rootNode);
 
-  Gistquire.onload();
-
-  _ref = PACKAGE.repository, owner = _ref.owner, repo = _ref.repo, branch = _ref.branch, fullName = _ref.full_name;
-
-  fullName || (fullName = "" + owner + "/" + repo);
-
-  repository = Repository({
-    fullName: fullName,
-    url: "repos/" + fullName,
-    branch: branch
-  });
-
-  builder = Builder();
-
-  repositoryLoaded = function(repository) {
-    issues.repository = repository;
-    repository.pullRequests().then(issues.reset);
-    return notify("Finished loading!");
-  };
-
-  confirmUnsaved = function() {
-    return Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?");
-  };
-
-  _ref1 = require("issues"), (_ref2 = _ref1.models, Issue = _ref2.Issue, Issues = _ref2.Issues), (_ref3 = _ref1.templates, issuesTemplate = _ref3.issues);
+  _ref = require("issues"), (_ref1 = _ref.models, Issue = _ref1.Issue, Issues = _ref1.Issues), (_ref2 = _ref.templates, issuesTemplate = _ref2.issues);
 
   templates["issues"] = issuesTemplate;
 
   issues = Issues();
 
+  repository = Observable();
+
+  repository.observe(function(repository) {
+    issues.repository = repository;
+    repository.pullRequests().then(issues.reset);
+    return notify("Loaded repository: " + (repository.full_name()));
+  });
+
+  (_base = PACKAGE.repository).url || (_base.url = "repos/" + PACKAGE.repository.full_name);
+
+  repository(github.Repository(PACKAGE.repository));
+
+  builder = Builder();
+
+  confirmUnsaved = function() {
+    return Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?");
+  };
+
   builder.addPostProcessor(function(pkg) {
-    pkg.repository = {
-      full_name: fullName,
-      branch: repository.branch()
-    };
+    pkg.repository = repository().toJSON();
     return pkg;
   });
 
@@ -103,7 +92,7 @@
     save: function() {
       notify("Saving...");
       return Actions.save({
-        repository: repository,
+        repository: repository(),
         fileData: filetree.data(),
         builder: builder
       }).then(function() {
@@ -141,34 +130,32 @@
     },
     load_repo: function(skipPrompt) {
       return confirmUnsaved().then(function() {
-        if (!skipPrompt) {
-          fullName = prompt("Github repo", fullName);
-        }
+        var currentRepositoryName, fullName;
+        currentRepositoryName = repository().full_name();
+        fullName = prompt("Github repo", currentRepositoryName);
         if (fullName) {
-          repository = Repository({
-            url: "repos/" + fullName
-          });
+          return github.repository(fullName).then(repository);
         } else {
-          classicError("No repo given");
-          return;
+          return Deferred().reject("No repo given");
         }
-        notify("Loading repo...");
+      }).then(function(repositoryInstance) {
+        notify("Loading files...");
         return Actions.load({
-          repository: repository,
+          repository: repositoryInstance,
           filetree: filetree
         }).then(function() {
           var root;
-          repositoryLoaded(repository);
           root = $root.children(".main");
-          return root.find(".editor-wrap").remove();
-        }).fail(classicError);
-      });
+          root.find(".editor-wrap").remove();
+          return notifications.push("Loaded");
+        });
+      }).fail(classicError);
     },
     new_feature: function() {
       var title;
       if (title = prompt("Description")) {
         notify("Creating feature branch...");
-        return repository.createPullRequest({
+        return repository().createPullRequest({
           title: title
         }).then(function(data) {
           var issue;
@@ -184,19 +171,19 @@
     pull_master: function() {
       return confirmUnsaved().then(function() {
         notify("Merging in default branch...");
-        return repository.pullFromBranch();
+        return repository().pullFromBranch();
       }, classicError).then(function() {
         var branchName;
         notifications.push("Merged!");
-        branchName = repository.branch();
+        branchName = repository().branch();
         notifications.push("\nReloading branch " + branchName + "...");
         return Actions.load({
-          repository: repository,
+          repository: repository(),
           filetree: filetree
         }).then(function() {
           return notifications.push("Loaded!");
         }).fail(function() {
-          return classicError("Error loading " + (repository.url()));
+          return classicError("Error loading " + (repository().url()));
         });
       });
     }
@@ -241,8 +228,6 @@
     return Runner.hotReloadCSS(css, file.path());
   }).debounce(500);
 
-  repositoryLoaded(repository);
-
   if (issues != null) {
     issues.currentIssue.observe(function(issue) {
       var changeBranch;
@@ -251,12 +236,12 @@
       }
       changeBranch = function(branchName) {
         var previousBranch;
-        previousBranch = repository.branch();
+        previousBranch = repository().branch();
         return confirmUnsaved().then(function() {
-          return repository.switchToBranch(branchName).then(function() {
+          return repository().switchToBranch(branchName).then(function() {
             notifications.push("\nLoading branch " + branchName + "...");
             return Actions.load({
-              repository: repository,
+              repository: repository(),
               filetree: filetree
             }).then(function() {
               return notifications.push("Loaded!");
@@ -272,7 +257,7 @@
         return changeBranch(issue.branchName());
       } else {
         notify("Default branch selected");
-        return changeBranch(repository.defaultBranch());
+        return changeBranch(repository().defaultBranch());
       }
     });
   }
@@ -282,14 +267,9 @@
     actions: actions,
     notifications: notifications,
     issues: issues,
+    github: github,
     repository: repository
   }));
-
-  Gistquire.api("rate_limit").then(function(data, status, request) {
-    return $root.append(HAMLjr.render("github_status", {
-      request: request
-    }));
-  });
 
   window.onbeforeunload = function() {
     if (filetree.hasUnsavedChanges()) {
