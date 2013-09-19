@@ -15,7 +15,7 @@
     "pixie.cson": {
       "path": "pixie.cson",
       "mode": "100644",
-      "content": "width: 960\nheight: 800\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/master.js\"\n]\ndependencies:\n  issues: \"http://strd6.github.io/issues/master.json\"\n  test_runner: \"http://strd6.github.io/tests/master.json\"\n  sandbox: \"http://strd6.github.io/sandbox/master.json\"\n  notifications: \"http://strd6.github.io/notifications/master.json\"\n  github: \"http://strd6.github.io/github/reduce-publish-commits.json\"\n",
+      "content": "width: 960\nheight: 800\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/master.js\"\n]\ndependencies:\n  issues: \"http://strd6.github.io/issues/master.json\"\n  test_runner: \"http://strd6.github.io/tests/master.json\"\n  sandbox: \"http://strd6.github.io/sandbox/master.json\"\n  notifications: \"http://strd6.github.io/notifications/master.json\"\n  github: \"http://strd6.github.io/github/master.json\"\n",
       "type": "blob"
     },
     "source/actions.coffee.md": {
@@ -519,7 +519,7 @@
         "owner": {
           "login": "STRd6",
           "id": 18894,
-          "avatar_url": "https://0.gravatar.com/avatar/33117162fff8a9cf50544a604f60c045?d=https%3A%2F%2Fidenticons.github.com%2F39df222bffe39629d904e4883eabc654.png",
+          "avatar_url": "https://2.gravatar.com/avatar/33117162fff8a9cf50544a604f60c045?d=https%3A%2F%2Fidenticons.github.com%2F39df222bffe39629d904e4883eabc654.png",
           "gravatar_id": "33117162fff8a9cf50544a604f60c045",
           "url": "https://api.github.com/users/STRd6",
           "html_url": "https://github.com/STRd6",
@@ -574,14 +574,14 @@
         "notifications_url": "https://api.github.com/repos/STRd6/github/notifications{?since,all,participating}",
         "labels_url": "https://api.github.com/repos/STRd6/github/labels{/name}",
         "created_at": "2013-09-18T00:25:56Z",
-        "updated_at": "2013-09-18T18:38:49Z",
-        "pushed_at": "2013-09-18T18:38:48Z",
+        "updated_at": "2013-09-19T21:03:38Z",
+        "pushed_at": "2013-09-19T21:03:36Z",
         "git_url": "git://github.com/STRd6/github.git",
         "ssh_url": "git@github.com:STRd6/github.git",
         "clone_url": "https://github.com/STRd6/github.git",
         "svn_url": "https://github.com/STRd6/github",
         "homepage": null,
-        "size": 460,
+        "size": 1236,
         "watchers_count": 0,
         "language": null,
         "has_issues": true,
@@ -601,7 +601,7 @@
           "pull": true
         },
         "network_count": 0,
-        "branch": "reduce-publish-commits",
+        "branch": "master",
         "defaultBranch": "master",
         "includedModules": [
           "Bindable"
