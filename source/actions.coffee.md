@@ -54,7 +54,7 @@ The primary actions of the editor. This should eventually become a mixin.
             item.content = Base64.decode(item.content)
             item.encoding = "raw"
     
-        repository.latestTree()
+        repository.latestContent()
         .then (results) ->
           files = processDirectory results
           filetree.load files
