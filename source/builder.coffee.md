@@ -281,7 +281,7 @@ Get entry point from package configuration
         """
 
         html: content.join "\n"
-        script: program
+        js: program
         json: JSON.stringify(pkg, null, 2)
 
     module.exports = Builder
