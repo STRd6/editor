@@ -212,9 +212,10 @@ filetree.selectedFile.observe (file) ->
         hotReloadCSS(file)
 
 hotReloadCSS = ( (file) ->
-  css = styl(file.content(), whitespace: true).toString()
+  try
+    css = styl(file.content(), whitespace: true).toString()
 
-  Runner.hotReloadCSS(css, file.path())
+  Runner.hotReloadCSS(css, file.path()) if css
 ).debounce(500)
 
 issues?.currentIssue.observe (issue) ->
