@@ -230,7 +230,7 @@
     if (css) {
       return Runner.hotReloadCSS(css, file.path());
     }
-  }).debounce(500);
+  }).debounce(100);
 
   if (issues != null) {
     issues.currentIssue.observe(function(issue) {
