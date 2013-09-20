@@ -1,4 +1,4 @@
-{
+window["STRd6/editor:master"]({
   "source": {
     "TODO": {
       "path": "TODO",
@@ -1025,4 +1025,4 @@
   "progenitor": {
     "url": "http://strd6.github.io/editor/"
   }
-}
+});
