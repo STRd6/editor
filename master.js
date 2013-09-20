@@ -222,10 +222,14 @@
 
   hotReloadCSS = (function(file) {
     var css;
-    css = styl(file.content(), {
-      whitespace: true
-    }).toString();
-    return Runner.hotReloadCSS(css, file.path());
+    try {
+      css = styl(file.content(), {
+        whitespace: true
+      }).toString();
+    } catch (_error) {}
+    if (css) {
+      return Runner.hotReloadCSS(css, file.path());
+    }
   }).debounce(500);
 
   if (issues != null) {
