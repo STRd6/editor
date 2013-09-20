@@ -216,7 +216,7 @@ hotReloadCSS = ( (file) ->
     css = styl(file.content(), whitespace: true).toString()
 
   Runner.hotReloadCSS(css, file.path()) if css
-).debounce(500)
+).debounce(100)
 
 issues?.currentIssue.observe (issue) ->
   # TODO: Formalize this later
