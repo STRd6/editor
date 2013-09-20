@@ -12,4 +12,4 @@ dependencies:
   test_runner: "http://strd6.github.io/tests/master.json"
   sandbox: "http://strd6.github.io/sandbox/master.json"
   notifications: "http://strd6.github.io/notifications/master.json"
-  github: "http://strd6.github.io/github/master.json"
+  github: "STRd6/github:emojers"

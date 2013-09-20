@@ -280,8 +280,18 @@ Get entry point from package configuration
           </html>
         """
 
+        json = JSON.stringify(pkg, null, 2)
+
         html: content.join "\n"
         js: program
-        json: JSON.stringify(pkg, null, 2)
+        json: json
+        jsonp: @jsonpWrapper(pkg.repository, json)
+
+Wraps the given data in a JSONP function wrapper.
+
+      jsonpWrapper: (repository, data) ->
+        """
+          window["#{repository.full_name}:#{repository.branch}"](#{data});
+        """
 
     module.exports = Builder
