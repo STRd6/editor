@@ -8,8 +8,8 @@ remoteDependencies: [
   "http://strd6.github.io/require/master.js"
 ]
 dependencies:
-  issues: "http://strd6.github.io/issues/master.json"
-  test_runner: "http://strd6.github.io/tests/master.json"
-  sandbox: "http://strd6.github.io/sandbox/master.json"
-  notifications: "http://strd6.github.io/notifications/master.json"
+  issues: "STRd6/issues:master"
+  test_runner: "STRd6/tests:master"
+  sandbox: "STRd6/sandbox:master"
+  notifications: "STRd6/notifications:master"
   github: "STRd6/github:master"
