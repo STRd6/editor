@@ -9,9 +9,11 @@ If the url contains a querystring parameter `code` then we send it to our auth
 server to get the OAuth token.
 
       if code = window.location.href.match(/\?code=(.*)/)?[1]
-        $.getJSON "https://hamljr-auth.herokuapp.com/authenticate/#{code}", (data) =>
+        $.getJSON "https://hamljr-auth.herokuapp.com/authenticate/#{code}", (data) ->
           if token = data.token
             localStorage.authToken = token
+
+            Deferred().resolve(localStorage.authToken)
           else
             Deferred().reject("Failed to get authorization from server")
       else
