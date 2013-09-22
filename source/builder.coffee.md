@@ -188,22 +188,24 @@ include source files, compiled files, and documentation.
       
           source = arrayToHash(fileData)
       
+          config = readSourceConfig(source: source)
+          
           # TODO: Robustify bundled dependencies
           # Right now we're always loading them from remote urls during the
           # build step. The default http caching is probably fine to speed this
           # up, but we may want to look into keeping our own cache during dev
           # in addition to using the package's existing dependencies rather
           # than always updating
-          dependencies = readSourceConfig(source: source).dependencies or {}
+          dependencies = config.dependencies or {}
           
           packager.collectDependencies(dependencies)
           .then (bundledDependencies) ->
             postProcessors.pipeline
               source: source
               distribution: arrayToHash(results)
-              entryPoint: "main"
+              entryPoint: config.entryPoint or "main"
               dependencies: bundledDependencies
-    
+
       program: (build) ->
         {distribution, entryPoint} = build
 
