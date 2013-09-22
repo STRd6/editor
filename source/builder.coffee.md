@@ -188,26 +188,34 @@ include source files, compiled files, and documentation.
       
           source = arrayToHash(fileData)
       
+          config = readSourceConfig(source: source)
+          
           # TODO: Robustify bundled dependencies
           # Right now we're always loading them from remote urls during the
           # build step. The default http caching is probably fine to speed this
           # up, but we may want to look into keeping our own cache during dev
           # in addition to using the package's existing dependencies rather
           # than always updating
-          dependencies = readSourceConfig(source: source).dependencies or {}
+          dependencies = config.dependencies or {}
           
           packager.collectDependencies(dependencies)
           .then (bundledDependencies) ->
             postProcessors.pipeline
               source: source
               distribution: arrayToHash(results)
-              entryPoint: "main"
+              entryPoint: config.entryPoint or "main"
               dependencies: bundledDependencies
-    
+
       program: (build) ->
         {distribution, entryPoint} = build
 
-        program = distribution[entryPoint].content
+        if main = distribution[entryPoint]
+          return main.content
+        else
+          # TODO: We should emit some kind of user-visible warning
+          console.warn "Entry point #{entryPoint} not found."
+          
+          return ""
 
       packageWrapper: (build, code) ->
         """
@@ -266,8 +274,6 @@ used as a dependency in other packages.
 
         content = content.concat dependencyScripts(pkg)
 
-        program = @program(pkg)
-
 Get entry point from package configuration
 
         entryPoint = readSourceConfig(pkg).entryPoint or "main"
@@ -283,7 +289,7 @@ Get entry point from package configuration
         json = JSON.stringify(pkg, null, 2)
 
         html: content.join "\n"
-        js: program
+        js: @program(pkg)
         json: json
         jsonp: @jsonpWrapper(pkg.repository, json)
 
