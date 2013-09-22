@@ -209,7 +209,13 @@ include source files, compiled files, and documentation.
       program: (build) ->
         {distribution, entryPoint} = build
 
-        program = distribution[entryPoint].content
+        if main = distribution[entryPoint]
+          return main.content
+        else
+          # TODO: We should emit some kind of user-visible warning
+          console.warn "Entry point #{entryPoint} not found."
+          
+          return ""
 
       packageWrapper: (build, code) ->
         """
@@ -268,8 +274,6 @@ used as a dependency in other packages.
 
         content = content.concat dependencyScripts(pkg)
 
-        program = @program(pkg)
-
 Get entry point from package configuration
 
         entryPoint = readSourceConfig(pkg).entryPoint or "main"
@@ -285,7 +289,7 @@ Get entry point from package configuration
         json = JSON.stringify(pkg, null, 2)
 
         html: content.join "\n"
-        js: program
+        js: @program(pkg)
         json: json
         jsonp: @jsonpWrapper(pkg.repository, json)
 
