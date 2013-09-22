@@ -163,7 +163,7 @@ actions =
 
         notifications.push "Created!"
       , classicError
-      
+
   pull_master: ->
     confirmUnsaved()
     .then( ->
@@ -183,6 +183,9 @@ actions =
         notifications.push "Loaded!"
       .fail ->
         classicError "Error loading #{repository().url()}"
+        
+  tag_version: ->
+    Actions.releaseTag()
 
 filetree = Filetree()
 filetree.load(files)

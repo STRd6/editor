@@ -201,6 +201,7 @@ include source files, compiled files, and documentation.
           packager.collectDependencies(dependencies)
           .then (bundledDependencies) ->
             postProcessors.pipeline
+              version: config.version
               source: source
               distribution: arrayToHash(results)
               entryPoint: config.entryPoint or "main"
