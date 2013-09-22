@@ -48,7 +48,7 @@ unique for all our packages so we use it to determine the URL and name callback.
                   cache: true
               else
                 reject """
-                  Failed to parse repository info string be sure it's in the 
+                  Failed to parse repository info string #{value}, be sure it's in the 
                   form `<user>/<repo>:<ref>` for example: `STRd6/issues:master`
                   or `STRd6/editor:v0.9.1`
                 """
@@ -75,4 +75,4 @@ Helpers
 Create a rejected deferred with the given message.
 
     reject = (message) ->
-      Deferred().reject(message)
+      Deferred().reject([message])
