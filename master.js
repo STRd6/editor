@@ -190,6 +190,9 @@
           return classicError("Error loading " + (repository().url()));
         });
       });
+    },
+    tag_version: function() {
+      return Actions.releaseTag();
     }
   };
 
