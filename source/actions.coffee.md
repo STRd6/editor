@@ -1,5 +1,4 @@
     Runner = require("./runner")
-    Builder = require("./builder")
     TestRunner = require("test_runner")
     {readSourceConfig} = require("./util")
 
@@ -19,11 +18,6 @@ The primary actions of the editor. This should eventually become a mixin.
         message: message
 
     Actions =
-      save: (params) ->
-        commit(params)
-        .then ->
-          publish(params)
-    
       run: ({builder, filetree}) ->
         sandbox = Runner.run
           config: readSourceConfig(PACKAGE)
@@ -33,7 +27,16 @@ The primary actions of the editor. This should eventually become a mixin.
           sandbox.document.open()
           sandbox.document.write(html)
           sandbox.document.close()
-          
+
+      save: (params) ->
+        commit(params)
+        .then ->
+          publish(params)
+
+      releaseTag: ({repository}) ->
+        version = readSourceConfig(PACKAGE).version
+        repository.createRef("v#{version}")
+
       test: ({builder, filetree}) ->
         sandbox = Runner.run
           config: readSourceConfig(PACKAGE)
