@@ -1,5 +1,5 @@
 (function() {
-  var $root, Actions, Builder, File, Filetree, Issue, Issues, Runner, Runtime, TextEditor, actions, builder, classicError, confirmUnsaved, errors, files, filetree, github, hotReloadCSS, issues, issuesTemplate, notifications, notify, repository, rootNode, runtime, templates, _base, _ref, _ref1, _ref2,
+  var $root, Actions, Builder, File, Filetree, Issue, Issues, Runner, Runtime, TextEditor, actions, builder, classicError, closeOpenEditors, confirmUnsaved, errors, files, filetree, github, hotReloadCSS, issues, issuesTemplate, notifications, notify, repository, rootNode, runtime, templates, _base, _ref, _ref1, _ref2,
     __slice = [].slice;
 
   files = PACKAGE.source;
@@ -88,6 +88,12 @@
     return pkg;
   });
 
+  closeOpenEditors = function() {
+    var root;
+    root = $root.children(".main");
+    return root.find(".editor-wrap").remove();
+  };
+
   actions = {
     save: function() {
       notify("Saving...");
@@ -144,9 +150,7 @@
           repository: repositoryInstance,
           filetree: filetree
         }).then(function() {
-          var root;
-          root = $root.children(".main");
-          root.find(".editor-wrap").remove();
+          closeOpenEditors();
           return notifications.push("Loaded");
         });
       }).fail(classicError);
@@ -242,6 +246,7 @@
         var previousBranch;
         previousBranch = repository().branch();
         return confirmUnsaved().then(function() {
+          closeOpenEditors();
           return repository().switchToBranch(branchName).then(function() {
             notifications.push("\nLoading branch " + branchName + "...");
             return Actions.load({
