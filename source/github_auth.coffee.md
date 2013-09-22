@@ -14,7 +14,10 @@ server to get the OAuth token.
           if token = data.token
             localStorage.authToken = token
           else
-            Deferred().reject("Failed to get authorization from server")
+            if localStorage.authToken
+              Deferred().resolve(localStorage.authToken)
+            else
+              Deferred().reject("Failed to get authorization from server and no token in local storage")
       else
 
 We also check localStorage for our auth token.
