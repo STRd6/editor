@@ -82,6 +82,10 @@ builder.addPostProcessor (pkg) ->
 
   pkg
 
+closeOpenEditors = ->
+  root = $root.children(".main")
+  root.find(".editor-wrap").remove()
+
 actions =
   save: ->
     notify "Saving..."
@@ -136,8 +140,7 @@ actions =
         repository: repositoryInstance
         filetree: filetree
       .then ->
-        root = $root.children(".main")
-        root.find(".editor-wrap").remove()
+        closeOpenEditors()
         
         notifications.push "Loaded"
     .fail classicError
@@ -227,11 +230,13 @@ issues?.currentIssue.observe (issue) ->
 
     confirmUnsaved()
     .then ->
+      closeOpenEditors()
+
       # Switch to branch for working on the issue
       repository().switchToBranch(branchName)
       .then ->
         notifications.push "\nLoading branch #{branchName}..."
-        
+
         Actions.load
           repository: repository()
           filetree: filetree
