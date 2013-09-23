@@ -194,11 +194,14 @@
       });
     },
     tag_version: function() {
-      var version;
-      version = "v" + (readSourceConfig(PACKAGE).version);
-      notify("Tagging version " + version + " ...");
-      return Actions.releaseTag(repository(), "refs/tags/" + version).then(function() {
-        return notifications.push("Tagged " + version);
+      notify("Building...");
+      return builder.build(filetree.data()).then(function(pkg) {
+        var version;
+        version = "v" + (readSourceConfig(pkg).version);
+        notify("Tagging version " + version + " ...");
+        return Actions.releaseTag(repository(), pkg, "refs/tags/" + version).then(function() {
+          return notifications.push("Tagged " + version);
+        });
       }).fail(classicError);
     }
   };
