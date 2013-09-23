@@ -201,7 +201,7 @@ actions =
       .then ->
         notifications.push "\nPublishing..."
 
-        repository.publish packager.standAlone(pkg), version
+        repository().publish packager.standAlone(pkg), version
       .then ->
         notifications.push "Published!"
 
