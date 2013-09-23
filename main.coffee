@@ -202,6 +202,9 @@ actions =
       .then ->
         notifications.push "\nPublishing..."
 
+        # Force branch for jsonp wrapper
+        pkg.repository.branch = version
+
         repository().publish packager.standAlone(pkg), version
       .then ->
         notifications.push "Published!"
