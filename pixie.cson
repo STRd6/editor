@@ -13,4 +13,4 @@ dependencies:
   test_runner: "STRd6/tests:master"
   sandbox: "STRd6/sandbox:master"
   notifications: "STRd6/notifications:master"
-  github: "STRd6/github:v0.2.0"
+  github: "STRd6/github:master"
