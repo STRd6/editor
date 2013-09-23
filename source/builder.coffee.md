@@ -82,39 +82,6 @@ TODO: Allow for files to generate docs and code at the same time.
       Object.extend result,
         path: path
 
-`documentFile` generates documentation for a literate file. Right now it just
-renders straight markdown, but it will get more clever in the future.
-
-TODO: Maybe doc more files than just .md?
-
-    documentFile = (content, path) ->
-      if path.extension() is "md"
-        marked(content)
-      else
-        ""
-
-`makeScript` returns a string representation of a script tag.
-
-    makeScript = (attrs) -> 
-      $("<script>", attrs).prop('outerHTML')
-
-`dependencyScripts` returns a string containing the script tags that are
-the dependencies of this build.
-
-    dependencyScripts = (build) ->
-      remoteDependencies = readSourceConfig(build).remoteDependencies
-  
-      (if remoteDependencies
-        remoteDependencies.map (src) ->
-          makeScript
-            class: "env"
-            src: src
-      else # Carry forward our own env if no dependencies specified
-        $('script.env').map ->
-          @outerHTML
-        .get()
-      ).join("\n")
-
 Builder
 -------
 
@@ -153,17 +120,6 @@ postprocessors, etc.
       
       addPostProcessor: (fn) ->
         postProcessors.push fn
-        
-      buildDocs: (fileData) ->
-        fileData.map ({path, content}) ->
-          try
-            path: path
-            documentation: documentFile(content, path)
-          catch {location, message}
-            if location?
-              message = "Error on line #{location.first_line + 1}: #{message}"
-    
-            error: "#{path} - #{message}"
 
 Compile and build a tree of file data into a distribution. The distribution should
 include source files, compiled files, and documentation.
@@ -206,99 +162,6 @@ include source files, compiled files, and documentation.
               distribution: arrayToHash(results)
               entryPoint: config.entryPoint or "main"
               dependencies: bundledDependencies
-
-      program: (build) ->
-        {distribution, entryPoint} = build
-
-        if main = distribution[entryPoint]
-          return main.content
-        else
-          # TODO: We should emit some kind of user-visible warning
-          console.warn "Entry point #{entryPoint} not found."
-          
-          return ""
-
-      packageWrapper: (build, code) ->
-        """
-          ;(function(PACKAGE) {
-          require = Require.generateFor(PACKAGE)
-          #{code}
-          })(#{JSON.stringify(build, null, 2)});
-        """
-
-      buildStyle: (fileData) ->
-        @build(fileData)
-        .then (build) ->
-          {distribution} = build
-
-          content = distribution["style.css"]?.content or ""
-
-      testScripts: (fileData) ->
-        @build(fileData).then (build) =>
-          {distribution} = build
-
-          testProgram = Object.keys(distribution).select (path) ->
-            path.match /test\//
-          .map (testPath) ->
-            "require('./#{testPath}')"
-          .join "\n"
-          
-          """
-            #{dependencyScripts(build)}
-            <script>
-              #{@packageWrapper(build, testProgram)}
-            <\/script>
-          """
-          
-      runnable: (fileData) ->
-        @build(fileData)
-        .then (build) =>
-          standAlone = @standAlone(build)
-          standAlone.config = readSourceConfig(build)
-
-          return standAlone
-
-Create the standalone components of this package. An html page that loads the 
-main entry point for demonstration purposes and a json package that can be
-used as a dependency in other packages.
-
-      standAlone: (pkg) ->
-        {source, distribution} = pkg
-
-        content = []
-    
-        content.push """
-          <!doctype html>
-          <head>
-          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        """
-
-        content = content.concat dependencyScripts(pkg)
-
-Get entry point from package configuration
-
-        entryPoint = readSourceConfig(pkg).entryPoint or "main"
-        
-        content.push """
-          </head>
-          <body>
-          #{makeScript html: @packageWrapper(pkg, "require('./#{entryPoint}')")}
-          </body>
-          </html>
-        """
-
-        json = JSON.stringify(pkg, null, 2)
-
-        html: content.join "\n"
-        js: @program(pkg)
-        json: json
-        jsonp: @jsonpWrapper(pkg.repository, json)
-
-Wraps the given data in a JSONP function wrapper.
-
-      jsonpWrapper: (repository, data) ->
-        """
-          window["#{repository.full_name}:#{repository.branch}"](#{data});
-        """
+              remoteDependencies: config.remoteDependencies
 
     module.exports = Builder

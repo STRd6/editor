@@ -31,6 +31,9 @@ Filetree = require("./source/filetree")
 File = require("./source/file")
 TextEditor = require("./source/text_editor")
 
+{readSourceConfig} = require("./source/util")
+packager = require("./source/packager")()
+
 notifications = require("notifications")()
 templates.notifications = notifications.template
 {classicError, notify, errors} = notifications
@@ -185,7 +188,28 @@ actions =
         classicError "Error loading #{repository().url()}"
         
   tag_version: ->
-    Actions.releaseTag()
+    notify "Building..."
+    
+    builder.build(filetree.data())
+    .then (pkg) ->
+      version = "v#{readSourceConfig(pkg).version}"
+
+      notify "Tagging version #{version} ..."
+
+      repository().createRef("refs/tags/#{version}")
+      .then ->
+        notifications.push "Tagged #{version}"
+      .then ->
+        notifications.push "\nPublishing..."
+
+        # Force branch for jsonp wrapper
+        pkg.repository.branch = version
+
+        repository().publish packager.standAlone(pkg), version
+      .then ->
+        notifications.push "Published!"
+
+    .fail classicError
 
 filetree = Filetree()
 filetree.load(files)
