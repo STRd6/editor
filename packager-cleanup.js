@@ -199,8 +199,13 @@
         var version;
         version = "v" + (readSourceConfig(pkg).version);
         notify("Tagging version " + version + " ...");
-        return Actions.releaseTag(repository(), pkg, "refs/tags/" + version).then(function() {
+        return repository().createRef("refs/tags/" + version).then(function() {
           return notifications.push("Tagged " + version);
+        }).then(function() {
+          notifications.push("\nPublishing...");
+          return repository.publish(packager.standAlone(pkg), version);
+        }).then(function() {
+          return notifications.push("Published!");
         });
       }).fail(classicError);
     }
