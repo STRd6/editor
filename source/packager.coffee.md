@@ -1,9 +1,5 @@
-This guy is resopnsible for creating and consuming packages.
-
-TODO: Extract the package construction parts of the builder into here, that way
-the consumption and creation of packages can be near each other. The builder
-should only be responsible for compiling all the files, or perhaps be a higher
-level component that coordinates a compiler, packager, etc.
+Packager
+========
 
 The main responsibilities will be bundling dependencies, and creating the
 package.
@@ -67,6 +63,50 @@ unique for all our packages so we use it to determine the URL and name callback.
 
           return bundledDependencies
 
+Create the standalone components of this package. An html page that loads the 
+main entry point for demonstration purposes and a json package that can be
+used as a dependency in other packages.
+
+      standAlone: (pkg) ->
+        {source, distribution, entryPoint} = pkg
+
+        html = """
+          <!doctype html>
+          <head>
+          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+          #{dependencyScripts(pkg)}
+          </head>
+          <body>
+          #{makeScript html: packageWrapper(pkg, "require('./#{entryPoint}')")}
+          </body>
+          </html>
+        """
+
+        json = JSON.stringify(pkg, null, 2)
+
+        html: html
+        js: program(pkg)
+        json: json
+        jsonp: jsonpWrapper(pkg.repository, json)
+
+Generates a standalone page for testing the app.
+
+      testScripts: (pkg) ->
+        {distribution} = pkg
+
+        testProgram = Object.keys(distribution).select (path) ->
+          path.match /test\//
+        .map (testPath) ->
+          "require('./#{testPath}')"
+        .join "\n"
+        
+        """
+          #{dependencyScripts(pkg.remoteDependencies)}
+          <script>
+            #{packageWrapper(pkg, testProgram)}
+          <\/script>
+        """
+
     module.exports = Packager
 
 Helpers
@@ -76,3 +116,50 @@ Create a rejected deferred with the given message.
 
     reject = (message) ->
       Deferred().reject([message])
+
+`makeScript` returns a string representation of a script tag.
+
+    makeScript = (attrs) -> 
+      $("<script>", attrs).prop('outerHTML')
+      
+`dependencyScripts` returns a string containing the script tags that are
+the dependencies of this build.
+
+    dependencyScripts = (remoteDependencies=[]) ->
+      remoteDependencies.map (src) ->
+        makeScript
+          class: "env"
+          src: src
+
+      .join("\n")
+
+A standalone JS program for the package. Does not use `require` and is only
+suitable for script style dependencies.
+
+    program = ({distribution, entryPoint}) ->
+      if main = distribution[entryPoint]
+        return main.content
+      else
+        # TODO: We should emit some kind of user-visible warning
+        console.warn "Entry point #{entryPoint} not found."
+        
+        return ""
+
+Wraps the given data in a JSONP function wrapper. This allows us to host our
+packages on Github pages and get around any same origin issues by using JSONP.
+
+    jsonpWrapper = (repository, data) ->
+      """
+        window["#{repository.full_name}:#{repository.branch}"](#{data});
+      """
+
+Wrap code in a closure that provides the package and a require function. This
+can be used for generating standalone HTML pages, scripts, and tests.
+
+    packageWrapper = (pkg, code) ->
+      """
+        ;(function(PACKAGE) {
+        require = Require.generateFor(PACKAGE)
+        #{code}
+        })(#{JSON.stringify(pkg, null, 2)});
+      """
