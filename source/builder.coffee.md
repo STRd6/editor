@@ -93,10 +93,7 @@ TODO: Maybe doc more files than just .md?
       else
         ""
 
-`makeScript` returns a string representation of a script tag.
-
-    makeScript = (attrs) -> 
-      $("<script>", attrs).prop('outerHTML')
+    "<script>" # TODO: For some unknown reason this needs to be here
 
 Builder
 -------
