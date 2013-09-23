@@ -8,12 +8,9 @@ Some dependencies.
 The primary actions of the editor. This should eventually become a mixin.
 
     publish = ({builder, fileData, repository}) ->
-      
-        builder.build(fileData)
-        .then (build) ->
-          branch = repository.branch()
-    
-          repository.publish builder.standAlone(build, branch)
+      builder.build(fileData)
+      .then (build) ->
+        repository.publish packager.standAlone(build)
     
     commit = ({fileData, repository, message}) ->
       repository.commitTree
@@ -39,6 +36,8 @@ The primary actions of the editor. This should eventually become a mixin.
       releaseTag: ({repository}) ->
         version = readSourceConfig(PACKAGE).version
         repository.createRef("v#{version}")
+        .then (data) ->
+          packager.standAlone(PACKAGE)
 
       test: ({builder, filetree}) ->
         sandbox = Runner.run

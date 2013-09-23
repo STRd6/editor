@@ -169,9 +169,9 @@ include source files, compiled files, and documentation.
 
       runnable: (fileData) ->
         @build(fileData)
-        .then (build) =>
-          standAlone = @standAlone(build)
-          standAlone.config = readSourceConfig(build)
+        .then (pkg) =>
+          standAlone = packager.standAlone(pkg)
+          standAlone.config = readSourceConfig(pkg)
 
           return standAlone
 
