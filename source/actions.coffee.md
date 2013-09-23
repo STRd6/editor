@@ -1,3 +1,6 @@
+Some dependencies.
+
+    packager = require("./packager")()
     Runner = require("./runner")
     TestRunner = require("test_runner")
     {readSourceConfig} = require("./util")
@@ -41,7 +44,9 @@ The primary actions of the editor. This should eventually become a mixin.
         sandbox = Runner.run
           config: readSourceConfig(PACKAGE)
 
-        builder.testScripts(filetree.data())
+        builder.build(filetree.data())
+        .then (pkg) ->
+          packager.testScripts(pkg)
         .then (testScripts) ->
           html = TestRunner.html(testScripts)
           sandbox.document.open()
