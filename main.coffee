@@ -192,12 +192,18 @@ actions =
     builder.build(filetree.data())
     .then (pkg) ->
       version = "v#{readSourceConfig(pkg).version}"
-      
+
       notify "Tagging version #{version} ..."
-  
-      Actions.releaseTag(repository(), pkg, "refs/tags/#{version}")
+
+      repository().createRef("refs/tags/#{version}")
       .then ->
         notifications.push "Tagged #{version}"
+      .then ->
+        notifications.push "\nPublishing..."
+
+        repository.publish packager.standAlone(pkg), version
+      .then ->
+        notifications.push "Published!"
 
     .fail classicError
 

@@ -33,12 +33,7 @@ The primary actions of the editor. This should eventually become a mixin.
       save: (params) ->
         commit(params)
         .then ->
-          publish(params)
-
-      releaseTag: (repository, pkg, ref) ->
-        repository.createRef(ref, "tags")
-        .then ->
-          repository.publish packager.standAlone(pkg), ref
+          publish(params)        
 
       test: ({builder, filetree}) ->
         sandbox = Runner.run
