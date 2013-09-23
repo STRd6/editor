@@ -70,8 +70,6 @@ used as a dependency in other packages.
       standAlone: (pkg) ->
         {source, distribution, entryPoint} = pkg
 
-        mainScript = packageWrapper(pkg, "require('./#{entryPoint}')")
-
         html = """
           <!doctype html>
           <head>
@@ -80,13 +78,11 @@ used as a dependency in other packages.
           </head>
           <body>
           <script>
-          #{mainScript}
+          #{packageWrapper(pkg, "require('./#{entryPoint}')")}
           <\/script>
           </body>
           </html>
         """
-        
-        debugger
 
         json = JSON.stringify(pkg, null, 2)
 
@@ -123,7 +119,9 @@ Create a rejected deferred with the given message.
     reject = (message) ->
       Deferred().reject([message])
 
-`makeScript` returns a string representation of a script tag.
+`makeScript` returns a string representation of a script tag. Don't use this
+with tons of stuff stuck inside as html, it gets messed up. Using with src is
+fine though.
 
     makeScript = (attrs) ->
       $("<script>", attrs).prop('outerHTML')
