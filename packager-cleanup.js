@@ -205,6 +205,7 @@
           return notifications.push("Tagged " + version);
         }).then(function() {
           notifications.push("\nPublishing...");
+          pkg.repository.branch = version;
           return repository().publish(packager.standAlone(pkg), version);
         }).then(function() {
           return notifications.push("Published!");
