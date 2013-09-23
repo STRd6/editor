@@ -187,13 +187,18 @@ actions =
         classicError "Error loading #{repository().url()}"
         
   tag_version: ->
-    version = "v#{readSourceConfig(PACKAGE).version}"
+    notify "Building..."
     
-    notify "Tagging version #{version} ..."
+    builder.build(filetree.data())
+    .then (pkg) ->
+      version = "v#{readSourceConfig(pkg).version}"
+      
+      notify "Tagging version #{version} ..."
+  
+      Actions.releaseTag(repository(), pkg, "refs/tags/#{version}")
+      .then ->
+        notifications.push "Tagged #{version}"
 
-    Actions.releaseTag(repository(), "refs/tags/#{version}")
-    .then ->
-      notifications.push "Tagged #{version}"
     .fail classicError
 
 filetree = Filetree()

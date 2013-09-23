@@ -35,10 +35,10 @@ The primary actions of the editor. This should eventually become a mixin.
         .then ->
           publish(params)
 
-      releaseTag: (repository, ref) ->
+      releaseTag: (repository, pkg, ref) ->
         repository.createRef(ref, "tags")
         .then ->
-          repository.publish packager.standAlone(PACKAGE), ref
+          repository.publish packager.standAlone(pkg), ref
 
       test: ({builder, filetree}) ->
         sandbox = Runner.run
