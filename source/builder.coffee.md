@@ -82,17 +82,6 @@ TODO: Allow for files to generate docs and code at the same time.
       Object.extend result,
         path: path
 
-`documentFile` generates documentation for a literate file. Right now it just
-renders straight markdown, but it will get more clever in the future.
-
-TODO: Maybe doc more files than just .md?
-
-    documentFile = (content, path) ->
-      if path.extension() is "md"
-        marked(content)
-      else
-        ""
-
     "<script>" # TODO: For some unknown reason this needs to be here
 
 Builder
@@ -133,17 +122,6 @@ postprocessors, etc.
       
       addPostProcessor: (fn) ->
         postProcessors.push fn
-        
-      buildDocs: (fileData) ->
-        fileData.map ({path, content}) ->
-          try
-            path: path
-            documentation: documentFile(content, path)
-          catch {location, message}
-            if location?
-              message = "Error on line #{location.first_line + 1}: #{message}"
-    
-            error: "#{path} - #{message}"
 
 Compile and build a tree of file data into a distribution. The distribution should
 include source files, compiled files, and documentation.
