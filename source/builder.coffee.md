@@ -82,7 +82,6 @@ TODO: Allow for files to generate docs and code at the same time.
       Object.extend result,
         path: path
 
-
 Builder
 -------
 

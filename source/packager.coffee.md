@@ -70,8 +70,7 @@ used as a dependency in other packages.
       standAlone: (pkg) ->
         {source, distribution, entryPoint} = pkg
 
-        mainScript = makeScript
-          html: packageWrapper(pkg, "require('./#{entryPoint}')")
+        mainScript = packageWrapper(pkg, "require('./#{entryPoint}')")
 
         html = """
           <!doctype html>
@@ -80,10 +79,14 @@ used as a dependency in other packages.
           #{dependencyScripts(pkg.remoteDependencies)}
           </head>
           <body>
+          <script>
           #{mainScript}
+          <\/script>
           </body>
           </html>
         """
+        
+        debugger
 
         json = JSON.stringify(pkg, null, 2)
 
@@ -122,9 +125,9 @@ Create a rejected deferred with the given message.
 
 `makeScript` returns a string representation of a script tag.
 
-    makeScript = (attrs) -> 
+    makeScript = (attrs) ->
       $("<script>", attrs).prop('outerHTML')
-      
+
 `dependencyScripts` returns a string containing the script tags that are
 the dependencies of this build.
 
