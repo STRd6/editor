@@ -70,8 +70,6 @@ used as a dependency in other packages.
       standAlone: (pkg) ->
         {source, distribution, entryPoint} = pkg
 
-        debugger
-
         mainScript = makeScript
           html: packageWrapper(pkg, "require('./#{entryPoint}')")
 
