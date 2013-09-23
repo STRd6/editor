@@ -164,11 +164,4 @@ include source files, compiled files, and documentation.
               dependencies: bundledDependencies
               remoteDependencies: config.remoteDependencies
 
-Create the standalone components of this package. An html page that loads the 
-main entry point for demonstration purposes and a json package that can be
-used as a dependency in other packages.
-
-      standAlone: (pkg) ->
-        packager.standAlone(pkg)
-
     module.exports = Builder
