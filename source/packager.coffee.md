@@ -70,6 +70,11 @@ used as a dependency in other packages.
       standAlone: (pkg) ->
         {source, distribution, entryPoint} = pkg
 
+        debugger
+
+        mainScript = makeScript
+          html: packageWrapper(pkg, "require('./#{entryPoint}')")
+
         html = """
           <!doctype html>
           <head>
@@ -77,7 +82,7 @@ used as a dependency in other packages.
           #{dependencyScripts(pkg.remoteDependencies)}
           </head>
           <body>
-          #{makeScript html: packageWrapper(pkg, "require('./#{entryPoint}')")}
+          #{mainScript}
           </body>
           </html>
         """
