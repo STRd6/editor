@@ -188,32 +188,6 @@ include source files, compiled files, and documentation.
               dependencies: bundledDependencies
               remoteDependencies: config.remoteDependencies
 
-      program: (build) ->
-        {distribution, entryPoint} = build
-
-        if main = distribution[entryPoint]
-          return main.content
-        else
-          # TODO: We should emit some kind of user-visible warning
-          console.warn "Entry point #{entryPoint} not found."
-          
-          return ""
-
-      packageWrapper: (build, code) ->
-        """
-          ;(function(PACKAGE) {
-          require = Require.generateFor(PACKAGE)
-          #{code}
-          })(#{JSON.stringify(build, null, 2)});
-        """
-
-      buildStyle: (fileData) ->
-        @build(fileData)
-        .then (build) ->
-          {distribution} = build
-
-          content = distribution["style.css"]?.content or ""
-
       runnable: (fileData) ->
         @build(fileData)
         .then (build) =>
