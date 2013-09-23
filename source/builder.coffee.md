@@ -266,11 +266,4 @@ used as a dependency in other packages.
       standAlone: (pkg) ->
         packager.standAlone(pkg)
 
-Wraps the given data in a JSONP function wrapper.
-
-      jsonpWrapper: (repository, data) ->
-        """
-          window["#{repository.full_name}:#{repository.branch}"](#{data});
-        """
-
     module.exports = Builder
