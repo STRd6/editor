@@ -32,6 +32,7 @@ File = require("./source/file")
 TextEditor = require("./source/text_editor")
 
 {readSourceConfig} = require("./source/util")
+packager = require("./source/packager")()
 
 notifications = require("notifications")()
 templates.notifications = notifications.template
