@@ -82,7 +82,8 @@ TODO: Allow for files to generate docs and code at the same time.
       Object.extend result,
         path: path
 
-    "<script>" # TODO: For some unknown reason this needs to be here
+    #TODO: For some unknown reason this needs to be here
+    #<script>
 
 Builder
 -------
