@@ -1,5 +1,5 @@
 (function() {
-  var $root, Actions, Builder, File, Filetree, Issue, Issues, Runner, Runtime, TextEditor, actions, builder, classicError, closeOpenEditors, confirmUnsaved, errors, files, filetree, github, hotReloadCSS, issues, issuesTemplate, notifications, notify, repository, rootNode, runtime, templates, _base, _ref, _ref1, _ref2,
+  var $root, Actions, Builder, File, Filetree, Issue, Issues, Runner, Runtime, TextEditor, actions, builder, classicError, closeOpenEditors, confirmUnsaved, errors, files, filetree, github, hotReloadCSS, issues, issuesTemplate, notifications, notify, readSourceConfig, repository, rootNode, runtime, templates, _base, _ref, _ref1, _ref2,
     __slice = [].slice;
 
   files = PACKAGE.source;
@@ -35,6 +35,8 @@
   File = require("./source/file");
 
   TextEditor = require("./source/text_editor");
+
+  readSourceConfig = require("./source/util").readSourceConfig;
 
   notifications = require("notifications")();
 
@@ -192,7 +194,12 @@
       });
     },
     tag_version: function() {
-      return Actions.releaseTag();
+      var version;
+      version = "v" + (readSourceConfig(PACKAGE).version);
+      notify("Tagging version " + version + " ...");
+      return Actions.releaseTag(repository(), "refs/tags/" + version).then(function() {
+        return notifications.push("Tagged " + version);
+      }).fail(classicError);
     }
   };
 
