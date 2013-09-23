@@ -74,7 +74,7 @@ used as a dependency in other packages.
           <!doctype html>
           <head>
           <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-          #{dependencyScripts(pkg)}
+          #{dependencyScripts(pkg.remoteDependencies)}
           </head>
           <body>
           #{makeScript html: packageWrapper(pkg, "require('./#{entryPoint}')")}

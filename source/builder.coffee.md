@@ -206,6 +206,7 @@ include source files, compiled files, and documentation.
               distribution: arrayToHash(results)
               entryPoint: config.entryPoint or "main"
               dependencies: bundledDependencies
+              remoteDependencies: config.remoteDependencies
 
       program: (build) ->
         {distribution, entryPoint} = build
@@ -263,36 +264,7 @@ main entry point for demonstration purposes and a json package that can be
 used as a dependency in other packages.
 
       standAlone: (pkg) ->
-        {source, distribution} = pkg
-
-        content = []
-    
-        content.push """
-          <!doctype html>
-          <head>
-          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        """
-
-        content = content.concat dependencyScripts(pkg)
-
-Get entry point from package configuration
-
-        entryPoint = readSourceConfig(pkg).entryPoint or "main"
-        
-        content.push """
-          </head>
-          <body>
-          #{makeScript html: @packageWrapper(pkg, "require('./#{entryPoint}')")}
-          </body>
-          </html>
-        """
-
-        json = JSON.stringify(pkg, null, 2)
-
-        html: content.join "\n"
-        js: @program(pkg)
-        json: json
-        jsonp: @jsonpWrapper(pkg.repository, json)
+        packager.standAlone(pkg)
 
 Wraps the given data in a JSONP function wrapper.
 
