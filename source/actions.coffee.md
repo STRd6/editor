@@ -22,7 +22,9 @@ The primary actions of the editor. This should eventually become a mixin.
         sandbox = Runner.run
           config: readSourceConfig(PACKAGE)
 
-        builder.runnable(filetree.data())
+        builder.build(filetree.data())
+        .then (pkg) ->
+          packager.standAlone pkg
         .then ({html}) ->
           sandbox.document.open()
           sandbox.document.write(html)

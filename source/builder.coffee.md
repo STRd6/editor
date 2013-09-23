@@ -167,14 +167,6 @@ include source files, compiled files, and documentation.
               dependencies: bundledDependencies
               remoteDependencies: config.remoteDependencies
 
-      runnable: (fileData) ->
-        @build(fileData)
-        .then (pkg) =>
-          standAlone = packager.standAlone(pkg)
-          standAlone.config = readSourceConfig(pkg)
-
-          return standAlone
-
 Create the standalone components of this package. An html page that loads the 
 main entry point for demonstration purposes and a json package that can be
 used as a dependency in other packages.
