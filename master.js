@@ -1,5 +1,5 @@
 (function() {
-  var $root, Actions, Builder, File, Filetree, Issue, Issues, Runner, Runtime, TextEditor, actions, builder, classicError, closeOpenEditors, confirmUnsaved, errors, files, filetree, github, hotReloadCSS, issues, issuesTemplate, notifications, notify, repository, rootNode, runtime, templates, _base, _ref, _ref1, _ref2,
+  var $root, Actions, Builder, File, Filetree, Issue, Issues, Runner, Runtime, TextEditor, actions, builder, classicError, closeOpenEditors, confirmUnsaved, errors, files, filetree, github, hotReloadCSS, issues, issuesTemplate, notifications, notify, packager, readSourceConfig, repository, rootNode, runtime, templates, _base, _ref, _ref1, _ref2,
     __slice = [].slice;
 
   files = PACKAGE.source;
@@ -35,6 +35,10 @@
   File = require("./source/file");
 
   TextEditor = require("./source/text_editor");
+
+  readSourceConfig = require("./source/util").readSourceConfig;
+
+  packager = require("./source/packager")();
 
   notifications = require("notifications")();
 
@@ -192,7 +196,21 @@
       });
     },
     tag_version: function() {
-      return Actions.releaseTag();
+      notify("Building...");
+      return builder.build(filetree.data()).then(function(pkg) {
+        var version;
+        version = "v" + (readSourceConfig(pkg).version);
+        notify("Tagging version " + version + " ...");
+        return repository().createRef("refs/tags/" + version).then(function() {
+          return notifications.push("Tagged " + version);
+        }).then(function() {
+          notifications.push("\nPublishing...");
+          pkg.repository.branch = version;
+          return repository().publish(packager.standAlone(pkg), version);
+        }).then(function() {
+          return notifications.push("Published!");
+        });
+      }).fail(classicError);
     }
   };
 
