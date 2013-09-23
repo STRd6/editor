@@ -35,9 +35,7 @@ The primary actions of the editor. This should eventually become a mixin.
         .then ->
           publish(params)
 
-      releaseTag: ({repository}) ->
-        ref = "v#{version}"
-        version = readSourceConfig(PACKAGE).version
+      releaseTag: (repository, ref) ->
         repository.createRef(ref, "tags")
         .then ->
           repository.publish packager.standAlone(PACKAGE), ref

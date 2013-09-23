@@ -31,6 +31,8 @@ Filetree = require("./source/filetree")
 File = require("./source/file")
 TextEditor = require("./source/text_editor")
 
+{readSourceConfig} = require("./source/util")
+
 notifications = require("notifications")()
 templates.notifications = notifications.template
 {classicError, notify, errors} = notifications
@@ -185,7 +187,14 @@ actions =
         classicError "Error loading #{repository().url()}"
         
   tag_version: ->
-    Actions.releaseTag()
+    version = "v#{readSourceConfig(PACKAGE).version}"
+    
+    notify "Tagging version #{version} ..."
+
+    Actions.releaseTag(repository(), "refs/tags/#{version}")
+    .then ->
+      notifications.push "Tagged #{version}"
+    .fail classicError
 
 filetree = Filetree()
 filetree.load(files)
