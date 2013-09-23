@@ -98,23 +98,6 @@ TODO: Maybe doc more files than just .md?
     makeScript = (attrs) -> 
       $("<script>", attrs).prop('outerHTML')
 
-`dependencyScripts` returns a string containing the script tags that are
-the dependencies of this build.
-
-    dependencyScripts = (build) ->
-      remoteDependencies = readSourceConfig(build).remoteDependencies
-  
-      (if remoteDependencies
-        remoteDependencies.map (src) ->
-          makeScript
-            class: "env"
-            src: src
-      else # Carry forward our own env if no dependencies specified
-        $('script.env').map ->
-          @outerHTML
-        .get()
-      ).join("\n")
-
 Builder
 -------
 
@@ -234,23 +217,6 @@ include source files, compiled files, and documentation.
 
           content = distribution["style.css"]?.content or ""
 
-      testScripts: (fileData) ->
-        @build(fileData).then (build) =>
-          {distribution} = build
-
-          testProgram = Object.keys(distribution).select (path) ->
-            path.match /test\//
-          .map (testPath) ->
-            "require('./#{testPath}')"
-          .join "\n"
-          
-          """
-            #{dependencyScripts(build)}
-            <script>
-              #{@packageWrapper(build, testProgram)}
-            <\/script>
-          """
-          
       runnable: (fileData) ->
         @build(fileData)
         .then (build) =>
