@@ -1,3 +1,6 @@
+Some dependencies.
+
+    packager = require("./packager")()
     Runner = require("./runner")
     TestRunner = require("test_runner")
     {readSourceConfig} = require("./util")
@@ -5,12 +8,9 @@
 The primary actions of the editor. This should eventually become a mixin.
 
     publish = ({builder, fileData, repository}) ->
-      
-        builder.build(fileData)
-        .then (build) ->
-          branch = repository.branch()
-    
-          repository.publish builder.standAlone(build, branch)
+      builder.build(fileData)
+      .then (pkg) ->
+        repository.publish packager.standAlone(pkg)
     
     commit = ({fileData, repository, message}) ->
       repository.commitTree
@@ -22,7 +22,9 @@ The primary actions of the editor. This should eventually become a mixin.
         sandbox = Runner.run
           config: readSourceConfig(PACKAGE)
 
-        builder.runnable(filetree.data())
+        builder.build(filetree.data())
+        .then (pkg) ->
+          packager.standAlone pkg
         .then ({html}) ->
           sandbox.document.open()
           sandbox.document.write(html)
@@ -31,17 +33,15 @@ The primary actions of the editor. This should eventually become a mixin.
       save: (params) ->
         commit(params)
         .then ->
-          publish(params)
-
-      releaseTag: ({repository}) ->
-        version = readSourceConfig(PACKAGE).version
-        repository.createRef("v#{version}")
+          publish(params)        
 
       test: ({builder, filetree}) ->
         sandbox = Runner.run
           config: readSourceConfig(PACKAGE)
 
-        builder.testScripts(filetree.data())
+        builder.build(filetree.data())
+        .then (pkg) ->
+          packager.testScripts(pkg)
         .then (testScripts) ->
           html = TestRunner.html(testScripts)
           sandbox.document.open()

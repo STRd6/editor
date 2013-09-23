@@ -1,4 +1,4 @@
-version: "0.2.0"
+version: "0.2.0-alpha.1"
 width: 960
 height: 800
 remoteDependencies: [
@@ -13,4 +13,4 @@ dependencies:
   test_runner: "STRd6/tests:master"
   sandbox: "STRd6/sandbox:master"
   notifications: "STRd6/notifications:master"
-  github: "STRd6/github:master"
+  github: "STRd6/github:v0.2.1"
