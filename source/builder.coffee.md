@@ -82,10 +82,6 @@ TODO: Allow for files to generate docs and code at the same time.
       Object.extend result,
         path: path
 
-    #TODO: For some unknown reason this needs to be here
-    # Something to do with escaping script tags when writing out code.
-    # We should really fix it though... :(
-    #<script>
 
 Builder
 -------
