@@ -163,7 +163,7 @@ can be used for generating standalone HTML pages, scripts, and tests.
     packageWrapper = (pkg, code) ->
       """
         ;(function(PACKAGE) {
-        require = Require.generateFor(PACKAGE)
+        var require = Require.generateFor(PACKAGE);
         #{code}
         })(#{JSON.stringify(pkg, null, 2)});
       """
