@@ -108,6 +108,8 @@ actions =
       errors args
 
   run: ->
+    notify "Running..."
+
     Actions.run({builder, filetree})
     .fail errors
 
@@ -210,6 +212,13 @@ actions =
         notifications.push "Published!"
 
     .fail classicError
+
+  doc_test: ->
+    docmon = require("./documenter")(github.markdown)
+    
+    docmon.documentAll(PACKAGE)
+    .then (docs) ->
+      console.log docs
 
 filetree = Filetree()
 filetree.load(files)

@@ -42,12 +42,20 @@ file's path is a key and the fileData is the object.
 
       "module.exports = #{program};"
 
-`compileStyl` compiles a styl file into css.
+`stringData` exports a string of text. When you require a file that exports
+string data it returns the string for you to use in your code. This is handy for
+CSS or other textually based data.
+
+    stringData = (source) ->
+      "module.exports = #{JSON.stringify(source)}"
+
+`compileStyl` compiles a styl file into CSS and makes it available as a string
+export.
 
     compileStyl = (source) ->
       styleContent = styl(source, whitespace: true).toString()
-      
-      "module.exports = #{JSON.stringify(styleContent)}"
+
+      stringData(styleContent)
 
 `compileFile` take a fileData and returns a buildData. A buildData has a `path`,
 and properties for what type of content was built.
@@ -67,6 +75,8 @@ TODO: Allow for files to generate docs and code at the same time.
             code: compileTemplate(content, name)
           when "styl"
             code: compileStyl(content)
+          when "css"
+            code: stringData(content)
           when "md"
             # Separate out code and call compile again
             compileFile
