@@ -12,7 +12,7 @@ The primary actions of the editor. This should eventually become a mixin.
     publish = ({builder, fileData, repository}) ->
       builder.build(fileData)
       .then (pkg) ->
-        repository.publish packager.standAlone(pkg)
+        repository.publish(packager.standAlone(pkg))
         .then -> # Can't outdent because we need `pkg`
           documenter.documentAll(pkg)
         .then (docs) ->
