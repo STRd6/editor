@@ -214,10 +214,14 @@
       }).fail(classicError);
     },
     doc_test: function() {
-      var docmon;
-      docmon = require("./documenter")(github.markdown);
-      return docmon.documentAll(PACKAGE).then(function(docs) {
-        return console.log(docs);
+      var documenter;
+      documenter = require("md/documenter")(github.markdown);
+      return documenter.documentAll(PACKAGE).then(function(docs) {
+        return repository().commitTree({
+          tree: docs,
+          baseTree: true,
+          branch: repository().publishBranch()
+        });
       });
     }
   };
