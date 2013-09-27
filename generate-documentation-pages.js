@@ -1,5 +1,5 @@
 (function() {
-  var $root, Actions, Builder, File, Filetree, Issue, Issues, Runner, Runtime, TextEditor, actions, builder, classicError, closeOpenEditors, confirmUnsaved, errors, files, filetree, github, hotReloadCSS, issues, issuesTemplate, notifications, notify, packager, readSourceConfig, repository, rootNode, runtime, templates, _base, _ref, _ref1, _ref2,
+  var $root, Actions, Builder, File, Filetree, Issue, Issues, Runner, Runtime, TextEditor, actions, builder, classicError, closeOpenEditors, confirmUnsaved, errors, files, filetree, hotReloadCSS, issues, issuesTemplate, notifications, notify, packager, readSourceConfig, repository, rootNode, runtime, templates, _base, _ref, _ref1, _ref2,
     __slice = [].slice;
 
   files = PACKAGE.source;
@@ -10,7 +10,7 @@
 
   require("./source/deferred");
 
-  github = require("github")(require("./source/github_auth")());
+  global.github = require("github")(require("./source/github_auth")());
 
   templates = (HAMLjr.templates || (HAMLjr.templates = {}));
 
@@ -212,17 +212,6 @@
           return notifications.push("Published!");
         });
       }).fail(classicError);
-    },
-    doc_test: function() {
-      var documenter;
-      documenter = require("md/documenter")(github.markdown);
-      return documenter.documentAll(PACKAGE).then(function(docs) {
-        return repository().commitTree({
-          tree: docs,
-          baseTree: true,
-          branch: repository().publishBranch()
-        });
-      });
     }
   };
 
