@@ -113,6 +113,8 @@ hr {
 Runner = require("./runner")
 TestRunner = require("test_runner")
 {readSourceConfig} = require("./util")
+
+documenter = require("md/documenter")(github.markdown)
 </code></pre>
 
 <p>The primary actions of the editor. This should eventually become a mixin.</p>
@@ -120,7 +122,14 @@ TestRunner = require("test_runner")
 <pre><code>publish = ({builder, fileData, repository}) -&gt;
   builder.build(fileData)
   .then (pkg) -&gt;
-    repository.publish packager.standAlone(pkg)
+    repository.publish(packager.standAlone(pkg))
+    .then -&gt; # Can't outdent because we need `pkg`
+      documenter.documentAll(pkg)
+    .then (docs) -&gt;
+      repository.commitTree
+        tree: docs
+        baseTree: true
+        branch: repository.publishBranch()
 
 commit = ({fileData, repository, message}) -&gt;
   repository.commitTree
