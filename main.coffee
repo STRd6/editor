@@ -6,7 +6,8 @@ require("./source/duct_tape")
 require("./source/deferred")
 
 # Create and auth a github API
-github = require("github")(require("./source/github_auth")())
+# Global until we consolidate editor/actions into something cleaner
+global.github = require("github")(require("./source/github_auth")())
 
 # Load and attach Templates
 templates = (HAMLjr.templates ||= {})
@@ -108,6 +109,8 @@ actions =
       errors args
 
   run: ->
+    notify "Running..."
+
     Actions.run({builder, filetree})
     .fail errors
 

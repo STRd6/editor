@@ -8,7 +8,7 @@ package.
       collectDependencies: (dependencies) ->
         names = Object.keys(dependencies)
 
-        $.when.apply(null, names.map (name) ->
+        Deferred.when(names.map (name) ->
           value = dependencies[name]
 
           if typeof value is "string"
@@ -50,16 +50,11 @@ unique for all our packages so we use it to determine the URL and name callback.
                 """
           else
             reject "Can only handle url string dependencies right now"
-        ).then (results...) ->
-          # WTF: jQuery.when behaves differently for one argument than it does for
-          # two or more.
-          if names.length is 1
-            results = [results]
-          
+        ).then (results) ->
           bundledDependencies = {}
 
           names.each (name, i) ->
-            bundledDependencies[name] = results[i][0]
+            bundledDependencies[name] = results[i].first()
 
           return bundledDependencies
 
