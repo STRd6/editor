@@ -214,11 +214,14 @@ actions =
     .fail classicError
 
   doc_test: ->
-    docmon = require("./documenter")(github.markdown)
-    
-    docmon.documentAll(PACKAGE)
+    documenter = require("md/documenter")(github.markdown)
+
+    documenter.documentAll(PACKAGE)
     .then (docs) ->
-      console.log docs
+      repository().commitTree
+        tree: docs
+        baseTree: true
+        branch: repository().publishBranch()
 
 filetree = Filetree()
 filetree.load(files)
