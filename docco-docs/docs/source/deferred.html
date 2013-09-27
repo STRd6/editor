@@ -1,0 +1,183 @@
+<html>
+<head>
+<title>source/deferred</title>
+<style>
+body{
+    margin: 0 auto;
+    font-family: Georgia, Palatino, serif;
+    color: #444444;
+    line-height: 1;
+    max-width: 960px;
+    padding: 30px;
+}
+h1, h2, h3, h4 {
+    color: #111111;
+    font-weight: 400;
+}
+h1, h2, h3, h4, h5, p {
+    margin-bottom: 24px;
+    padding: 0;
+}
+h1 {
+    font-size: 48px;
+}
+h2 {
+    font-size: 36px;
+    /* The bottom margin is small. It's designed to be used with gray meta text
+     * below a post title. */
+    margin: 24px 0 6px;
+}
+h3 {
+    font-size: 24px;
+}
+h4 {
+    font-size: 21px;
+}
+h5 {
+    font-size: 18px;
+}
+a {
+    color: #0099ff;
+    margin: 0;
+    padding: 0;
+    vertical-align: baseline;
+}
+a:hover {
+    text-decoration: none;
+    color: #ff6600;
+}
+a:visited {
+    color: purple;
+}
+ul, ol {
+    padding: 0;
+    margin: 0;
+}
+li {
+    line-height: 24px;
+}
+li ul, li ul {
+    margin-left: 24px;
+}
+p, ul, ol {
+    font-size: 16px;
+    line-height: 24px;
+    max-width: 540px;
+}
+pre {
+    padding: 0px 24px;
+    max-width: 800px;
+    white-space: pre-wrap;
+}
+code {
+    font-family: Consolas, Monaco, Andale Mono, monospace;
+    line-height: 1.5;
+    font-size: 13px;
+}
+aside {
+    display: block;
+    float: right;
+    width: 390px;
+}
+blockquote {
+    border-left:.5em solid #eee;
+    padding: 0 2em;
+    margin-left:0;
+    max-width: 476px;
+}
+blockquote  cite {
+    font-size:14px;
+    line-height:20px;
+    color:#bfbfbf;
+}
+blockquote cite:before {
+    content: '\2014 \00A0';
+}
+
+blockquote p {  
+    color: #666;
+    max-width: 460px;
+}
+hr {
+    width: 540px;
+    text-align: left;
+    margin: 0 auto 0 0;
+    color: #999;
+}
+</style>
+</head>
+<body>
+<p>Use jQuery.Deferred to implement deferreds, but
+stay insulated by not blasting the $ all over our code
+that doesn't really depend on jQuery
+This let's us swap our our Deferred provider more easily later.</p>
+
+<pre><code>global.Deferred = $.Deferred
+</code></pre>
+
+<p>A helper to return a promise that may be resolved or rejected by the passed
+code block.</p>
+
+<pre><code>withDeferrence = (fn) -&gt;
+  deferred = Deferred()
+
+  # TODO: This try catch may be useless from deferring the fn
+  try
+    fn.defer(deferred)
+  catch e
+    deferred.reject(e)
+
+  return deferred.promise()
+</code></pre>
+
+<p>A deferred encapsulating a confirm dialog.</p>
+
+<pre><code>Deferred.Confirm = (message) -&gt;
+  withDeferrence (deferred) -&gt;
+    if window.confirm(message)
+      deferred.resolve()
+    else
+      deferred.reject()
+</code></pre>
+
+<p>A deferred that may present a confirm dialog, but only if a certain condition is
+met.</p>
+
+<pre><code>Deferred.ConfirmIf = (flag, message) -&gt;
+  if flag
+    return Deferred.Confirm(message)
+  else
+    withDeferrence (deferred) -&gt;
+      deferred.resolve()
+</code></pre>
+
+<p>A deferred that encapsulates a conditional execution of a block that returns a
+promise. If the condition is met the promise returning block is executed,
+otherwise the deferred is marked as resolved and the block is not executed.</p>
+
+<pre><code>Deferred.ExecuteIf = (flag, callback) -&gt;
+  withDeferrence (deferred) -&gt;
+    if flag
+      callback().then deferred.resolve
+    else
+      deferred.resolve()
+</code></pre>
+
+<p>A touched up version of jQuery's <code>when</code>. Succeeds if all promises succeed, fails
+if any promise fails. Handles jQuery weirdness if only operating on one promise.</p>
+
+<p>TODO: We should think about the case when there are zero promises. Probably
+succeed with an empty array for results.</p>
+
+<pre><code>Deferred.when = (promises) -&gt;
+  $.when.apply(null, promises)
+  .then (results...) -&gt;
+    # WTF: jQuery.when behaves differently for one argument than it does for
+    # two or more.  
+    if promises.length is 1
+      results = [results]
+    else
+      results
+</code></pre>
+</body>
+</html>
