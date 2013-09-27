@@ -6,7 +6,8 @@ require("./source/duct_tape")
 require("./source/deferred")
 
 # Create and auth a github API
-github = require("github")(require("./source/github_auth")())
+# Global until we consolidate editor/actions into something cleaner
+global.github = require("github")(require("./source/github_auth")())
 
 # Load and attach Templates
 templates = (HAMLjr.templates ||= {})
@@ -212,16 +213,6 @@ actions =
         notifications.push "Published!"
 
     .fail classicError
-
-  doc_test: ->
-    documenter = require("md/documenter")(github.markdown)
-
-    documenter.documentAll(PACKAGE)
-    .then (docs) ->
-      repository().commitTree
-        tree: docs
-        baseTree: true
-        branch: repository().publishBranch()
 
 filetree = Filetree()
 filetree.load(files)
