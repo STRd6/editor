@@ -5,7 +5,7 @@ Some dependencies.
     TestRunner = require("test_runner")
     {readSourceConfig} = require("./util")
 
-    documenter = require("md/documenter")(github.markdown)
+    documenter = require("md")
 
 The primary actions of the editor. This should eventually become a mixin.
 
