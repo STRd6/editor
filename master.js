@@ -1,5 +1,5 @@
 (function() {
-  var $root, Actions, Builder, File, Filetree, Issue, Issues, Runner, Runtime, TextEditor, actions, builder, classicError, closeOpenEditors, confirmUnsaved, errors, files, filetree, github, hotReloadCSS, issues, issuesTemplate, notifications, notify, packager, readSourceConfig, repository, rootNode, runtime, templates, _base, _ref, _ref1, _ref2,
+  var $root, Actions, Builder, File, Filetree, Issue, Issues, Runner, Runtime, TextEditor, actions, builder, classicError, closeOpenEditors, confirmUnsaved, errors, files, filetree, hotReloadCSS, issues, issuesTemplate, notifications, notify, packager, readSourceConfig, repository, rootNode, runtime, templates, _base, _ref, _ref1, _ref2,
     __slice = [].slice;
 
   files = PACKAGE.source;
@@ -10,7 +10,7 @@
 
   require("./source/deferred");
 
-  github = require("github")(require("./source/github_auth")());
+  global.github = require("github")(require("./source/github_auth")());
 
   templates = (HAMLjr.templates || (HAMLjr.templates = {}));
 
@@ -115,6 +115,7 @@
       });
     },
     run: function() {
+      notify("Running...");
       return Actions.run({
         builder: builder,
         filetree: filetree
