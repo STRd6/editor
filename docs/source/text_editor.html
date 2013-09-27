@@ -1,0 +1,192 @@
+<html>
+<head>
+<title>source/text_editor</title>
+<style>
+body{
+    margin: 0 auto;
+    font-family: Georgia, Palatino, serif;
+    color: #444444;
+    line-height: 1;
+    max-width: 960px;
+    padding: 30px;
+}
+h1, h2, h3, h4 {
+    color: #111111;
+    font-weight: 400;
+}
+h1, h2, h3, h4, h5, p {
+    margin-bottom: 24px;
+    padding: 0;
+}
+h1 {
+    font-size: 48px;
+}
+h2 {
+    font-size: 36px;
+    /* The bottom margin is small. It's designed to be used with gray meta text
+     * below a post title. */
+    margin: 24px 0 6px;
+}
+h3 {
+    font-size: 24px;
+}
+h4 {
+    font-size: 21px;
+}
+h5 {
+    font-size: 18px;
+}
+a {
+    color: #0099ff;
+    margin: 0;
+    padding: 0;
+    vertical-align: baseline;
+}
+a:hover {
+    text-decoration: none;
+    color: #ff6600;
+}
+a:visited {
+    color: purple;
+}
+ul, ol {
+    padding: 0;
+    margin: 0;
+}
+li {
+    line-height: 24px;
+}
+li ul, li ul {
+    margin-left: 24px;
+}
+p, ul, ol {
+    font-size: 16px;
+    line-height: 24px;
+    max-width: 540px;
+}
+pre {
+    padding: 0px 24px;
+    max-width: 800px;
+    white-space: pre-wrap;
+}
+code {
+    font-family: Consolas, Monaco, Andale Mono, monospace;
+    line-height: 1.5;
+    font-size: 13px;
+}
+aside {
+    display: block;
+    float: right;
+    width: 390px;
+}
+blockquote {
+    border-left:.5em solid #eee;
+    padding: 0 2em;
+    margin-left:0;
+    max-width: 476px;
+}
+blockquote  cite {
+    font-size:14px;
+    line-height:20px;
+    color:#bfbfbf;
+}
+blockquote cite:before {
+    content: '\2014 \00A0';
+}
+
+blockquote p {  
+    color: #666;
+    max-width: 460px;
+}
+hr {
+    width: 540px;
+    text-align: left;
+    margin: 0 auto 0 0;
+    color: #999;
+}
+</style>
+</head>
+<body>
+<p>The <code>TextEditor</code> is a model for editing a text file. Currently it uses the Ace
+editor, but we may switch in the future. All the editor specific things live in
+here.</p>
+
+<pre><code>TextEditor = (I) -&gt;
+  Object.reverseMerge I,
+    mode: "coffee"
+    text: ""
+
+  self = Model(I)
+</code></pre>
+
+<p>We can't use ace on a div not in the DOM so we need to be sure to pass one in.</p>
+
+<pre><code>  el = I.el
+</code></pre>
+
+<p>We can't serialize DOM elements so we need to be sure to delete it.</p>
+
+<pre><code>  delete I.el
+</code></pre>
+
+<p>Here we create and configure the Ace text editor.</p>
+
+<p>TODO: Load these options from a preferences somewhere.</p>
+
+<pre><code>  editor = ace.edit(el)
+  editor.setFontSize("16px")
+  editor.setTheme("ace/theme/chrome")
+  editor.getSession().setUseWorker(false)
+  editor.getSession().setMode("ace/mode/#{I.mode}")
+  editor.getSession().setUseSoftTabs(true)
+  editor.getSession().setTabSize(2)
+</code></pre>
+
+<p><code>reset</code> Sets the content of the editor to the given content and also resets any
+cursor position or selection.</p>
+
+<pre><code>  reset = (content="") -&gt;
+    editor.setValue(content)
+    editor.moveCursorTo(0, 0)
+    editor.session.selection.clearSelection()
+
+  reset(I.text)
+</code></pre>
+
+<p>Our text attribute is observable so clients can track changes.</p>
+
+<pre><code>  self.attrObservable "text"
+</code></pre>
+
+<p>We modify our text by listening to change events from Ace.</p>
+
+<p>TODO: Remove these <code>updating</code> hacks.</p>
+
+<pre><code>  updating = false
+  editor.getSession().on 'change', -&gt;
+    updating = true
+    self.text(editor.getValue())
+    updating = false
+</code></pre>
+
+<p>We also observe any changes to <code>text</code> ourselves to stay up to date with outside
+modifications. Its a bi-directional binding.</p>
+
+<pre><code>  self.text.observe (newValue) -&gt;
+    unless updating
+      reset(newValue)
+</code></pre>
+
+<p>We expose some properties and methods.</p>
+
+<pre><code>  self.extend
+    el: el
+    editor: editor
+    reset: reset
+
+  return self
+
+module.exports = TextEditor
+</code></pre>
+</body>
+</html>
