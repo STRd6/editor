@@ -1,303 +1,286 @@
-<!DOCTYPE html>
-
 <html>
 <head>
-  <title>source/packager</title>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
-  <link rel="stylesheet" media="all" href="http://strd6.github.io/cdn/parallel/docco.css" />
+<title>source/packager</title>
+<style>
+body{
+    margin: 0 auto;
+    font-family: Georgia, Palatino, serif;
+    color: #444444;
+    line-height: 1;
+    max-width: 960px;
+    padding: 30px;
+}
+h1, h2, h3, h4 {
+    color: #111111;
+    font-weight: 400;
+}
+h1, h2, h3, h4, h5, p {
+    margin-bottom: 24px;
+    padding: 0;
+}
+h1 {
+    font-size: 48px;
+}
+h2 {
+    font-size: 36px;
+    /* The bottom margin is small. It's designed to be used with gray meta text
+     * below a post title. */
+    margin: 24px 0 6px;
+}
+h3 {
+    font-size: 24px;
+}
+h4 {
+    font-size: 21px;
+}
+h5 {
+    font-size: 18px;
+}
+a {
+    color: #0099ff;
+    margin: 0;
+    padding: 0;
+    vertical-align: baseline;
+}
+a:hover {
+    text-decoration: none;
+    color: #ff6600;
+}
+a:visited {
+    color: purple;
+}
+ul, ol {
+    padding: 0;
+    margin: 0;
+}
+li {
+    line-height: 24px;
+}
+li ul, li ul {
+    margin-left: 24px;
+}
+p, ul, ol {
+    font-size: 16px;
+    line-height: 24px;
+    max-width: 540px;
+}
+pre {
+    padding: 0px 24px;
+    max-width: 800px;
+    white-space: pre-wrap;
+}
+code {
+    font-family: Consolas, Monaco, Andale Mono, monospace;
+    line-height: 1.5;
+    font-size: 13px;
+}
+aside {
+    display: block;
+    float: right;
+    width: 390px;
+}
+blockquote {
+    border-left:.5em solid #eee;
+    padding: 0 2em;
+    margin-left:0;
+    max-width: 476px;
+}
+blockquote  cite {
+    font-size:14px;
+    line-height:20px;
+    color:#bfbfbf;
+}
+blockquote cite:before {
+    content: '\2014 \00A0';
+}
+
+blockquote p {  
+    color: #666;
+    max-width: 460px;
+}
+hr {
+    width: 540px;
+    text-align: left;
+    margin: 0 auto 0 0;
+    color: #999;
+}
+</style>
 </head>
 <body>
-  <div id="container">
-    <div id="background"></div>
-    <ul class="sections">
-        
-        
-        <li id="section-1">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-1">&#182;</a>
-              </div>
-              <h1 id="packager">Packager</h1>
+<h1>
+<a name="packager" class="anchor" href="#packager"><span class="octicon octicon-link"></span></a>Packager</h1>
 
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">
-</code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-2">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-2">&#182;</a>
-              </div>
-              <p>The main responsibilities will be bundling dependencies, and creating the
+<p>The main responsibilities will be bundling dependencies, and creating the
 package.</p>
 
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">Packager</span></span> = -&gt;
+<pre><code>Packager = -&gt;
   collectDependencies: (dependencies) -&gt;
     names = Object.keys(dependencies)
 
-    Deferred.<span class="keyword">when</span>(names.map (name) -&gt;
+    Deferred.when(names.map (name) -&gt;
       value = dependencies[name]
 
-      <span class="keyword">if</span> <span class="keyword">typeof</span> value <span class="keyword">is</span> <span class="string">"string"</span></code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-3">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-3">&#182;</a>
-              </div>
-              <p>If our string is an absolute URL then we assume that the server is CORS enabled
+      if typeof value is "string"
+</code></pre>
+
+<p>If our string is an absolute URL then we assume that the server is CORS enabled
 and we can make a cross origin request to collect the JSON data.</p>
 
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">        <span class="keyword">if</span> value.startsWith(<span class="string">"http"</span>)
+<pre><code>        if value.startsWith("http")
           $.getJSON(value)
-        <span class="keyword">else</span></code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <p>Handle a Github repo dependency. Something like <code>STRd6/issues:master</code>. This uses
+        else
+</code></pre>
+
+<p>Handle a Github repo dependency. Something like <code>STRd6/issues:master</code>. This uses
 JSONP to load the package from the gh-pages branch of the given repo.</p>
+
 <p><code>STRd6/issues:master</code> will be accessible at <code>http://strd6.github.io/issues/master.jsonp</code>.
-The callback is the same as the repo info string: <code>window[&quot;STRd6/issues:master&quot;](... JSON DATA ...)</code></p>
-<p>Why all the madness? Github pages doesn&#39;t allow CORS right now, so we need to use
-the JSONP hack to work around it. Because the files are static we can&#39;t allow the
+The callback is the same as the repo info string: <code>window["STRd6/issues:master"](... JSON DATA ...)</code></p>
+
+<p>Why all the madness? Github pages doesn't allow CORS right now, so we need to use
+the JSONP hack to work around it. Because the files are static we can't allow the
 server to generate a wrapper in response to our query string param so we need to
 work out a unique one per file ahead of time. The <code>&lt;user&gt;/&lt;repo&gt;:&lt;ref&gt;</code> string is 
 unique for all our packages so we use it to determine the URL and name callback.</p>
 
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">          <span class="keyword">if</span> (match = value.match(<span class="regexp">/([^\/]*)\/([^\:]*)\:(.*)/</span>))
+<pre><code>          if (match = value.match(/([^\/]*)\/([^\:]*)\:(.*)/))
             [callback, user, repo, branch] = match
 
             user = user.toLowerCase()
 
             $.ajax
-              url: <span class="string">"http://<span class="subst">#{user}</span>.github.io/<span class="subst">#{repo}</span>/<span class="subst">#{branch}</span>.jsonp"</span>
-              dataType: <span class="string">"jsonp"</span>
+              url: "http://#{user}.github.io/#{repo}/#{branch}.jsonp"
+              dataType: "jsonp"
               jsonpCallback: callback
-              cache: <span class="literal">true</span>
-          <span class="keyword">else</span>
-            reject <span class="string">"""
-              Failed to parse repository info string <span class="subst">#{value}</span>, be sure it's in the 
+              cache: true
+          else
+            reject """
+              Failed to parse repository info string #{value}, be sure it's in the 
               form `&lt;user&gt;/&lt;repo&gt;:&lt;ref&gt;` for example: `STRd6/issues:master`
               or `STRd6/editor:v0.9.1`
-            """</span>
-      <span class="keyword">else</span>
-        reject <span class="string">"Can only handle url string dependencies right now"</span>
-    ).<span class="keyword">then</span> (results) -&gt;
+            """
+      else
+        reject "Can only handle url string dependencies right now"
+    ).then (results) -&gt;
       bundledDependencies = {}
 
       names.each (name, i) -&gt;
         bundledDependencies[name] = results[i].first()
 
-      <span class="keyword">return</span> bundledDependencies</code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <p>Create the standalone components of this package. An html page that loads the 
+      return bundledDependencies
+</code></pre>
+
+<p>Create the standalone components of this package. An html page that loads the 
 main entry point for demonstration purposes and a json package that can be
 used as a dependency in other packages.</p>
 
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">  standAlone: (pkg) -&gt;
+<pre><code>  standAlone: (pkg) -&gt;
     {source, distribution, entryPoint} = pkg
 
-    html = <span class="string">"""
+    html = """
       &lt;!doctype html&gt;
       &lt;head&gt;
       &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
-      <span class="subst">#{dependencyScripts(pkg.remoteDependencies)}</span>
+      #{dependencyScripts(pkg.remoteDependencies)}
       &lt;/head&gt;
       &lt;body&gt;
       &lt;script&gt;
-      <span class="subst">#{packageWrapper(pkg, "require('./#{entryPoint}</span>')")}
+      #{packageWrapper(pkg, "require('./#{entryPoint}')")}
       &lt;\/script&gt;
       &lt;/body&gt;
       &lt;/html&gt;
-    """</span>
+    """
 
-    json = JSON.stringify(pkg, <span class="literal">null</span>, <span class="number">2</span>)
+    json = JSON.stringify(pkg, null, 2)
 
     html: html
     js: program(pkg)
     json: json
-    jsonp: jsonpWrapper(pkg.repository, json)</code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <p>Generates a standalone page for testing the app.</p>
+    jsonp: jsonpWrapper(pkg.repository, json)
+</code></pre>
 
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">  testScripts: (pkg) -&gt;
+<p>Generates a standalone page for testing the app.</p>
+
+<pre><code>  testScripts: (pkg) -&gt;
     {distribution} = pkg
 
     testProgram = Object.keys(distribution).select (path) -&gt;
-      path.match <span class="regexp">/test\//</span>
+      path.match /test\//
     .map (testPath) -&gt;
-      <span class="string">"require('./<span class="subst">#{testPath}</span>')"</span>
-    .join <span class="string">"\n"</span>
+      "require('./#{testPath}')"
+    .join "\n"
 
-    <span class="string">"""
-      <span class="subst">#{dependencyScripts(pkg.remoteDependencies)}</span>
+    """
+      #{dependencyScripts(pkg.remoteDependencies)}
       &lt;script&gt;
-        <span class="subst">#{packageWrapper(pkg, testProgram)}</span>
+        #{packageWrapper(pkg, testProgram)}
       &lt;\/script&gt;
-    """</span>
+    """
 
-module.exports = Packager</code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <h2 id="helpers">Helpers</h2>
-
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">
+module.exports = Packager
 </code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <p>Create a rejected deferred with the given message.</p>
 
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">reject</span></span> = (message) -&gt;
-  Deferred().reject([message])</code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-9">&#182;</a>
-              </div>
-              <p><code>makeScript</code> returns a string representation of a script tag. Don&#39;t use this
+<h2>
+<a name="helpers" class="anchor" href="#helpers"><span class="octicon octicon-link"></span></a>Helpers</h2>
+
+<p>Create a rejected deferred with the given message.</p>
+
+<pre><code>reject = (message) -&gt;
+  Deferred().reject([message])
+</code></pre>
+
+<p><code>makeScript</code> returns a string representation of a script tag. Don't use this
 with tons of stuff stuck inside as html, it gets messed up. Using with src is
 fine though.</p>
 
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">makeScript</span></span> = (attrs) -&gt;
-  $(<span class="string">"&lt;script&gt;"</span>, attrs).prop(<span class="string">'outerHTML'</span>)</code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-10">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <p><code>dependencyScripts</code> returns a string containing the script tags that are
+<pre><code>makeScript = (attrs) -&gt;
+  $("&lt;script&gt;", attrs).prop('outerHTML')
+</code></pre>
+
+<p><code>dependencyScripts</code> returns a string containing the script tags that are
 the dependencies of this build.</p>
 
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">dependencyScripts</span></span> = (remoteDependencies=[]) -&gt;
+<pre><code>dependencyScripts = (remoteDependencies=[]) -&gt;
   remoteDependencies.map (src) -&gt;
     makeScript
-      class: <span class="string">"env"</span>
+      class: "env"
       src: src
 
-  .join(<span class="string">"\n"</span>)</code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-11">&#182;</a>
-              </div>
-              <p>A standalone JS program for the package. Does not use <code>require</code> and is only
+  .join("\n")
+</code></pre>
+
+<p>A standalone JS program for the package. Does not use <code>require</code> and is only
 suitable for script style dependencies.</p>
 
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">program</span></span> = ({distribution, entryPoint}) -&gt;
-  <span class="keyword">if</span> main = distribution[entryPoint]
-    <span class="keyword">return</span> main.content
-  <span class="keyword">else</span>
-    <span class="comment"># TODO: We should emit some kind of user-visible warning</span>
-    console.warn <span class="string">"Entry point <span class="subst">#{entryPoint}</span> not found."</span>
+<pre><code>program = ({distribution, entryPoint}) -&gt;
+  if main = distribution[entryPoint]
+    return main.content
+  else
+    # TODO: We should emit some kind of user-visible warning
+    console.warn "Entry point #{entryPoint} not found."
 
-    <span class="keyword">return</span> <span class="string">""</span></code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-12">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-12">&#182;</a>
-              </div>
-              <p>Wraps the given data in a JSONP function wrapper. This allows us to host our
+    return ""
+</code></pre>
+
+<p>Wraps the given data in a JSONP function wrapper. This allows us to host our
 packages on Github pages and get around any same origin issues by using JSONP.</p>
 
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">jsonpWrapper</span></span> = (repository, data) -&gt;
-  <span class="string">"""
-    window["<span class="subst">#{repository.full_name}</span>:<span class="subst">#{repository.branch}</span>"](<span class="subst">#{data}</span>);
-  """</span></code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-13">&#182;</a>
-              </div>
-              <p>Wrap code in a closure that provides the package and a require function. This
+<pre><code>jsonpWrapper = (repository, data) -&gt;
+  """
+    window["#{repository.full_name}:#{repository.branch}"](#{data});
+  """
+</code></pre>
+
+<p>Wrap code in a closure that provides the package and a require function. This
 can be used for generating standalone HTML pages, scripts, and tests.</p>
 
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">packageWrapper</span></span> = (pkg, code) -&gt;
-  <span class="string">"""
+<pre><code>packageWrapper = (pkg, code) -&gt;
+  """
     ;(function(PACKAGE) {
     var require = Require.generateFor(PACKAGE);
-    <span class="subst">#{code}</span>
-    })(<span class="subst">#{JSON.stringify(pkg, <span class="literal">null</span>, <span class="number">2</span>)}</span>);
-  """</span></code></pre>
-</div>
-        </li>
-        
-    </ul>
-  </div>
-  
+    #{code}
+    })(#{JSON.stringify(pkg, null, 2)});
+  """
+</code></pre>
 </body>
 </html>
