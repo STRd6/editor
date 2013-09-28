@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>source/actions</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="http://strd6.github.io/cdn/parallel/docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    <ul class="sections">
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>Some dependencies.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">packager = require(<span class="string">"./packager"</span>)()
+Runner = require(<span class="string">"./runner"</span>)
+TestRunner = require(<span class="string">"test_runner"</span>)
+{readSourceConfig} = require(<span class="string">"./util"</span>)
+
+documenter = require(<span class="string">"md"</span>)</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>The primary actions of the editor. This should eventually become a mixin.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">publish</span></span> = ({builder, fileData, repository}) -&gt;
+  builder.build(fileData)
+  .<span class="keyword">then</span> (pkg) -&gt;
+    repository.publish(packager.standAlone(pkg))
+    .<span class="keyword">then</span> -&gt; <span class="comment"># Can't outdent because we need `pkg`</span>
+      documenter.documentAll(pkg)
+    .<span class="keyword">then</span> (docs) -&gt;
+      repository.commitTree
+        tree: docs
+        baseTree: <span class="literal">true</span>
+        branch: repository.publishBranch()
+
+<span class="function"><span class="title">commit</span></span> = ({fileData, repository, message}) -&gt;
+  repository.commitTree
+    tree: fileData
+    message: message
+
+Actions =
+  run: ({builder, filetree}) -&gt;
+    sandbox = Runner.run
+      config: readSourceConfig(PACKAGE)
+
+    builder.build(filetree.data())
+    .<span class="keyword">then</span> (pkg) -&gt;
+      packager.standAlone pkg
+    .<span class="keyword">then</span> ({html}) -&gt;
+      sandbox.document.open()
+      sandbox.document.write(html)
+      sandbox.document.close()
+
+  save: (params) -&gt;
+    commit(params)
+    .<span class="keyword">then</span> -&gt;
+      publish(params)        
+
+  test: ({builder, filetree}) -&gt;
+    sandbox = Runner.run
+      config: readSourceConfig(PACKAGE)
+
+    builder.build(filetree.data())
+    .<span class="keyword">then</span> (pkg) -&gt;
+      packager.testScripts(pkg)
+    .<span class="keyword">then</span> (testScripts) -&gt;
+      html = TestRunner.html(testScripts)
+      sandbox.document.open()
+      sandbox.document.write(html)
+      sandbox.document.close()
+
+  load: ({filetree, repository}) -&gt;
+    <span class="comment"># Decode all content in place</span>
+    <span class="function"><span class="title">processDirectory</span></span> = (items) -&gt;
+      items.each (item) -&gt;
+        <span class="keyword">return</span> item <span class="keyword">unless</span> item.content
+
+        item.content = Base64.decode(item.content)
+        item.encoding = <span class="string">"raw"</span>
+
+    repository.latestContent()
+    .<span class="keyword">then</span> (results) -&gt;
+      files = processDirectory results
+      filetree.load files
+
+module.exports = Actions</code></pre>
+</div>
+        </li>
+        
+    </ul>
+  </div>
+  
+</body>
+</html>
