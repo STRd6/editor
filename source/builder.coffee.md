@@ -47,7 +47,7 @@ string data it returns the string for you to use in your code. This is handy for
 CSS or other textually based data.
 
     stringData = (source) ->
-      "module.exports = #{JSON.stringify(source)}"
+      "module.exports = #{JSON.stringify(source)};"
 
 `compileStyl` compiles a styl file into CSS and makes it available as a string
 export.
@@ -69,6 +69,10 @@ TODO: Allow for files to generate docs and code at the same time.
         switch extension
           when "js"
             code: content
+          when "json"
+            code: stringData(JSON.parse(content))
+          when "cson"
+            code: stringData(CSON.parse(content))
           when "coffee"
             code: CoffeeScript.compile(content)
           when "haml"
