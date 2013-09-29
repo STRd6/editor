@@ -42,7 +42,7 @@ The primary actions of the editor. This should eventually become a mixin.
       save: (params) ->
         commit(params)
         .then ->
-          publish(params)        
+          publish(params)
 
       test: ({builder, filetree}) ->
         sandbox = Runner.run
@@ -62,10 +62,10 @@ The primary actions of the editor. This should eventually become a mixin.
         processDirectory = (items) ->
           items.each (item) ->
             return item unless item.content
-    
+
             item.content = Base64.decode(item.content)
             item.encoding = "raw"
-    
+
         repository.latestContent()
         .then (results) ->
           files = processDirectory results

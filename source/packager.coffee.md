@@ -29,14 +29,14 @@ The callback is the same as the repo info string: `window["STRd6/issues:master"]
 Why all the madness? Github pages doesn't allow CORS right now, so we need to use
 the JSONP hack to work around it. Because the files are static we can't allow the
 server to generate a wrapper in response to our query string param so we need to
-work out a unique one per file ahead of time. The `<user>/<repo>:<ref>` string is 
+work out a unique one per file ahead of time. The `<user>/<repo>:<ref>` string is
 unique for all our packages so we use it to determine the URL and name callback.
 
               if (match = value.match(/([^\/]*)\/([^\:]*)\:(.*)/))
                 [callback, user, repo, branch] = match
-                
+
                 user = user.toLowerCase()
-                
+
                 $.ajax
                   url: "http://#{user}.github.io/#{repo}/#{branch}.jsonp"
                   dataType: "jsonp"
@@ -44,7 +44,7 @@ unique for all our packages so we use it to determine the URL and name callback.
                   cache: true
               else
                 reject """
-                  Failed to parse repository info string #{value}, be sure it's in the 
+                  Failed to parse repository info string #{value}, be sure it's in the
                   form `<user>/<repo>:<ref>` for example: `STRd6/issues:master`
                   or `STRd6/editor:v0.9.1`
                 """
@@ -58,7 +58,7 @@ unique for all our packages so we use it to determine the URL and name callback.
 
           return bundledDependencies
 
-Create the standalone components of this package. An html page that loads the 
+Create the standalone components of this package. An html page that loads the
 main entry point for demonstration purposes and a json package that can be
 used as a dependency in other packages.
 
@@ -96,7 +96,7 @@ Generates a standalone page for testing the app.
         .map (testPath) ->
           "require('./#{testPath}')"
         .join "\n"
-        
+
         """
           #{dependencyScripts(pkg.remoteDependencies)}
           <script>
@@ -141,7 +141,7 @@ suitable for script style dependencies.
       else
         # TODO: We should emit some kind of user-visible warning
         console.warn "Entry point #{entryPoint} not found."
-        
+
         return ""
 
 Wraps the given data in a JSONP function wrapper. This allows us to host our

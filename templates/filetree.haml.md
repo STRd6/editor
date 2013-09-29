@@ -5,7 +5,7 @@ Render a list of files as a filetree.
       - files = @files
       - each files, (file) ->
         %li= file.displayName
-          - on "click", (e) -> 
+          - on "click", (e) ->
             - selectedFile(file) if $(e.target).is('li')
           .delete
             - on "click", -> files.remove(file) if confirm("Delete #{file.path()}?")
