@@ -31,6 +31,7 @@ Runtime = require("./source/runtime")
 Filetree = require("./source/filetree")
 File = require("./source/file")
 TextEditor = require("./source/text_editor")
+Hygiene = require "hygiene"
 
 {readSourceConfig} = require("./source/util")
 packager = require("./source/packager")()
@@ -226,6 +227,9 @@ filetree.selectedFile.observe (file) ->
   else
     root.append(HAMLjr.render "text_editor")
     file.editor = root.find(".editor-wrap").last()
+    
+    if file.path().extension() is "md"
+      file.content Hygiene.clean file.content()
     
     editor = TextEditor
       text: file.content()
