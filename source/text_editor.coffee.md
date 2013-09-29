@@ -36,7 +36,7 @@ cursor position or selection.
         editor.setValue(content)
         editor.moveCursorTo(0, 0)
         editor.session.selection.clearSelection()
-
+    
       reset(I.text)
 
 Our text attribute is observable so clients can track changes.
@@ -66,7 +66,7 @@ We expose some properties and methods.
         el: el
         editor: editor
         reset: reset
-
+    
       return self
 
     module.exports = TextEditor

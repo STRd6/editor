@@ -10,13 +10,13 @@ code block.
 
     withDeferrence = (fn) ->
       deferred = Deferred()
-
+    
       # TODO: This try catch may be useless from deferring the fn
       try
         fn.defer(deferred)
       catch e
         deferred.reject(e)
-
+    
       return deferred.promise()
 
 A deferred encapsulating a confirm dialog.
@@ -59,7 +59,7 @@ succeed with an empty array for results.
       $.when.apply(null, promises)
       .then (results...) ->
         # WTF: jQuery.when behaves differently for one argument than it does for
-        # two or more.
+        # two or more.  
         if promises.length is 1
           results = [results]
         else

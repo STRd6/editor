@@ -64,7 +64,7 @@ TODO: Allow for files to generate docs and code at the same time.
 
     compileFile = ({path, content}) ->
       [name, extension] = [path.withoutExtension(), path.extension()]
-
+      
       result =
         switch extension
           when "js"
@@ -88,7 +88,7 @@ TODO: Allow for files to generate docs and code at the same time.
               content: stripMarkdown(content)
           else
             {}
-
+    
       Object.defaults result,
         name: name
         extension: extension
@@ -109,49 +109,35 @@ TODO: Allow configuration of builder instances, adding additional compilers,
 postprocessors, etc.
 
     Builder = ->
-      build = (fileData) ->
+      build = (fileData) ->    
         results = fileData.map ({path, content}) ->
           try
             # TODO: Separate out tests
-
+    
             compileFile
               path: path
               content: content
           catch {location, message}
             if location?
               message = "Error on line #{location.first_line + 1}: #{message}"
-
+    
             error: "#{path} - #{message}"
-
+            
         [errors, data] = results.partition (result) -> result.error
-
+        
         if errors.length
           Deferred().reject(errors.map (e) -> e.error)
         else
           Deferred().resolve(data)
-
-Pre processors operate on source `fileData` objects.
-
-      preProcessors = []
-
-      preprocess = (fileData) ->
-        fileData.map (fileDatum) ->
-          preProcessors.each (fn) ->
-            fn(fileDatum)
-
-          fileDatum
 
 Post processors operate on the built package.
 
 TODO: Maybe we should split post processors into the packager.
 
       postProcessors = []
-
+      
       addPostProcessor: (fn) ->
         postProcessors.push fn
-
-      addPreProcessor: (fn) ->
-        preProcessors.push fn
 
 Compile and build a tree of file data into a distribution. The distribution should
 include source files, compiled files, and documentation.
@@ -171,13 +157,13 @@ include source files, compiled files, and documentation.
             path: item.name
             content: item.code
             type: "blob"
-
+      
           # TODO: We should be able to put a lot of this into postProcessors
-
-          source = arrayToHash(preprocess(fileData))
+      
+          source = arrayToHash(fileData)
 
           config = readSourceConfig(source: source)
-
+          
           # TODO: Robustify bundled dependencies
           # Right now we're always loading them from remote urls during the
           # build step. The default http caching is probably fine to speed this
@@ -185,7 +171,7 @@ include source files, compiled files, and documentation.
           # in addition to using the package's existing dependencies rather
           # than always updating
           dependencies = config.dependencies or {}
-
+          
           packager.collectDependencies(dependencies)
           .then (bundledDependencies) ->
             postProcessors.pipeline

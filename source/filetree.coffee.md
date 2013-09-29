@@ -5,16 +5,16 @@ The `Filetree` model represents a tree of files.
     Filetree = (I={}) ->
       Object.defaults I,
         files: []
-
+    
       self = Model(I).observeAll()
 
 The `selectedFile` observable keeps people up to date on what file has been
 selected.
 
       self.attrObservable "selectedFile"
-
+    
       self.extend
-
+        
 Load files either from an array of file data objects or from an object with
 paths as keys and file data objects as values.
 
@@ -33,11 +33,11 @@ observable.
               else
                 0
             .map File
-
+    
           else
             files = Object.keys(fileData).sort().map (path) ->
               File fileData[path]
-
+    
           self.files(files)
 
 The `data` method returns an array of file data objects that is compatible with
@@ -68,7 +68,7 @@ TODO: Use git trees and content shas to robustly manage changed state.
         markSaved: ->
           self.files().each (file) ->
             file.modified(false)
-
+    
       return self
 
 Export

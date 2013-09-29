@@ -4,15 +4,15 @@ returned from the Github API.
     File = (I={}) ->
       I.path ?= I.filename
       I.filename ?= I.path.split("/").last()
-
+    
       self = Model(I).observeAll()
-
+    
       self.extend
-
+      
 The extension is the last part of the filename after the `.`, for example
 `"coffee"` for a file named `"main.coffee"` or `"haml"` for a file named
 `"filetree.haml"`.
-
+      
         extension: ->
           self.filename().extension()
 
@@ -54,7 +54,7 @@ indication.
           self.displayName("*#{self.path()}")
         else
           self.displayName(self.path())
-
+    
       return self
 
 Export
