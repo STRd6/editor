@@ -31,6 +31,7 @@ Runtime = require("./source/runtime")
 Filetree = require("./source/filetree")
 File = require("./source/file")
 TextEditor = require("./source/text_editor")
+Hygiene = require "hygiene"
 
 {readSourceConfig} = require("./source/util")
 packager = require("./source/packager")()
@@ -85,6 +86,9 @@ builder.addPostProcessor (pkg) ->
     url: "http://strd6.github.io/editor/"
 
   pkg
+  
+builder.addPreProcessor (fileDatum) ->
+  fileDatum.content = Hygiene.clean fileDatum.content
 
 closeOpenEditors = ->
   root = $root.children(".main")

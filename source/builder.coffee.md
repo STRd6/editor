@@ -129,11 +129,29 @@ postprocessors, etc.
           Deferred().reject(errors.map (e) -> e.error)
         else
           Deferred().resolve(data)
-    
+
+Pre processors operate on source `fileData` objects.
+
+      preProcessors = []
+
+      preprocess = (fileData) ->
+        fileData.map (fileDatum) ->
+          preProcessors.each (fn) ->
+            fn(fileDatum)
+
+          fileDatum
+
+Post processors operate on the built package.
+
+TODO: Maybe we should split post processors into the packager.
+
       postProcessors = []
       
       addPostProcessor: (fn) ->
         postProcessors.push fn
+
+      addPreProcessor: (fn) ->
+        preProcessors.push fn
 
 Compile and build a tree of file data into a distribution. The distribution should
 include source files, compiled files, and documentation.
@@ -156,8 +174,8 @@ include source files, compiled files, and documentation.
       
           # TODO: We should be able to put a lot of this into postProcessors
       
-          source = arrayToHash(fileData)
-      
+          source = arrayToHash(preprocess(fileData))
+
           config = readSourceConfig(source: source)
           
           # TODO: Robustify bundled dependencies
