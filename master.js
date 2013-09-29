@@ -1,5 +1,5 @@
 (function() {
-  var $root, Actions, Builder, File, Filetree, Issue, Issues, Runner, Runtime, TextEditor, actions, builder, classicError, closeOpenEditors, confirmUnsaved, errors, files, filetree, hotReloadCSS, issues, issuesTemplate, notifications, notify, packager, readSourceConfig, repository, rootNode, runtime, templates, _base, _ref, _ref1, _ref2,
+  var $root, Actions, Builder, File, Filetree, Hygiene, Issue, Issues, Runner, Runtime, TextEditor, actions, builder, classicError, closeOpenEditors, confirmUnsaved, errors, files, filetree, hotReloadCSS, issues, issuesTemplate, notifications, notify, packager, readSourceConfig, repository, rootNode, runtime, templates, _base, _ref, _ref1, _ref2,
     __slice = [].slice;
 
   files = PACKAGE.source;
@@ -35,6 +35,8 @@
   File = require("./source/file");
 
   TextEditor = require("./source/text_editor");
+
+  Hygiene = require("hygiene");
 
   readSourceConfig = require("./source/util").readSourceConfig;
 
@@ -228,6 +230,9 @@
     } else {
       root.append(HAMLjr.render("text_editor"));
       file.editor = root.find(".editor-wrap").last();
+      if (file.path().extension() === "md") {
+        file.content(Hygiene.clean(file.content()));
+      }
       editor = TextEditor({
         text: file.content(),
         el: file.editor.find('.editor').get(0),
