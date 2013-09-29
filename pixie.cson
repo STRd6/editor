@@ -7,7 +7,7 @@ remoteDependencies: [
   "//code.jquery.com/jquery-1.10.1.min.js"
   "//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"
   "http://strd6.github.io/tempest/javascripts/envweb.js"
-  "http://strd6.github.io/require/v0.2.0-alpha.0.js"
+  "http://strd6.github.io/require/v0.2.0-alpha.1.js"
 ]
 dependencies:
   issues: "STRd6/issues:master"
