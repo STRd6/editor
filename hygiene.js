@@ -94,11 +94,6 @@
     return pkg;
   });
 
-  builder.addPreProcessor(function(fileDatum) {
-    console.log(fileDatum);
-    return fileDatum.content = Hygiene.clean(fileDatum.content);
-  });
-
   closeOpenEditors = function() {
     var root;
     root = $root.children(".main");
@@ -235,6 +230,9 @@
     } else {
       root.append(HAMLjr.render("text_editor"));
       file.editor = root.find(".editor-wrap").last();
+      if (file.path().extension() === "md") {
+        file.content(Hygiene.clean(file.content()));
+      }
       editor = TextEditor({
         text: file.content(),
         el: file.editor.find('.editor').get(0),
