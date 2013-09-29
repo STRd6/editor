@@ -16,7 +16,7 @@
     "pixie.cson": {
       "path": "pixie.cson",
       "mode": "100644",
-      "content": "version: \"0.2.0\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/master.js\"\n]\ndependencies:\n  issues: \"STRd6/issues:master\"\n  test_runner: \"STRd6/tests:master\"\n  sandbox: \"STRd6/sandbox:master\"\n  notifications: \"STRd6/notifications:master\"\n  md: \"STRd6/md:v0.2.0\"\n  github: \"STRd6/github:v0.2.2\"\n",
+      "content": "version: \"0.2.0\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/v0.2.0.js\"\n]\ndependencies:\n  issues: \"STRd6/issues:master\"\n  test_runner: \"STRd6/tests:master\"\n  sandbox: \"STRd6/sandbox:master\"\n  notifications: \"STRd6/notifications:master\"\n  md: \"STRd6/md:v0.2.0\"\n  github: \"STRd6/github:v0.2.2\"\n",
       "type": "blob"
     },
     "source/actions.coffee.md": {
@@ -160,7 +160,7 @@
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.2.0\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"//code.jquery.com/jquery-1.10.1.min.js\",\"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\",\"http://strd6.github.io/tempest/javascripts/envweb.js\",\"http://strd6.github.io/require/master.js\"],\"dependencies\":{\"issues\":\"STRd6/issues:master\",\"test_runner\":\"STRd6/tests:master\",\"sandbox\":\"STRd6/sandbox:master\",\"notifications\":\"STRd6/notifications:master\",\"md\":\"STRd6/md:v0.2.0\",\"github\":\"STRd6/github:v0.2.2\"}};",
+      "content": "module.exports = {\"version\":\"0.2.0\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"//code.jquery.com/jquery-1.10.1.min.js\",\"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\",\"http://strd6.github.io/tempest/javascripts/envweb.js\",\"http://strd6.github.io/require/v0.2.0.js\"],\"dependencies\":{\"issues\":\"STRd6/issues:master\",\"test_runner\":\"STRd6/tests:master\",\"sandbox\":\"STRd6/sandbox:master\",\"notifications\":\"STRd6/notifications:master\",\"md\":\"STRd6/md:v0.2.0\",\"github\":\"STRd6/github:v0.2.2\"}};",
       "type": "blob"
     },
     "source/actions": {
@@ -1577,7 +1577,7 @@
     "//code.jquery.com/jquery-1.10.1.min.js",
     "//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js",
     "http://strd6.github.io/tempest/javascripts/envweb.js",
-    "http://strd6.github.io/require/master.js"
+    "http://strd6.github.io/require/v0.2.0.js"
   ],
   "repository": {
     "id": 12478000,
@@ -1641,24 +1641,24 @@
     "notifications_url": "https://api.github.com/repos/STRd6/editor/notifications{?since,all,participating}",
     "labels_url": "https://api.github.com/repos/STRd6/editor/labels{/name}",
     "created_at": "2013-08-30T04:27:41Z",
-    "updated_at": "2013-09-27T00:20:52Z",
-    "pushed_at": "2013-09-27T00:20:52Z",
+    "updated_at": "2013-09-29T20:38:32Z",
+    "pushed_at": "2013-09-29T20:38:32Z",
     "git_url": "git://github.com/STRd6/editor.git",
     "ssh_url": "git@github.com:STRd6/editor.git",
     "clone_url": "https://github.com/STRd6/editor.git",
     "svn_url": "https://github.com/STRd6/editor",
     "homepage": "strd6.github.io/editor",
-    "size": 2581,
+    "size": 3296,
     "watchers_count": 1,
     "language": "CoffeeScript",
     "has_issues": true,
     "has_downloads": true,
     "has_wiki": true,
-    "forks_count": 1,
+    "forks_count": 2,
     "mirror_url": null,
-    "open_issues_count": 14,
-    "forks": 1,
-    "open_issues": 14,
+    "open_issues_count": 13,
+    "forks": 2,
+    "open_issues": 13,
     "watchers": 1,
     "master_branch": "master",
     "default_branch": "master",
@@ -1667,7 +1667,7 @@
       "push": true,
       "pull": true
     },
-    "network_count": 1,
+    "network_count": 2,
     "branch": "master",
     "defaultBranch": "master",
     "includedModules": [
