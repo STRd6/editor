@@ -95,6 +95,7 @@
   });
 
   builder.addPreProcessor(function(fileDatum) {
+    console.log(fileDatum);
     return fileDatum.content = Hygiene.clean(fileDatum.content);
   });
 
