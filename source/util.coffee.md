@@ -15,4 +15,11 @@ Read the config for the package from the package source.
         else
           {}
 
+`arrayToHash` converts an array of fileData objects into an object where each
+file's path is a key and the fileData is the object.
+
+      arrayToHash: (array) ->
+        array.eachWithObject {}, (file, hash) ->
+          hash[file.path] = file
+
     module.exports = Util

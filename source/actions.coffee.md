@@ -3,7 +3,7 @@ Some dependencies.
     packager = require("./packager")()
     Runner = require("./runner")
     TestRunner = require("test_runner")
-    {readSourceConfig} = require("./util")
+    {readSourceConfig, arrayToHash} = require("./util")
 
     documenter = require("md")
 
@@ -28,10 +28,12 @@ The primary actions of the editor. This should eventually become a mixin.
 
     Actions =
       run: ({builder, filetree}) ->
-        sandbox = Runner.run
-          config: readSourceConfig(PACKAGE)
+        data = filetree.data()
 
-        builder.build(filetree.data())
+        sandbox = Runner.run
+          config: readSourceConfig(source: arrayToHash(data))
+
+        builder.build(data)
         .then (pkg) ->
           packager.standAlone pkg
         .then ({html}) ->
@@ -42,7 +44,7 @@ The primary actions of the editor. This should eventually become a mixin.
       save: (params) ->
         commit(params)
         .then ->
-          publish(params)        
+          publish(params)
 
       test: ({builder, filetree}) ->
         sandbox = Runner.run
@@ -62,10 +64,10 @@ The primary actions of the editor. This should eventually become a mixin.
         processDirectory = (items) ->
           items.each (item) ->
             return item unless item.content
-    
+
             item.content = Base64.decode(item.content)
             item.encoding = "raw"
-    
+
         repository.latestContent()
         .then (results) ->
           files = processDirectory results
