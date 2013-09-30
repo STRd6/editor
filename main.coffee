@@ -27,11 +27,12 @@ templates = (HAMLjr.templates ||= {})
 Actions = require("./source/actions")
 Builder = require("./source/builder")
 Runner = require("./source/runner")
-Runtime = require("./source/runtime")
 Filetree = require("./source/filetree")
 File = require("./source/file")
 TextEditor = require("./source/text_editor")
+
 Hygiene = require "hygiene"
+Runtime = require "runtime"
 
 {readSourceConfig} = require("./source/util")
 packager = require("./source/packager")()
@@ -44,8 +45,7 @@ templates.notifications = notifications.template
 runtime = Runtime(PACKAGE)
 rootNode = runtime.boot()
 
-try
-  runtime.applyStyleSheet(rootNode, '/style')
+runtime.applyStyleSheet(require('./style'))
 
 $root = $(rootNode)
 
