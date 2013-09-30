@@ -28,8 +28,6 @@
 
   Runner = require("./source/runner");
 
-  Runtime = require("./source/runtime");
-
   Filetree = require("./source/filetree");
 
   File = require("./source/file");
@@ -37,6 +35,8 @@
   TextEditor = require("./source/text_editor");
 
   Hygiene = require("hygiene");
+
+  Runtime = require("runtime");
 
   readSourceConfig = require("./source/util").readSourceConfig;
 
@@ -52,9 +52,7 @@
 
   rootNode = runtime.boot();
 
-  try {
-    runtime.applyStyleSheet(rootNode, '/style');
-  } catch (_error) {}
+  runtime.applyStyleSheet(require('./style'));
 
   $root = $(rootNode);
 
