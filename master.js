@@ -1,5 +1,5 @@
 (function() {
-  var $root, Actions, Builder, File, Filetree, Hygiene, Issue, Issues, Packager, Runner, Runtime, TextEditor, actions, builder, classicError, closeOpenEditors, confirmUnsaved, errors, files, filetree, hotReloadCSS, issues, issuesTemplate, notifications, notify, readSourceConfig, repository, rootNode, runtime, templates, _base, _ref, _ref1, _ref2,
+  var $root, Actions, Builder, File, Filetree, Hygiene, Issue, Issues, Packager, Runner, Runtime, TextEditor, actions, builder, classicError, closeOpenEditors, confirmUnsaved, errors, files, filetree, filetreeTemplate, hotReloadCSS, issues, issuesTemplate, notifications, notify, readSourceConfig, repository, rootNode, runtime, templates, _base, _ref, _ref1, _ref2, _ref3,
     __slice = [].slice;
 
   files = PACKAGE.source;
@@ -10,11 +10,13 @@
 
   require("./source/deferred");
 
+  global.PACKAGE = PACKAGE;
+
   global.github = require("github")(require("./source/github_auth")());
 
   templates = (HAMLjr.templates || (HAMLjr.templates = {}));
 
-  ["actions", "editor", "filetree", "github_status", "text_editor", "repo_info"].each(function(name) {
+  ["actions", "editor", "github_status", "text_editor", "repo_info"].each(function(name) {
     var template;
     template = require("./templates/" + name);
     if (typeof template === "function") {
@@ -28,11 +30,11 @@
 
   Runner = require("./source/runner");
 
-  Filetree = require("./source/filetree");
-
-  File = require("./source/file");
-
   TextEditor = require("./source/text_editor");
+
+  _ref = require("filetree"), Filetree = _ref.Filetree, File = _ref.File, filetreeTemplate = _ref.template;
+
+  templates["filetree"] = filetreeTemplate;
 
   Hygiene = require("hygiene");
 
@@ -56,7 +58,7 @@
 
   $root = $(rootNode);
 
-  _ref = require("issues"), (_ref1 = _ref.models, Issue = _ref1.Issue, Issues = _ref1.Issues), (_ref2 = _ref.templates, issuesTemplate = _ref2.issues);
+  _ref1 = require("issues"), (_ref2 = _ref1.models, Issue = _ref2.Issue, Issues = _ref2.Issues), (_ref3 = _ref1.templates, issuesTemplate = _ref3.issues);
 
   templates["issues"] = issuesTemplate;
 
@@ -132,7 +134,7 @@
       var file, name;
       if (name = prompt("File Name", "newfile.coffee")) {
         file = File({
-          filename: name,
+          path: name,
           content: ""
         });
         filetree.files.push(file);
