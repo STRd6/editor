@@ -1,5 +1,5 @@
 (function() {
-  var $root, Actions, Builder, File, Filetree, Hygiene, Issue, Issues, Runner, Runtime, TextEditor, actions, builder, classicError, closeOpenEditors, confirmUnsaved, errors, files, filetree, hotReloadCSS, issues, issuesTemplate, notifications, notify, packager, readSourceConfig, repository, rootNode, runtime, templates, _base, _ref, _ref1, _ref2,
+  var $root, Actions, Builder, File, Filetree, Hygiene, Issue, Issues, Packager, Runner, Runtime, TextEditor, actions, builder, classicError, closeOpenEditors, confirmUnsaved, errors, files, filetree, hotReloadCSS, issues, issuesTemplate, notifications, notify, readSourceConfig, repository, rootNode, runtime, templates, _base, _ref, _ref1, _ref2,
     __slice = [].slice;
 
   files = PACKAGE.source;
@@ -38,9 +38,9 @@
 
   Runtime = require("runtime");
 
-  readSourceConfig = require("./source/util").readSourceConfig;
+  Packager = require("packager");
 
-  packager = require("./source/packager")();
+  readSourceConfig = require("./source/util").readSourceConfig;
 
   notifications = require("notifications")();
 
@@ -207,7 +207,7 @@
         }).then(function() {
           notifications.push("\nPublishing...");
           pkg.repository.branch = version;
-          return repository().publish(packager.standAlone(pkg), version);
+          return repository().publish(Packager.standAlone(pkg), version);
         }).then(function() {
           return notifications.push("Published!");
         });
