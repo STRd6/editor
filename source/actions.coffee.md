@@ -60,8 +60,6 @@ The primary actions of the editor. This should eventually become a mixin.
             /index\.html$/.test doc.path
           .first()
 
-          console.log docs, index
-
           sandbox.document.open()
           sandbox.document.write(index?.content)
           sandbox.document.close()
