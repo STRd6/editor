@@ -57,7 +57,7 @@ describe <span class="string">"Util"</span>, -&gt;
     "pixie.cson": {
       "path": "pixie.cson",
       "mode": "100644",
-      "content": "version: \"0.2.0\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/v0.2.1.js\"\n]\ndependencies:\n  issues: \"STRd6/issues:master\"\n  test_runner: \"STRd6/tests:master\"\n  sandbox: \"STRd6/sandbox:master\"\n  notifications: \"STRd6/notifications:master\"\n  md: \"STRd6/md:v0.2.0\"\n  github: \"STRd6/github:v0.2.2\"\n  hygiene: \"STRd6/hygiene:v0.1.0\"\n  runtime: \"STRd6/runtime:v0.1.1\"\n  packager: \"STRd6/packager:v0.2.0\"\n  filetree: \"STRd6/filetree:v0.1.0\"\n",
+      "content": "version: \"0.2.0\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/v0.2.1.js\"\n]\ndependencies:\n  issues: \"STRd6/issues:master\"\n  test_runner: \"STRd6/tests:master\"\n  sandbox: \"STRd6/sandbox:master\"\n  notifications: \"STRd6/notifications:master\"\n  md: \"STRd6/md:v0.2.0\"\n  github: \"STRd6/github:v0.2.2\"\n  hygiene: \"STRd6/hygiene:v0.1.0\"\n  runtime: \"STRd6/runtime:v0.1.1\"\n  packager: \"STRd6/packager:v0.2.0\"\n  filetree: \"STRd6/filetree:v0.2.0\"\n",
       "type": "blob"
     },
     "source/actions.coffee.md": {
@@ -171,7 +171,7 @@ describe <span class="string">"Util"</span>, -&gt;
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.2.0\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"//code.jquery.com/jquery-1.10.1.min.js\",\"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\",\"http://strd6.github.io/tempest/javascripts/envweb.js\",\"http://strd6.github.io/require/v0.2.1.js\"],\"dependencies\":{\"issues\":\"STRd6/issues:master\",\"test_runner\":\"STRd6/tests:master\",\"sandbox\":\"STRd6/sandbox:master\",\"notifications\":\"STRd6/notifications:master\",\"md\":\"STRd6/md:v0.2.0\",\"github\":\"STRd6/github:v0.2.2\",\"hygiene\":\"STRd6/hygiene:v0.1.0\",\"runtime\":\"STRd6/runtime:v0.1.1\",\"packager\":\"STRd6/packager:v0.2.0\",\"filetree\":\"STRd6/filetree:v0.1.0\"}};",
+      "content": "module.exports = {\"version\":\"0.2.0\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"//code.jquery.com/jquery-1.10.1.min.js\",\"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\",\"http://strd6.github.io/tempest/javascripts/envweb.js\",\"http://strd6.github.io/require/v0.2.1.js\"],\"dependencies\":{\"issues\":\"STRd6/issues:master\",\"test_runner\":\"STRd6/tests:master\",\"sandbox\":\"STRd6/sandbox:master\",\"notifications\":\"STRd6/notifications:master\",\"md\":\"STRd6/md:v0.2.0\",\"github\":\"STRd6/github:v0.2.2\",\"hygiene\":\"STRd6/hygiene:v0.1.0\",\"runtime\":\"STRd6/runtime:v0.1.1\",\"packager\":\"STRd6/packager:v0.2.0\",\"filetree\":\"STRd6/filetree:v0.2.0\"}};",
       "type": "blob"
     },
     "source/actions": {
@@ -2024,7 +2024,7 @@ describe <span class="string">"Util"</span>, -&gt;
       }
     },
     "filetree": {
-      "version": "0.1.0",
+      "version": "0.2.0",
       "source": {
         "LICENSE": {
           "path": "LICENSE",
@@ -2047,7 +2047,7 @@ describe <span class="string">"Util"</span>, -&gt;
         "file.coffee.md": {
           "path": "file.coffee.md",
           "mode": "100644",
-          "content": "File Model\n==========\n\nThe `File` model represents a file in a file system. It is populated by data\nreturned from the Github API.\n\n    File = (I={}) ->\n      I.path ?= I.filename\n      I.filename ?= I.path.split(\"/\").last()\n\n      self = Model(I).observeAll()\n\n      self.extend\n\nThe extension is the last part of the filename after the `.`, for example\n`\"coffee\"` for a file named `\"main.coffee\"` or `\"haml\"` for a file named\n`\"filetree.haml\"`.\n\n        extension: ->\n          self.filename().extension()\n\nThe `mode` of the file is what editor mode to use for our text editor.\n\n        mode: ->\n          switch extension = self.extension()\n            when \"js\"\n              \"javascript\"\n            when \"md\" # TODO: See about nested markdown code modes for .haml.md, .js.md, and .coffee.md\n              \"markdown\"\n            when \"cson\"\n              \"coffee\"\n            when \"\"\n              \"text\"\n            else\n              extension\n\nModified tracks whether the file has been changed since it was created.\n\n        modified: Observable(false)\n\nThe `displayName` is how the file appears in views.\n\n        displayName: Observable(self.path())\n\nWhen our content changes we assume we are modified. In the future we may want to\ntrack the original content and compare with that to get a more accurate modified\nstatus.\n\n      self.content.observe ->\n        self.modified(true)\n\nWhen our modified state changes we adjust the `displayName` to provide a visual\nindication.\n\n      self.modified.observe (modified) ->\n        if modified\n          self.displayName(\"*#{self.path()}\")\n        else\n          self.displayName(self.path())\n\n      return self\n\nExport\n\n    module.exports = File\n",
+          "content": "File Model\n==========\n\nThe `File` model represents a file in a file system. It is populated by data\nreturned from the Github API.\n\n    File = (I={}) ->\n      Object.defaults I,\n        content: \"\"\n\n      throw \"File must have a path\" unless I.path\n\n      self = Model(I).observeAll()\n\n      self.extend\n\nThe extension is the last part of the filename after the `.`, for example\n`\"coffee\"` for a file named `\"main.coffee\"` or `\"haml\"` for a file named\n`\"filetree.haml\"`.\n\n        extension: ->\n          self.path().extension()\n\nThe `mode` of the file is what editor mode to use for our text editor.\n\n        mode: ->\n          switch extension = self.extension()\n            when \"js\"\n              \"javascript\"\n            when \"md\" # TODO: See about nested markdown code modes for .haml.md, .js.md, and .coffee.md\n              \"markdown\"\n            when \"cson\"\n              \"coffee\"\n            when \"\"\n              \"text\"\n            else\n              extension\n\nModified tracks whether the file has been changed since it was created.\n\n        modified: Observable(false)\n\nThe `displayName` is how the file appears in views.\n\n        displayName: Observable(self.path())\n\nWhen our content changes we assume we are modified. In the future we may want to\ntrack the original content and compare with that to get a more accurate modified\nstatus.\n\n      self.content.observe ->\n        self.modified(true)\n\nWhen our modified state changes we adjust the `displayName` to provide a visual\nindication.\n\n      self.modified.observe (modified) ->\n        if modified\n          self.displayName(\"*#{self.path()}\")\n        else\n          self.displayName(self.path())\n\n      return self\n\nExport\n\n    module.exports = File\n",
           "type": "blob"
         },
         "filetree.coffee.md": {
@@ -2059,13 +2059,13 @@ describe <span class="string">"Util"</span>, -&gt;
         "main.coffee.md": {
           "path": "main.coffee.md",
           "mode": "100644",
-          "content": "Filetree\n========\n\nAn interactive HTML filetree that presents file data in the style of Github API\nrequests.\n\n    module.exports =\n      File: require \"./filetree\"\n      Filetree: require \"./file\"\n      template: require \"./templates/filetree\"\n\n    # TODO: Check if package is root package and then run demo\n    # require \"./demo\"\n",
+          "content": "Filetree\n========\n\nAn interactive HTML filetree that presents file data in the style of Github API\nrequests.\n\n    module.exports =\n      File: require \"./file\"\n      Filetree: require \"./filetree\"\n      template: require \"./templates/filetree\"\n\n    # TODO: Check if package is root package and then run demo\n    # require \"./demo\"\n",
           "type": "blob"
         },
         "pixie.cson": {
           "path": "pixie.cson",
           "mode": "100644",
-          "content": "version: \"0.1.0\"\nremoteDependencies: [\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/v0.2.0.js\"\n]\n",
+          "content": "version: \"0.2.0\"\nremoteDependencies: [\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/v0.2.1.js\"\n]\n",
           "type": "blob"
         },
         "templates/filetree.haml.md": {
@@ -2077,7 +2077,7 @@ describe <span class="string">"Util"</span>, -&gt;
         "test/filetree.coffee": {
           "path": "test/filetree.coffee",
           "mode": "100644",
-          "content": "{File, Filetree, template} = require \"../main\"\n\ndescribe \"Filetree\", ->\n  it \"should expose a template\", ->\n    assert template\n\n  it \"should expose a Filetree constructor\", ->\n    assert Filetree\n",
+          "content": "{File, Filetree, template} = require \"../main\"\n\ndescribe \"Filetree\", ->\n  it \"should expose a template\", ->\n    assert template\n\n  it \"should expose a Filetree constructor\", ->\n    assert Filetree\n\n  it \"should expose a File constructor\", ->\n    assert File\n      path: \"duder.txt\"\n",
           "type": "blob"
         }
       },
@@ -2089,7 +2089,7 @@ describe <span class="string">"Util"</span>, -&gt;
         },
         "file": {
           "path": "file",
-          "content": "(function() {\n  var File;\n\n  File = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    if (I.path == null) {\n      I.path = I.filename;\n    }\n    if (I.filename == null) {\n      I.filename = I.path.split(\"/\").last();\n    }\n    self = Model(I).observeAll();\n    self.extend({\n      extension: function() {\n        return self.filename().extension();\n      },\n      mode: function() {\n        var extension;\n        switch (extension = self.extension()) {\n          case \"js\":\n            return \"javascript\";\n          case \"md\":\n            return \"markdown\";\n          case \"cson\":\n            return \"coffee\";\n          case \"\":\n            return \"text\";\n          default:\n            return extension;\n        }\n      },\n      modified: Observable(false),\n      displayName: Observable(self.path())\n    });\n    self.content.observe(function() {\n      return self.modified(true);\n    });\n    self.modified.observe(function(modified) {\n      if (modified) {\n        return self.displayName(\"*\" + (self.path()));\n      } else {\n        return self.displayName(self.path());\n      }\n    });\n    return self;\n  };\n\n  module.exports = File;\n\n}).call(this);\n",
+          "content": "(function() {\n  var File;\n\n  File = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    Object.defaults(I, {\n      content: \"\"\n    });\n    if (!I.path) {\n      throw \"File must have a path\";\n    }\n    self = Model(I).observeAll();\n    self.extend({\n      extension: function() {\n        return self.path().extension();\n      },\n      mode: function() {\n        var extension;\n        switch (extension = self.extension()) {\n          case \"js\":\n            return \"javascript\";\n          case \"md\":\n            return \"markdown\";\n          case \"cson\":\n            return \"coffee\";\n          case \"\":\n            return \"text\";\n          default:\n            return extension;\n        }\n      },\n      modified: Observable(false),\n      displayName: Observable(self.path())\n    });\n    self.content.observe(function() {\n      return self.modified(true);\n    });\n    self.modified.observe(function(modified) {\n      if (modified) {\n        return self.displayName(\"*\" + (self.path()));\n      } else {\n        return self.displayName(self.path());\n      }\n    });\n    return self;\n  };\n\n  module.exports = File;\n\n}).call(this);\n",
           "type": "blob"
         },
         "filetree": {
@@ -2099,12 +2099,12 @@ describe <span class="string">"Util"</span>, -&gt;
         },
         "main": {
           "path": "main",
-          "content": "(function() {\n  module.exports = {\n    File: require(\"./filetree\"),\n    Filetree: require(\"./file\"),\n    template: require(\"./templates/filetree\")\n  };\n\n}).call(this);\n",
+          "content": "(function() {\n  module.exports = {\n    File: require(\"./file\"),\n    Filetree: require(\"./filetree\"),\n    template: require(\"./templates/filetree\")\n  };\n\n}).call(this);\n",
           "type": "blob"
         },
         "pixie": {
           "path": "pixie",
-          "content": "module.exports = {\"version\":\"0.1.0\",\"remoteDependencies\":[\"//code.jquery.com/jquery-1.10.1.min.js\",\"http://strd6.github.io/tempest/javascripts/envweb.js\",\"http://strd6.github.io/require/v0.2.0.js\"]};",
+          "content": "module.exports = {\"version\":\"0.2.0\",\"remoteDependencies\":[\"//code.jquery.com/jquery-1.10.1.min.js\",\"http://strd6.github.io/tempest/javascripts/envweb.js\",\"http://strd6.github.io/require/v0.2.1.js\"]};",
           "type": "blob"
         },
         "templates/filetree": {
@@ -2114,7 +2114,7 @@ describe <span class="string">"Util"</span>, -&gt;
         },
         "test/filetree": {
           "path": "test/filetree",
-          "content": "(function() {\n  var File, Filetree, template, _ref;\n\n  _ref = require(\"../main\"), File = _ref.File, Filetree = _ref.Filetree, template = _ref.template;\n\n  describe(\"Filetree\", function() {\n    it(\"should expose a template\", function() {\n      return assert(template);\n    });\n    return it(\"should expose a Filetree constructor\", function() {\n      return assert(Filetree);\n    });\n  });\n\n}).call(this);\n",
+          "content": "(function() {\n  var File, Filetree, template, _ref;\n\n  _ref = require(\"../main\"), File = _ref.File, Filetree = _ref.Filetree, template = _ref.template;\n\n  describe(\"Filetree\", function() {\n    it(\"should expose a template\", function() {\n      return assert(template);\n    });\n    it(\"should expose a Filetree constructor\", function() {\n      return assert(Filetree);\n    });\n    return it(\"should expose a File constructor\", function() {\n      return assert(File({\n        path: \"duder.txt\"\n      }));\n    });\n  });\n\n}).call(this);\n",
           "type": "blob"
         }
       },
@@ -2123,7 +2123,7 @@ describe <span class="string">"Util"</span>, -&gt;
       "remoteDependencies": [
         "//code.jquery.com/jquery-1.10.1.min.js",
         "http://strd6.github.io/tempest/javascripts/envweb.js",
-        "http://strd6.github.io/require/v0.2.0.js"
+        "http://strd6.github.io/require/v0.2.1.js"
       ],
       "repository": {
         "id": 13128952,
@@ -2214,7 +2214,7 @@ describe <span class="string">"Util"</span>, -&gt;
           "pull": true
         },
         "network_count": 0,
-        "branch": "v0.1.0",
+        "branch": "v0.2.0",
         "defaultBranch": "master",
         "includedModules": [
           "Bindable"
