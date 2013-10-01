@@ -46,6 +46,26 @@ The primary actions of the editor. This should eventually become a mixin.
           sandbox.document.write(html)
           sandbox.document.close()
 
+      runDocs: ({builder, data}) ->
+        sandbox = Runner.run
+          config:
+            width: 1280
+            height: 800
+
+        builder.build(data)
+        .then (pkg) ->
+          documenter.documentAll(pkg)
+        .then (docs) ->
+          index = docs.filter (doc) ->
+            /index\.html$/.test doc.path
+          .first()
+
+          console.log docs, index
+
+          sandbox.document.open()
+          sandbox.document.write(index?.content)
+          sandbox.document.close()
+
       save: (params) ->
         commit(params)
         .then ->
