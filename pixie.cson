@@ -14,7 +14,7 @@ dependencies:
   test_runner: "STRd6/tests:master"
   sandbox: "STRd6/sandbox:master"
   notifications: "STRd6/notifications:master"
-  md: "STRd6/md:v0.2.1-alpha.1"
+  md: "STRd6/md:v0.2.1-alpha.2"
   github: "STRd6/github:v0.2.2"
   hygiene: "STRd6/hygiene:v0.1.0"
   runtime: "STRd6/runtime:v0.1.1"
