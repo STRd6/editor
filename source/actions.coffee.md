@@ -1,6 +1,11 @@
+Actions
+=======
+
+Trying to encapsulate our action button actions, but doing a poor job so far.
+
 Some dependencies.
 
-    packager = require("./packager")()
+    Packager = require "packager"
     Runner = require("./runner")
     TestRunner = require("test_runner")
     {readSourceConfig, arrayToHash} = require("./util")
@@ -12,7 +17,7 @@ The primary actions of the editor. This should eventually become a mixin.
     publish = ({builder, fileData, repository}) ->
       builder.build(fileData)
       .then (pkg) ->
-        repository.publish(packager.standAlone(pkg))
+        repository.publish(Packager.standAlone(pkg))
         .then -> # Can't outdent because we need `pkg`
           documenter.documentAll(pkg)
         .then (docs) ->
@@ -35,7 +40,7 @@ The primary actions of the editor. This should eventually become a mixin.
 
         builder.build(data)
         .then (pkg) ->
-          packager.standAlone pkg
+          Packager.standAlone pkg
         .then ({html}) ->
           sandbox.document.open()
           sandbox.document.write(html)
@@ -52,7 +57,7 @@ The primary actions of the editor. This should eventually become a mixin.
 
         builder.build(filetree.data())
         .then (pkg) ->
-          packager.testScripts(pkg)
+          Packager.testScripts(pkg)
         .then (testScripts) ->
           html = TestRunner.html(testScripts)
           sandbox.document.open()
