@@ -130,6 +130,13 @@
         filetree: filetree
       }).fail(errors);
     },
+    docs: function() {
+      notify("Running Docs...");
+      return Actions.runDocs({
+        builder: builder,
+        data: filetree.data()
+      }).fail(errors);
+    },
     new_file: function() {
       var file, name;
       if (name = prompt("File Name", "newfile.coffee")) {
