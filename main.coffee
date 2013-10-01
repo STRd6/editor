@@ -123,6 +123,12 @@ actions =
     Actions.test({builder, filetree})
     .fail errors
 
+  docs: ->
+    notify "Running Docs..."
+
+    Actions.runDocs({builder, data: filetree.data()})
+    .fail errors
+
   new_file: ->
     if name = prompt("File Name", "newfile.coffee")
       file = File

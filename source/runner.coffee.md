@@ -11,10 +11,12 @@ time how the css changes affect each one.
     runningWindows = []
 
     Runner =
-      run: ({config}) ->
+      run: ({config}={}) ->
+        {width, height} = (config or {})
+
         sandbox = Sandbox
-          width: config.width
-          height: config.height
+          width: width
+          height: height
 
         runningWindows.push sandbox
 
