@@ -33,9 +33,9 @@ TextEditor = require("./source/text_editor")
 
 Hygiene = require "hygiene"
 Runtime = require "runtime"
+Packager = require "packager"
 
 {readSourceConfig} = require("./source/util")
-packager = require("./source/packager")()
 
 notifications = require("notifications")()
 templates.notifications = notifications.template
@@ -209,7 +209,7 @@ actions =
         # Force branch for jsonp wrapper
         pkg.repository.branch = version
 
-        repository().publish packager.standAlone(pkg), version
+        repository().publish Packager.standAlone(pkg), version
       .then ->
         notifications.push "Published!"
 

@@ -11,7 +11,7 @@ Dependencies
 
 This guy helps package our app and manage dependencies.
 
-    packager = require('./packager')()
+    Packager = require "packager"
     {readSourceConfig, arrayToHash} = require('./util')
 
 Helpers
@@ -165,7 +165,7 @@ include source files, compiled files, and documentation.
           # than always updating
           dependencies = config.dependencies or {}
 
-          packager.collectDependencies(dependencies)
+          Packager.collectDependencies(dependencies)
           .then (bundledDependencies) ->
             postProcessors.pipeline
               version: config.version
