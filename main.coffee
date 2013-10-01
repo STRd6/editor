@@ -5,6 +5,8 @@ global.Sandbox = require 'sandbox'
 require("./source/duct_tape")
 require("./source/deferred")
 
+global.PACKAGE = PACKAGE
+
 # Create and auth a github API
 # Global until we consolidate editor/actions into something cleaner
 global.github = require("github")(require("./source/github_auth")())
@@ -14,7 +16,6 @@ templates = (HAMLjr.templates ||= {})
 [
   "actions"
   "editor"
-  "filetree"
   "github_status"
   "text_editor"
   "repo_info"
@@ -27,9 +28,10 @@ templates = (HAMLjr.templates ||= {})
 Actions = require("./source/actions")
 Builder = require("./source/builder")
 Runner = require("./source/runner")
-Filetree = require("./source/filetree")
-File = require("./source/file")
 TextEditor = require("./source/text_editor")
+
+{Filetree, File, template:filetreeTemplate} = require "filetree"
+templates["filetree"] = filetreeTemplate
 
 Hygiene = require "hygiene"
 Runtime = require "runtime"
@@ -124,7 +126,7 @@ actions =
   new_file: ->
     if name = prompt("File Name", "newfile.coffee")
       file = File
-        filename: name
+        path: name
         content: ""
       filetree.files.push file
       filetree.selectedFile file      
