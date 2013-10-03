@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# 1380829920714
+# 1380830922484
 
 CACHE:
 index.html
@@ -9,3 +9,8 @@ index.html
 //d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js
 http://strd6.github.io/tempest/javascripts/envweb.js
 http://strd6.github.io/require/v0.2.1.js
+
+NETWORK:
+https://*
+http://*
+*
