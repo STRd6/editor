@@ -1,0 +1,11 @@
+CACHE MANIFEST
+# 1380828267049
+
+CACHE:
+index.html
+//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js
+//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js
+//code.jquery.com/jquery-1.10.1.min.js
+//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js
+http://strd6.github.io/tempest/javascripts/envweb.js
+http://strd6.github.io/require/v0.2.1.js
