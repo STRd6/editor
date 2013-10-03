@@ -115,7 +115,7 @@ actions =
     notify "Running..."
 
     Actions.run({builder, filetree})
-    .fail errors
+    .fail classicError
 
   test: ->
     notify "Running tests..."
