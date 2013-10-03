@@ -121,7 +121,7 @@
       return Actions.run({
         builder: builder,
         filetree: filetree
-      }).fail(errors);
+      }).fail(classicError);
     },
     test: function() {
       notify("Running tests...");
