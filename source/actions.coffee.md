@@ -43,7 +43,7 @@ The primary actions of the editor. This should eventually become a mixin.
           Packager.standAlone pkg
         .then (files) ->
           content = index(files)?.content
-        
+
           sandbox.document.open()
           sandbox.document.write(content)
           sandbox.document.close()
@@ -104,6 +104,6 @@ Helpers
 Get the `index.html` from a list of files.
 
     index = (files) ->
-      index = files.filter (file) ->
+      files.filter (file) ->
         /index\.html$/.test file.path
       .first()
