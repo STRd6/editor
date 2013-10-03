@@ -41,9 +41,11 @@ The primary actions of the editor. This should eventually become a mixin.
         builder.build(data)
         .then (pkg) ->
           Packager.standAlone pkg
-        .then ({html}) ->
+        .then (files) ->
+          content = index(files)?.content
+
           sandbox.document.open()
-          sandbox.document.write(html)
+          sandbox.document.write(content)
           sandbox.document.close()
 
       runDocs: ({builder, data}) ->
@@ -56,12 +58,10 @@ The primary actions of the editor. This should eventually become a mixin.
         .then (pkg) ->
           documenter.documentAll(pkg)
         .then (docs) ->
-          index = docs.filter (doc) ->
-            /index\.html$/.test doc.path
-          .first()
+          content = index(docs)?.content
 
           sandbox.document.open()
-          sandbox.document.write(index?.content)
+          sandbox.document.write(content)
           sandbox.document.close()
 
       save: (params) ->
@@ -97,3 +97,13 @@ The primary actions of the editor. This should eventually become a mixin.
           filetree.load files
 
     module.exports = Actions
+
+Helpers
+-------
+
+Get the `index.html` from a list of files.
+
+    index = (files) ->
+      files.filter (file) ->
+        /index\.html$/.test file.path
+      .first()
