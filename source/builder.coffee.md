@@ -146,7 +146,7 @@ TODO: Maybe we should split post processors into the packager.
 Compile and build a tree of file data into a distribution. The distribution should
 include source files, compiled files, and documentation.
 
-      build: (fileData) ->
+      build: (fileData, cache={}) ->
         build(fileData)
         .then (items) ->
           results = []
@@ -176,7 +176,7 @@ include source files, compiled files, and documentation.
           # than always updating
           dependencies = config.dependencies or {}
 
-          Packager.collectDependencies(dependencies)
+          Packager.collectDependencies(dependencies, cache)
           .then (bundledDependencies) ->
             postProcessors.pipeline
               version: config.version
