@@ -13,7 +13,7 @@ Some dependencies.
     documenter = require("md")
     
     build = (builder, fileData) ->
-      builder.build(fileData, PACKAGE)
+      builder.build(fileData, PACKAGE.dependencies)
 
 The primary actions of the editor. This should eventually become a mixin.
 
