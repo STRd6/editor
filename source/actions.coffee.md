@@ -11,11 +11,14 @@ Some dependencies.
     {readSourceConfig, arrayToHash} = require("./util")
 
     documenter = require("md")
+    
+    build = (builder, fileData) ->
+      builder.build(fileData, PACKAGE.dependencies)
 
 The primary actions of the editor. This should eventually become a mixin.
 
     publish = ({builder, fileData, repository}) ->
-      builder.build(fileData)
+      build(builder, fileData)
       .then (pkg) ->
         repository.publish(Packager.standAlone(pkg))
         .then -> # Can't outdent because we need `pkg`
@@ -38,7 +41,7 @@ The primary actions of the editor. This should eventually become a mixin.
         sandbox = Runner.run
           config: readSourceConfig(source: arrayToHash(data))
 
-        builder.build(data)
+        build(builder, data)
         .then (pkg) ->
           Packager.standAlone pkg
         .then (files) ->
@@ -54,7 +57,7 @@ The primary actions of the editor. This should eventually become a mixin.
             width: 1280
             height: 800
 
-        builder.build(data)
+        build(builder, data)
         .then (pkg) ->
           documenter.documentAll(pkg)
         .then (docs) ->
@@ -73,7 +76,7 @@ The primary actions of the editor. This should eventually become a mixin.
         sandbox = Runner.run
           config: readSourceConfig(PACKAGE)
 
-        builder.build(filetree.data())
+        build(builder, filetree.data())
         .then (pkg) ->
           Packager.testScripts(pkg)
         .then (testScripts) ->
