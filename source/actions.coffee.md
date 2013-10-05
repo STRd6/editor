@@ -11,7 +11,7 @@ Some dependencies.
     {readSourceConfig, arrayToHash} = require("./util")
 
     documenter = require("md")
-    
+
     build = (builder, fileData) ->
       builder.build(fileData, PACKAGE.dependencies)
 
