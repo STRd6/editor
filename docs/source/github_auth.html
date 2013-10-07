@@ -101,7 +101,7 @@ module.exports = GithubAuth</code></pre>
     "pixie.cson": {
       "path": "pixie.cson",
       "mode": "100644",
-      "content": "version: \"0.2.0\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/v0.2.2.js\"\n]\ndependencies:\n  issues: \"STRd6/issues:v0.1.0\"\n  test_runner: \"STRd6/tests:master\"\n  sandbox: \"STRd6/sandbox:v0.1.0\"\n  notifications: \"STRd6/notifications:master\"\n  md: \"STRd6/md:v0.2.3\"\n  github: \"STRd6/github:v0.3.0\"\n  hygiene: \"STRd6/hygiene:v0.1.0\"\n  runtime: \"STRd6/runtime:v0.1.1\"\n  packager: \"STRd6/packager:v0.3.1\"\n  filetree: \"STRd6/filetree:v0.2.0\"\n",
+      "content": "version: \"0.2.0\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/v0.2.2.js\"\n]\ndependencies:\n  issues: \"STRd6/issues:v0.1.0\"\n  test_runner: \"STRd6/tests:v0.1.0\"\n  sandbox: \"STRd6/sandbox:v0.1.0\"\n  notifications: \"STRd6/notifications:master\"\n  md: \"STRd6/md:v0.2.3\"\n  github: \"STRd6/github:v0.3.0\"\n  hygiene: \"STRd6/hygiene:v0.1.0\"\n  runtime: \"STRd6/runtime:v0.1.1\"\n  packager: \"STRd6/packager:v0.3.1\"\n  filetree: \"STRd6/filetree:v0.2.0\"\n",
       "type": "blob"
     },
     "source/actions.coffee.md": {
@@ -215,7 +215,7 @@ module.exports = GithubAuth</code></pre>
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.2.0\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"//code.jquery.com/jquery-1.10.1.min.js\",\"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\",\"http://strd6.github.io/tempest/javascripts/envweb.js\",\"http://strd6.github.io/require/v0.2.2.js\"],\"dependencies\":{\"issues\":\"STRd6/issues:v0.1.0\",\"test_runner\":\"STRd6/tests:master\",\"sandbox\":\"STRd6/sandbox:v0.1.0\",\"notifications\":\"STRd6/notifications:master\",\"md\":\"STRd6/md:v0.2.3\",\"github\":\"STRd6/github:v0.3.0\",\"hygiene\":\"STRd6/hygiene:v0.1.0\",\"runtime\":\"STRd6/runtime:v0.1.1\",\"packager\":\"STRd6/packager:v0.3.1\",\"filetree\":\"STRd6/filetree:v0.2.0\"}};",
+      "content": "module.exports = {\"version\":\"0.2.0\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"//code.jquery.com/jquery-1.10.1.min.js\",\"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\",\"http://strd6.github.io/tempest/javascripts/envweb.js\",\"http://strd6.github.io/require/v0.2.2.js\"],\"dependencies\":{\"issues\":\"STRd6/issues:v0.1.0\",\"test_runner\":\"STRd6/tests:v0.1.0\",\"sandbox\":\"STRd6/sandbox:v0.1.0\",\"notifications\":\"STRd6/notifications:master\",\"md\":\"STRd6/md:v0.2.3\",\"github\":\"STRd6/github:v0.3.0\",\"hygiene\":\"STRd6/hygiene:v0.1.0\",\"runtime\":\"STRd6/runtime:v0.1.1\",\"packager\":\"STRd6/packager:v0.3.1\",\"filetree\":\"STRd6/filetree:v0.2.0\"}};",
       "type": "blob"
     },
     "source/actions": {
@@ -479,6 +479,7 @@ module.exports = GithubAuth</code></pre>
       "name": "issues"
     },
     "test_runner": {
+      "version": "0.1.0",
       "source": {
         "README.md": {
           "path": "README.md",
@@ -495,14 +496,25 @@ module.exports = GithubAuth</code></pre>
         "main.coffee.md": {
           "path": "main.coffee.md",
           "mode": "100644",
-          "content": "\n    module.exports = \n\nGenerate an html template that runs the given script tag strings as tests.\n      \n      html: (testScripts) -> \"\"\"\n        <html>\n        <head>\n          <meta charset=\"utf-8\">\n          <title>Mocha Tests</title>\n          <link rel=\"stylesheet\" href=\"http://strd6.github.io/tests/mocha.css\" />\n        </head>\n        <body>\n          <div id=\"mocha\"></div>\n          <script src=\"http://strd6.github.io/tests/assert.js\"><\\/script>\n          <script src=\"http://strd6.github.io/tests/mocha.js\"><\\/script>\n          <script>mocha.setup('bdd')<\\/script>\n          #{testScripts}\n          <script>\n            mocha.checkLeaks();\n            mocha.globals(['jQuery']);\n            mocha.run();\n          <\\/script>\n        </body>\n        </html>\n      \"\"\"\n",
+          "content": "\n    module.exports =\n\nGenerate an html template that runs the given script tag strings as tests.\n\n      html: (testScripts) -> \"\"\"\n        <html>\n        <head>\n          <meta charset=\"utf-8\">\n          <title>Mocha Tests</title>\n          <link rel=\"stylesheet\" href=\"http://strd6.github.io/tests/mocha.css\" />\n        </head>\n        <body>\n          <div id=\"mocha\"></div>\n          <script src=\"http://strd6.github.io/tests/assert.js\"><\\/script>\n          <script src=\"http://strd6.github.io/tests/mocha.js\"><\\/script>\n          <script>mocha.setup('bdd')<\\/script>\n          #{testScripts}\n          <script>\n            mocha.checkLeaks();\n            mocha.globals(['jQuery']);\n            mocha.run();\n          <\\/script>\n        </body>\n        </html>\n      \"\"\"\n",
+          "type": "blob"
+        },
+        "pixie.cson": {
+          "path": "pixie.cson",
+          "mode": "100644",
+          "content": "version: \"0.1.0\"\n",
           "type": "blob"
         }
       },
       "distribution": {
         "main": {
           "path": "main",
-          "content": "(function() {\n  module.exports = {\n    html: function(testScripts) {\n      return \"<html>\\n<head>\\n  <meta charset=\\\"utf-8\\\">\\n  <title>Mocha Tests</title>\\n  <link rel=\\\"stylesheet\\\" href=\\\"http://strd6.github.io/tests/mocha.css\\\" />\\n</head>\\n<body>\\n  <div id=\\\"mocha\\\"></div>\\n  <script src=\\\"http://strd6.github.io/tests/assert.js\\\"><\\/script>\\n  <script src=\\\"http://strd6.github.io/tests/mocha.js\\\"><\\/script>\\n  <script>mocha.setup('bdd')<\\/script>\\n  \" + testScripts + \"\\n  <script>\\n    mocha.checkLeaks();\\n    mocha.globals(['jQuery']);\\n    mocha.run();\\n  <\\/script>\\n</body>\\n</html>\";\n    }\n  };\n\n}).call(this);\n",
+          "content": "(function() {\n  module.exports = {\n    html: function(testScripts) {\n      return \"<html>\\n<head>\\n  <meta charset=\\\"utf-8\\\">\\n  <title>Mocha Tests</title>\\n  <link rel=\\\"stylesheet\\\" href=\\\"http://strd6.github.io/tests/mocha.css\\\" />\\n</head>\\n<body>\\n  <div id=\\\"mocha\\\"></div>\\n  <script src=\\\"http://strd6.github.io/tests/assert.js\\\"><\\/script>\\n  <script src=\\\"http://strd6.github.io/tests/mocha.js\\\"><\\/script>\\n  <script>mocha.setup('bdd')<\\/script>\\n  \" + testScripts + \"\\n  <script>\\n    mocha.checkLeaks();\\n    mocha.globals(['jQuery']);\\n    mocha.run();\\n  <\\/script>\\n</body>\\n</html>\";\n    }\n  };\n\n}).call(this);\n\n//# sourceURL=main.coffee",
+          "type": "blob"
+        },
+        "pixie": {
+          "path": "pixie",
+          "content": "module.exports = {\"version\":\"0.1.0\"};",
           "type": "blob"
         }
       },
@@ -515,7 +527,7 @@ module.exports = GithubAuth</code></pre>
         "owner": {
           "login": "STRd6",
           "id": 18894,
-          "avatar_url": "https://1.gravatar.com/avatar/33117162fff8a9cf50544a604f60c045?d=https%3A%2F%2Fidenticons.github.com%2F39df222bffe39629d904e4883eabc654.png",
+          "avatar_url": "https://2.gravatar.com/avatar/33117162fff8a9cf50544a604f60c045?d=https%3A%2F%2Fidenticons.github.com%2F39df222bffe39629d904e4883eabc654.png",
           "gravatar_id": "33117162fff8a9cf50544a604f60c045",
           "url": "https://api.github.com/users/STRd6",
           "html_url": "https://github.com/STRd6",
@@ -528,7 +540,8 @@ module.exports = GithubAuth</code></pre>
           "repos_url": "https://api.github.com/users/STRd6/repos",
           "events_url": "https://api.github.com/users/STRd6/events{/privacy}",
           "received_events_url": "https://api.github.com/users/STRd6/received_events",
-          "type": "User"
+          "type": "User",
+          "site_admin": false
         },
         "private": false,
         "html_url": "https://github.com/STRd6/tests",
@@ -570,14 +583,14 @@ module.exports = GithubAuth</code></pre>
         "notifications_url": "https://api.github.com/repos/STRd6/tests/notifications{?since,all,participating}",
         "labels_url": "https://api.github.com/repos/STRd6/tests/labels{/name}",
         "created_at": "2013-09-12T00:46:52Z",
-        "updated_at": "2013-09-16T06:03:31Z",
-        "pushed_at": "2013-09-16T06:03:31Z",
+        "updated_at": "2013-09-21T22:30:10Z",
+        "pushed_at": "2013-09-21T22:30:07Z",
         "git_url": "git://github.com/STRd6/tests.git",
         "ssh_url": "git@github.com:STRd6/tests.git",
         "clone_url": "https://github.com/STRd6/tests.git",
         "svn_url": "https://github.com/STRd6/tests",
         "homepage": null,
-        "size": 712,
+        "size": 924,
         "watchers_count": 0,
         "language": null,
         "has_issues": true,
@@ -597,7 +610,7 @@ module.exports = GithubAuth</code></pre>
           "pull": true
         },
         "network_count": 0,
-        "branch": "master",
+        "branch": "v0.1.0",
         "defaultBranch": "master",
         "includedModules": [
           "Bindable"
@@ -605,8 +618,7 @@ module.exports = GithubAuth</code></pre>
       },
       "progenitor": {
         "url": "http://strd6.github.io/editor/"
-      },
-      "name": "test_runner"
+      }
     },
     "sandbox": {
       "version": "0.1.0",
@@ -751,7 +763,8 @@ module.exports = GithubAuth</code></pre>
       },
       "progenitor": {
         "url": "http://strd6.github.io/editor/"
-      }
+      },
+      "name": "sandbox"
     },
     "notifications": {
       "source": {
