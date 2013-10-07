@@ -10,7 +10,7 @@ remoteDependencies: [
   "http://strd6.github.io/require/v0.2.2.js"
 ]
 dependencies:
-  issues: "STRd6/issues:master"
+  issues: "STRd6/issues:v0.1.0"
   test_runner: "STRd6/tests:master"
   sandbox: "STRd6/sandbox:master"
   notifications: "STRd6/notifications:master"
