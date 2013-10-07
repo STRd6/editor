@@ -60,7 +60,7 @@ describe <span class="string">"Util"</span>, -&gt;
     "pixie.cson": {
       "path": "pixie.cson",
       "mode": "100644",
-      "content": "version: \"0.2.0\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/v0.2.2.js\"\n]\ndependencies:\n  issues: \"STRd6/issues:master\"\n  test_runner: \"STRd6/tests:master\"\n  sandbox: \"STRd6/sandbox:master\"\n  notifications: \"STRd6/notifications:master\"\n  md: \"STRd6/md:v0.2.3\"\n  github: \"STRd6/github:v0.3.0\"\n  hygiene: \"STRd6/hygiene:v0.1.0\"\n  runtime: \"STRd6/runtime:v0.1.1\"\n  packager: \"STRd6/packager:v0.3.1\"\n  filetree: \"STRd6/filetree:v0.2.0\"\n",
+      "content": "version: \"0.2.0\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/v0.2.2.js\"\n]\ndependencies:\n  issues: \"STRd6/issues:v0.1.0\"\n  test_runner: \"STRd6/tests:master\"\n  sandbox: \"STRd6/sandbox:master\"\n  notifications: \"STRd6/notifications:master\"\n  md: \"STRd6/md:v0.2.3\"\n  github: \"STRd6/github:v0.3.0\"\n  hygiene: \"STRd6/hygiene:v0.1.0\"\n  runtime: \"STRd6/runtime:v0.1.1\"\n  packager: \"STRd6/packager:v0.3.1\"\n  filetree: \"STRd6/filetree:v0.2.0\"\n",
       "type": "blob"
     },
     "source/actions.coffee.md": {
@@ -174,7 +174,7 @@ describe <span class="string">"Util"</span>, -&gt;
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.2.0\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"//code.jquery.com/jquery-1.10.1.min.js\",\"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\",\"http://strd6.github.io/tempest/javascripts/envweb.js\",\"http://strd6.github.io/require/v0.2.2.js\"],\"dependencies\":{\"issues\":\"STRd6/issues:master\",\"test_runner\":\"STRd6/tests:master\",\"sandbox\":\"STRd6/sandbox:master\",\"notifications\":\"STRd6/notifications:master\",\"md\":\"STRd6/md:v0.2.3\",\"github\":\"STRd6/github:v0.3.0\",\"hygiene\":\"STRd6/hygiene:v0.1.0\",\"runtime\":\"STRd6/runtime:v0.1.1\",\"packager\":\"STRd6/packager:v0.3.1\",\"filetree\":\"STRd6/filetree:v0.2.0\"}};",
+      "content": "module.exports = {\"version\":\"0.2.0\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"//code.jquery.com/jquery-1.10.1.min.js\",\"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\",\"http://strd6.github.io/tempest/javascripts/envweb.js\",\"http://strd6.github.io/require/v0.2.2.js\"],\"dependencies\":{\"issues\":\"STRd6/issues:v0.1.0\",\"test_runner\":\"STRd6/tests:master\",\"sandbox\":\"STRd6/sandbox:master\",\"notifications\":\"STRd6/notifications:master\",\"md\":\"STRd6/md:v0.2.3\",\"github\":\"STRd6/github:v0.3.0\",\"hygiene\":\"STRd6/hygiene:v0.1.0\",\"runtime\":\"STRd6/runtime:v0.1.1\",\"packager\":\"STRd6/packager:v0.3.1\",\"filetree\":\"STRd6/filetree:v0.2.0\"}};",
       "type": "blob"
     },
     "source/actions": {
@@ -266,6 +266,7 @@ describe <span class="string">"Util"</span>, -&gt;
   "entryPoint": "main",
   "dependencies": {
     "issues": {
+      "version": "0.1.0",
       "source": {
         "README.md": {
           "path": "README.md",
@@ -282,13 +283,13 @@ describe <span class="string">"Util"</span>, -&gt;
         "source/issue.coffee.md": {
           "path": "source/issue.coffee.md",
           "mode": "100644",
-          "content": "A tempest model that wraps issues from github.\n\n    Issue = (I={}) ->\n      self = Model(I)\n    \n      self.extend\n\nThe option text is what appears in the dropdown menu.\n\n        optionText: ->\n          \"#{I.title}\"\n\n        fullDescription: ->\n          \"\"\"\n            #{self.optionText()}\n            #{I.html_url}\n            #{I.body}\n          \"\"\"\n\nA helper method to get a standard branch name for an issue. Pull requests have\ntheir own branches, but an issue branch is generated based on issue number.\n\n        branchName: ->\n          I.head?.ref or \"issue-#{I.number}\"\n    \n      return self\n\n    module.exports = Issue\n",
+          "content": "A tempest model that wraps issues from github.\n\n    Issue = (I={}) ->\n      self = Model(I)\n\n      self.extend\n\nThe option text is what appears in the dropdown menu.\n\n        optionText: ->\n          \"#{I.title}\"\n\n        fullDescription: ->\n          \"\"\"\n            #{self.optionText()}\n            #{I.html_url}\n            #{I.body}\n          \"\"\"\n\nA helper method to get a standard branch name for an issue. Pull requests have\ntheir own branches, but an issue branch is generated based on issue number.\n\n        branchName: ->\n          I.head?.ref or \"issue-#{I.number}\"\n\n      return self\n\n    module.exports = Issue\n",
           "type": "blob"
         },
         "source/issues.coffee.md": {
           "path": "source/issues.coffee.md",
           "mode": "100644",
-          "content": "    Issue = require \"./issue\"\n\nA collection of issues including a `currentIssue` to represent the actively\nselected issue.\n\nWe may want to formalize this collection pattern later, but for now lets just\nsee how it goes.\n\n    Issues = (I={}) ->\n      Object.defaults I,\n        issues: []\n\n      self = Model(I)\n\nOur `issues` method is a list of `Issue` models.\n\n      self.attrModels \"issues\", Issue\n\nWe want to expose the currently selected issue as an observable as well.\n\n      self.attrObservable \"currentIssue\"\n\n      self.extend\n\nThe reset method accepts an array of raw issue data, converts it into an array\nof issue objects, replaces the previous issues with the new ones and clears the \nselected issue.\n\n        reset: (issueData) ->\n          self.currentIssue(undefined)\n          self.issues issueData.map(Issue)\n    \n      return self\n\n    module.exports = Issues\n",
+          "content": "    Issue = require \"./issue\"\n\nA collection of issues including a `currentIssue` to represent the actively\nselected issue.\n\nWe may want to formalize this collection pattern later, but for now lets just\nsee how it goes.\n\n    Issues = (I={}) ->\n      Object.defaults I,\n        issues: []\n\n      self = Model(I)\n\nOur `issues` method is a list of `Issue` models.\n\n      self.attrModels \"issues\", Issue\n\nWe want to expose the currently selected issue as an observable as well.\n\n      self.attrObservable \"currentIssue\"\n\n      self.extend\n\nThe reset method accepts an array of raw issue data, converts it into an array\nof issue objects, replaces the previous issues with the new ones and clears the\nselected issue.\n\n        reset: (issueData) ->\n          self.currentIssue(undefined)\n          self.issues issueData.map(Issue)\n\n      return self\n\n    module.exports = Issues\n",
           "type": "blob"
         },
         "templates/issues.haml.md": {
@@ -296,32 +297,46 @@ describe <span class="string">"Util"</span>, -&gt;
           "mode": "100644",
           "content": "A simple select element to allow choosing of issues.\n\n    %select\n      - on \"change\", @currentIssue\n      %option= \"- Default Branch -\"\n      - each @issues, ->\n        %option= @optionText()\n",
           "type": "blob"
+        },
+        "pixie.cson": {
+          "path": "pixie.cson",
+          "mode": "100644",
+          "content": "version: \"0.1.0\"\nentryPoint: \"main\"\nremoteDependencies: [\n  \"http://strd6.github.io/require/v0.2.2.js\"\n]\n",
+          "type": "blob"
         }
       },
       "distribution": {
         "main": {
           "path": "main",
-          "content": "(function() {\n  module.exports = {\n    models: {\n      Issue: require(\"./source/issue\"),\n      Issues: require(\"./source/issues\")\n    },\n    templates: {\n      issues: require(\"./templates/issues\")\n    }\n  };\n\n}).call(this);\n",
+          "content": "(function() {\n  module.exports = {\n    models: {\n      Issue: require(\"./source/issue\"),\n      Issues: require(\"./source/issues\")\n    },\n    templates: {\n      issues: require(\"./templates/issues\")\n    }\n  };\n\n}).call(this);\n\n//# sourceURL=main.coffee",
           "type": "blob"
         },
         "source/issue": {
           "path": "source/issue",
-          "content": "(function() {\n  var Issue;\n\n  Issue = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    self = Model(I);\n    self.extend({\n      optionText: function() {\n        return \"\" + I.title;\n      },\n      fullDescription: function() {\n        return \"\" + (self.optionText()) + \"\\n\" + I.html_url + \"\\n\" + I.body;\n      },\n      branchName: function() {\n        var _ref;\n        return ((_ref = I.head) != null ? _ref.ref : void 0) || (\"issue-\" + I.number);\n      }\n    });\n    return self;\n  };\n\n  module.exports = Issue;\n\n}).call(this);\n",
+          "content": "(function() {\n  var Issue;\n\n  Issue = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    self = Model(I);\n    self.extend({\n      optionText: function() {\n        return \"\" + I.title;\n      },\n      fullDescription: function() {\n        return \"\" + (self.optionText()) + \"\\n\" + I.html_url + \"\\n\" + I.body;\n      },\n      branchName: function() {\n        var _ref;\n        return ((_ref = I.head) != null ? _ref.ref : void 0) || (\"issue-\" + I.number);\n      }\n    });\n    return self;\n  };\n\n  module.exports = Issue;\n\n}).call(this);\n\n//# sourceURL=source/issue.coffee",
           "type": "blob"
         },
         "source/issues": {
           "path": "source/issues",
-          "content": "(function() {\n  var Issue, Issues;\n\n  Issue = require(\"./issue\");\n\n  Issues = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    Object.defaults(I, {\n      issues: []\n    });\n    self = Model(I);\n    self.attrModels(\"issues\", Issue);\n    self.attrObservable(\"currentIssue\");\n    self.extend({\n      reset: function(issueData) {\n        self.currentIssue(void 0);\n        return self.issues(issueData.map(Issue));\n      }\n    });\n    return self;\n  };\n\n  module.exports = Issues;\n\n}).call(this);\n",
+          "content": "(function() {\n  var Issue, Issues;\n\n  Issue = require(\"./issue\");\n\n  Issues = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    Object.defaults(I, {\n      issues: []\n    });\n    self = Model(I);\n    self.attrModels(\"issues\", Issue);\n    self.attrObservable(\"currentIssue\");\n    self.extend({\n      reset: function(issueData) {\n        self.currentIssue(void 0);\n        return self.issues(issueData.map(Issue));\n      }\n    });\n    return self;\n  };\n\n  module.exports = Issues;\n\n}).call(this);\n\n//# sourceURL=source/issues.coffee",
           "type": "blob"
         },
         "templates/issues": {
           "path": "templates/issues",
           "content": "module.exports = (function(data) {\n  return (function() {\n    var __attribute, __each, __element, __filter, __on, __pop, __push, __render, __text, __with, _ref;\n    _ref = HAMLjr.Runtime(this), __push = _ref.__push, __pop = _ref.__pop, __attribute = _ref.__attribute, __filter = _ref.__filter, __text = _ref.__text, __on = _ref.__on, __each = _ref.__each, __with = _ref.__with, __render = _ref.__render;\n    __push(document.createDocumentFragment());\n    __element = document.createElement(\"select\");\n    __push(__element);\n    __on(\"change\", this.currentIssue);\n    __element = document.createElement(\"option\");\n    __push(__element);\n    __element = document.createTextNode('');\n    __text(__element, \"- Default Branch -\");\n    __push(__element);\n    __pop();\n    __pop();\n    __each(this.issues, function() {\n      __element = document.createElement(\"option\");\n      __push(__element);\n      __element = document.createTextNode('');\n      __text(__element, this.optionText());\n      __push(__element);\n      __pop();\n      return __pop();\n    });\n    __pop();\n    return __pop();\n  }).call(data);\n});\n;",
           "type": "blob"
+        },
+        "pixie": {
+          "path": "pixie",
+          "content": "module.exports = {\"version\":\"0.1.0\",\"entryPoint\":\"main\",\"remoteDependencies\":[\"http://strd6.github.io/require/v0.2.2.js\"]};",
+          "type": "blob"
         }
       },
       "entryPoint": "main",
       "dependencies": {},
+      "remoteDependencies": [
+        "http://strd6.github.io/require/v0.2.2.js"
+      ],
       "repository": {
         "id": 12632346,
         "name": "issues",
@@ -329,7 +344,7 @@ describe <span class="string">"Util"</span>, -&gt;
         "owner": {
           "login": "STRd6",
           "id": 18894,
-          "avatar_url": "https://0.gravatar.com/avatar/33117162fff8a9cf50544a604f60c045?d=https%3A%2F%2Fidenticons.github.com%2F39df222bffe39629d904e4883eabc654.png",
+          "avatar_url": "https://1.gravatar.com/avatar/33117162fff8a9cf50544a604f60c045?d=https%3A%2F%2Fidenticons.github.com%2F39df222bffe39629d904e4883eabc654.png",
           "gravatar_id": "33117162fff8a9cf50544a604f60c045",
           "url": "https://api.github.com/users/STRd6",
           "html_url": "https://github.com/STRd6",
@@ -384,14 +399,14 @@ describe <span class="string">"Util"</span>, -&gt;
         "notifications_url": "https://api.github.com/repos/STRd6/issues/notifications{?since,all,participating}",
         "labels_url": "https://api.github.com/repos/STRd6/issues/labels{/name}",
         "created_at": "2013-09-06T00:35:16Z",
-        "updated_at": "2013-09-15T01:55:08Z",
-        "pushed_at": "2013-09-15T01:55:08Z",
+        "updated_at": "2013-09-21T22:22:27Z",
+        "pushed_at": "2013-09-21T22:22:26Z",
         "git_url": "git://github.com/STRd6/issues.git",
         "ssh_url": "git@github.com:STRd6/issues.git",
         "clone_url": "https://github.com/STRd6/issues.git",
         "svn_url": "https://github.com/STRd6/issues",
         "homepage": null,
-        "size": 1624,
+        "size": 1696,
         "watchers_count": 0,
         "language": "JavaScript",
         "has_issues": true,
@@ -411,7 +426,7 @@ describe <span class="string">"Util"</span>, -&gt;
           "pull": true
         },
         "network_count": 0,
-        "branch": "master",
+        "branch": "v0.1.0",
         "defaultBranch": "master",
         "includedModules": [
           "Bindable"
@@ -419,8 +434,7 @@ describe <span class="string">"Util"</span>, -&gt;
       },
       "progenitor": {
         "url": "http://strd6.github.io/editor/"
-      },
-      "name": "issues"
+      }
     },
     "test_runner": {
       "source": {
