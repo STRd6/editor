@@ -16,7 +16,7 @@ window["STRd6/editor:master"]({
     "pixie.cson": {
       "path": "pixie.cson",
       "mode": "100644",
-      "content": "version: \"0.2.0\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/v0.2.2.js\"\n]\ndependencies:\n  issues: \"STRd6/issues:v0.1.0\"\n  test_runner: \"STRd6/tests:master\"\n  sandbox: \"STRd6/sandbox:master\"\n  notifications: \"STRd6/notifications:master\"\n  md: \"STRd6/md:v0.2.3\"\n  github: \"STRd6/github:v0.3.0\"\n  hygiene: \"STRd6/hygiene:v0.1.0\"\n  runtime: \"STRd6/runtime:v0.1.1\"\n  packager: \"STRd6/packager:v0.3.1\"\n  filetree: \"STRd6/filetree:v0.2.0\"\n",
+      "content": "version: \"0.2.0\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/v0.2.2.js\"\n]\ndependencies:\n  issues: \"STRd6/issues:v0.1.0\"\n  test_runner: \"STRd6/tests:master\"\n  sandbox: \"STRd6/sandbox:v0.1.0\"\n  notifications: \"STRd6/notifications:master\"\n  md: \"STRd6/md:v0.2.3\"\n  github: \"STRd6/github:v0.3.0\"\n  hygiene: \"STRd6/hygiene:v0.1.0\"\n  runtime: \"STRd6/runtime:v0.1.1\"\n  packager: \"STRd6/packager:v0.3.1\"\n  filetree: \"STRd6/filetree:v0.2.0\"\n",
       "type": "blob"
     },
     "source/actions.coffee.md": {
@@ -130,7 +130,7 @@ window["STRd6/editor:master"]({
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.2.0\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"//code.jquery.com/jquery-1.10.1.min.js\",\"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\",\"http://strd6.github.io/tempest/javascripts/envweb.js\",\"http://strd6.github.io/require/v0.2.2.js\"],\"dependencies\":{\"issues\":\"STRd6/issues:v0.1.0\",\"test_runner\":\"STRd6/tests:master\",\"sandbox\":\"STRd6/sandbox:master\",\"notifications\":\"STRd6/notifications:master\",\"md\":\"STRd6/md:v0.2.3\",\"github\":\"STRd6/github:v0.3.0\",\"hygiene\":\"STRd6/hygiene:v0.1.0\",\"runtime\":\"STRd6/runtime:v0.1.1\",\"packager\":\"STRd6/packager:v0.3.1\",\"filetree\":\"STRd6/filetree:v0.2.0\"}};",
+      "content": "module.exports = {\"version\":\"0.2.0\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"//code.jquery.com/jquery-1.10.1.min.js\",\"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\",\"http://strd6.github.io/tempest/javascripts/envweb.js\",\"http://strd6.github.io/require/v0.2.2.js\"],\"dependencies\":{\"issues\":\"STRd6/issues:v0.1.0\",\"test_runner\":\"STRd6/tests:master\",\"sandbox\":\"STRd6/sandbox:v0.1.0\",\"notifications\":\"STRd6/notifications:master\",\"md\":\"STRd6/md:v0.2.3\",\"github\":\"STRd6/github:v0.3.0\",\"hygiene\":\"STRd6/hygiene:v0.1.0\",\"runtime\":\"STRd6/runtime:v0.1.1\",\"packager\":\"STRd6/packager:v0.3.1\",\"filetree\":\"STRd6/filetree:v0.2.0\"}};",
       "type": "blob"
     },
     "source/actions": {
@@ -390,7 +390,8 @@ window["STRd6/editor:master"]({
       },
       "progenitor": {
         "url": "http://strd6.github.io/editor/"
-      }
+      },
+      "name": "issues"
     },
     "test_runner": {
       "source": {
@@ -523,6 +524,7 @@ window["STRd6/editor:master"]({
       "name": "test_runner"
     },
     "sandbox": {
+      "version": "0.1.0",
       "source": {
         "LICENSE": {
           "path": "LICENSE",
@@ -539,19 +541,33 @@ window["STRd6/editor:master"]({
         "main.coffee.md": {
           "path": "main.coffee.md",
           "mode": "100644",
-          "content": "Sandbox\n=======\n\nSandbox creates a popup window in which you can run code.\n\nYou can pass in a width and a height to set the size of the window.\n\n    module.exports = ({name, width, height, methods}={}) ->\n      name ?= \"sandbox\" + new Date\n      width ?= 800\n      height ?= 600\n      methods ?= {}\n    \n      sandbox = window.open(\n        \"\"\n        name\n        \"width=#{width},height=#{height}\"\n      )\n    \nPass in functions to attach to the running window. Useful for things like\n`onerror` or other utilities if you would like the running code to be able to\ncommunicate back to the parent.\n\n      Object.extend sandbox, methods\n\nThe newly created window is returned.\n\n      return sandbox\n",
+          "content": "Sandbox\n=======\n\nSandbox creates a popup window in which you can run code.\n\nYou can pass in a width and a height to set the size of the window.\n\n    module.exports = ({name, width, height, methods}={}) ->\n      name ?= \"sandbox\" + new Date\n      width ?= 800\n      height ?= 600\n      methods ?= {}\n\n      sandbox = window.open(\n        \"\"\n        name\n        \"width=#{width},height=#{height}\"\n      )\n\nPass in functions to attach to the running window. Useful for things like\n`onerror` or other utilities if you would like the running code to be able to\ncommunicate back to the parent.\n\n      Object.extend sandbox, methods\n\nThe newly created window is returned.\n\n      return sandbox\n",
+          "type": "blob"
+        },
+        "pixie.cson": {
+          "path": "pixie.cson",
+          "mode": "100644",
+          "content": "version: \"0.1.0\"\nremoteDependencies: [\n  \"http://strd6.github.io/require/v0.2.2.js\"\n]\n",
           "type": "blob"
         }
       },
       "distribution": {
         "main": {
           "path": "main",
-          "content": "(function() {\n  module.exports = function(_arg) {\n    var height, methods, name, sandbox, width, _ref;\n    _ref = _arg != null ? _arg : {}, name = _ref.name, width = _ref.width, height = _ref.height, methods = _ref.methods;\n    if (name == null) {\n      name = \"sandbox\" + new Date;\n    }\n    if (width == null) {\n      width = 800;\n    }\n    if (height == null) {\n      height = 600;\n    }\n    if (methods == null) {\n      methods = {};\n    }\n    sandbox = window.open(\"\", name, \"width=\" + width + \",height=\" + height);\n    Object.extend(sandbox, methods);\n    return sandbox;\n  };\n\n}).call(this);\n",
+          "content": "(function() {\n  module.exports = function(_arg) {\n    var height, methods, name, sandbox, width, _ref;\n    _ref = _arg != null ? _arg : {}, name = _ref.name, width = _ref.width, height = _ref.height, methods = _ref.methods;\n    if (name == null) {\n      name = \"sandbox\" + new Date;\n    }\n    if (width == null) {\n      width = 800;\n    }\n    if (height == null) {\n      height = 600;\n    }\n    if (methods == null) {\n      methods = {};\n    }\n    sandbox = window.open(\"\", name, \"width=\" + width + \",height=\" + height);\n    Object.extend(sandbox, methods);\n    return sandbox;\n  };\n\n}).call(this);\n\n//# sourceURL=main.coffee",
+          "type": "blob"
+        },
+        "pixie": {
+          "path": "pixie",
+          "content": "module.exports = {\"version\":\"0.1.0\",\"remoteDependencies\":[\"http://strd6.github.io/require/v0.2.2.js\"]};",
           "type": "blob"
         }
       },
       "entryPoint": "main",
       "dependencies": {},
+      "remoteDependencies": [
+        "http://strd6.github.io/require/v0.2.2.js"
+      ],
       "repository": {
         "id": 12746310,
         "name": "sandbox",
@@ -572,7 +588,8 @@ window["STRd6/editor:master"]({
           "repos_url": "https://api.github.com/users/STRd6/repos",
           "events_url": "https://api.github.com/users/STRd6/events{/privacy}",
           "received_events_url": "https://api.github.com/users/STRd6/received_events",
-          "type": "User"
+          "type": "User",
+          "site_admin": false
         },
         "private": false,
         "html_url": "https://github.com/STRd6/sandbox",
@@ -614,14 +631,14 @@ window["STRd6/editor:master"]({
         "notifications_url": "https://api.github.com/repos/STRd6/sandbox/notifications{?since,all,participating}",
         "labels_url": "https://api.github.com/repos/STRd6/sandbox/labels{/name}",
         "created_at": "2013-09-11T03:03:50Z",
-        "updated_at": "2013-09-16T06:11:09Z",
-        "pushed_at": "2013-09-16T06:11:08Z",
+        "updated_at": "2013-09-21T22:24:05Z",
+        "pushed_at": "2013-09-21T22:24:04Z",
         "git_url": "git://github.com/STRd6/sandbox.git",
         "ssh_url": "git@github.com:STRd6/sandbox.git",
         "clone_url": "https://github.com/STRd6/sandbox.git",
         "svn_url": "https://github.com/STRd6/sandbox",
         "homepage": null,
-        "size": 476,
+        "size": 572,
         "watchers_count": 0,
         "language": "CoffeeScript",
         "has_issues": true,
@@ -641,7 +658,7 @@ window["STRd6/editor:master"]({
           "pull": true
         },
         "network_count": 0,
-        "branch": "master",
+        "branch": "v0.1.0",
         "defaultBranch": "master",
         "includedModules": [
           "Bindable"
@@ -649,8 +666,7 @@ window["STRd6/editor:master"]({
       },
       "progenitor": {
         "url": "http://strd6.github.io/editor/"
-      },
-      "name": "sandbox"
+      }
     },
     "notifications": {
       "source": {
