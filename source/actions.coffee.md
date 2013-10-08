@@ -46,7 +46,7 @@ The primary actions of the editor. This should eventually become a mixin.
             content = index(files)?.content
 
       runDocs: ({builder, data}) ->
-        runSandboxed docsConfig, 
+        runSandboxed docsConfig,
           build(builder, data)
           .then (pkg) ->
             documenter.documentAll(pkg)
@@ -95,7 +95,7 @@ auto-close the window.
     runSandboxed = (config, promise) ->
       sandbox = Runner.run
         config: config
-        
+
       promise.then(
         (content) ->
           sandbox.document.open()
@@ -103,13 +103,13 @@ auto-close the window.
           sandbox.document.close()
         , (error) ->
           sandbox.close()
-          
+
           return error
       )
-      
+
     configFor = (data) ->
       readSourceConfig(source: arrayToHash(data))
-      
+
     docsConfig =
       width: 1280
       height: 800
