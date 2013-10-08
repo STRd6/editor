@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>source/runner</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="http://strd6.github.io/cdn/parallel/docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    <ul class="sections">
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>Runner manages running apps in sandboxed windows and passing messages back and
+forth from the parent to the running instances.</p>
+<p>We keep a list of running windows so we can hot-update them when we modify our
+own code.</p>
+<p>One cool example use is if you are modifying your css you can run several
+instances of your app and navigate to different states. Then you can see in real
+time how the css changes affect each one.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">runningWindows = []
+
+Runner =
+  run: ({config}={}) -&gt;
+    {width, height} = (config <span class="keyword">or</span> {})
+
+    sandbox = Sandbox
+      width: width
+      height: height
+
+    runningWindows.push sandbox
+
+    <span class="keyword">return</span> sandbox
+
+  hotReloadCSS: (css, path) -&gt;
+    runningWindows = runningWindows.select (window) -&gt;
+      <span class="keyword">return</span> <span class="literal">false</span> <span class="keyword">if</span> window.closed
+
+      <span class="comment"># TODO: We're assuming only one style in the body</span>
+      <span class="comment"># which is reasonable in most cases, but we may want</span>
+      <span class="comment"># to scope it by the path of the specific css file</span>
+      <span class="comment"># to handle a wider range of situations</span>
+      $(window.document).find(<span class="string">"body style:eq(0)"</span>).html(css)
+
+      <span class="keyword">return</span> <span class="literal">true</span>
+
+module.exports = Runner</code></pre>
+</div>
+        </li>
+        
+    </ul>
+  </div>
+  <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
+<script src="http://strd6.github.io/require/v0.2.2.js"></script>
+<script src="http://strd6.github.io/interactive/v0.8.0.js"></script>
+<script src="package.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+<script src="//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
+<script src="http://strd6.github.io/tempest/javascripts/envweb.js"></script>
+</body>
+</html>
