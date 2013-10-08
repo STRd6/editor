@@ -38,34 +38,20 @@ The primary actions of the editor. This should eventually become a mixin.
       run: ({builder, filetree}) ->
         data = filetree.data()
 
-        sandbox = Runner.run
-          config: readSourceConfig(source: arrayToHash(data))
-
-        build(builder, data)
-        .then (pkg) ->
-          Packager.standAlone pkg
-        .then (files) ->
-          content = index(files)?.content
-
-          sandbox.document.open()
-          sandbox.document.write(content)
-          sandbox.document.close()
+        runSandboxed configFor(data),
+          build(builder, data)
+          .then (pkg) ->
+            Packager.standAlone pkg
+          .then (files) ->
+            content = index(files)?.content
 
       runDocs: ({builder, data}) ->
-        sandbox = Runner.run
-          config:
-            width: 1280
-            height: 800
-
-        build(builder, data)
-        .then (pkg) ->
-          documenter.documentAll(pkg)
-        .then (docs) ->
-          content = index(docs)?.content
-
-          sandbox.document.open()
-          sandbox.document.write(content)
-          sandbox.document.close()
+        runSandboxed docsConfig, 
+          build(builder, data)
+          .then (pkg) ->
+            documenter.documentAll(pkg)
+          .then (docs) ->
+            content = index(docs)?.content
 
       save: (params) ->
         commit(params)
@@ -73,8 +59,10 @@ The primary actions of the editor. This should eventually become a mixin.
           publish(params)
 
       test: ({builder, filetree}) ->
-        runSandboxed readSourceConfig(PACKAGE),
-          build(builder, filetree.data())
+        data = filetree.data()
+
+        runSandboxed configFor(data),
+          build(builder, data)
           .then (pkg) ->
             Packager.testScripts(pkg)
           .then (testScripts) ->
@@ -99,6 +87,11 @@ The primary actions of the editor. This should eventually become a mixin.
 Helpers
 -------
 
+Run some code in a sandboxed popup window. We need to popup the window immediately
+in response to user input to prevent pop-up blocking so we also pass a promise
+that will contain the content to render in the window. If the promise fails we
+auto-close the window.
+
     runSandboxed = (config, promise) ->
       sandbox = Runner.run
         config: config
@@ -113,6 +106,13 @@ Helpers
           
           return error
       )
+      
+    configFor = (data) ->
+      readSourceConfig(source: arrayToHash(data))
+      
+    docsConfig =
+      width: 1280
+      height: 800
 
 Get the `index.html` from a list of files.
 
