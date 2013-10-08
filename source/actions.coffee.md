@@ -73,17 +73,12 @@ The primary actions of the editor. This should eventually become a mixin.
           publish(params)
 
       test: ({builder, filetree}) ->
-        sandbox = Runner.run
-          config: readSourceConfig(PACKAGE)
-
-        build(builder, filetree.data())
-        .then (pkg) ->
-          Packager.testScripts(pkg)
-        .then (testScripts) ->
-          html = TestRunner.html(testScripts)
-          sandbox.document.open()
-          sandbox.document.write(html)
-          sandbox.document.close()
+        runSandboxed readSourceConfig(PACKAGE),
+          build(builder, filetree.data())
+          .then (pkg) ->
+            Packager.testScripts(pkg)
+          .then (testScripts) ->
+            html = TestRunner.html(testScripts)
 
       load: ({filetree, repository}) ->
         # Decode all content in place
@@ -103,6 +98,21 @@ The primary actions of the editor. This should eventually become a mixin.
 
 Helpers
 -------
+
+    runSandboxed = (config, promise) ->
+      sandbox = Runner.run
+        config: config
+        
+      promise.then(
+        (content) ->
+          sandbox.document.open()
+          sandbox.document.write(content)
+          sandbox.document.close()
+        , (error) ->
+          sandbox.close()
+          
+          return error
+      )
 
 Get the `index.html` from a list of files.
 
