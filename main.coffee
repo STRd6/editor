@@ -126,8 +126,9 @@ actions =
   docs: ->
     notify "Running Docs..."
 
-    Actions.runDocs({builder, data: filetree.data()})
-    .fail errors
+    if file = prompt("Docs file", "index")
+      Actions.runDocs({builder, data: filetree.data(), file: file})
+      .fail errors
 
   new_file: ->
     if name = prompt("File Name", "newfile.coffee")
