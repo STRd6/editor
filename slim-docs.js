@@ -133,12 +133,13 @@
     docs: function() {
       var file;
       notify("Running Docs...");
-      file = prompt("Docs file", "index");
-      return Actions.runDocs({
-        builder: builder,
-        data: filetree.data(),
-        file: file
-      }).fail(errors);
+      if (file = prompt("Docs file", "index")) {
+        return Actions.runDocs({
+          builder: builder,
+          data: filetree.data(),
+          file: file
+        }).fail(errors);
+      }
     },
     new_file: function() {
       var file, name;
