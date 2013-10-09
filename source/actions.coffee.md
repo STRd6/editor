@@ -54,7 +54,7 @@ The primary actions of the editor. This should eventually become a mixin.
             documenter.documentAll(pkg)
           .then (docs) ->
             script = docs.first()
-            
+
             path = script.path.split("/")
             path.pop()
             path.push("#{file}.html")
