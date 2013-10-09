@@ -45,13 +45,25 @@ The primary actions of the editor. This should eventually become a mixin.
           .then (files) ->
             content = index(files)?.content
 
-      runDocs: ({builder, data}) ->
+      runDocs: ({builder, data, file}) ->
+        file ?= "index"
+
         runSandboxed docsConfig,
           build(builder, data)
           .then (pkg) ->
             documenter.documentAll(pkg)
           .then (docs) ->
-            content = index(docs)?.content
+            script = docs.first()
+            
+            path = script.path.split("/")
+            path.pop()
+            path.push("#{file}.html")
+            path = path.join("/")
+
+            if file = findFile(path, docs)
+              file.content + "<script>#{script.content}<\/script>"
+            else
+              "Failed to find file at #{path}"
 
       save: (params) ->
         commit(params)
@@ -119,4 +131,11 @@ Get the `index.html` from a list of files.
     index = (files) ->
       files.filter (file) ->
         /index\.html$/.test file.path
+      .first()
+
+Find a file in a list of files by path.
+
+    findFile = (path, files) ->
+      files.filter (file) ->
+        file.path is path
       .first()
