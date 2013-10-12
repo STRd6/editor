@@ -25,10 +25,11 @@ templates = (HAMLjr.templates ||= {})
   if typeof template is "function"
     templates[name] = template
 
-Actions = require("./source/actions")
+Editor = require("./editor")
 Builder = require("./source/builder")
-Runner = require("./source/runner")
 TextEditor = require("./source/text_editor")
+
+editor = Editor()
 
 {Filetree, File, template:filetreeTemplate} = require "filetree"
 templates["filetree"] = filetreeTemplate
@@ -97,7 +98,7 @@ actions =
   save: ->
     notify "Saving..."
 
-    Actions.save
+    editor.save
       repository: repository()
       fileData: filetree.data()
       builder: builder
@@ -114,20 +115,20 @@ actions =
   run: ->
     notify "Running..."
 
-    Actions.run({builder, filetree})
+    editor.run({builder, filetree})
     .fail classicError
 
   test: ->
     notify "Running tests..."
 
-    Actions.test({builder, filetree})
+    editor.test({builder, filetree})
     .fail errors
 
   docs: ->
     notify "Running Docs..."
 
     if file = prompt("Docs file", "index")
-      Actions.runDocs({builder, data: filetree.data(), file: file})
+      editor.runDocs({builder, data: filetree.data(), file: file})
       .fail errors
 
   new_file: ->
@@ -152,7 +153,7 @@ actions =
     .then (repositoryInstance) ->
       notify "Loading files..."
   
-      Actions.load
+      editor.load
         repository: repositoryInstance
         filetree: filetree
       .then ->
@@ -192,7 +193,7 @@ actions =
       branchName = repository().branch()
       notifications.push "\nReloading branch #{branchName}..."
 
-      Actions.load
+      editor.load
         repository: repository()
         filetree: filetree
       .then ->
@@ -280,7 +281,7 @@ issues?.currentIssue.observe (issue) ->
       .then ->
         notifications.push "\nLoading branch #{branchName}..."
 
-        Actions.load
+        editor.load
           repository: repository()
           filetree: filetree
         .then ->

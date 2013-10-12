@@ -6,8 +6,6 @@ Trying to encapsulate our action button actions, but doing a poor job so far.
 Some dependencies.
 
     Packager = require "packager"
-    Runner = require("./runner")
-    TestRunner = require("test_runner")
     {readSourceConfig, arrayToHash} = require("./util")
 
     documenter = require("md")
@@ -34,11 +32,11 @@ The primary actions of the editor. This should eventually become a mixin.
         tree: fileData
         message: message
 
-    Actions =
+    Actions = (I={}, self) ->
       run: ({builder, filetree}) ->
         data = filetree.data()
 
-        runSandboxed configFor(data),
+        runSandboxed self.runner(), configFor(data),
           build(builder, data)
           .then (pkg) ->
             Packager.standAlone pkg
@@ -48,7 +46,7 @@ The primary actions of the editor. This should eventually become a mixin.
       runDocs: ({builder, data, file}) ->
         file ?= "index"
 
-        runSandboxed docsConfig,
+        runSandboxed self.runner(), docsConfig,
           build(builder, data)
           .then (pkg) ->
             documenter.documentAll(pkg)
@@ -73,7 +71,7 @@ The primary actions of the editor. This should eventually become a mixin.
       test: ({builder, filetree}) ->
         data = filetree.data()
 
-        runSandboxed configFor(data),
+        runSandboxed self.runner(), configFor(data),
           build(builder, data)
           .then (pkg) ->
             Packager.testScripts(pkg)
@@ -98,26 +96,6 @@ The primary actions of the editor. This should eventually become a mixin.
 
 Helpers
 -------
-
-Run some code in a sandboxed popup window. We need to popup the window immediately
-in response to user input to prevent pop-up blocking so we also pass a promise
-that will contain the content to render in the window. If the promise fails we
-auto-close the window.
-
-    runSandboxed = (config, promise) ->
-      sandbox = Runner.run
-        config: config
-
-      promise.then(
-        (content) ->
-          sandbox.document.open()
-          sandbox.document.write(content)
-          sandbox.document.close()
-        , (error) ->
-          sandbox.close()
-
-          return error
-      )
 
     configFor = (data) ->
       readSourceConfig(source: arrayToHash(data))
