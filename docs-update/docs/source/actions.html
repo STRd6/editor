@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>source/actions</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="http://strd6.github.io/cdn/parallel/docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    <ul class="sections">
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <h1 id="actions">Actions</h1>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Trying to encapsulate our action button actions, but doing a poor job so far.</p>
+<p>Some dependencies.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">Packager = require <span class="string">"packager"</span>
+Runner = require(<span class="string">"./runner"</span>)
+TestRunner = require(<span class="string">"test_runner"</span>)
+{readSourceConfig, arrayToHash} = require(<span class="string">"./util"</span>)
+
+documenter = require(<span class="string">"md"</span>)
+
+<span class="function"><span class="title">build</span></span> = (builder, fileData) -&gt;
+  builder.build(fileData, PACKAGE.dependencies)</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>The primary actions of the editor. This should eventually become a mixin.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">publish</span></span> = ({builder, fileData, repository}) -&gt;
+  build(builder, fileData)
+  .<span class="keyword">then</span> (pkg) -&gt;
+    repository.publish(Packager.standAlone(pkg))
+    .<span class="keyword">then</span> -&gt; <span class="comment"># Can't outdent because we need `pkg`</span>
+      documenter.documentAll(pkg)
+    .<span class="keyword">then</span> (docs) -&gt;
+      repository.commitTree
+        tree: docs
+        baseTree: <span class="literal">true</span>
+        branch: repository.publishBranch()
+
+<span class="function"><span class="title">commit</span></span> = ({fileData, repository, message}) -&gt;
+  repository.commitTree
+    tree: fileData
+    message: message
+
+Actions =
+  run: ({builder, filetree}) -&gt;
+    data = filetree.data()
+
+    runSandboxed configFor(data),
+      build(builder, data)
+      .<span class="keyword">then</span> (pkg) -&gt;
+        Packager.standAlone pkg
+      .<span class="keyword">then</span> (files) -&gt;
+        content = index(files)?.content
+
+  runDocs: ({builder, data, file}) -&gt;
+    file ?= <span class="string">"index"</span>
+
+    runSandboxed docsConfig,
+      build(builder, data)
+      .<span class="keyword">then</span> (pkg) -&gt;
+        documenter.documentAll(pkg)
+      .<span class="keyword">then</span> (docs) -&gt;
+        script = docs.first()
+
+        path = script.path.split(<span class="string">"/"</span>)
+        path.pop()
+        path.push(<span class="string">"<span class="subst">#{file}</span>.html"</span>)
+        path = path.join(<span class="string">"/"</span>)
+
+        <span class="keyword">if</span> file = findFile(path, docs)
+          file.content + <span class="string">"&lt;script&gt;<span class="subst">#{script.content}</span>&lt;\/script&gt;"</span>
+        <span class="keyword">else</span>
+          <span class="string">"Failed to find file at <span class="subst">#{path}</span>"</span>
+
+  save: (params) -&gt;
+    commit(params)
+    .<span class="keyword">then</span> -&gt;
+      publish(params)
+
+  test: ({builder, filetree}) -&gt;
+    data = filetree.data()
+
+    runSandboxed configFor(data),
+      build(builder, data)
+      .<span class="keyword">then</span> (pkg) -&gt;
+        Packager.testScripts(pkg)
+      .<span class="keyword">then</span> (testScripts) -&gt;
+        html = TestRunner.html(testScripts)
+
+  load: ({filetree, repository}) -&gt;
+    <span class="comment"># Decode all content in place</span>
+    <span class="function"><span class="title">processDirectory</span></span> = (items) -&gt;
+      items.each (item) -&gt;
+        <span class="keyword">return</span> item <span class="keyword">unless</span> item.content
+
+        item.content = Base64.decode(item.content)
+        item.encoding = <span class="string">"raw"</span>
+
+    repository.latestContent()
+    .<span class="keyword">then</span> (results) -&gt;
+      files = processDirectory results
+      filetree.load files
+
+module.exports = Actions</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <h2 id="helpers">Helpers</h2>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Run some code in a sandboxed popup window. We need to popup the window immediately
+in response to user input to prevent pop-up blocking so we also pass a promise
+that will contain the content to render in the window. If the promise fails we
+auto-close the window.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">runSandboxed</span></span> = (config, promise) -&gt;
+  sandbox = Runner.run
+    config: config
+
+  promise.<span class="keyword">then</span>(
+    (content) -&gt;
+      sandbox.document.open()
+      sandbox.document.write(content)
+      sandbox.document.close()
+    , (error) -&gt;
+      sandbox.close()
+
+      <span class="keyword">return</span> error
+  )
+
+<span class="function"><span class="title">configFor</span></span> = (data) -&gt;
+  readSourceConfig(source: arrayToHash(data))
+
+docsConfig =
+  width: <span class="number">1280</span>
+  height: <span class="number">800</span></code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Get the <code>index.html</code> from a list of files.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">index</span></span> = (files) -&gt;
+  files.filter (file) -&gt;
+    <span class="regexp">/index\.html$/</span>.test file.path
+  .first()</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Find a file in a list of files by path.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">findFile</span></span> = (path, files) -&gt;
+  files.filter (file) -&gt;
+    file.path <span class="keyword">is</span> path
+  .first()</code></pre>
+</div>
+        </li>
+        
+    </ul>
+  </div>
+  <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
+<script src="http://strd6.github.io/require/v0.2.2.js"></script>
+<script src="http://strd6.github.io/interactive/v0.8.0.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+<script src="//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
+<script src="http://strd6.github.io/tempest/javascripts/envweb.js"></script><script src="../package.js"></script>
+</body>
+</html>
