@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>source/text_editor</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="http://strd6.github.io/cdn/parallel/docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    <ul class="sections">
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>The <code>TextEditor</code> is a model for editing a text file. Currently it uses the Ace
+editor, but we may switch in the future. All the editor specific things live in
+here.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">TextEditor</span></span> = (I) -&gt;
+  Object.reverseMerge I,
+    mode: <span class="string">"coffee"</span>
+    text: <span class="string">""</span>
+
+  self = Model(I)</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>We can&#39;t use ace on a div not in the DOM so we need to be sure to pass one in.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">  el = I.el</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>We can&#39;t serialize DOM elements so we need to be sure to delete it.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">  <span class="keyword">delete</span> I.el</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Here we create and configure the Ace text editor.</p>
+<p>TODO: Load these options from a preferences somewhere.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">  editor = ace.edit(el)
+  editor.setFontSize(<span class="string">"16px"</span>)
+  editor.setTheme(<span class="string">"ace/theme/chrome"</span>)
+  editor.getSession().setUseWorker(<span class="literal">false</span>)
+  editor.getSession().setMode(<span class="string">"ace/mode/<span class="subst">#{I.mode}</span>"</span>)
+  editor.getSession().setUseSoftTabs(<span class="literal">true</span>)
+  editor.getSession().setTabSize(<span class="number">2</span>)</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p><code>reset</code> Sets the content of the editor to the given content and also resets any
+cursor position or selection.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">  <span class="function"><span class="title">reset</span></span> = (content=<span class="string">""</span>) -&gt;
+    editor.setValue(content)
+    editor.moveCursorTo(<span class="number">0</span>, <span class="number">0</span>)
+    editor.session.selection.clearSelection()
+
+  reset(I.text)</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Our text attribute is observable so clients can track changes.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">  self.attrObservable <span class="string">"text"</span></code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>We modify our text by listening to change events from Ace.</p>
+<p>TODO: Remove these <code>updating</code> hacks.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">  updating = <span class="literal">false</span>
+  editor.getSession().<span class="literal">on</span> <span class="string">'change'</span>, -&gt;
+    updating = <span class="literal">true</span>
+    self.text(editor.getValue())
+    updating = <span class="literal">false</span></code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>We also observe any changes to <code>text</code> ourselves to stay up to date with outside
+modifications. Its a bi-directional binding.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">  self.text.observe (newValue) -&gt;
+    <span class="keyword">unless</span> updating
+      reset(newValue)</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>We expose some properties and methods.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">  self.extend
+    el: el
+    editor: editor
+    reset: reset
+
+  <span class="keyword">return</span> self
+
+module.exports = TextEditor</code></pre>
+</div>
+        </li>
+        
+    </ul>
+  </div>
+  <script src="../package.js"></script>,<script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
+<script src="http://strd6.github.io/require/v0.2.2.js"></script>
+<script src="http://strd6.github.io/interactive/v0.8.0.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+<script src="//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
+<script src="http://strd6.github.io/tempest/javascripts/envweb.js"></script>
+</body>
+</html>
