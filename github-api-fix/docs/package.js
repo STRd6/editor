@@ -19,7 +19,7 @@
     "pixie.cson": {
       "path": "pixie.cson",
       "mode": "100644",
-      "content": "version: \"0.2.0\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/v0.2.2.js\"\n]\ndependencies:\n  issues: \"STRd6/issues:v0.1.0\"\n  test_runner: \"STRd6/tests:v0.1.0\"\n  sandbox: \"STRd6/sandbox:v0.1.0\"\n  notifications: \"STRd6/notifications:master\"\n  md: \"STRd6/md:v0.2.7\"\n  github: \"STRd6/github:v0.3.1-alpha.0\"\n  hygiene: \"STRd6/hygiene:v0.1.0\"\n  runtime: \"STRd6/runtime:v0.1.1\"\n  packager: \"STRd6/packager:v0.3.2\"\n  filetree: \"STRd6/filetree:v0.2.0\"\n",
+      "content": "version: \"0.2.0\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/v0.2.2.js\"\n]\ndependencies:\n  issues: \"STRd6/issues:v0.1.0\"\n  test_runner: \"STRd6/tests:v0.1.0\"\n  sandbox: \"STRd6/sandbox:v0.1.0\"\n  notifications: \"STRd6/notifications:master\"\n  md: \"STRd6/md:v0.2.7\"\n  github: \"STRd6/github:v0.3.1\"\n  hygiene: \"STRd6/hygiene:v0.1.0\"\n  runtime: \"STRd6/runtime:v0.1.1\"\n  packager: \"STRd6/packager:v0.3.2\"\n  filetree: \"STRd6/filetree:v0.2.0\"\n",
       "type": "blob"
     },
     "source/actions.coffee.md": {
@@ -127,7 +127,7 @@
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.2.0\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"//code.jquery.com/jquery-1.10.1.min.js\",\"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\",\"http://strd6.github.io/tempest/javascripts/envweb.js\",\"http://strd6.github.io/require/v0.2.2.js\"],\"dependencies\":{\"issues\":\"STRd6/issues:v0.1.0\",\"test_runner\":\"STRd6/tests:v0.1.0\",\"sandbox\":\"STRd6/sandbox:v0.1.0\",\"notifications\":\"STRd6/notifications:master\",\"md\":\"STRd6/md:v0.2.7\",\"github\":\"STRd6/github:v0.3.1-alpha.0\",\"hygiene\":\"STRd6/hygiene:v0.1.0\",\"runtime\":\"STRd6/runtime:v0.1.1\",\"packager\":\"STRd6/packager:v0.3.2\",\"filetree\":\"STRd6/filetree:v0.2.0\"}};",
+      "content": "module.exports = {\"version\":\"0.2.0\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"//code.jquery.com/jquery-1.10.1.min.js\",\"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\",\"http://strd6.github.io/tempest/javascripts/envweb.js\",\"http://strd6.github.io/require/v0.2.2.js\"],\"dependencies\":{\"issues\":\"STRd6/issues:v0.1.0\",\"test_runner\":\"STRd6/tests:v0.1.0\",\"sandbox\":\"STRd6/sandbox:v0.1.0\",\"notifications\":\"STRd6/notifications:master\",\"md\":\"STRd6/md:v0.2.7\",\"github\":\"STRd6/github:v0.3.1\",\"hygiene\":\"STRd6/hygiene:v0.1.0\",\"runtime\":\"STRd6/runtime:v0.1.1\",\"packager\":\"STRd6/packager:v0.3.2\",\"filetree\":\"STRd6/filetree:v0.2.0\"}};",
       "type": "blob"
     },
     "source/actions": {
@@ -1052,7 +1052,7 @@
       "name": "md"
     },
     "github": {
-      "version": "0.3.1-alpha.0",
+      "version": "0.3.1",
       "source": {
         "LICENSE": {
           "path": "LICENSE",
@@ -1087,7 +1087,7 @@
         "pixie.cson": {
           "path": "pixie.cson",
           "mode": "100644",
-          "content": "version: \"0.3.1-alpha.0\"\nremoteDependencies: [\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/master.js\"\n]\ndependencies:\n  emojer: \"STRd6/emojer:master\"\n",
+          "content": "version: \"0.3.1\"\nremoteDependencies: [\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/master.js\"\n]\ndependencies:\n  emojer: \"STRd6/emojer:master\"\n",
           "type": "blob"
         },
         "repository.coffee.md": {
@@ -1121,7 +1121,7 @@
         },
         "pixie": {
           "path": "pixie",
-          "content": "module.exports = {\"version\":\"0.3.1-alpha.0\",\"remoteDependencies\":[\"//code.jquery.com/jquery-1.10.1.min.js\",\"http://strd6.github.io/tempest/javascripts/envweb.js\",\"http://strd6.github.io/require/master.js\"],\"dependencies\":{\"emojer\":\"STRd6/emojer:master\"}};",
+          "content": "module.exports = {\"version\":\"0.3.1\",\"remoteDependencies\":[\"//code.jquery.com/jquery-1.10.1.min.js\",\"http://strd6.github.io/tempest/javascripts/envweb.js\",\"http://strd6.github.io/require/master.js\"],\"dependencies\":{\"emojer\":\"STRd6/emojer:master\"}};",
           "type": "blob"
         },
         "repository": {
@@ -1432,8 +1432,7 @@
           },
           "progenitor": {
             "url": "http://strd6.github.io/editor/"
-          },
-          "name": "emojer"
+          }
         }
       },
       "remoteDependencies": [
@@ -1531,7 +1530,7 @@
           "pull": true
         },
         "network_count": 0,
-        "branch": "v0.3.1-alpha.0",
+        "branch": "v0.3.1",
         "defaultBranch": "master",
         "includedModules": [
           "Bindable"
@@ -1539,8 +1538,7 @@
       },
       "progenitor": {
         "url": "http://strd6.github.io/editor/"
-      },
-      "name": "github"
+      }
     },
     "hygiene": {
       "version": "0.1.0",
@@ -2231,7 +2229,7 @@
     "owner": {
       "login": "STRd6",
       "id": 18894,
-      "avatar_url": "https://2.gravatar.com/avatar/33117162fff8a9cf50544a604f60c045?d=https%3A%2F%2Fidenticons.github.com%2F39df222bffe39629d904e4883eabc654.png",
+      "avatar_url": "https://0.gravatar.com/avatar/33117162fff8a9cf50544a604f60c045?d=https%3A%2F%2Fidenticons.github.com%2F39df222bffe39629d904e4883eabc654.png",
       "gravatar_id": "33117162fff8a9cf50544a604f60c045",
       "url": "https://api.github.com/users/STRd6",
       "html_url": "https://github.com/STRd6",
@@ -2244,8 +2242,7 @@
       "repos_url": "https://api.github.com/users/STRd6/repos",
       "events_url": "https://api.github.com/users/STRd6/events{/privacy}",
       "received_events_url": "https://api.github.com/users/STRd6/received_events",
-      "type": "User",
-      "site_admin": false
+      "type": "User"
     },
     "private": false,
     "html_url": "https://github.com/STRd6/editor",
@@ -2287,14 +2284,14 @@
     "notifications_url": "https://api.github.com/repos/STRd6/editor/notifications{?since,all,participating}",
     "labels_url": "https://api.github.com/repos/STRd6/editor/labels{/name}",
     "created_at": "2013-08-30T04:27:41Z",
-    "updated_at": "2013-10-12T22:08:06Z",
-    "pushed_at": "2013-10-12T22:07:57Z",
+    "updated_at": "2013-09-29T23:40:12Z",
+    "pushed_at": "2013-09-29T23:40:11Z",
     "git_url": "git://github.com/STRd6/editor.git",
     "ssh_url": "git@github.com:STRd6/editor.git",
     "clone_url": "https://github.com/STRd6/editor.git",
     "svn_url": "https://github.com/STRd6/editor",
     "homepage": "strd6.github.io/editor",
-    "size": 4044,
+    "size": 3211,
     "watchers_count": 1,
     "language": "CoffeeScript",
     "has_issues": true,
@@ -2302,9 +2299,9 @@
     "has_wiki": true,
     "forks_count": 2,
     "mirror_url": null,
-    "open_issues_count": 15,
+    "open_issues_count": 13,
     "forks": 2,
-    "open_issues": 15,
+    "open_issues": 13,
     "watchers": 1,
     "master_branch": "master",
     "default_branch": "master",
