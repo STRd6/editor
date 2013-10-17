@@ -1432,7 +1432,8 @@
           },
           "progenitor": {
             "url": "http://strd6.github.io/editor/"
-          }
+          },
+          "name": "emojer"
         }
       },
       "remoteDependencies": [
@@ -1538,7 +1539,8 @@
       },
       "progenitor": {
         "url": "http://strd6.github.io/editor/"
-      }
+      },
+      "name": "github"
     },
     "hygiene": {
       "version": "0.1.0",
