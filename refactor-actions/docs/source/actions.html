@@ -73,64 +73,66 @@ documenter = require(<span class="string">"md"</span>)
     message: message
 
 <span class="function"><span class="title">Actions</span></span> = (I={}, self) -&gt;
-  run: ({builder, filetree}) -&gt;
-    data = filetree.data()
+  self.extend
+    run: ({builder, filetree}) -&gt;
+      data = filetree.data()
 
-    runSandboxed self.runner(), configFor(data),
-      build(builder, data)
-      .<span class="keyword">then</span> (pkg) -&gt;
-        Packager.standAlone pkg
-      .<span class="keyword">then</span> (files) -&gt;
-        content = index(files)?.content
+      self.runInSandboxWindow configFor(data),
+        build(builder, data)
+        .<span class="keyword">then</span> (pkg) -&gt;
+          Packager.standAlone pkg
+        .<span class="keyword">then</span> (files) -&gt;
+          content = index(files)?.content
 
-  runDocs: ({builder, data, file}) -&gt;
-    file ?= <span class="string">"index"</span>
+    runDocs: ({builder, data, file}) -&gt;
+      file ?= <span class="string">"index"</span>
 
-    runSandboxed self.runner(), docsConfig,
-      build(builder, data)
-      .<span class="keyword">then</span> (pkg) -&gt;
-        documenter.documentAll(pkg)
-      .<span class="keyword">then</span> (docs) -&gt;
-        script = docs.first()
+      self.runInSandboxWindow docsConfig,
+        build(builder, data)
+        .<span class="keyword">then</span> (pkg) -&gt;
+          documenter.documentAll(pkg)
+        .<span class="keyword">then</span> (docs) -&gt;
+          script = docs.first()
 
-        path = script.path.split(<span class="string">"/"</span>)
-        path.pop()
-        path.push(<span class="string">"<span class="subst">#{file}</span>.html"</span>)
-        path = path.join(<span class="string">"/"</span>)
+          path = script.path.split(<span class="string">"/"</span>)
+          path.pop()
+          path.push(<span class="string">"<span class="subst">#{file}</span>.html"</span>)
+          path = path.join(<span class="string">"/"</span>)
 
-        <span class="keyword">if</span> file = findFile(path, docs)
-          file.content + <span class="string">"&lt;script&gt;<span class="subst">#{script.content}</span>&lt;\/script&gt;"</span>
-        <span class="keyword">else</span>
-          <span class="string">"Failed to find file at <span class="subst">#{path}</span>"</span>
+          <span class="keyword">if</span> file = findFile(path, docs)
+            file.content + <span class="string">"&lt;script&gt;<span class="subst">#{script.content}</span>&lt;\/script&gt;"</span>
+          <span class="keyword">else</span>
+            <span class="string">"Failed to find file at <span class="subst">#{path}</span>"</span>
 
-  save: (params) -&gt;
-    commit(params)
-    .<span class="keyword">then</span> -&gt;
-      publish(params)
+    save: (params) -&gt;
+      commit(params)
+      .<span class="keyword">then</span> -&gt;
+        publish(params)
 
-  test: ({builder, filetree}) -&gt;
-    data = filetree.data()
+    test: ({builder, filetree}) -&gt;
+      data = filetree.data()
 
-    runSandboxed self.runner(), configFor(data),
-      build(builder, data)
-      .<span class="keyword">then</span> (pkg) -&gt;
-        Packager.testScripts(pkg)
-      .<span class="keyword">then</span> (testScripts) -&gt;
-        html = TestRunner.html(testScripts)
+      self.runInSandboxWindow configFor(data),
+        build(builder, data)
+        .<span class="keyword">then</span> (pkg) -&gt;
+          Packager.testScripts(pkg)
+        .<span class="keyword">then</span> (testScripts) -&gt;
+          <span class="comment"># TODO: Editor should not have to return runner to run tests.</span>
+          html = self.runner().testsHtml(testScripts)
 
-  load: ({filetree, repository}) -&gt;
-    <span class="comment"># Decode all content in place</span>
-    <span class="function"><span class="title">processDirectory</span></span> = (items) -&gt;
-      items.each (item) -&gt;
-        <span class="keyword">return</span> item <span class="keyword">unless</span> item.content
+    load: ({filetree, repository}) -&gt;
+      <span class="comment"># Decode all content in place</span>
+      <span class="function"><span class="title">processDirectory</span></span> = (items) -&gt;
+        items.each (item) -&gt;
+          <span class="keyword">return</span> item <span class="keyword">unless</span> item.content
 
-        item.content = Base64.decode(item.content)
-        item.encoding = <span class="string">"raw"</span>
+          item.content = Base64.decode(item.content)
+          item.encoding = <span class="string">"raw"</span>
 
-    repository.latestContent()
-    .<span class="keyword">then</span> (results) -&gt;
-      files = processDirectory results
-      filetree.load files
+      repository.latestContent()
+      .<span class="keyword">then</span> (results) -&gt;
+        files = processDirectory results
+        filetree.load files
 
 module.exports = Actions</code></pre>
 </div>
@@ -201,12 +203,12 @@ docsConfig =
         
     </ul>
   </div>
-  <script src="../package.js"></script>,<script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
 <script src="http://strd6.github.io/require/v0.2.2.js"></script>
 <script src="http://strd6.github.io/interactive/v0.8.0.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
 <script src="//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
-<script src="http://strd6.github.io/tempest/javascripts/envweb.js"></script>
+<script src="http://strd6.github.io/tempest/javascripts/envweb.js"></script><script src="../package.js"></script>
 </body>
 </html>
