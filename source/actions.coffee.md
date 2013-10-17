@@ -33,64 +33,66 @@ The primary actions of the editor. This should eventually become a mixin.
         message: message
 
     Actions = (I={}, self) ->
-      run: ({builder, filetree}) ->
-        data = filetree.data()
+      self.extend
+        run: ({builder, filetree}) ->
+          data = filetree.data()
+  
+          self.runInSandboxWindow configFor(data),
+            build(builder, data)
+            .then (pkg) ->
+              Packager.standAlone pkg
+            .then (files) ->
+              content = index(files)?.content
+  
+        runDocs: ({builder, data, file}) ->
+          file ?= "index"
+  
+          self.runInSandboxWindow docsConfig,
+            build(builder, data)
+            .then (pkg) ->
+              documenter.documentAll(pkg)
+            .then (docs) ->
+              script = docs.first()
+  
+              path = script.path.split("/")
+              path.pop()
+              path.push("#{file}.html")
+              path = path.join("/")
+  
+              if file = findFile(path, docs)
+                file.content + "<script>#{script.content}<\/script>"
+              else
+                "Failed to find file at #{path}"
+  
+        save: (params) ->
+          commit(params)
+          .then ->
+            publish(params)
+  
+        test: ({builder, filetree}) ->
+          data = filetree.data()
+  
+          self.runInSandboxWindow configFor(data),
+            build(builder, data)
+            .then (pkg) ->
+              Packager.testScripts(pkg)
+            .then (testScripts) ->
+              # TODO: Editor should not have to return runner to run tests.
+              html = self.runner().testsHtml(testScripts)
 
-        runSandboxed self.runner(), configFor(data),
-          build(builder, data)
-          .then (pkg) ->
-            Packager.standAlone pkg
-          .then (files) ->
-            content = index(files)?.content
-
-      runDocs: ({builder, data, file}) ->
-        file ?= "index"
-
-        runSandboxed self.runner(), docsConfig,
-          build(builder, data)
-          .then (pkg) ->
-            documenter.documentAll(pkg)
-          .then (docs) ->
-            script = docs.first()
-
-            path = script.path.split("/")
-            path.pop()
-            path.push("#{file}.html")
-            path = path.join("/")
-
-            if file = findFile(path, docs)
-              file.content + "<script>#{script.content}<\/script>"
-            else
-              "Failed to find file at #{path}"
-
-      save: (params) ->
-        commit(params)
-        .then ->
-          publish(params)
-
-      test: ({builder, filetree}) ->
-        data = filetree.data()
-
-        runSandboxed self.runner(), configFor(data),
-          build(builder, data)
-          .then (pkg) ->
-            Packager.testScripts(pkg)
-          .then (testScripts) ->
-            html = TestRunner.html(testScripts)
-
-      load: ({filetree, repository}) ->
-        # Decode all content in place
-        processDirectory = (items) ->
-          items.each (item) ->
-            return item unless item.content
-
-            item.content = Base64.decode(item.content)
-            item.encoding = "raw"
-
-        repository.latestContent()
-        .then (results) ->
-          files = processDirectory results
-          filetree.load files
+        load: ({filetree, repository}) ->
+          # Decode all content in place
+          processDirectory = (items) ->
+            items.each (item) ->
+              return item unless item.content
+  
+              item.content = Base64.decode(item.content)
+              item.encoding = "raw"
+  
+          repository.latestContent()
+          .then (results) ->
+            files = processDirectory results
+            filetree.load files
 
     module.exports = Actions
 
