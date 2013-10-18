@@ -2209,8 +2209,7 @@
       },
       "progenitor": {
         "url": "http://strd6.github.io/editor/"
-      },
-      "name": "runner"
+      }
     }
   },
   "remoteDependencies": [
@@ -2221,9 +2220,6 @@
     "http://strd6.github.io/tempest/javascripts/envweb.js",
     "http://strd6.github.io/require/v0.2.2.js"
   ],
-  "progenitor": {
-    "url": "http://strd6.github.io/editor/"
-  },
   "repository": {
     "id": 12478000,
     "name": "editor",
@@ -2318,5 +2314,8 @@
     "includedModules": [
       "Bindable"
     ]
+  },
+  "progenitor": {
+    "url": "http://strd6.github.io/editor/"
   }
 });
