@@ -29,6 +29,7 @@ Editor = require("./editor")
 TextEditor = require("./source/text_editor")
 
 editor = Editor()
+editor.loadFiles(files)
 
 # TODO: Don't expose these
 builder = editor.builder()
@@ -213,8 +214,6 @@ actions =
         notifications.push "Published!"
 
     .fail classicError
-
-filetree.load(files)
 
 filetree.selectedFile.observe (file) ->
   root = $root.children(".main")
