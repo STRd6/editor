@@ -1,20 +1,4 @@
-<!DOCTYPE html>
-<html manifest="manifest.appcache?1382123757970">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
-<script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
-<script src="//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
-<script src="http://strd6.github.io/tempest/javascripts/envweb.js"></script>
-<script src="http://strd6.github.io/require/v0.2.2.js"></script>
-</head>
-<body>
-<script>
-;(function(PACKAGE) {
-var require = Require.generateFor(PACKAGE);
-require('./main')
-})({
+{
   "version": "0.2.0",
   "source": {
     "TODO": {
@@ -2325,7 +2309,4 @@ require('./main')
       "Bindable"
     ]
   }
-});
-</script>
-</body>
-</html>
+}
