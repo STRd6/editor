@@ -11,7 +11,6 @@ remoteDependencies: [
 ]
 dependencies:
   issues: "STRd6/issues:v0.1.0"
-  test_runner: "STRd6/tests:v0.1.0"
   sandbox: "STRd6/sandbox:v0.1.0"
   notifications: "STRd6/notifications:master"
   md: "STRd6/md:v0.2.7"
@@ -20,3 +19,4 @@ dependencies:
   runtime: "STRd6/runtime:v0.1.1"
   packager: "STRd6/packager:v0.3.2"
   filetree: "STRd6/filetree:v0.2.0"
+  runner: "STRd6/runner:v0.1.0"

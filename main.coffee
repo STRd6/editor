@@ -25,12 +25,17 @@ templates = (HAMLjr.templates ||= {})
   if typeof template is "function"
     templates[name] = template
 
-Actions = require("./source/actions")
-Builder = require("./source/builder")
-Runner = require("./source/runner")
+Editor = require("./editor")
 TextEditor = require("./source/text_editor")
 
-{Filetree, File, template:filetreeTemplate} = require "filetree"
+editor = Editor()
+editor.loadFiles(files)
+
+# TODO: Don't expose these
+builder = editor.builder()
+filetree = editor.filetree()
+
+{File, template:filetreeTemplate} = require "filetree"
 templates["filetree"] = filetreeTemplate
 
 Hygiene = require "hygiene"
@@ -68,26 +73,9 @@ repository.observe (repository) ->
 PACKAGE.repository.url ||= "repos/#{PACKAGE.repository.full_name}"
 
 repository github.Repository(PACKAGE.repository)
-
-builder = Builder()
   
 confirmUnsaved = ->
   Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
-
-# TODO: Clean up these builder processors
-# Attach repo metadata to package
-builder.addPostProcessor (pkg) ->
-  # TODO: Track commit SHA as well
-  pkg.repository = repository().toJSON()
-
-  pkg
-
-builder.addPostProcessor (pkg) ->
-  # TODO: Think about a robust way to get 'self' and set it as progenitor data
-  pkg.progenitor =
-    url: "http://strd6.github.io/editor/"
-
-  pkg
 
 closeOpenEditors = ->
   root = $root.children(".main")
@@ -97,16 +85,21 @@ actions =
   save: ->
     notify "Saving..."
 
-    Actions.save
-      repository: repository()
-      fileData: filetree.data()
-      builder: builder
+    # TODO: Move repository into editor
+    repositoryInstance = repository()
+
+    editor.save
+      repository: repositoryInstance
     .then ->
       # TODO: This could get slightly out of sync if there were changes
       # during the async call
       # The correct solution will be to use git shas to determine changed status
       # but that's a little heavy duty for right now.
       filetree.markSaved()
+      
+      editor.publish
+        repository: repositoryInstance
+    .then ->
       notify "Saved and published!"
     .fail (args...) ->
       errors args
@@ -114,20 +107,20 @@ actions =
   run: ->
     notify "Running..."
 
-    Actions.run({builder, filetree})
+    editor.run()
     .fail classicError
 
   test: ->
     notify "Running tests..."
 
-    Actions.test({builder, filetree})
+    editor.test()
     .fail errors
 
   docs: ->
     notify "Running Docs..."
 
     if file = prompt("Docs file", "index")
-      Actions.runDocs({builder, data: filetree.data(), file: file})
+      editor.runDocs({file})
       .fail errors
 
   new_file: ->
@@ -152,9 +145,8 @@ actions =
     .then (repositoryInstance) ->
       notify "Loading files..."
   
-      Actions.load
+      editor.load
         repository: repositoryInstance
-        filetree: filetree
       .then ->
         closeOpenEditors()
         
@@ -192,9 +184,8 @@ actions =
       branchName = repository().branch()
       notifications.push "\nReloading branch #{branchName}..."
 
-      Actions.load
+      editor.load
         repository: repository()
-        filetree: filetree
       .then ->
         notifications.push "Loaded!"
       .fail ->
@@ -202,8 +193,8 @@ actions =
         
   tag_version: ->
     notify "Building..."
-    
-    builder.build(filetree.data())
+
+    editor.build()
     .then (pkg) ->
       version = "v#{readSourceConfig(pkg).version}"
 
@@ -224,9 +215,6 @@ actions =
 
     .fail classicError
 
-filetree = Filetree()
-filetree.load(files)
-
 filetree.selectedFile.observe (file) ->
   root = $root.children(".main")
   root.find(".editor-wrap").hide()
@@ -240,16 +228,16 @@ filetree.selectedFile.observe (file) ->
     if file.path().extension() is "md"
       file.content Hygiene.clean file.content()
     
-    editor = TextEditor
+    textEditor = TextEditor
       text: file.content()
       el: file.editor.find('.editor').get(0)
       mode: file.mode()
 
     file.editor.on "show", ->
       file.editor.show()
-      editor.editor.focus()
+      textEditor.editor.focus()
   
-    editor.text.observe (value) ->
+    textEditor.text.observe (value) ->
       file.content(value)
       
       # TODO May want to move this into a collection listener for all files
@@ -280,9 +268,8 @@ issues?.currentIssue.observe (issue) ->
       .then ->
         notifications.push "\nLoading branch #{branchName}..."
 
-        Actions.load
+        editor.load
           repository: repository()
-          filetree: filetree
         .then ->
           notifications.push "Loaded!"
     , ->
@@ -317,3 +304,12 @@ $root
 window.onbeforeunload = ->
   if filetree.hasUnsavedChanges()
     "You have some unsaved changes, if you leave now you will lose your work."
+
+# TODO: Find a better way to initialize this
+
+# Attach repo metadata to package
+builder.addPostProcessor (pkg) ->
+  # TODO: Track commit SHA as well
+  pkg.repository = repository().toJSON()
+
+  pkg
