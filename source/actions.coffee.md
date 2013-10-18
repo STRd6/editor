@@ -45,14 +45,9 @@ The primary actions of the editor. This is a mixin that is included in the edito
         publish: ({repository}) ->
           self.build()
           .then (pkg) ->
-            repository.publish(Packager.standAlone(pkg))
-            .then -> # Can't outdent because we need `pkg`
-              documenter.documentAll(pkg)
+            documenter.documentAll(pkg)
             .then (docs) ->
-              repository.commitTree
-                tree: docs
-                baseTree: true
-                branch: repository.publishBranch()
+              repository.publish(Packager.standAlone(pkg, docs))
 
         test: ->
           self.runInSandboxWindow self.config(),
