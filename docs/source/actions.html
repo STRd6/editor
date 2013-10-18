@@ -85,14 +85,9 @@ documenter = require(<span class="string">"md"</span>)</code></pre>
     publish: ({repository}) -&gt;
       self.build()
       .<span class="keyword">then</span> (pkg) -&gt;
-        repository.publish(Packager.standAlone(pkg))
-        .<span class="keyword">then</span> -&gt; <span class="comment"># Can't outdent because we need `pkg`</span>
-          documenter.documentAll(pkg)
+        documenter.documentAll(pkg)
         .<span class="keyword">then</span> (docs) -&gt;
-          repository.commitTree
-            tree: docs
-            baseTree: <span class="literal">true</span>
-            branch: repository.publishBranch()
+          repository.publish(Packager.standAlone(pkg, docs))
 
     test: -&gt;
       self.runInSandboxWindow self.config(),
