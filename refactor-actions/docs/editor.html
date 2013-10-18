@@ -36,14 +36,25 @@
             </div>
             <div class="content"><pre><code class="lang-coffeescript">Runner = require(<span class="string">"runner"</span>)
 Actions = require(<span class="string">"./source/actions"</span>)
+Builder = require(<span class="string">"./source/builder"</span>)
+{Filetree} = require(<span class="string">"filetree"</span>)
+
+<span class="function"><span class="title">initBuilder</span></span> = -&gt;
+  builder = Builder()
+  builder.addPostProcessor (pkg) -&gt;
+    pkg.progenitor =
+      url: <span class="string">"http://strd6.github.io/editor/"</span>
+
+    pkg
+
+  <span class="keyword">return</span> builder
 
 module.<span class="function"><span class="title">exports</span></span> = (I={}, self=Model(I)) -&gt;
   runner = Runner()
+  builder = initBuilder()
+  filetree = Filetree()
 
-  self.extend
-    <span class="comment"># TODO: Don't expose this, instead expose things like `runDocs`, `runTests`, etc.</span>
-    runner: -&gt;
-      runner</code></pre>
+  self.extend</code></pre>
 </div>
         </li>
         
@@ -52,6 +63,67 @@ module.<span class="function"><span class="title">exports</span></span> = (I={},
             <div class="annotation">
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Build the project, returning a promise that will be fulfilled with the <code>pkg</code>
+when complete.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">    build: -&gt;
+      data = filetree.data()
+      <span class="comment"># TODO: We may want a more robust dependency cache</span>
+      dependencyCache = PACKAGE.dependencies
+
+      builder.build(data, dependencyCache)
+
+    save: ({repository}) -&gt;
+      repository.commitTree
+        tree: filetree.data()
+
+    loadFiles: (fileData) -&gt;
+      filetree.load fileData</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Currently we&#39;re exposing the filetree though in the future we shouldn&#39;t be.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">    filetree: -&gt;
+      filetree</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Likewise we shouldn&#39;t expose the builder directly either.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">    builder: -&gt;
+      builder
+
+    config: -&gt;
+      readSourceConfig(source: arrayToHash(filetree.data()))
+
+    <span class="comment"># TODO: Don't expose this, instead expose things like `runDocs`, `runTests`, etc.</span>
+    runner: -&gt;
+      runner</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>Run some code in a sandboxed popup window. We need to popup the window immediately
 in response to user input to prevent pop-up blocking so we also pass a promise
@@ -77,6 +149,32 @@ auto-close the window.</p>
   self.include(Actions)
 
   <span class="keyword">return</span> self</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h2 id="helpers">Helpers</h2>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">{readSourceConfig, arrayToHash} = require(<span class="string">"./source/util"</span>)</code></pre>
 </div>
         </li>
         

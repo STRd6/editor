@@ -37,12 +37,8 @@
 
             </div>
             <div class="content"><pre><code class="lang-coffeescript">Packager = require <span class="string">"packager"</span>
-{readSourceConfig, arrayToHash} = require(<span class="string">"./util"</span>)
 
-documenter = require(<span class="string">"md"</span>)
-
-<span class="function"><span class="title">build</span></span> = (builder, fileData) -&gt;
-  builder.build(fileData, PACKAGE.dependencies)</code></pre>
+documenter = require(<span class="string">"md"</span>)</code></pre>
 </div>
         </li>
         
@@ -52,43 +48,25 @@ documenter = require(<span class="string">"md"</span>)
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>The primary actions of the editor. This should eventually become a mixin.</p>
+              <p>The primary actions of the editor. This is a mixin that is included in the editor.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">publish</span></span> = ({builder, fileData, repository}) -&gt;
-  build(builder, fileData)
-  .<span class="keyword">then</span> (pkg) -&gt;
-    repository.publish(Packager.standAlone(pkg))
-    .<span class="keyword">then</span> -&gt; <span class="comment"># Can't outdent because we need `pkg`</span>
-      documenter.documentAll(pkg)
-    .<span class="keyword">then</span> (docs) -&gt;
-      repository.commitTree
-        tree: docs
-        baseTree: <span class="literal">true</span>
-        branch: repository.publishBranch()
-
-<span class="function"><span class="title">commit</span></span> = ({fileData, repository, message}) -&gt;
-  repository.commitTree
-    tree: fileData
-    message: message
-
-<span class="function"><span class="title">Actions</span></span> = (I={}, self) -&gt;
+            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">Actions</span></span> = (I={}, self) -&gt;
   self.extend
-    run: ({builder, filetree}) -&gt;
-      data = filetree.data()
 
-      self.runInSandboxWindow configFor(data),
-        build(builder, data)
+    run: -&gt;
+      self.runInSandboxWindow self.config(),
+        self.build()
         .<span class="keyword">then</span> (pkg) -&gt;
           Packager.standAlone pkg
         .<span class="keyword">then</span> (files) -&gt;
           content = index(files)?.content
 
-    runDocs: ({builder, data, file}) -&gt;
+    runDocs: ({file}) -&gt;
       file ?= <span class="string">"index"</span>
 
       self.runInSandboxWindow docsConfig,
-        build(builder, data)
+        self.build()
         .<span class="keyword">then</span> (pkg) -&gt;
           documenter.documentAll(pkg)
         .<span class="keyword">then</span> (docs) -&gt;
@@ -104,35 +82,32 @@ documenter = require(<span class="string">"md"</span>)
           <span class="keyword">else</span>
             <span class="string">"Failed to find file at <span class="subst">#{path}</span>"</span>
 
-    save: (params) -&gt;
-      commit(params)
-      .<span class="keyword">then</span> -&gt;
-        publish(params)
+    publish: ({repository}) -&gt;
+      self.build()
+      .<span class="keyword">then</span> (pkg) -&gt;
+        repository.publish(Packager.standAlone(pkg))
+        .<span class="keyword">then</span> -&gt; <span class="comment"># Can't outdent because we need `pkg`</span>
+          documenter.documentAll(pkg)
+        .<span class="keyword">then</span> (docs) -&gt;
+          repository.commitTree
+            tree: docs
+            baseTree: <span class="literal">true</span>
+            branch: repository.publishBranch()
 
-    test: ({builder, filetree}) -&gt;
-      data = filetree.data()
-
-      self.runInSandboxWindow configFor(data),
-        build(builder, data)
+    test: -&gt;
+      self.runInSandboxWindow self.config(),
+        self.build()
         .<span class="keyword">then</span> (pkg) -&gt;
           Packager.testScripts(pkg)
         .<span class="keyword">then</span> (testScripts) -&gt;
           <span class="comment"># TODO: Editor should not have to return runner to run tests.</span>
           html = self.runner().testsHtml(testScripts)
 
-    load: ({filetree, repository}) -&gt;
-      <span class="comment"># Decode all content in place</span>
-      <span class="function"><span class="title">processDirectory</span></span> = (items) -&gt;
-        items.each (item) -&gt;
-          <span class="keyword">return</span> item <span class="keyword">unless</span> item.content
-
-          item.content = Base64.decode(item.content)
-          item.encoding = <span class="string">"raw"</span>
-
+    load: ({repository}) -&gt;
       repository.latestContent()
       .<span class="keyword">then</span> (results) -&gt;
         files = processDirectory results
-        filetree.load files
+        self.loadFiles files
 
 module.exports = Actions</code></pre>
 </div>
@@ -160,10 +135,7 @@ module.exports = Actions</code></pre>
               </div>
               
             </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">configFor</span></span> = (data) -&gt;
-  readSourceConfig(source: arrayToHash(data))
-
-docsConfig =
+            <div class="content"><pre><code class="lang-coffeescript">docsConfig =
   width: <span class="number">1280</span>
   height: <span class="number">800</span></code></pre>
 </div>
@@ -198,6 +170,25 @@ docsConfig =
   files.filter (file) -&gt;
     file.path <span class="keyword">is</span> path
   .first()</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Process results returned from Github API.</p>
+<p>Decodes all content in place.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">processDirectory</span></span> = (items) -&gt;
+  items.forEach (item) -&gt;
+    <span class="keyword">return</span> item <span class="keyword">unless</span> item.content
+
+    item.content = Base64.decode(item.content)
+    item.encoding = <span class="string">"raw"</span></code></pre>
 </div>
         </li>
         
