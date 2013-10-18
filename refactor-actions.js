@@ -30,6 +30,8 @@
 
   editor = Editor();
 
+  editor.loadFiles(files);
+
   builder = editor.builder();
 
   filetree = editor.filetree();
@@ -209,8 +211,6 @@
       }).fail(classicError);
     }
   };
-
-  filetree.load(files);
 
   filetree.selectedFile.observe(function(file) {
     var root, textEditor;
