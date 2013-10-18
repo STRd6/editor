@@ -102,3 +102,5 @@ Decodes all content in place.
 
         item.content = Base64.decode(item.content)
         item.encoding = "raw"
+
+      return items
