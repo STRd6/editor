@@ -1,5 +1,5 @@
 (function() {
-  var $root, Builder, Editor, File, Filetree, Hygiene, Issue, Issues, Packager, Runtime, TextEditor, actions, builder, classicError, closeOpenEditors, confirmUnsaved, editor, errors, files, filetree, filetreeTemplate, hotReloadCSS, issues, issuesTemplate, notifications, notify, readSourceConfig, repository, rootNode, runtime, templates, _base, _ref, _ref1, _ref2, _ref3,
+  var $root, Editor, File, Hygiene, Issue, Issues, Packager, Runtime, TextEditor, actions, builder, classicError, closeOpenEditors, confirmUnsaved, editor, errors, files, filetree, filetreeTemplate, hotReloadCSS, issues, issuesTemplate, notifications, notify, readSourceConfig, repository, rootNode, runtime, templates, _base, _ref, _ref1, _ref2, _ref3,
     __slice = [].slice;
 
   files = PACKAGE.source;
@@ -26,13 +26,15 @@
 
   Editor = require("./editor");
 
-  Builder = require("./source/builder");
-
   TextEditor = require("./source/text_editor");
 
   editor = Editor();
 
-  _ref = require("filetree"), Filetree = _ref.Filetree, File = _ref.File, filetreeTemplate = _ref.template;
+  builder = editor.builder();
+
+  filetree = editor.filetree();
+
+  _ref = require("filetree"), File = _ref.File, filetreeTemplate = _ref.template;
 
   templates["filetree"] = filetreeTemplate;
 
@@ -76,23 +78,9 @@
 
   repository(github.Repository(PACKAGE.repository));
 
-  builder = Builder();
-
   confirmUnsaved = function() {
     return Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?");
   };
-
-  builder.addPostProcessor(function(pkg) {
-    pkg.repository = repository().toJSON();
-    return pkg;
-  });
-
-  builder.addPostProcessor(function(pkg) {
-    pkg.progenitor = {
-      url: "http://strd6.github.io/editor/"
-    };
-    return pkg;
-  });
 
   closeOpenEditors = function() {
     var root;
@@ -102,13 +90,17 @@
 
   actions = {
     save: function() {
+      var repositoryInstance;
       notify("Saving...");
+      repositoryInstance = repository();
       return editor.save({
-        repository: repository(),
-        fileData: filetree.data(),
-        builder: builder
+        repository: repositoryInstance
       }).then(function() {
         filetree.markSaved();
+        return editor.publish({
+          repository: repositoryInstance
+        });
+      }).then(function() {
         return notify("Saved and published!");
       }).fail(function() {
         var args;
@@ -118,25 +110,17 @@
     },
     run: function() {
       notify("Running...");
-      return editor.run({
-        builder: builder,
-        filetree: filetree
-      }).fail(classicError);
+      return editor.run().fail(classicError);
     },
     test: function() {
       notify("Running tests...");
-      return editor.test({
-        builder: builder,
-        filetree: filetree
-      }).fail(errors);
+      return editor.test().fail(errors);
     },
     docs: function() {
       var file;
       notify("Running Docs...");
       if (file = prompt("Docs file", "index")) {
         return editor.runDocs({
-          builder: builder,
-          data: filetree.data(),
           file: file
         }).fail(errors);
       }
@@ -165,8 +149,7 @@
       }).then(function(repositoryInstance) {
         notify("Loading files...");
         return editor.load({
-          repository: repositoryInstance,
-          filetree: filetree
+          repository: repositoryInstance
         }).then(function() {
           closeOpenEditors();
           return notifications.push("Loaded");
@@ -200,8 +183,7 @@
         branchName = repository().branch();
         notifications.push("\nReloading branch " + branchName + "...");
         return editor.load({
-          repository: repository(),
-          filetree: filetree
+          repository: repository()
         }).then(function() {
           return notifications.push("Loaded!");
         }).fail(function() {
@@ -211,7 +193,7 @@
     },
     tag_version: function() {
       notify("Building...");
-      return builder.build(filetree.data()).then(function(pkg) {
+      return editor.build().then(function(pkg) {
         var version;
         version = "v" + (readSourceConfig(pkg).version);
         notify("Tagging version " + version + " ...");
@@ -228,12 +210,10 @@
     }
   };
 
-  filetree = Filetree();
-
   filetree.load(files);
 
   filetree.selectedFile.observe(function(file) {
-    var root;
+    var root, textEditor;
     root = $root.children(".main");
     root.find(".editor-wrap").hide();
     if (file.editor) {
@@ -244,16 +224,16 @@
       if (file.path().extension() === "md") {
         file.content(Hygiene.clean(file.content()));
       }
-      editor = TextEditor({
+      textEditor = TextEditor({
         text: file.content(),
         el: file.editor.find('.editor').get(0),
         mode: file.mode()
       });
       file.editor.on("show", function() {
         file.editor.show();
-        return editor.editor.focus();
+        return textEditor.editor.focus();
       });
-      return editor.text.observe(function(value) {
+      return textEditor.text.observe(function(value) {
         file.content(value);
         if (file.path().match(/\.styl$/)) {
           return hotReloadCSS(file);
@@ -288,8 +268,7 @@
           return repository().switchToBranch(branchName).then(function() {
             notifications.push("\nLoading branch " + branchName + "...");
             return editor.load({
-              repository: repository(),
-              filetree: filetree
+              repository: repository()
             }).then(function() {
               return notifications.push("Loaded!");
             });
@@ -323,6 +302,11 @@
       return "You have some unsaved changes, if you leave now you will lose your work.";
     }
   };
+
+  builder.addPostProcessor(function(pkg) {
+    pkg.repository = repository().toJSON();
+    return pkg;
+  });
 
 }).call(this);
 
