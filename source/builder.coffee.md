@@ -29,11 +29,10 @@ Helpers
 
 `compileTemplate` compiles a haml file into a HAMLjr program.
 
-    compileTemplate = (source, name="test") ->
-      program = HAMLjr.compile source,
-        compiler: CoffeeScript
-
-      "module.exports = #{program};"
+    compileTemplate = (source) ->
+      """
+        module.exports = Function("return " + HAMLjr.compile(#{JSON.stringify(source)}, {compiler: CoffeeScript}))()
+      """
 
 `stringData` exports a string of text. When you require a file that exports
 string data it returns the string for you to use in your code. This is handy for
