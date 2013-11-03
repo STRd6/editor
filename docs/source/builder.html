@@ -99,11 +99,10 @@ build products.</p>
               <p><code>compileTemplate</code> compiles a haml file into a HAMLjr program.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">compileTemplate</span></span> = (source, name=<span class="string">"test"</span>) -&gt;
-  program = HAMLjr.compile source,
-    compiler: CoffeeScript
-
-  <span class="string">"module.exports = <span class="subst">#{program}</span>;"</span></code></pre>
+            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">compileTemplate</span></span> = (source) -&gt;
+  <span class="string">"""
+    module.exports = Function("return " + HAMLjr.compile(<span class="subst">#{JSON.stringify(source)}</span>, {compiler: CoffeeScript}))()
+  """</span></code></pre>
 </div>
         </li>
         
