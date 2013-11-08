@@ -249,7 +249,7 @@ hotReloadCSS = ( (file) ->
   try
     css = styl(file.content(), whitespace: true).toString()
 
-  Runner.hotReloadCSS(css, file.path()) if css
+  editor.runner().hotReloadCSS(css) if css
 ).debounce(100)
 
 issues?.currentIssue.observe (issue) ->
