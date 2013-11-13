@@ -2,8 +2,9 @@
 {source:files} = PACKAGE
 
 global.Sandbox = require 'sandbox'
-require("./source/duct_tape")
-require("./source/deferred")
+require "./source/duct_tape"
+require "./source/deferred" 
+{processDirectory} = require "./source/util"
 
 global.PACKAGE = PACKAGE
 
@@ -190,6 +191,25 @@ actions =
         notifications.push "Loaded!"
       .fail ->
         classicError "Error loading #{repository().url()}"
+  
+  pull_upstream: ->
+    confirmUnsaved()
+    .then( ->
+      notify "Pulling from upstream master"
+      
+      upstreamRepo = repository().parent().full_name
+      
+      github.repository(upstreamRepo)
+      .then (repository) ->
+        repository.latestContent()  
+      .then (results) ->
+        files = processDirectory results
+        editor.loadFiles files
+      
+    , classicError  
+    ).then ->
+      notifications.push "\nYour code is up to date with the upstream master"
+      closeOpenEditors()
         
   tag_version: ->
     notify "Building..."

@@ -6,6 +6,7 @@ Trying to encapsulate our action button actions, but doing a poor job so far.
 Some dependencies.
 
     Packager = require "packager"
+    {processDirectory} = require "./util"
 
     documenter = require("md")
 
@@ -88,14 +89,3 @@ Find a file in a list of files by path.
       .first()
 
 Process results returned from Github API.
-
-Decodes all content in place.
-
-    processDirectory = (items) ->
-      items.forEach (item) ->
-        return item unless item.content
-
-        item.content = Base64.decode(item.content)
-        item.encoding = "raw"
-
-      return items
