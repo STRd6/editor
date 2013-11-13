@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html manifest="manifest.appcache?1384310193690">
+<html manifest="manifest.appcache?1384311764512">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
@@ -86,7 +86,7 @@ require('./main')
     "style.styl": {
       "path": "style.styl",
       "mode": "100644",
-      "content": "html, body\n  margin: 0\n  height: 100%\n\nbody\n  font-family: \"HelveticaNeue-Light\", \"Helvetica Neue Light\", \"Helvetica Neue\", Helvetica, Arial, \"Lucida Grande\", sans-serif\n  font-weight: 300\n\n.main\n  position: relative\n  padding-top: 40px\n  padding-left: 200px\n  padding-bottom: 100px\n  box-sizing: border-box\n  height: 100%\n\n.editor-wrap\n  background-color: white\n  width: 100%\n  height: 100%\n  position: relative\n\n  & > div\n    position: absolute\n    top: 0\n    left: 0\n    right: 0\n    bottom: 0\n\n.filetree\n  margin: 0\n  padding: 0\n  width: 200px\n  position: absolute\n  left: 0\n  top: 40px\n  z-index: 2\n\n  li\n    list-style-type: none\n    padding-left: 1em\n    position: relative\n    whitespace: nowrap\n\n    .delete\n      display: none\n      position: absolute\n      right: 0\n      top: 0\n\n    &:hover\n      background-color: lightyellow\n\n      .delete\n        display: inline-block\n\n.actions\n  position: absolute\n  top: 0\n  left: 200px\n  z-index: 1\n\n.repo_info\n  box-sizing: border-box\n  position: absolute\n  top: 0\n  left: 0\n  padding: 0.25em 1em\n  width: 200px\n  overflow: hidden\n  border-bottom: 1px solid black\n  height: 40px\n  font-size: 0.8em\n\n.console-wrap\n  box-sizing: border-box\n  position: absolute\n  bottom: 0\n  left: 0\n  right: 0\n  padding-left: 200px\n  height: 100px\n  width: 100%\n  margin: 0\n\n  .errors\n    box-sizing: border-box\n    border-top: 1px solid black\n    color: red\n\n.status\n  top: 0\n  right: 0\n  position: absolute\n",
+      "content": "html, body\n  margin: 0\n  height: 100%\n\nbody\n  font-family: \"HelveticaNeue-Light\", \"Helvetica Neue Light\", \"Helvetica Neue\", Helvetica, Arial, \"Lucida Grande\", sans-serif\n  font-weight: 300\n\n.main\n  position: relative\n  padding-top: 40px\n  padding-left: 200px\n  padding-bottom: 100px\n  box-sizing: border-box\n  height: 100%\n\n.editor-wrap\n  background-color: white\n  width: 100%\n  height: 100%\n  position: relative\n\n  & > div\n    position: absolute\n    top: 0\n    left: 0\n    right: 0\n    bottom: 0\n\n.filetree\n  margin: 0\n  padding: 0\n  width: 200px\n  position: absolute\n  left: 0\n  top: 40px\n  z-index: 2\n\n  li\n    cursor: pointer\n    list-style-type: none\n    padding-left: 1em\n    position: relative\n    whitespace: nowrap\n\n    .delete\n      display: none\n      position: absolute\n      right: 0\n      top: 0\n\n    &:hover\n      background-color: lightyellow\n\n      .delete\n        display: inline-block\n\n.actions\n  position: absolute\n  top: 0\n  left: 200px\n  z-index: 1\n\n.repo_info\n  box-sizing: border-box\n  position: absolute\n  top: 0\n  left: 0\n  padding: 0.25em 1em\n  width: 200px\n  overflow: hidden\n  border-bottom: 1px solid black\n  height: 40px\n  font-size: 0.8em\n\n.console-wrap\n  box-sizing: border-box\n  position: absolute\n  bottom: 0\n  left: 0\n  right: 0\n  padding-left: 200px\n  height: 100px\n  width: 100%\n  margin: 0\n\n  .errors\n    box-sizing: border-box\n    border-top: 1px solid black\n    color: red\n\n.status\n  top: 0\n  right: 0\n  position: absolute\n",
       "type": "blob"
     },
     "templates/actions.haml.md": {
@@ -185,7 +185,7 @@ require('./main')
     },
     "style": {
       "path": "style",
-      "content": "module.exports = \"html,\\nbody {\\n  margin: 0;\\n  height: 100%;\\n}\\n\\nbody {\\n  font-family: \\\"HelveticaNeue-Light\\\", \\\"Helvetica Neue Light\\\", \\\"Helvetica Neue\\\", Helvetica, Arial, \\\"Lucida Grande\\\", sans-serif;\\n  font-weight: 300;\\n}\\n\\n.main {\\n  position: relative;\\n  padding-top: 40px;\\n  padding-left: 200px;\\n  padding-bottom: 100px;\\n  height: 100%;\\n  -ms-box-sizing: border-box;\\n  -moz-box-sizing: border-box;\\n  -webkit-box-sizing: border-box;\\n  box-sizing: border-box;\\n}\\n\\n.editor-wrap {\\n  background-color: white;\\n  width: 100%;\\n  height: 100%;\\n  position: relative;\\n}\\n\\n.editor-wrap > div {\\n  position: absolute;\\n  top: 0;\\n  left: 0;\\n  right: 0;\\n  bottom: 0;\\n}\\n\\n.filetree {\\n  margin: 0;\\n  padding: 0;\\n  width: 200px;\\n  position: absolute;\\n  left: 0;\\n  top: 40px;\\n  z-index: 2;\\n}\\n\\n.filetree li .delete {\\n  display: none;\\n  position: absolute;\\n  right: 0;\\n  top: 0;\\n}\\n\\n.filetree li:hover .delete {\\n  display: inline-block;\\n}\\n\\n.filetree li:hover {\\n  background-color: lightyellow;\\n}\\n\\n.filetree li {\\n  list-style-type: none;\\n  padding-left: 1em;\\n  position: relative;\\n  whitespace: nowrap;\\n}\\n\\n.actions {\\n  position: absolute;\\n  top: 0;\\n  left: 200px;\\n  z-index: 1;\\n}\\n\\n.repo_info {\\n  position: absolute;\\n  top: 0;\\n  left: 0;\\n  padding: 0.25em 1em;\\n  width: 200px;\\n  overflow: hidden;\\n  border-bottom: 1px solid black;\\n  height: 40px;\\n  font-size: 0.8em;\\n  -ms-box-sizing: border-box;\\n  -moz-box-sizing: border-box;\\n  -webkit-box-sizing: border-box;\\n  box-sizing: border-box;\\n}\\n\\n.console-wrap {\\n  position: absolute;\\n  bottom: 0;\\n  left: 0;\\n  right: 0;\\n  padding-left: 200px;\\n  height: 100px;\\n  width: 100%;\\n  margin: 0;\\n  -ms-box-sizing: border-box;\\n  -moz-box-sizing: border-box;\\n  -webkit-box-sizing: border-box;\\n  box-sizing: border-box;\\n}\\n\\n.console-wrap .errors {\\n  border-top: 1px solid black;\\n  color: red;\\n  -ms-box-sizing: border-box;\\n  -moz-box-sizing: border-box;\\n  -webkit-box-sizing: border-box;\\n  box-sizing: border-box;\\n}\\n\\n.status {\\n  top: 0;\\n  right: 0;\\n  position: absolute;\\n}\";",
+      "content": "module.exports = \"html,\\nbody {\\n  margin: 0;\\n  height: 100%;\\n}\\n\\nbody {\\n  font-family: \\\"HelveticaNeue-Light\\\", \\\"Helvetica Neue Light\\\", \\\"Helvetica Neue\\\", Helvetica, Arial, \\\"Lucida Grande\\\", sans-serif;\\n  font-weight: 300;\\n}\\n\\n.main {\\n  position: relative;\\n  padding-top: 40px;\\n  padding-left: 200px;\\n  padding-bottom: 100px;\\n  height: 100%;\\n  -ms-box-sizing: border-box;\\n  -moz-box-sizing: border-box;\\n  -webkit-box-sizing: border-box;\\n  box-sizing: border-box;\\n}\\n\\n.editor-wrap {\\n  background-color: white;\\n  width: 100%;\\n  height: 100%;\\n  position: relative;\\n}\\n\\n.editor-wrap > div {\\n  position: absolute;\\n  top: 0;\\n  left: 0;\\n  right: 0;\\n  bottom: 0;\\n}\\n\\n.filetree {\\n  margin: 0;\\n  padding: 0;\\n  width: 200px;\\n  position: absolute;\\n  left: 0;\\n  top: 40px;\\n  z-index: 2;\\n}\\n\\n.filetree li .delete {\\n  display: none;\\n  position: absolute;\\n  right: 0;\\n  top: 0;\\n}\\n\\n.filetree li:hover .delete {\\n  display: inline-block;\\n}\\n\\n.filetree li:hover {\\n  background-color: lightyellow;\\n}\\n\\n.filetree li {\\n  cursor: pointer;\\n  list-style-type: none;\\n  padding-left: 1em;\\n  position: relative;\\n  whitespace: nowrap;\\n}\\n\\n.actions {\\n  position: absolute;\\n  top: 0;\\n  left: 200px;\\n  z-index: 1;\\n}\\n\\n.repo_info {\\n  position: absolute;\\n  top: 0;\\n  left: 0;\\n  padding: 0.25em 1em;\\n  width: 200px;\\n  overflow: hidden;\\n  border-bottom: 1px solid black;\\n  height: 40px;\\n  font-size: 0.8em;\\n  -ms-box-sizing: border-box;\\n  -moz-box-sizing: border-box;\\n  -webkit-box-sizing: border-box;\\n  box-sizing: border-box;\\n}\\n\\n.console-wrap {\\n  position: absolute;\\n  bottom: 0;\\n  left: 0;\\n  right: 0;\\n  padding-left: 200px;\\n  height: 100px;\\n  width: 100%;\\n  margin: 0;\\n  -ms-box-sizing: border-box;\\n  -moz-box-sizing: border-box;\\n  -webkit-box-sizing: border-box;\\n  box-sizing: border-box;\\n}\\n\\n.console-wrap .errors {\\n  border-top: 1px solid black;\\n  color: red;\\n  -ms-box-sizing: border-box;\\n  -moz-box-sizing: border-box;\\n  -webkit-box-sizing: border-box;\\n  box-sizing: border-box;\\n}\\n\\n.status {\\n  top: 0;\\n  right: 0;\\n  position: absolute;\\n}\";",
       "type": "blob"
     },
     "templates/actions": {
@@ -2251,7 +2251,7 @@ require('./main')
     "owner": {
       "login": "STRd6",
       "id": 18894,
-      "avatar_url": "https://2.gravatar.com/avatar/33117162fff8a9cf50544a604f60c045?d=https%3A%2F%2Fidenticons.github.com%2F39df222bffe39629d904e4883eabc654.png&r=x",
+      "avatar_url": "https://0.gravatar.com/avatar/33117162fff8a9cf50544a604f60c045?d=https%3A%2F%2Fidenticons.github.com%2F39df222bffe39629d904e4883eabc654.png&r=x",
       "gravatar_id": "33117162fff8a9cf50544a604f60c045",
       "url": "https://api.github.com/users/STRd6",
       "html_url": "https://github.com/STRd6",
@@ -2308,24 +2308,24 @@ require('./main')
     "labels_url": "https://api.github.com/repos/STRd6/editor/labels{/name}",
     "releases_url": "https://api.github.com/repos/STRd6/editor/releases{/id}",
     "created_at": "2013-08-30T04:27:41Z",
-    "updated_at": "2013-11-08T23:24:01Z",
-    "pushed_at": "2013-11-08T23:24:01Z",
+    "updated_at": "2013-11-13T03:01:25Z",
+    "pushed_at": "2013-11-13T03:01:25Z",
     "git_url": "git://github.com/STRd6/editor.git",
     "ssh_url": "git@github.com:STRd6/editor.git",
     "clone_url": "https://github.com/STRd6/editor.git",
     "svn_url": "https://github.com/STRd6/editor",
     "homepage": "strd6.github.io/editor",
-    "size": 4408,
+    "size": 4096,
     "stargazers_count": 1,
     "watchers_count": 1,
     "language": "CoffeeScript",
     "has_issues": true,
     "has_downloads": true,
     "has_wiki": true,
-    "forks_count": 2,
+    "forks_count": 3,
     "mirror_url": null,
     "open_issues_count": 18,
-    "forks": 2,
+    "forks": 3,
     "open_issues": 18,
     "watchers": 1,
     "default_branch": "master",
@@ -2335,7 +2335,7 @@ require('./main')
       "push": true,
       "pull": true
     },
-    "network_count": 2,
+    "network_count": 3,
     "subscribers_count": 2,
     "branch": "master",
     "defaultBranch": "master"
