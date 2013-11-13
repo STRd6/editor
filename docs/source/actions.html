@@ -37,6 +37,7 @@
 
             </div>
             <div class="content"><pre><code class="lang-coffeescript">Packager = require <span class="string">"packager"</span>
+{processDirectory} = require <span class="string">"./util"</span>
 
 documenter = require(<span class="string">"md"</span>)</code></pre>
 </div>
@@ -175,17 +176,10 @@ module.exports = Actions</code></pre>
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p>Process results returned from Github API.</p>
-<p>Decodes all content in place.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">processDirectory</span></span> = (items) -&gt;
-  items.forEach (item) -&gt;
-    <span class="keyword">return</span> item <span class="keyword">unless</span> item.content
-
-    item.content = Base64.decode(item.content)
-    item.encoding = <span class="string">"raw"</span>
-
-  <span class="keyword">return</span> items</code></pre>
+            <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
 </div>
         </li>
         

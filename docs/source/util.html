@@ -62,6 +62,26 @@
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
+              <p>Decodes all content in place.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">  processDirectory: (items) -&gt;
+    items.forEach (item) -&gt;
+      <span class="keyword">return</span> item <span class="keyword">unless</span> item.content
+
+      item.content = Base64.decode(item.content)
+      item.encoding = <span class="string">"raw"</span>
+
+    <span class="keyword">return</span> items</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
               <p><code>arrayToHash</code> converts an array of fileData objects into an object where each
 file&#39;s path is a key and the fileData is the object.</p>
 
