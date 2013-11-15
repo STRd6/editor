@@ -22,7 +22,7 @@ window["STRd6/editor:master"]({
     "pixie.cson": {
       "path": "pixie.cson",
       "mode": "100644",
-      "content": "version: \"0.2.0\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb-v0.4.5.js\"\n  \"http://strd6.github.io/require/v0.2.2.js\"\n]\ndependencies:\n  issues: \"STRd6/issues:v0.1.1\"\n  sandbox: \"STRd6/sandbox:v0.1.0\"\n  notifications: \"STRd6/notifications:v0.1.0\"\n  md: \"STRd6/md:v0.2.7\"\n  github: \"STRd6/github:v0.3.2\"\n  hygiene: \"STRd6/hygiene:v0.1.0\"\n  runtime: \"STRd6/runtime:v0.1.1\"\n  packager: \"STRd6/packager:v0.3.3\"\n  filetree: \"STRd6/filetree:v0.2.1\"\n  runner: \"STRd6/runner:v0.1.0\"\n",
+      "content": "version: \"0.2.0\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb-v0.4.5.js\"\n  \"http://strd6.github.io/require/v0.2.2.js\"\n]\ndependencies:\n  issues: \"STRd6/issues:v0.1.1\"\n  sandbox: \"STRd6/sandbox:v0.1.0\"\n  notifications: \"STRd6/notifications:v0.1.0\"\n  md: \"STRd6/md:v0.2.7\"\n  github: \"STRd6/github:v0.3.3\"\n  hygiene: \"STRd6/hygiene:v0.1.0\"\n  runtime: \"STRd6/runtime:v0.1.1\"\n  packager: \"STRd6/packager:v0.3.3\"\n  filetree: \"STRd6/filetree:v0.2.1\"\n  runner: \"STRd6/runner:v0.1.0\"\n",
       "type": "blob"
     },
     "source/actions.coffee.md": {
@@ -129,7 +129,7 @@ window["STRd6/editor:master"]({
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.2.0\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"//code.jquery.com/jquery-1.10.1.min.js\",\"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\",\"http://strd6.github.io/tempest/javascripts/envweb-v0.4.5.js\",\"http://strd6.github.io/require/v0.2.2.js\"],\"dependencies\":{\"issues\":\"STRd6/issues:v0.1.1\",\"sandbox\":\"STRd6/sandbox:v0.1.0\",\"notifications\":\"STRd6/notifications:v0.1.0\",\"md\":\"STRd6/md:v0.2.7\",\"github\":\"STRd6/github:v0.3.2\",\"hygiene\":\"STRd6/hygiene:v0.1.0\",\"runtime\":\"STRd6/runtime:v0.1.1\",\"packager\":\"STRd6/packager:v0.3.3\",\"filetree\":\"STRd6/filetree:v0.2.1\",\"runner\":\"STRd6/runner:v0.1.0\"}};",
+      "content": "module.exports = {\"version\":\"0.2.0\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"//code.jquery.com/jquery-1.10.1.min.js\",\"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\",\"http://strd6.github.io/tempest/javascripts/envweb-v0.4.5.js\",\"http://strd6.github.io/require/v0.2.2.js\"],\"dependencies\":{\"issues\":\"STRd6/issues:v0.1.1\",\"sandbox\":\"STRd6/sandbox:v0.1.0\",\"notifications\":\"STRd6/notifications:v0.1.0\",\"md\":\"STRd6/md:v0.2.7\",\"github\":\"STRd6/github:v0.3.3\",\"hygiene\":\"STRd6/hygiene:v0.1.0\",\"runtime\":\"STRd6/runtime:v0.1.1\",\"packager\":\"STRd6/packager:v0.3.3\",\"filetree\":\"STRd6/filetree:v0.2.1\",\"runner\":\"STRd6/runner:v0.1.0\"}};",
       "type": "blob"
     },
     "source/actions": {
@@ -919,7 +919,7 @@ window["STRd6/editor:master"]({
       "name": "md"
     },
     "github": {
-      "version": "0.3.2",
+      "version": "0.3.3",
       "source": {
         "LICENSE": {
           "path": "LICENSE",
@@ -936,13 +936,13 @@ window["STRd6/editor:master"]({
         "api_generator.coffee.md": {
           "path": "api_generator.coffee.md",
           "mode": "100644",
-          "content": "\nGenerate all those fun API verbs: `get`, `put`, `post`, `patch`, `delete`\n\nOur helpers need a root to base off of. The root is a function that returns a\nstring. The requester does the actual api calls, these just set it up easily.\n\n    ApiGenerator = (root, requester) ->\n\nConfigure the options for a request by stringifying any data to be added to the\nrequest body, and setting the appropriate type. `get` requests don't call this\nas the default type is `get` and they put their params in the querystring.\n\n      requestOptions = (type, data) ->\n        type: type\n        data: JSON.stringify(data)\n\nIf our request is absolute we use that url, otherwise we get the base url from\nour root and append the path. This allows us to follow HATEOS resource urls more\neasily.\n\n      api = (path, options) ->\n        if path.match /^http/\n          url = path\n        else\n          url = \"#{root()}/#{path}\"\n              \n        requester url, options\n\nExpose the basic api method in our returned object.\n\n      api: api\n\n      get: (path, data) ->\n        api path, data: data\n\n      put: (path, data) ->\n        api(path, requestOptions(\"PUT\", data))\n\n      post: (path, data) ->\n        api(path, requestOptions(\"POST\", data))\n\n      patch: (path, data) ->\n        api path, requestOptions(\"PATCH\", data)\n\n`delete` is a keyword in JS, so I guess we'll go with all caps. We maybe should\ngo with all caps for everything, but it seems so loud.\n\n      DELETE: (path, data) ->\n        api path, requestOptions(\"DELETE\", data)\n\n    module.exports = ApiGenerator\n",
+          "content": "\nGenerate all those fun API verbs: `get`, `put`, `post`, `patch`, `delete`\n\nOur helpers need a root to base off of. The root is a function that returns a\nstring. The requester does the actual api calls, these just set it up easily.\n\n    ApiGenerator = (root, requester) ->\n\nConfigure the options for a request by stringifying any data to be added to the\nrequest body, and setting the appropriate type. `get` requests don't call this\nas the default type is `get` and they put their params in the querystring.\n\n      requestOptions = (type, data) ->\n        type: type\n        data: JSON.stringify(data)\n\nIf our request is absolute we use that url, otherwise we get the base url from\nour root and append the path. This allows us to follow HATEOS resource urls more\neasily.\n\n      api = (path, options) ->\n        if path.match /^http/\n          url = path\n        else\n          url = \"#{root()}/#{path}\"\n\n        requester url, options\n\nExpose the basic api method in our returned object.\n\n      api: api\n\n      get: (path, data) ->\n        api path, data: data\n\n      put: (path, data) ->\n        api(path, requestOptions(\"PUT\", data))\n\n      post: (path, data) ->\n        api(path, requestOptions(\"POST\", data))\n\n      patch: (path, data) ->\n        api path, requestOptions(\"PATCH\", data)\n\n`delete` is a keyword in JS, so I guess we'll go with all caps. We maybe should\ngo with all caps for everything, but it seems so loud.\n\n      DELETE: (path, data) ->\n        api path, requestOptions(\"DELETE\", data)\n\n    module.exports = ApiGenerator\n",
           "type": "blob"
         },
         "main.coffee.md": {
           "path": "main.coffee.md",
           "mode": "100644",
-          "content": "    Repository = require \"./repository\"\n\nGithub handles our connections to the Github API. May be optionally passed a\npromise that when fulfilled will set the authorization token.\n\n    Github = (tokenPromise) ->\n\nOur OAuth token for making API requests. We can still make anonymous requests\nwithout it.\n\n      token = null\n\n      tokenPromise?.then (tokenValue) ->\n        token = tokenValue\n\nHold an observable for the last request so we can track things like oauth scopes\nand rate limit.\n\n      lastRequest = Observable()\n\nMake a call to the github API. The path can be either a relative path such as\n`users/STRd6` or an absolute path like `https://api.github.com/users/octocat` or\n`user.url`.\n\nWe attach our `accessToken` if present.\n\n`api` returns a promise for easy chaining.\n\n      api = (path, options={}) ->\n        if path.match /^http/\n          url = path\n        else\n          url = \"https://api.github.com/#{path}\"\n\n        options.headers ||= {}\n\n        if token\n          options.headers[\"Authorization\"] = \"token #{token}\"\n\n        options = Object.extend\n          url: url\n          type: \"GET\"\n          dataType: 'json'\n        , options\n\nPerform the ajax call and observe requests on success or failure\n\n        $.ajax(options).done (data, status, request) ->\n          lastRequest(request)\n        .fail lastRequest\n\nPublicly expose `api` method.\n\n      api: api\n\n`markdown` takes a string of source and returns a promise that will complete with\nthe rendered markdown by posting it to Github.\n\nSee also: http://developer.github.com/v3/markdown/\n\n      markdown: require('./markdown')(api)\n\nAlso expose `lastRequest`.\n\n      lastRequest: lastRequest\n\nGetter/Setter for auth token.\n\n      token: (newValue) ->\n        if arguments.length > 0\n          token = newValue\n        else\n          token\n\nExpose the `Repository` constructor so that others can create repositories from\nraw data.\n\n      Repository: (data={}) ->\n        # Use our api for the repository\n        Object.defaults data,\n          requester: api\n\n        Repository(data)\n\nGet a repository, returns a promise that will have a repository one day.\n\n      repository: (fullName) ->\n        # TODO: Consider returning a repository proxy immediately\n        #   may need to be weighed carefully with the tradeoffs of observables.\n        # TODO: Consider creating from a full url in addition to a full name.\n\n        api(\"repos/#{fullName}\")\n        .then (data) ->\n          Object.defaults data,\n            requester: api\n\n          Repository(data)\n\nExpose `authorizationUrl` to instances as well.\n\n      authorizationUrl: Github.authorizationUrl\n\nA URL that will authorize a user with the specified scope for the given app.\n\n    Github.authorizationUrl = (clientId, scope=\"user:email\") ->\n      \"https://github.com/login/oauth/authorize?client_id=#{clientId}&scope=#{scope}\"\n\n    module.exports = Github\n",
+          "content": "    Repository = require \"./repository\"\n\nGithub handles our connections to the Github API. May be optionally passed a\npromise that when fulfilled will set the authorization token.\n\n    Github = (tokenPromise) ->\n\nOur OAuth token for making API requests. We can still make anonymous requests\nwithout it.\n\n      token = null\n\n      tokenPromise?.then (tokenValue) ->\n        token = tokenValue\n\nHold an observable for the last request so we can track things like oauth scopes\nand rate limit.\n\n      lastRequest = Observable()\n\nMake a call to the github API. The path can be either a relative path such as\n`users/STRd6` or an absolute path like `https://api.github.com/users/octocat` or\n`user.url`.\n\nWe attach our `accessToken` if present.\n\n`api` returns a promise for easy chaining.\n\n      api = (path, options={}) ->\n        if path.match /^http/\n          url = path\n        else\n          url = \"https://api.github.com/#{path}\"\n\n        options.headers ||= {}\n\n        if token\n          options.headers[\"Authorization\"] = \"token #{token}\"\n\n        options = Object.extend\n          url: url\n          type: \"GET\"\n          dataType: 'json'\n          contentType: \"application/json; charset=utf-8\"\n        , options\n\nPerform the ajax call and observe requests on success or failure\n\n        $.ajax(options).done (data, status, request) ->\n          lastRequest(request)\n        .fail lastRequest\n\nPublicly expose `api` method.\n\n      api: api\n\n`markdown` takes a string of source and returns a promise that will complete with\nthe rendered markdown by posting it to Github.\n\nSee also: http://developer.github.com/v3/markdown/\n\n      markdown: require('./markdown')(api)\n\nAlso expose `lastRequest`.\n\n      lastRequest: lastRequest\n\nGetter/Setter for auth token.\n\n      token: (newValue) ->\n        if arguments.length > 0\n          token = newValue\n        else\n          token\n\nExpose the `Repository` constructor so that others can create repositories from\nraw data.\n\n      Repository: (data={}) ->\n        # Use our api for the repository\n        Object.defaults data,\n          requester: api\n\n        Repository(data)\n\nGet a repository, returns a promise that will have a repository one day.\n\n      repository: (fullName) ->\n        # TODO: Consider returning a repository proxy immediately\n        #   may need to be weighed carefully with the tradeoffs of observables.\n        # TODO: Consider creating from a full url in addition to a full name.\n\n        api(\"repos/#{fullName}\")\n        .then (data) ->\n          Object.defaults data,\n            requester: api\n\n          Repository(data)\n\nExpose `authorizationUrl` to instances as well.\n\n      authorizationUrl: Github.authorizationUrl\n\nA URL that will authorize a user with the specified scope for the given app.\n\n    Github.authorizationUrl = (clientId, scope=\"user:email\") ->\n      \"https://github.com/login/oauth/authorize?client_id=#{clientId}&scope=#{scope}\"\n\n    module.exports = Github\n",
           "type": "blob"
         },
         "markdown.coffee.md": {
@@ -954,7 +954,7 @@ window["STRd6/editor:master"]({
         "pixie.cson": {
           "path": "pixie.cson",
           "mode": "100644",
-          "content": "version: \"0.3.2\"\nremoteDependencies: [\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/master.js\"\n]\ndependencies:\n  emojer: \"STRd6/emojer:master\"\n",
+          "content": "version: \"0.3.3\"\nremoteDependencies: [\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb-v0.4.5.js\"\n  \"http://strd6.github.io/require/v0.2.2.js\"\n]\ndependencies:\n  emojer: \"STRd6/emojer:master\"\n",
           "type": "blob"
         },
         "repository.coffee.md": {
@@ -966,7 +966,7 @@ window["STRd6/editor:master"]({
         "test/github.coffee.md": {
           "path": "test/github.coffee.md",
           "mode": "100644",
-          "content": "Testing our Github API wrapper. Currently super hacky, but time heals all.\n\n    window.Github = require \"../main\"\n    \n    describe \"Github\", ->\n      it \"Should be able to construct repositories\", ->\n        assert Github().repository\n        \n        assert Github().Repository\n\n      it \"should have authorizationUrl as an instance method\", ->\n        assert Github().authorizationUrl\n\n      describe \"Repository\", ->\n\nHacky way to test requests. We just see if it returns a URL that looks ok.\n\n        expected = null\n        expectUrlToMatch = (regex) ->\n          expected = regex\n\n        testRequester = (url, data) ->\n          match = url.match(expected)\n          assert.equal !!match, true, \"\"\"\n            #{url} did not match #{expected}, #{match}\n          \"\"\"\n    \n          then: ->\n    \n        repository = Github().Repository\n          url: \"STRd6/testin\"\n          requester: testRequester\n    \n        it \"should cache bust the latest commit\", ->\n          expectUrlToMatch /.*\\?\\d+/\n\n          repository.latestCommit()\n\n        it \"should create a merge when asked\", ->\n          expectUrlToMatch /STRd6\\/testin\\/merges/\n\n          repository.mergeInto()\n",
+          "content": "Testing our Github API wrapper. Currently super hacky, but time heals all.\n\n    window.Github = require \"../main\"\n\n    describe \"Github\", ->\n      it \"Should be able to construct repositories\", ->\n        assert Github().repository\n\n        assert Github().Repository\n\n      it \"should have authorizationUrl as an instance method\", ->\n        assert Github().authorizationUrl\n\n      describe \"Repository\", ->\n\nHacky way to test requests. We just see if it returns a URL that looks ok.\n\n        expected = null\n        expectUrlToMatch = (regex) ->\n          expected = regex\n\n        testRequester = (url, data) ->\n          match = url.match(expected)\n          assert.equal !!match, true, \"\"\"\n            #{url} did not match #{expected}, #{match}\n          \"\"\"\n\n          then: ->\n\n        repository = Github().Repository\n          url: \"STRd6/testin\"\n          requester: testRequester\n\n        it \"should cache bust the latest commit\", ->\n          expectUrlToMatch /.*\\?\\d+/\n\n          repository.latestCommit()\n\n        it \"should create a merge when asked\", ->\n          expectUrlToMatch /STRd6\\/testin\\/merges/\n\n          repository.mergeInto()\n",
           "type": "blob"
         }
       },
@@ -978,7 +978,7 @@ window["STRd6/editor:master"]({
         },
         "main": {
           "path": "main",
-          "content": "(function() {\n  var Github, Repository;\n\n  Repository = require(\"./repository\");\n\n  Github = function(tokenPromise) {\n    var api, lastRequest, token;\n    token = null;\n    if (tokenPromise != null) {\n      tokenPromise.then(function(tokenValue) {\n        return token = tokenValue;\n      });\n    }\n    lastRequest = Observable();\n    api = function(path, options) {\n      var url;\n      if (options == null) {\n        options = {};\n      }\n      if (path.match(/^http/)) {\n        url = path;\n      } else {\n        url = \"https://api.github.com/\" + path;\n      }\n      options.headers || (options.headers = {});\n      if (token) {\n        options.headers[\"Authorization\"] = \"token \" + token;\n      }\n      options = Object.extend({\n        url: url,\n        type: \"GET\",\n        dataType: 'json'\n      }, options);\n      return $.ajax(options).done(function(data, status, request) {\n        return lastRequest(request);\n      }).fail(lastRequest);\n    };\n    return {\n      api: api,\n      markdown: require('./markdown')(api),\n      lastRequest: lastRequest,\n      token: function(newValue) {\n        if (arguments.length > 0) {\n          return token = newValue;\n        } else {\n          return token;\n        }\n      },\n      Repository: function(data) {\n        if (data == null) {\n          data = {};\n        }\n        Object.defaults(data, {\n          requester: api\n        });\n        return Repository(data);\n      },\n      repository: function(fullName) {\n        return api(\"repos/\" + fullName).then(function(data) {\n          Object.defaults(data, {\n            requester: api\n          });\n          return Repository(data);\n        });\n      },\n      authorizationUrl: Github.authorizationUrl\n    };\n  };\n\n  Github.authorizationUrl = function(clientId, scope) {\n    if (scope == null) {\n      scope = \"user:email\";\n    }\n    return \"https://github.com/login/oauth/authorize?client_id=\" + clientId + \"&scope=\" + scope;\n  };\n\n  module.exports = Github;\n\n}).call(this);\n\n//# sourceURL=main.coffee",
+          "content": "(function() {\n  var Github, Repository;\n\n  Repository = require(\"./repository\");\n\n  Github = function(tokenPromise) {\n    var api, lastRequest, token;\n    token = null;\n    if (tokenPromise != null) {\n      tokenPromise.then(function(tokenValue) {\n        return token = tokenValue;\n      });\n    }\n    lastRequest = Observable();\n    api = function(path, options) {\n      var url;\n      if (options == null) {\n        options = {};\n      }\n      if (path.match(/^http/)) {\n        url = path;\n      } else {\n        url = \"https://api.github.com/\" + path;\n      }\n      options.headers || (options.headers = {});\n      if (token) {\n        options.headers[\"Authorization\"] = \"token \" + token;\n      }\n      options = Object.extend({\n        url: url,\n        type: \"GET\",\n        dataType: 'json',\n        contentType: \"application/json; charset=utf-8\"\n      }, options);\n      return $.ajax(options).done(function(data, status, request) {\n        return lastRequest(request);\n      }).fail(lastRequest);\n    };\n    return {\n      api: api,\n      markdown: require('./markdown')(api),\n      lastRequest: lastRequest,\n      token: function(newValue) {\n        if (arguments.length > 0) {\n          return token = newValue;\n        } else {\n          return token;\n        }\n      },\n      Repository: function(data) {\n        if (data == null) {\n          data = {};\n        }\n        Object.defaults(data, {\n          requester: api\n        });\n        return Repository(data);\n      },\n      repository: function(fullName) {\n        return api(\"repos/\" + fullName).then(function(data) {\n          Object.defaults(data, {\n            requester: api\n          });\n          return Repository(data);\n        });\n      },\n      authorizationUrl: Github.authorizationUrl\n    };\n  };\n\n  Github.authorizationUrl = function(clientId, scope) {\n    if (scope == null) {\n      scope = \"user:email\";\n    }\n    return \"https://github.com/login/oauth/authorize?client_id=\" + clientId + \"&scope=\" + scope;\n  };\n\n  module.exports = Github;\n\n}).call(this);\n\n//# sourceURL=main.coffee",
           "type": "blob"
         },
         "markdown": {
@@ -988,7 +988,7 @@ window["STRd6/editor:master"]({
         },
         "pixie": {
           "path": "pixie",
-          "content": "module.exports = {\"version\":\"0.3.2\",\"remoteDependencies\":[\"//code.jquery.com/jquery-1.10.1.min.js\",\"http://strd6.github.io/tempest/javascripts/envweb.js\",\"http://strd6.github.io/require/master.js\"],\"dependencies\":{\"emojer\":\"STRd6/emojer:master\"}};",
+          "content": "module.exports = {\"version\":\"0.3.3\",\"remoteDependencies\":[\"//code.jquery.com/jquery-1.10.1.min.js\",\"http://strd6.github.io/tempest/javascripts/envweb-v0.4.5.js\",\"http://strd6.github.io/require/v0.2.2.js\"],\"dependencies\":{\"emojer\":\"STRd6/emojer:master\"}};",
           "type": "blob"
         },
         "repository": {
@@ -1299,14 +1299,13 @@ window["STRd6/editor:master"]({
           },
           "progenitor": {
             "url": "http://strd6.github.io/editor/"
-          },
-          "name": "emojer"
+          }
         }
       },
       "remoteDependencies": [
         "//code.jquery.com/jquery-1.10.1.min.js",
-        "http://strd6.github.io/tempest/javascripts/envweb.js",
-        "http://strd6.github.io/require/master.js"
+        "http://strd6.github.io/tempest/javascripts/envweb-v0.4.5.js",
+        "http://strd6.github.io/require/v0.2.2.js"
       ],
       "progenitor": {
         "url": "http://strd6.github.io/editor/"
@@ -1318,7 +1317,7 @@ window["STRd6/editor:master"]({
         "owner": {
           "login": "STRd6",
           "id": 18894,
-          "avatar_url": "https://0.gravatar.com/avatar/33117162fff8a9cf50544a604f60c045?d=https%3A%2F%2Fidenticons.github.com%2F39df222bffe39629d904e4883eabc654.png",
+          "avatar_url": "https://2.gravatar.com/avatar/33117162fff8a9cf50544a604f60c045?d=https%3A%2F%2Fidenticons.github.com%2F39df222bffe39629d904e4883eabc654.png&r=x",
           "gravatar_id": "33117162fff8a9cf50544a604f60c045",
           "url": "https://api.github.com/users/STRd6",
           "html_url": "https://github.com/STRd6",
@@ -1373,15 +1372,17 @@ window["STRd6/editor:master"]({
         "milestones_url": "https://api.github.com/repos/STRd6/github/milestones{/number}",
         "notifications_url": "https://api.github.com/repos/STRd6/github/notifications{?since,all,participating}",
         "labels_url": "https://api.github.com/repos/STRd6/github/labels{/name}",
+        "releases_url": "https://api.github.com/repos/STRd6/github/releases{/id}",
         "created_at": "2013-09-18T00:25:56Z",
-        "updated_at": "2013-10-15T18:08:21Z",
-        "pushed_at": "2013-10-15T18:08:19Z",
+        "updated_at": "2013-10-18T18:57:22Z",
+        "pushed_at": "2013-10-18T18:57:22Z",
         "git_url": "git://github.com/STRd6/github.git",
         "ssh_url": "git@github.com:STRd6/github.git",
         "clone_url": "https://github.com/STRd6/github.git",
         "svn_url": "https://github.com/STRd6/github",
         "homepage": null,
-        "size": 5004,
+        "size": 5360,
+        "stargazers_count": 0,
         "watchers_count": 0,
         "language": "CoffeeScript",
         "has_issues": true,
@@ -1393,18 +1394,18 @@ window["STRd6/editor:master"]({
         "forks": 0,
         "open_issues": 0,
         "watchers": 0,
-        "master_branch": "master",
         "default_branch": "master",
+        "master_branch": "master",
         "permissions": {
           "admin": true,
           "push": true,
           "pull": true
         },
         "network_count": 0,
-        "branch": "v0.3.2",
+        "subscribers_count": 1,
+        "branch": "v0.3.3",
         "defaultBranch": "master"
-      },
-      "name": "github"
+      }
     },
     "hygiene": {
       "version": "0.1.0",
