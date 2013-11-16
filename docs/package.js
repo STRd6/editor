@@ -25,7 +25,7 @@
     "pixie.cson": {
       "path": "pixie.cson",
       "mode": "100644",
-      "content": "version: \"0.2.0\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb-v0.4.5.js\"\n  \"http://strd6.github.io/require/v0.2.2.js\"\n]\ndependencies:\n  issues: \"STRd6/issues:v0.1.1\"\n  sandbox: \"STRd6/sandbox:v0.1.0\"\n  notifications: \"STRd6/notifications:v0.1.0\"\n  md: \"STRd6/md:v0.2.7\"\n  github: \"STRd6/github:v0.3.3\"\n  hygiene: \"STRd6/hygiene:v0.1.0\"\n  runtime: \"STRd6/runtime:v0.1.1\"\n  packager: \"STRd6/packager:v0.3.3\"\n  filetree: \"STRd6/filetree:v0.2.1\"\n  runner: \"STRd6/runner:v0.1.0\"\n",
+      "content": "version: \"0.2.0\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"//code.jquery.com/jquery-1.10.1.min.js\"\n  \"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb-v0.4.5.js\"\n  \"http://strd6.github.io/require/v0.2.2.js\"\n]\ndependencies:\n  issues: \"STRd6/issues:v0.1.1\"\n  sandbox: \"STRd6/sandbox:v0.1.0\"\n  notifications: \"STRd6/notifications:v0.1.0\"\n  md: \"STRd6/md:v0.2.9\"\n  github: \"STRd6/github:v0.3.3\"\n  hygiene: \"STRd6/hygiene:v0.1.0\"\n  runtime: \"STRd6/runtime:v0.1.1\"\n  packager: \"STRd6/packager:v0.3.3\"\n  filetree: \"STRd6/filetree:v0.2.1\"\n  runner: \"STRd6/runner:v0.1.0\"\n",
       "type": "blob"
     },
     "source/actions.coffee.md": {
@@ -132,7 +132,7 @@
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.2.0\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"//code.jquery.com/jquery-1.10.1.min.js\",\"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\",\"http://strd6.github.io/tempest/javascripts/envweb-v0.4.5.js\",\"http://strd6.github.io/require/v0.2.2.js\"],\"dependencies\":{\"issues\":\"STRd6/issues:v0.1.1\",\"sandbox\":\"STRd6/sandbox:v0.1.0\",\"notifications\":\"STRd6/notifications:v0.1.0\",\"md\":\"STRd6/md:v0.2.7\",\"github\":\"STRd6/github:v0.3.3\",\"hygiene\":\"STRd6/hygiene:v0.1.0\",\"runtime\":\"STRd6/runtime:v0.1.1\",\"packager\":\"STRd6/packager:v0.3.3\",\"filetree\":\"STRd6/filetree:v0.2.1\",\"runner\":\"STRd6/runner:v0.1.0\"}};",
+      "content": "module.exports = {\"version\":\"0.2.0\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"//code.jquery.com/jquery-1.10.1.min.js\",\"//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\",\"http://strd6.github.io/tempest/javascripts/envweb-v0.4.5.js\",\"http://strd6.github.io/require/v0.2.2.js\"],\"dependencies\":{\"issues\":\"STRd6/issues:v0.1.1\",\"sandbox\":\"STRd6/sandbox:v0.1.0\",\"notifications\":\"STRd6/notifications:v0.1.0\",\"md\":\"STRd6/md:v0.2.9\",\"github\":\"STRd6/github:v0.3.3\",\"hygiene\":\"STRd6/hygiene:v0.1.0\",\"runtime\":\"STRd6/runtime:v0.1.1\",\"packager\":\"STRd6/packager:v0.3.3\",\"filetree\":\"STRd6/filetree:v0.2.1\",\"runner\":\"STRd6/runner:v0.1.0\"}};",
       "type": "blob"
     },
     "source/actions": {
@@ -686,7 +686,7 @@
       "name": "notifications"
     },
     "md": {
-      "version": "0.2.7",
+      "version": "0.2.9",
       "source": {
         "LICENSE": {
           "path": "LICENSE",
@@ -721,7 +721,7 @@
         "main.coffee.md": {
           "path": "main.coffee.md",
           "mode": "100644",
-          "content": "Like a Doctor\n=============\n\nDocument all of your literate code: files that end in `.md`.\n\nInspired by Docco. Designed for the browser environment.\n\nWe use marked for generating the markdown.\n\n    marked = require \"./lib/marked\"\n    highlight = require \"./lib/highlight\"\n    languages = require \"./languages\"\n\n    marked.setOptions\n      highlight: (code, lang) ->\n        if highlight.LANGUAGES[lang]\n          highlight.highlight(lang, code).value\n        else\n          console.warn \"couldn't highlight code block with unknown language '#{lang}'\"\n\n          code\n\nExport our public api.\n\n    module.exports = doctor =\n      parse: require('./parse')\n\nOur docco style template.\n\n      template: require('./template')\n\nDocument one file.\n\n      compile: (content, language=\"coffeescript\") ->\n        doctor.parse(content).map ({text, code}) ->\n          docsHtml: marked(text)\n          codeHtml: marked \"```#{language}\\n#{code}\\n```\"\n\nGenerate the documentation for all files within the given package. Returns a\npromise that will be fulfilled with an array of `fileData`.\n\n      documentAll: (pkg) ->\n        {entryPoint, source, repository} = pkg\n        {branch, default_branch} = repository\n\n        if branch is default_branch\n          base = \"docs\"\n        else\n          base = \"#{branch}/docs\"\n\n        documentableFiles = Object.keys(source).select (name) ->\n          name.extension() is \"md\"\n\n        results = documentableFiles.map (name) ->\n          language = name.withoutExtension().extension()\n          language = languages[language] || language\n\n          doctor.compile source[name].content, language\n\n        extras = [packageScript(base, pkg)]\n\n        scripts = dependencyScripts unique([\n          \"//code.jquery.com/jquery-1.10.1.min.js\"\n          \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n          \"http://strd6.github.io/require/v0.2.2.js\"\n          \"http://strd6.github.io/interactive/v0.8.0.js\"\n        ].concat(\n          pkg.remoteDependencies or []\n        ))\n\n        results = results.map (result, i) ->\n          # Assuming .*.md so we should strip the extension twice\n          name = documentableFiles[i].withoutExtension().withoutExtension()\n\n          content = doctor.template\n            title: name\n            sections: result\n            scripts:  \"#{scripts}#{makeScript(relativeScriptPath(name))}\"\n\n          # Add an index.html if our file is the entry point\n          if name is entryPoint\n            extras.push\n              path: \"#{base}/index.html\"\n              content: content\n\n          path: \"#{base}/#{name}.html\"\n          content: content\n\n        Deferred().resolve(extras.concat(results))\n\nHelpers\n-------\n\n`makeScript` returns a string representation of a script tag that has a src\nattribute.\n\n    makeScript = (src) ->\n      script = document.createElement(\"script\")\n      script.src = src\n\n      return script.outerHTML\n\n`dependencyScripts` returns a string containing the script tags that are\nthe dependencies of this build.\n\n    dependencyScripts = (remoteDependencies=[]) ->\n      remoteDependencies.map(makeScript).join(\"\\n\")\n\n`unique` returns a new duplicate free version of an array.\n\n    unique = (array) ->\n      array.reduce (results, item) ->\n        results.push item if results.indexOf(item) is -1\n\n        results\n      , []\n\nThis returns a script file that exposes a global `require` that gives access to\nthe current package and is meant to be included in every docs page.\n\n    packageScript = (base, pkg) ->\n      path: \"#{base}/package.js\"\n      content: \"\"\"\n        (function(pkg) {\n          // Expose a require for our package so scripts can access our modules\n          window.require = Require.generateFor(pkg);\n        })(#{JSON.stringify(pkg, null, 2)});\n      \"\"\"\n\nPackage Script path\n\n    relativeScriptPath = (path) ->\n      upOne = \"../\"\n      results = []\n\n      (path.split(\"/\").length - 1).times ->\n        results.push upOne\n\n      results.concat(\"package.js\").join(\"\")\n",
+          "content": "Like a Doctor\n=============\n\nDocument all of your literate code: files that end in `.md`.\n\nInspired by Docco. Designed for the browser environment.\n\nWe use marked for generating the markdown.\n\n    marked = require \"./lib/marked\"\n    highlight = require \"./lib/highlight\"\n    languages = require \"./languages\"\n\n    marked.setOptions\n      highlight: (code, lang) ->\n        if highlight.LANGUAGES[lang]\n          highlight.highlight(lang, code).value\n        else\n          console.warn \"couldn't highlight code block with unknown language '#{lang}'\"\n\n          code\n\nExport our public api.\n\n    module.exports = doctor =\n      parse: require('./parse')\n\nOur docco style template.\n\n      template: require('./template')\n\nDocument one file.\n\n      compile: (content, language=\"coffeescript\") ->\n        doctor.parse(content).map ({text, code}) ->\n          docsHtml: marked(text)\n          codeHtml: marked \"```#{language}\\n#{code}\\n```\"\n\nGenerate the documentation for all files within the given package. Returns a\npromise that will be fulfilled with an array of `fileData`.\n\n      documentAll: (pkg) ->\n        {entryPoint, source, repository} = pkg\n        {branch, default_branch} = repository\n\n        if branch is default_branch\n          base = \"docs\"\n        else\n          base = \"#{branch}/docs\"\n\n        documentableFiles = Object.keys(source).select (name) ->\n          name.extension() is \"md\"\n\n        results = documentableFiles.map (name) ->\n          language = name.withoutExtension().extension()\n          language = languages[language] || language\n\n          doctor.compile source[name].content, language\n\n        extras = [packageScript(base, pkg)]\n\n        scripts = dependencyScripts unique([\n          \"//code.jquery.com/jquery-1.10.1.min.js\"\n          \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n          \"http://strd6.github.io/require/v0.2.2.js\"\n        ].concat(\n          pkg.remoteDependencies or []\n        ))\n        \n        # Add interactive loader to scripts string\n        scripts += interactiveLoader\n\n        results = results.map (result, i) ->\n          # Assuming .*.md so we should strip the extension twice\n          name = documentableFiles[i].withoutExtension().withoutExtension()\n\n          content = doctor.template\n            title: name\n            sections: result\n            scripts:  \"#{scripts}#{makeScript(relativeScriptPath(name))}\"\n\n          # Add an index.html if our file is the entry point\n          if name is entryPoint\n            extras.push\n              path: \"#{base}/index.html\"\n              content: content\n\n          path: \"#{base}/#{name}.html\"\n          content: content\n\n        Deferred().resolve(extras.concat(results))\n\nHelpers\n-------\n\n    interactiveLoader =\n      \"\"\"\n        <script>\n          $.ajax({\n            url: \"http://strd6.github.io/interactive/v0.8.1.jsonp\",\n            dataType: \"jsonp\",\n            jsonpCallback: \"STRd6/interactive:v0.8.1\",\n            cache: true\n          }).then(function(PACKAGE) {\n            Require.generateFor(PACKAGE)(\"./\" + PACKAGE.entryPoint)\n          })\n        <\\/script>\n      \"\"\"\n\n`makeScript` returns a string representation of a script tag that has a src\nattribute.\n\n    makeScript = (src) ->\n      script = document.createElement(\"script\")\n      script.src = src\n\n      return script.outerHTML\n\n`dependencyScripts` returns a string containing the script tags that are\nthe dependencies of this build.\n\n    dependencyScripts = (remoteDependencies=[]) ->\n      remoteDependencies.map(makeScript).join(\"\\n\")\n\n`unique` returns a new duplicate free version of an array.\n\n    unique = (array) ->\n      array.reduce (results, item) ->\n        results.push item if results.indexOf(item) is -1\n\n        results\n      , []\n\nThis returns a script file that exposes a global `require` that gives access to\nthe current package and is meant to be included in every docs page.\n\n    packageScript = (base, pkg) ->\n      path: \"#{base}/package.js\"\n      content: \"\"\"\n        (function(pkg) {\n          // Expose a require for our package so scripts can access our modules\n          window.require = Require.generateFor(pkg);\n        })(#{JSON.stringify(pkg, null, 2)});\n      \"\"\"\n\nPackage Script path\n\n    relativeScriptPath = (path) ->\n      upOne = \"../\"\n      results = []\n\n      (path.split(\"/\").length - 1).times ->\n        results.push upOne\n\n      results.concat(\"package.js\").join(\"\")\n",
           "type": "blob"
         },
         "parse.coffee.md": {
@@ -733,7 +733,7 @@
         "pixie.cson": {
           "path": "pixie.cson",
           "mode": "100644",
-          "content": "version: \"0.2.7\"\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/v0.2.2.js\"\n]\n",
+          "content": "version: \"0.2.9\"\nremoteDependencies: [\n  \"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n  \"http://strd6.github.io/require/v0.2.2.js\"\n]\n",
           "type": "blob"
         },
         "template.coffee.md": {
@@ -779,7 +779,7 @@
         },
         "main": {
           "path": "main",
-          "content": "(function() {\n  var dependencyScripts, doctor, highlight, languages, makeScript, marked, packageScript, relativeScriptPath, unique;\n\n  marked = require(\"./lib/marked\");\n\n  highlight = require(\"./lib/highlight\");\n\n  languages = require(\"./languages\");\n\n  marked.setOptions({\n    highlight: function(code, lang) {\n      if (highlight.LANGUAGES[lang]) {\n        return highlight.highlight(lang, code).value;\n      } else {\n        console.warn(\"couldn't highlight code block with unknown language '\" + lang + \"'\");\n        return code;\n      }\n    }\n  });\n\n  module.exports = doctor = {\n    parse: require('./parse'),\n    template: require('./template'),\n    compile: function(content, language) {\n      if (language == null) {\n        language = \"coffeescript\";\n      }\n      return doctor.parse(content).map(function(_arg) {\n        var code, text;\n        text = _arg.text, code = _arg.code;\n        return {\n          docsHtml: marked(text),\n          codeHtml: marked(\"```\" + language + \"\\n\" + code + \"\\n```\")\n        };\n      });\n    },\n    documentAll: function(pkg) {\n      var base, branch, default_branch, documentableFiles, entryPoint, extras, repository, results, scripts, source;\n      entryPoint = pkg.entryPoint, source = pkg.source, repository = pkg.repository;\n      branch = repository.branch, default_branch = repository.default_branch;\n      if (branch === default_branch) {\n        base = \"docs\";\n      } else {\n        base = \"\" + branch + \"/docs\";\n      }\n      documentableFiles = Object.keys(source).select(function(name) {\n        return name.extension() === \"md\";\n      });\n      results = documentableFiles.map(function(name) {\n        var language;\n        language = name.withoutExtension().extension();\n        language = languages[language] || language;\n        return doctor.compile(source[name].content, language);\n      });\n      extras = [packageScript(base, pkg)];\n      scripts = dependencyScripts(unique([\"//code.jquery.com/jquery-1.10.1.min.js\", \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\", \"http://strd6.github.io/require/v0.2.2.js\", \"http://strd6.github.io/interactive/v0.8.0.js\"].concat(pkg.remoteDependencies || [])));\n      results = results.map(function(result, i) {\n        var content, name;\n        name = documentableFiles[i].withoutExtension().withoutExtension();\n        content = doctor.template({\n          title: name,\n          sections: result,\n          scripts: \"\" + scripts + (makeScript(relativeScriptPath(name)))\n        });\n        if (name === entryPoint) {\n          extras.push({\n            path: \"\" + base + \"/index.html\",\n            content: content\n          });\n        }\n        return {\n          path: \"\" + base + \"/\" + name + \".html\",\n          content: content\n        };\n      });\n      return Deferred().resolve(extras.concat(results));\n    }\n  };\n\n  makeScript = function(src) {\n    var script;\n    script = document.createElement(\"script\");\n    script.src = src;\n    return script.outerHTML;\n  };\n\n  dependencyScripts = function(remoteDependencies) {\n    if (remoteDependencies == null) {\n      remoteDependencies = [];\n    }\n    return remoteDependencies.map(makeScript).join(\"\\n\");\n  };\n\n  unique = function(array) {\n    return array.reduce(function(results, item) {\n      if (results.indexOf(item) === -1) {\n        results.push(item);\n      }\n      return results;\n    }, []);\n  };\n\n  packageScript = function(base, pkg) {\n    return {\n      path: \"\" + base + \"/package.js\",\n      content: \"(function(pkg) {\\n  // Expose a require for our package so scripts can access our modules\\n  window.require = Require.generateFor(pkg);\\n})(\" + (JSON.stringify(pkg, null, 2)) + \");\"\n    };\n  };\n\n  relativeScriptPath = function(path) {\n    var results, upOne;\n    upOne = \"../\";\n    results = [];\n    (path.split(\"/\").length - 1).times(function() {\n      return results.push(upOne);\n    });\n    return results.concat(\"package.js\").join(\"\");\n  };\n\n}).call(this);\n\n//# sourceURL=main.coffee",
+          "content": "(function() {\n  var dependencyScripts, doctor, highlight, interactiveLoader, languages, makeScript, marked, packageScript, relativeScriptPath, unique;\n\n  marked = require(\"./lib/marked\");\n\n  highlight = require(\"./lib/highlight\");\n\n  languages = require(\"./languages\");\n\n  marked.setOptions({\n    highlight: function(code, lang) {\n      if (highlight.LANGUAGES[lang]) {\n        return highlight.highlight(lang, code).value;\n      } else {\n        console.warn(\"couldn't highlight code block with unknown language '\" + lang + \"'\");\n        return code;\n      }\n    }\n  });\n\n  module.exports = doctor = {\n    parse: require('./parse'),\n    template: require('./template'),\n    compile: function(content, language) {\n      if (language == null) {\n        language = \"coffeescript\";\n      }\n      return doctor.parse(content).map(function(_arg) {\n        var code, text;\n        text = _arg.text, code = _arg.code;\n        return {\n          docsHtml: marked(text),\n          codeHtml: marked(\"```\" + language + \"\\n\" + code + \"\\n```\")\n        };\n      });\n    },\n    documentAll: function(pkg) {\n      var base, branch, default_branch, documentableFiles, entryPoint, extras, repository, results, scripts, source;\n      entryPoint = pkg.entryPoint, source = pkg.source, repository = pkg.repository;\n      branch = repository.branch, default_branch = repository.default_branch;\n      if (branch === default_branch) {\n        base = \"docs\";\n      } else {\n        base = \"\" + branch + \"/docs\";\n      }\n      documentableFiles = Object.keys(source).select(function(name) {\n        return name.extension() === \"md\";\n      });\n      results = documentableFiles.map(function(name) {\n        var language;\n        language = name.withoutExtension().extension();\n        language = languages[language] || language;\n        return doctor.compile(source[name].content, language);\n      });\n      extras = [packageScript(base, pkg)];\n      scripts = dependencyScripts(unique([\"//code.jquery.com/jquery-1.10.1.min.js\", \"//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\", \"http://strd6.github.io/require/v0.2.2.js\"].concat(pkg.remoteDependencies || [])));\n      scripts += interactiveLoader;\n      results = results.map(function(result, i) {\n        var content, name;\n        name = documentableFiles[i].withoutExtension().withoutExtension();\n        content = doctor.template({\n          title: name,\n          sections: result,\n          scripts: \"\" + scripts + (makeScript(relativeScriptPath(name)))\n        });\n        if (name === entryPoint) {\n          extras.push({\n            path: \"\" + base + \"/index.html\",\n            content: content\n          });\n        }\n        return {\n          path: \"\" + base + \"/\" + name + \".html\",\n          content: content\n        };\n      });\n      return Deferred().resolve(extras.concat(results));\n    }\n  };\n\n  interactiveLoader = \"<script>\\n  $.ajax({\\n    url: \\\"http://strd6.github.io/interactive/v0.8.1.jsonp\\\",\\n    dataType: \\\"jsonp\\\",\\n    jsonpCallback: \\\"STRd6/interactive:v0.8.1\\\",\\n    cache: true\\n  }).then(function(PACKAGE) {\\n    Require.generateFor(PACKAGE)(\\\"./\\\" + PACKAGE.entryPoint)\\n  })\\n<\\/script>\";\n\n  makeScript = function(src) {\n    var script;\n    script = document.createElement(\"script\");\n    script.src = src;\n    return script.outerHTML;\n  };\n\n  dependencyScripts = function(remoteDependencies) {\n    if (remoteDependencies == null) {\n      remoteDependencies = [];\n    }\n    return remoteDependencies.map(makeScript).join(\"\\n\");\n  };\n\n  unique = function(array) {\n    return array.reduce(function(results, item) {\n      if (results.indexOf(item) === -1) {\n        results.push(item);\n      }\n      return results;\n    }, []);\n  };\n\n  packageScript = function(base, pkg) {\n    return {\n      path: \"\" + base + \"/package.js\",\n      content: \"(function(pkg) {\\n  // Expose a require for our package so scripts can access our modules\\n  window.require = Require.generateFor(pkg);\\n})(\" + (JSON.stringify(pkg, null, 2)) + \");\"\n    };\n  };\n\n  relativeScriptPath = function(path) {\n    var results, upOne;\n    upOne = \"../\";\n    results = [];\n    (path.split(\"/\").length - 1).times(function() {\n      return results.push(upOne);\n    });\n    return results.concat(\"package.js\").join(\"\");\n  };\n\n}).call(this);\n\n//# sourceURL=main.coffee",
           "type": "blob"
         },
         "parse": {
@@ -789,7 +789,7 @@
         },
         "pixie": {
           "path": "pixie",
-          "content": "module.exports = {\"version\":\"0.2.7\",\"remoteDependencies\":[\"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"http://strd6.github.io/tempest/javascripts/envweb.js\",\"http://strd6.github.io/require/v0.2.2.js\"]};",
+          "content": "module.exports = {\"version\":\"0.2.9\",\"remoteDependencies\":[\"//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"http://strd6.github.io/tempest/javascripts/envweb.js\",\"http://strd6.github.io/require/v0.2.2.js\"]};",
           "type": "blob"
         },
         "template": {
@@ -820,6 +820,9 @@
         "http://strd6.github.io/tempest/javascripts/envweb.js",
         "http://strd6.github.io/require/v0.2.2.js"
       ],
+      "progenitor": {
+        "url": "http://strd6.github.io/editor/"
+      },
       "repository": {
         "id": 13102476,
         "name": "md",
@@ -827,7 +830,7 @@
         "owner": {
           "login": "STRd6",
           "id": 18894,
-          "avatar_url": "https://2.gravatar.com/avatar/33117162fff8a9cf50544a604f60c045?d=https%3A%2F%2Fidenticons.github.com%2F39df222bffe39629d904e4883eabc654.png",
+          "avatar_url": "https://1.gravatar.com/avatar/33117162fff8a9cf50544a604f60c045?d=https%3A%2F%2Fidenticons.github.com%2F39df222bffe39629d904e4883eabc654.png&r=x",
           "gravatar_id": "33117162fff8a9cf50544a604f60c045",
           "url": "https://api.github.com/users/STRd6",
           "html_url": "https://github.com/STRd6",
@@ -882,15 +885,17 @@
         "milestones_url": "https://api.github.com/repos/STRd6/md/milestones{/number}",
         "notifications_url": "https://api.github.com/repos/STRd6/md/notifications{?since,all,participating}",
         "labels_url": "https://api.github.com/repos/STRd6/md/labels{/name}",
+        "releases_url": "https://api.github.com/repos/STRd6/md/releases{/id}",
         "created_at": "2013-09-25T18:55:25Z",
-        "updated_at": "2013-10-10T01:58:22Z",
-        "pushed_at": "2013-10-10T01:58:22Z",
+        "updated_at": "2013-11-15T23:47:03Z",
+        "pushed_at": "2013-11-15T23:47:03Z",
         "git_url": "git://github.com/STRd6/md.git",
         "ssh_url": "git@github.com:STRd6/md.git",
         "clone_url": "https://github.com/STRd6/md.git",
         "svn_url": "https://github.com/STRd6/md",
         "homepage": null,
-        "size": 22116,
+        "size": 1548,
+        "stargazers_count": 0,
         "watchers_count": 0,
         "language": "JavaScript",
         "has_issues": true,
@@ -902,24 +907,18 @@
         "forks": 0,
         "open_issues": 0,
         "watchers": 0,
-        "master_branch": "master",
         "default_branch": "master",
+        "master_branch": "master",
         "permissions": {
           "admin": true,
           "push": true,
           "pull": true
         },
         "network_count": 0,
-        "branch": "v0.2.7",
-        "defaultBranch": "master",
-        "includedModules": [
-          "Bindable"
-        ]
-      },
-      "progenitor": {
-        "url": "http://strd6.github.io/editor/"
-      },
-      "name": "md"
+        "subscribers_count": 1,
+        "branch": "v0.2.9",
+        "defaultBranch": "master"
+      }
     },
     "github": {
       "version": "0.3.3",
@@ -1302,7 +1301,8 @@
           },
           "progenitor": {
             "url": "http://strd6.github.io/editor/"
-          }
+          },
+          "name": "emojer"
         }
       },
       "remoteDependencies": [
@@ -1408,7 +1408,8 @@
         "subscribers_count": 1,
         "branch": "v0.3.3",
         "defaultBranch": "master"
-      }
+      },
+      "name": "github"
     },
     "hygiene": {
       "version": "0.1.0",
