@@ -918,7 +918,8 @@
         "subscribers_count": 1,
         "branch": "v0.2.9",
         "defaultBranch": "master"
-      }
+      },
+      "name": "md"
     },
     "github": {
       "version": "0.3.3",
