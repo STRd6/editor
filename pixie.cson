@@ -1,4 +1,5 @@
 version: "0.2.0"
+entryPoint: "main"
 width: 960
 height: 800
 remoteDependencies: [
@@ -13,7 +14,7 @@ dependencies:
   issues: "STRd6/issues:v0.1.1"
   sandbox: "STRd6/sandbox:v0.1.0"
   notifications: "STRd6/notifications:v0.1.0"
-  md: "STRd6/md:v0.2.7"
+  md: "STRd6/md:v0.2.9"
   github: "STRd6/github:v0.3.3"
   hygiene: "STRd6/hygiene:v0.1.0"
   runtime: "STRd6/runtime:v0.1.1"
