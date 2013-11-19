@@ -7,6 +7,7 @@ require "./source/deferred"
 {processDirectory} = require "./source/util"
 
 global.PACKAGE = PACKAGE
+global.require = require
 
 # Create and auth a github API
 # Global until we consolidate editor/actions into something cleaner
@@ -29,7 +30,7 @@ templates = (HAMLjr.templates ||= {})
 Editor = require("./editor")
 TextEditor = require("./source/text_editor")
 
-editor = Editor()
+editor = global.editor = Editor()
 editor.loadFiles(files)
 
 # TODO: Don't expose these
