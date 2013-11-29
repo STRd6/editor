@@ -4,15 +4,18 @@ Editor
     Runner = require("runner")
     Actions = require("./source/actions")
     Builder = require("builder")
+    Packager = require("packager")
     {Filetree} = require("filetree")
 
     initBuilder = ->
       builder = Builder()
 
+      # Add editor's metadata
       builder.addPostProcessor (pkg) ->
         pkg.progenitor =
           url: "http://strd6.github.io/editor/"
 
+      # Add metadata from our config
       builder.addPostProcessor (pkg) ->
         config = readSourceConfig(pkg)
 
@@ -34,10 +37,26 @@ when complete.
 
         build: ->
           data = filetree.data()
-          # TODO: We may want a more robust dependency cache
-          dependencyCache = PACKAGE.dependencies
 
-          builder.build(data, dependencyCache)
+          builder.build(data)
+          .then (pkg) ->
+            config = readSourceConfig(pkg)
+
+            # TODO: Robustify bundled dependencies
+            # Right now we're always loading them from remote urls during the
+            # build step. The default http caching is probably fine to speed this
+            # up, but we may want to look into keeping our own cache during dev
+            # in addition to using the package's existing dependencies rather
+            # than always updating
+            dependencies = config.dependencies or {}
+
+            # TODO: We will want a more robust dependency cache instead of just
+            # grabbing our own package's dependencies
+            Packager.collectDependencies(dependencies, PACKAGE.dependencies)
+            .then (dependencies) ->
+              pkg.dependencies = dependencies
+
+              return pkg
 
         save: ({repository}) ->
           repository.commitTree
