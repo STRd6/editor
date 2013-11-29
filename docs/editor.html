@@ -37,15 +37,18 @@
             <div class="content"><pre><code class="lang-coffeescript">Runner = require(<span class="string">"runner"</span>)
 Actions = require(<span class="string">"./source/actions"</span>)
 Builder = require(<span class="string">"builder"</span>)
+Packager = require(<span class="string">"packager"</span>)
 {Filetree} = require(<span class="string">"filetree"</span>)
 
 <span class="function"><span class="title">initBuilder</span></span> = -&gt;
   builder = Builder()
 
+  <span class="comment"># Add editor's metadata</span>
   builder.addPostProcessor (pkg) -&gt;
     pkg.progenitor =
       url: <span class="string">"http://strd6.github.io/editor/"</span>
 
+  <span class="comment"># Add metadata from our config</span>
   builder.addPostProcessor (pkg) -&gt;
     config = readSourceConfig(pkg)
 
@@ -76,10 +79,26 @@ when complete.</p>
             </div>
             <div class="content"><pre><code class="lang-coffeescript">    build: -&gt;
       data = filetree.data()
-      <span class="comment"># TODO: We may want a more robust dependency cache</span>
-      dependencyCache = PACKAGE.dependencies
 
-      builder.build(data, dependencyCache)
+      builder.build(data)
+      .<span class="keyword">then</span> (pkg) -&gt;
+        config = readSourceConfig(pkg)
+
+        <span class="comment"># TODO: Robustify bundled dependencies</span>
+        <span class="comment"># Right now we're always loading them from remote urls during the</span>
+        <span class="comment"># build step. The default http caching is probably fine to speed this</span>
+        <span class="comment"># up, but we may want to look into keeping our own cache during dev</span>
+        <span class="comment"># in addition to using the package's existing dependencies rather</span>
+        <span class="comment"># than always updating</span>
+        dependencies = config.dependencies <span class="keyword">or</span> {}
+
+        <span class="comment"># TODO: We will want a more robust dependency cache instead of just</span>
+        <span class="comment"># grabbing our own package's dependencies</span>
+        Packager.collectDependencies(dependencies, PACKAGE.dependencies)
+        .<span class="keyword">then</span> (dependencies) -&gt;
+          pkg.dependencies = dependencies
+
+          <span class="keyword">return</span> pkg
 
     save: ({repository}) -&gt;
       repository.commitTree
