@@ -8,11 +8,17 @@ Editor
 
     initBuilder = ->
       builder = Builder()
+
       builder.addPostProcessor (pkg) ->
         pkg.progenitor =
           url: "http://strd6.github.io/editor/"
 
-        pkg
+      builder.addPostProcessor (pkg) ->
+        config = readSourceConfig(pkg)
+
+        pkg.version = config.version
+        pkg.entryPoint = config.entryPoint or "main"
+        pkg.remoteDependencies = config.remoteDependencies
 
       return builder
 
