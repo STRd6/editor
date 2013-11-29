@@ -41,11 +41,17 @@ Builder = require(<span class="string">"builder"</span>)
 
 <span class="function"><span class="title">initBuilder</span></span> = -&gt;
   builder = Builder()
+
   builder.addPostProcessor (pkg) -&gt;
     pkg.progenitor =
       url: <span class="string">"http://strd6.github.io/editor/"</span>
 
-    pkg
+  builder.addPostProcessor (pkg) -&gt;
+    config = readSourceConfig(pkg)
+
+    pkg.version = config.version
+    pkg.entryPoint = config.entryPoint <span class="keyword">or</span> <span class="string">"main"</span>
+    pkg.remoteDependencies = config.remoteDependencies
 
   <span class="keyword">return</span> builder
 
