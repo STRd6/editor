@@ -484,7 +484,8 @@
         "branch": "v0.3.1",
         "defaultBranch": "master"
       },
-      "dependencies": {}
+      "dependencies": {},
+      "name": "builder"
     },
     "issues": {
       "source": {
@@ -653,7 +654,8 @@
         "branch": "v0.2.0",
         "defaultBranch": "master"
       },
-      "dependencies": {}
+      "dependencies": {},
+      "name": "issues"
     },
     "sandbox": {
       "source": {
@@ -795,7 +797,8 @@
         "branch": "v0.2.0",
         "defaultBranch": "master"
       },
-      "dependencies": {}
+      "dependencies": {},
+      "name": "sandbox"
     },
     "notifications": {
       "source": {
@@ -948,7 +951,8 @@
         "branch": "v0.2.0",
         "defaultBranch": "master"
       },
-      "dependencies": {}
+      "dependencies": {},
+      "name": "notifications"
     },
     "md": {
       "source": {
@@ -1182,7 +1186,8 @@
         "branch": "v0.3.0",
         "defaultBranch": "master"
       },
-      "dependencies": {}
+      "dependencies": {},
+      "name": "md"
     },
     "github": {
       "source": {
@@ -1687,9 +1692,11 @@
             "branch": "v0.2.0",
             "defaultBranch": "master"
           },
-          "dependencies": {}
+          "dependencies": {},
+          "name": "emojer"
         }
-      }
+      },
+      "name": "github"
     },
     "hygiene": {
       "source": {
@@ -1842,7 +1849,8 @@
         "branch": "v0.2.0",
         "defaultBranch": "master"
       },
-      "dependencies": {}
+      "dependencies": {},
+      "name": "hygiene"
     },
     "runtime": {
       "source": {
@@ -1995,7 +2003,8 @@
         "branch": "v0.2.0",
         "defaultBranch": "master"
       },
-      "dependencies": {}
+      "dependencies": {},
+      "name": "runtime"
     },
     "packager": {
       "source": {
@@ -2350,7 +2359,8 @@
           },
           "dependencies": {}
         }
-      }
+      },
+      "name": "packager"
     },
     "filetree": {
       "source": {
@@ -2552,7 +2562,8 @@
         "branch": "v0.3.0",
         "defaultBranch": "master"
       },
-      "dependencies": {}
+      "dependencies": {},
+      "name": "filetree"
     },
     "runner": {
       "source": {
@@ -2694,7 +2705,8 @@
         "branch": "v0.2.0",
         "defaultBranch": "master"
       },
-      "dependencies": {}
+      "dependencies": {},
+      "name": "runner"
     }
   }
 });

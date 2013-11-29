@@ -481,7 +481,8 @@ window["STRd6/editor:master"]({
         "branch": "v0.3.1",
         "defaultBranch": "master"
       },
-      "dependencies": {}
+      "dependencies": {},
+      "name": "builder"
     },
     "issues": {
       "source": {
@@ -650,7 +651,8 @@ window["STRd6/editor:master"]({
         "branch": "v0.2.0",
         "defaultBranch": "master"
       },
-      "dependencies": {}
+      "dependencies": {},
+      "name": "issues"
     },
     "sandbox": {
       "source": {
@@ -792,7 +794,8 @@ window["STRd6/editor:master"]({
         "branch": "v0.2.0",
         "defaultBranch": "master"
       },
-      "dependencies": {}
+      "dependencies": {},
+      "name": "sandbox"
     },
     "notifications": {
       "source": {
@@ -945,7 +948,8 @@ window["STRd6/editor:master"]({
         "branch": "v0.2.0",
         "defaultBranch": "master"
       },
-      "dependencies": {}
+      "dependencies": {},
+      "name": "notifications"
     },
     "md": {
       "source": {
@@ -1179,7 +1183,8 @@ window["STRd6/editor:master"]({
         "branch": "v0.3.0",
         "defaultBranch": "master"
       },
-      "dependencies": {}
+      "dependencies": {},
+      "name": "md"
     },
     "github": {
       "source": {
@@ -1684,9 +1689,11 @@ window["STRd6/editor:master"]({
             "branch": "v0.2.0",
             "defaultBranch": "master"
           },
-          "dependencies": {}
+          "dependencies": {},
+          "name": "emojer"
         }
-      }
+      },
+      "name": "github"
     },
     "hygiene": {
       "source": {
@@ -1839,7 +1846,8 @@ window["STRd6/editor:master"]({
         "branch": "v0.2.0",
         "defaultBranch": "master"
       },
-      "dependencies": {}
+      "dependencies": {},
+      "name": "hygiene"
     },
     "runtime": {
       "source": {
@@ -1992,7 +2000,8 @@ window["STRd6/editor:master"]({
         "branch": "v0.2.0",
         "defaultBranch": "master"
       },
-      "dependencies": {}
+      "dependencies": {},
+      "name": "runtime"
     },
     "packager": {
       "source": {
@@ -2347,7 +2356,8 @@ window["STRd6/editor:master"]({
           },
           "dependencies": {}
         }
-      }
+      },
+      "name": "packager"
     },
     "filetree": {
       "source": {
@@ -2549,7 +2559,8 @@ window["STRd6/editor:master"]({
         "branch": "v0.3.0",
         "defaultBranch": "master"
       },
-      "dependencies": {}
+      "dependencies": {},
+      "name": "filetree"
     },
     "runner": {
       "source": {
@@ -2691,7 +2702,8 @@ window["STRd6/editor:master"]({
         "branch": "v0.2.0",
         "defaultBranch": "master"
       },
-      "dependencies": {}
+      "dependencies": {},
+      "name": "runner"
     }
   }
 });
