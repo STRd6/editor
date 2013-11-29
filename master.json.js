@@ -1,7 +1,4 @@
-(function(pkg) {
-  // Expose a require for our package so scripts can access our modules
-  window.require = Require.generateFor(pkg);
-})({
+window["STRd6/editor:master"]({
   "source": {
     "TODO": {
       "path": "TODO",
