@@ -3,7 +3,7 @@ Editor
 
     Runner = require("runner")
     Actions = require("./source/actions")
-    Builder = require("./source/builder")
+    Builder = require("builder")
     {Filetree} = require("filetree")
 
     initBuilder = ->
