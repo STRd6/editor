@@ -18,6 +18,6 @@ dependencies:
   github: "STRd6/github:v0.4.0"
   hygiene: "STRd6/hygiene:v0.2.0"
   runtime: "STRd6/runtime:v0.2.0"
-  packager: "STRd6/packager:v0.5.0-pre.2"
+  packager: "STRd6/packager:v0.5.0-pre.3"
   filetree: "STRd6/filetree:v0.3.0"
   runner: "STRd6/runner:v0.2.0"
