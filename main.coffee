@@ -3,7 +3,7 @@
 
 global.Sandbox = require 'sandbox'
 require "./source/duct_tape"
-require "./source/deferred" 
+require "./source/deferred"
 {processDirectory} = require "./source/util"
 
 global.PACKAGE = PACKAGE
@@ -69,13 +69,13 @@ repository = Observable()
 repository.observe (repository) ->
   issues.repository = repository
   repository.pullRequests().then issues.reset
-  
+
   notify "Loaded repository: #{repository.full_name()}"
 
 PACKAGE.repository.url ||= "repos/#{PACKAGE.repository.full_name}"
 
 repository github.Repository(PACKAGE.repository)
-  
+
 confirmUnsaved = ->
   Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
 
@@ -98,7 +98,7 @@ actions =
       # The correct solution will be to use git shas to determine changed status
       # but that's a little heavy duty for right now.
       filetree.markSaved()
-      
+
       editor.publish
         repository: repositoryInstance
     .then ->
@@ -131,7 +131,7 @@ actions =
         path: name
         content: ""
       filetree.files.push file
-      filetree.selectedFile file      
+      filetree.selectedFile file
 
   load_repo: (skipPrompt) ->
     confirmUnsaved()
@@ -146,12 +146,12 @@ actions =
         Deferred().reject("No repo given")
     .then (repositoryInstance) ->
       notify "Loading files..."
-  
+
       editor.load
         repository: repositoryInstance
       .then ->
         closeOpenEditors()
-        
+
         notifications.push "Loaded"
     .fail classicError
 
@@ -192,26 +192,26 @@ actions =
         notifications.push "Loaded!"
       .fail ->
         classicError "Error loading #{repository().url()}"
-  
+
   pull_upstream: ->
     confirmUnsaved()
     .then( ->
       notify "Pulling from upstream master"
-      
+
       upstreamRepo = repository().parent().full_name
-      
+
       github.repository(upstreamRepo)
       .then (repository) ->
-        repository.latestContent()  
+        repository.latestContent()
       .then (results) ->
         files = processDirectory results
         editor.loadFiles files
-      
-    , classicError  
+
+    , classicError
     ).then ->
       notifications.push "\nYour code is up to date with the upstream master"
       closeOpenEditors()
-        
+
   tag_version: ->
     notify "Building..."
 
@@ -239,16 +239,17 @@ actions =
 filetree.selectedFile.observe (file) ->
   root = $root.children(".main")
   root.find(".editor-wrap").hide()
-  
+
   if file.editor
     file.editor.trigger("show")
   else
     root.append(HAMLjr.render "text_editor")
     file.editor = root.find(".editor-wrap").last()
-    
-    if file.path().extension() is "md"
-      file.content Hygiene.clean file.content()
-    
+
+    switch file.path().extension()
+      when "md", "coffee", "js", "styl", "cson"
+        file.content Hygiene.clean file.content()
+
     textEditor = TextEditor
       text: file.content()
       el: file.editor.find('.editor').get(0)
@@ -257,10 +258,10 @@ filetree.selectedFile.observe (file) ->
     file.editor.on "show", ->
       file.editor.show()
       textEditor.editor.focus()
-  
+
     textEditor.text.observe (value) ->
       file.content(value)
-      
+
       # TODO May want to move this into a collection listener for all files
       # in the filetree
       if file.path().match(/\.styl$/)
@@ -276,7 +277,7 @@ hotReloadCSS = ( (file) ->
 issues?.currentIssue.observe (issue) ->
   # TODO: Formalize this later
   return if issues.silent
-  
+
   changeBranch = (branchName) ->
     previousBranch = repository().branch()
 
@@ -298,18 +299,18 @@ issues?.currentIssue.observe (issue) ->
       # To correctly handle this we may need to really beef up our observables.
       # One possibility is to extend observables to full fledged deferreds
       # which can be rejected by listeners added to the chain.
-      
+
       repository.branch(previousBranch)
 
       classicError "Error switching to #{branchName}, still on #{previousBranch}"
 
   if issue
     notify issue.fullDescription()
-    
+
     changeBranch issue.branchName()
-  else    
+  else
     notify "Default branch selected"
-    
+
     changeBranch repository().defaultBranch()
 
 $root
