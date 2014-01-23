@@ -1,12 +1,12 @@
 CACHE MANIFEST
-# 1387863997977
+# 1390513233358
 
 CACHE:
 index.html
-//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js
-//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js
-//code.jquery.com/jquery-1.10.1.min.js
-//d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js
+https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js
+https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js
+https://code.jquery.com/jquery-1.10.1.min.js
+https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js
 http://strd6.github.io/tempest/javascripts/envweb-v0.4.5.js
 
 NETWORK:
