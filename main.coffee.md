@@ -25,6 +25,15 @@ TODO: This needs a big cleanup.
     # Global until we consolidate editor/actions into something cleaner
     global.github = require("github")(require("./source/github_auth")())
 
+Templates
+---------
+
+- [Actions](./templates/actions)
+- [Editor](./templates/editor)
+- [Github Status](./templates/github_status)
+- [Text Editor](./templates/text_editor)
+- [Repo Info](./templates/repo_info)
+
     # Load and attach Templates
     templates = (HAMLjr.templates ||= {})
     [

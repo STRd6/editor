@@ -1,3 +1,5 @@
+Github Status
+=============
 
 Display information about the current Github api session.
 
