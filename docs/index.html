@@ -67,9 +67,40 @@ global.require = require
 
 <span class="comment"># Create and auth a github API</span>
 <span class="comment"># Global until we consolidate editor/actions into something cleaner</span>
-global.github = require(<span class="string">"github"</span>)(require(<span class="string">"./source/github_auth"</span>)())
+global.github = require(<span class="string">"github"</span>)(require(<span class="string">"./source/github_auth"</span>)())</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <h2 id="templates">Templates</h2>
 
-<span class="comment"># Load and attach Templates</span>
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <ul>
+<li><a href="./templates/actions">Actions</a></li>
+<li><a href="./templates/editor">Editor</a></li>
+<li><a href="./templates/github_status">Github Status</a></li>
+<li><a href="./templates/text_editor">Text Editor</a></li>
+<li><a href="./templates/repo_info">Repo Info</a></li>
+</ul>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript"><span class="comment"># Load and attach Templates</span>
 templates = (HAMLjr.templates ||= {})
 [
   <span class="string">"actions"</span>
