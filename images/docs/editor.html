@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>editor</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="http://strd6.github.io/cdn/parallel/docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    <ul class="sections">
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <h1 id="editor">Editor</h1>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">Runner = require(<span class="string">"runner"</span>)
+Actions = require(<span class="string">"./source/actions"</span>)
+Builder = require(<span class="string">"builder"</span>)
+Packager = require(<span class="string">"packager"</span>)
+{Filetree} = require(<span class="string">"filetree"</span>)
+
+<span class="function"><span class="title">initBuilder</span></span> = -&gt;
+  builder = Builder()
+
+  <span class="comment"># Add editor's metadata</span>
+  builder.addPostProcessor (pkg) -&gt;
+    pkg.progenitor =
+      url: <span class="string">"http://strd6.github.io/editor/"</span>
+
+  <span class="comment"># Add metadata from our config</span>
+  builder.addPostProcessor (pkg) -&gt;
+    config = readSourceConfig(pkg)
+
+    pkg.version = config.version
+    pkg.entryPoint = config.entryPoint <span class="keyword">or</span> <span class="string">"main"</span>
+    pkg.remoteDependencies = config.remoteDependencies
+
+  <span class="keyword">return</span> builder
+
+module.<span class="function"><span class="title">exports</span></span> = (I={}, self=Model(I)) -&gt;
+  runner = Runner()
+  builder = initBuilder()
+  filetree = Filetree()
+
+  self.extend</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Build the project, returning a promise that will be fulfilled with the <code>pkg</code>
+when complete.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">    build: -&gt;
+      data = filetree.data()
+
+      builder.build(data)
+      .<span class="keyword">then</span> (pkg) -&gt;
+        config = readSourceConfig(pkg)
+
+        <span class="comment"># TODO: Robustify bundled dependencies</span>
+        <span class="comment"># Right now we're always loading them from remote urls during the</span>
+        <span class="comment"># build step. The default http caching is probably fine to speed this</span>
+        <span class="comment"># up, but we may want to look into keeping our own cache during dev</span>
+        <span class="comment"># in addition to using the package's existing dependencies rather</span>
+        <span class="comment"># than always updating</span>
+        dependencies = config.dependencies <span class="keyword">or</span> {}
+
+        <span class="comment"># TODO: We will want a more robust dependency cache instead of just</span>
+        <span class="comment"># grabbing our own package's dependencies</span>
+        Packager.collectDependencies(dependencies, PACKAGE.dependencies)
+        .<span class="keyword">then</span> (dependencies) -&gt;
+          pkg.dependencies = dependencies
+
+          <span class="keyword">return</span> pkg
+
+    save: ({repository}) -&gt;
+      repository.commitTree
+        tree: filetree.data()
+
+    loadFiles: (fileData) -&gt;
+      filetree.load fileData</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Currently we&#39;re exposing the filetree though in the future we shouldn&#39;t be.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">    filetree: -&gt;
+      filetree</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Likewise we shouldn&#39;t expose the builder directly either.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">    builder: -&gt;
+      builder
+
+    config: -&gt;
+      readSourceConfig(source: arrayToHash(filetree.data()))
+
+    <span class="comment"># TODO: Don't expose this, instead expose things like `runDocs`, `runTests`, etc.</span>
+    runner: -&gt;
+      runner</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Run some code in a sandboxed popup window. We need to popup the window immediately
+in response to user input to prevent pop-up blocking so we also pass a promise
+that will contain the content to render in the window. If the promise fails we
+auto-close the window.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">    runInSandboxWindow: (config, promise) -&gt;
+      sandbox = runner.run
+        config: config
+
+      promise.<span class="keyword">then</span>(
+        (content) -&gt;
+          sandbox.document.open()
+          sandbox.document.write(content)
+          sandbox.document.close()
+        , (error) -&gt;
+          sandbox.close()
+
+          <span class="keyword">return</span> error
+      )
+
+  self.include(Actions)
+
+  <span class="keyword">return</span> self</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h2 id="helpers">Helpers</h2>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">{readSourceConfig, arrayToHash} = require(<span class="string">"./source/util"</span>)</code></pre>
+</div>
+        </li>
+        
+    </ul>
+  </div>
+  <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
+<script src="http://strd6.github.io/require/v0.2.2.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
+<script src="http://strd6.github.io/tempest/javascripts/envweb-v0.4.5.js"></script><script>
+  $.ajax({
+    url: "http://strd6.github.io/interactive/v0.8.1.jsonp",
+    dataType: "jsonp",
+    jsonpCallback: "STRd6/interactive:v0.8.1",
+    cache: true
+  }).then(function(PACKAGE) {
+    Require.generateFor(PACKAGE)("./" + PACKAGE.entryPoint)
+  })
+</script><script src="package.js"></script>
+</body>
+</html>
