@@ -120,7 +120,7 @@
     "test/images.coffee": {
       "path": "test/images.coffee",
       "mode": "100644",
-      "content": "Images = require \"../lib/images\"\n\ndescribe \"images\", ->\n  it \"should convert\", ->\n    result = Images.convert [\n      path: \"images/duder.png\"\n      content: atob \"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAALUlEQVRYR+3QQREAAAABQfqXFsNnFTizzXk99+MAAQIECBAgQIAAAQIECBAgMBo/ACHo7lH9AAAAAElFTkSuQmCC\"\n    ]\n\n    console.log result\n\n    assert result.duder\n",
+      "content": "Images = require \"../lib/images\"\n\ndescribe \"images\", ->\n  it \"should convert\", ->\n    result = Images.convert [\n      path: \"images/test.png\"\n      content: atob \"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAALUlEQVRYR+3QQREAAAABQfqXFsNnFTizzXk99+MAAQIECBAgQIAAAQIECBAgMBo/ACHo7lH9AAAAAElFTkSuQmCC\"\n    ]\n\n    console.log result\n\n    assert result.test\n",
       "type": "blob"
     }
   },
@@ -217,7 +217,7 @@
     },
     "test/images": {
       "path": "test/images",
-      "content": "(function() {\n  var Images;\n\n  Images = require(\"../lib/images\");\n\n  describe(\"images\", function() {\n    return it(\"should convert\", function() {\n      var result;\n      result = Images.convert([\n        {\n          path: \"images/duder.png\",\n          content: atob(\"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAALUlEQVRYR+3QQREAAAABQfqXFsNnFTizzXk99+MAAQIECBAgQIAAAQIECBAgMBo/ACHo7lH9AAAAAElFTkSuQmCC\")\n        }\n      ]);\n      console.log(result);\n      return assert(result.duder);\n    });\n  });\n\n}).call(this);\n\n//# sourceURL=test/images.coffee",
+      "content": "(function() {\n  var Images;\n\n  Images = require(\"../lib/images\");\n\n  describe(\"images\", function() {\n    return it(\"should convert\", function() {\n      var result;\n      result = Images.convert([\n        {\n          path: \"images/test.png\",\n          content: atob(\"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAALUlEQVRYR+3QQREAAAABQfqXFsNnFTizzXk99+MAAQIECBAgQIAAAQIECBAgMBo/ACHo7lH9AAAAAElFTkSuQmCC\")\n        }\n      ]);\n      console.log(result);\n      return assert(result.test);\n    });\n  });\n\n}).call(this);\n\n//# sourceURL=test/images.coffee",
       "type": "blob"
     }
   },
