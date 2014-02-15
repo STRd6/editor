@@ -137,7 +137,7 @@ when complete.</p>
         file.path().match expr
 
     writeFile: (path, content) -&gt;
-      <span class="keyword">if</span> existingFile = fileAt(path)
+      <span class="keyword">if</span> existingFile = self.fileAt(path)
         existingFile.content(content)
 
         <span class="keyword">return</span> existingFile
