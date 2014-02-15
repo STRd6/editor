@@ -5,7 +5,7 @@ Editor
     Actions = require("./source/actions")
     Builder = require("builder")
     Packager = require("packager")
-    {Filetree} = require("filetree")
+    {Filetree, File} = require("filetree")
 
     initBuilder = ->
       builder = Builder()
@@ -84,6 +84,18 @@ Currently we're exposing the filetree though in the future we shouldn't be.
         filesMatching: (expr) ->
           self.files().select (file) ->
             file.path().match expr
+
+        writeFile: (path, content) ->
+          if existingFile = fileAt(path)
+            existingFile.content(content)
+
+            return existingFile
+          else
+            file = File
+              path: path
+              content: content
+
+            return file
 
 Likewise we shouldn't expose the builder directly either.
 
