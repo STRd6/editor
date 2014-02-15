@@ -119,7 +119,22 @@ when complete.</p>
 
             </div>
             <div class="content"><pre><code class="lang-coffeescript">    filetree: -&gt;
-      filetree</code></pre>
+      filetree
+
+    files: -&gt;
+      filetree.files()
+
+    fileAt: (path) -&gt;
+      self.files().select (file) -&gt;
+        file.path() <span class="keyword">is</span> path
+      .first()
+
+    fileContents: (path) -&gt;
+      self.fileAt(path)?.content()
+
+    filesMatching: (expr) -&gt;
+      self.files().select (file) -&gt;
+        file.path().match expr</code></pre>
 </div>
         </li>
         
