@@ -146,6 +146,29 @@ Templates
           editor.runDocs({file})
           .fail errors
 
+      convert_images: ->
+        # Gather image data from images/
+        imageFiles = editor.filesMatching(/^images\//)
+
+        imageData = require("./lib/images").convert(imageFiles)
+
+        # Delete files in images/
+        imageFiles.forEach (file) ->
+          editor.files().remove(file)
+
+        # Create/update images.json
+        # Read file if it exists
+        try
+          existingImages = JSON.parse(editor.fileContents("images.json"))
+        catch
+          existingImages = {}
+
+        # Merge data
+        Object.extend existingImages, imageData
+
+        # Write file
+        editor.writeFile("images.json", JSON.stringify(existingImages))
+
       new_file: ->
         if name = prompt("File Name", "newfile.coffee")
           file = File
