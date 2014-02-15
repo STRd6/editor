@@ -86,7 +86,7 @@ Currently we're exposing the filetree though in the future we shouldn't be.
             file.path().match expr
 
         writeFile: (path, content) ->
-          if existingFile = fileAt(path)
+          if existingFile = self.fileAt(path)
             existingFile.content(content)
 
             return existingFile
