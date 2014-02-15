@@ -216,7 +216,9 @@ actions =
     <span class="comment"># Gather image data from images/</span>
     imageFiles = editor.filesMatching(<span class="regexp">/^images\//</span>)
 
-    imageData = require(<span class="string">"./lib/images"</span>).convert(imageFiles)
+    imageData = require(<span class="string">"./lib/images"</span>).convert imageFiles.map (file) -&gt;
+      path: file.path()
+      content: file.content()
 
     <span class="comment"># Delete files in images/</span>
     imageFiles.forEach (file) -&gt;
