@@ -111,13 +111,13 @@ window["STRd6/editor:images"]({
     "lib/images.coffee.md": {
       "path": "lib/images.coffee.md",
       "mode": "100644",
-      "content": "Images\n======\n\nHandle converting images from a directory into an images.json\n\n    module.exports =\n      convert: (fileData) ->\n        fileData.reduce (hash, {path, content}) ->\n          if path.match /\\.png$/\n            path = path.replace(/\\.png$/, \"\").replace(/^images\\//, \"\")\n            hash[path] = \"data:image/png;base64,#{btoa(content)}\"\n          hash\n        , {}\n",
+      "content": "Images\n======\n\nHandle converting images from a directory into an images.json\n\n    module.exports =\n      convert: (fileData) ->\n        fileData.reduce (hash, {path, content}) ->\n          if path.match /\\.png$/\n            path = path.replace(/\\.png$/, \"\").replace(/^images\\//, \"\")\n            hash[path] = \"data:image/png;base64,#{Base64.encode(content)}\"\n          hash\n        , {}\n",
       "type": "blob"
     },
     "test/images.coffee": {
       "path": "test/images.coffee",
       "mode": "100644",
-      "content": "Images = require \"../lib/images\"\n\ndescribe \"images\", ->\n  it \"should convert\", ->\n    testImage = atob \"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAALUlEQVRYR+3QQREAAAABQfqXFsNnFTizzXk99+MAAQIECBAgQIAAAQIECBAgMBo/ACHo7lH9AAAAAElFTkSuQmCC\"\n    result = Images.convert [{\n      path: \"images/test.png\"\n      content: testImage\n    }, {\n      path: \"images/yolo.png\"\n      content: testImage\n    }, {\n      path: \"main.coffee.md\"\n      content: \"Not an image\"\n    }]\n\n    assert result.test\n    assert result.yolo\n    assert !result.main\n",
+      "content": "Images = require \"../lib/images\"\n\ndescribe \"images\", ->\n  it \"should convert\", ->\n    testImage = Base64.decode \"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAALUlEQVRYR+3QQREAAAABQfqXFsNnFTizzXk99+MAAQIECBAgQIAAAQIECBAgMBo/ACHo7lH9AAAAAElFTkSuQmCC\"\n    result = Images.convert [{\n      path: \"images/test.png\"\n      content: testImage\n    }, {\n      path: \"images/yolo.png\"\n      content: testImage\n    }, {\n      path: \"main.coffee.md\"\n      content: \"Not an image\"\n    }]\n\n    assert result.test\n    assert result.yolo\n    assert !result.main\n",
       "type": "blob"
     }
   },
@@ -209,12 +209,12 @@ window["STRd6/editor:images"]({
     },
     "lib/images": {
       "path": "lib/images",
-      "content": "(function() {\n  module.exports = {\n    convert: function(fileData) {\n      return fileData.reduce(function(hash, _arg) {\n        var content, path;\n        path = _arg.path, content = _arg.content;\n        if (path.match(/\\.png$/)) {\n          path = path.replace(/\\.png$/, \"\").replace(/^images\\//, \"\");\n          hash[path] = \"data:image/png;base64,\" + (btoa(content));\n        }\n        return hash;\n      }, {});\n    }\n  };\n\n}).call(this);\n\n//# sourceURL=lib/images.coffee",
+      "content": "(function() {\n  module.exports = {\n    convert: function(fileData) {\n      return fileData.reduce(function(hash, _arg) {\n        var content, path;\n        path = _arg.path, content = _arg.content;\n        if (path.match(/\\.png$/)) {\n          path = path.replace(/\\.png$/, \"\").replace(/^images\\//, \"\");\n          hash[path] = \"data:image/png;base64,\" + (Base64.encode(content));\n        }\n        return hash;\n      }, {});\n    }\n  };\n\n}).call(this);\n\n//# sourceURL=lib/images.coffee",
       "type": "blob"
     },
     "test/images": {
       "path": "test/images",
-      "content": "(function() {\n  var Images;\n\n  Images = require(\"../lib/images\");\n\n  describe(\"images\", function() {\n    return it(\"should convert\", function() {\n      var result, testImage;\n      testImage = atob(\"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAALUlEQVRYR+3QQREAAAABQfqXFsNnFTizzXk99+MAAQIECBAgQIAAAQIECBAgMBo/ACHo7lH9AAAAAElFTkSuQmCC\");\n      result = Images.convert([\n        {\n          path: \"images/test.png\",\n          content: testImage\n        }, {\n          path: \"images/yolo.png\",\n          content: testImage\n        }, {\n          path: \"main.coffee.md\",\n          content: \"Not an image\"\n        }\n      ]);\n      assert(result.test);\n      assert(result.yolo);\n      return assert(!result.main);\n    });\n  });\n\n}).call(this);\n\n//# sourceURL=test/images.coffee",
+      "content": "(function() {\n  var Images;\n\n  Images = require(\"../lib/images\");\n\n  describe(\"images\", function() {\n    return it(\"should convert\", function() {\n      var result, testImage;\n      testImage = Base64.decode(\"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAALUlEQVRYR+3QQREAAAABQfqXFsNnFTizzXk99+MAAQIECBAgQIAAAQIECBAgMBo/ACHo7lH9AAAAAElFTkSuQmCC\");\n      result = Images.convert([\n        {\n          path: \"images/test.png\",\n          content: testImage\n        }, {\n          path: \"images/yolo.png\",\n          content: testImage\n        }, {\n          path: \"main.coffee.md\",\n          content: \"Not an image\"\n        }\n      ]);\n      assert(result.test);\n      assert(result.yolo);\n      return assert(!result.main);\n    });\n  });\n\n}).call(this);\n\n//# sourceURL=test/images.coffee",
       "type": "blob"
     }
   },
