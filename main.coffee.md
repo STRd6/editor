@@ -169,7 +169,7 @@ Templates
         Object.extend existingImages, imageData
 
         # Write file
-        editor.writeFile("images.json", JSON.stringify(existingImages))
+        editor.writeFile("images.json", JSON.stringify(existingImages, null, 2))
 
       new_file: ->
         if name = prompt("File Name", "newfile.coffee")
