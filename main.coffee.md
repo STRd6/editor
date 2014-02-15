@@ -150,7 +150,9 @@ Templates
         # Gather image data from images/
         imageFiles = editor.filesMatching(/^images\//)
 
-        imageData = require("./lib/images").convert(imageFiles)
+        imageData = require("./lib/images").convert imageFiles.map (file) ->
+          path: file.path()
+          content: file.content()
 
         # Delete files in images/
         imageFiles.forEach (file) ->
