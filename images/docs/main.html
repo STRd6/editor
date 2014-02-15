@@ -235,7 +235,7 @@ actions =
     Object.extend existingImages, imageData
 
     <span class="comment"># Write file</span>
-    editor.writeFile(<span class="string">"images.json"</span>, JSON.stringify(existingImages))
+    editor.writeFile(<span class="string">"images.json"</span>, JSON.stringify(existingImages, <span class="literal">null</span>, <span class="number">2</span>))
 
   new_file: -&gt;
     <span class="keyword">if</span> name = prompt(<span class="string">"File Name"</span>, <span class="string">"newfile.coffee"</span>)
