@@ -95,6 +95,8 @@ Currently we're exposing the filetree though in the future we shouldn't be.
               path: path
               content: content
 
+            filetree.files.push(file)
+
             return file
 
 Likewise we shouldn't expose the builder directly either.
