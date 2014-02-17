@@ -85,7 +85,8 @@ Templates
     issues = Issues()
 
     # Github repository observable
-    repository = Observable()
+    # TODO: Finalize move into editor module
+    repository = editor.repository
 
     repository.observe (repository) ->
       issues.repository = repository
@@ -347,12 +348,3 @@ Templates
     window.onbeforeunload = ->
       if filetree.hasUnsavedChanges()
         "You have some unsaved changes, if you leave now you will lose your work."
-
-    # TODO: Find a better way to initialize this
-
-    # Attach repo metadata to package
-    builder.addPostProcessor (pkg) ->
-      # TODO: Track commit SHA as well
-      pkg.repository = repository().toJSON()
-
-      pkg

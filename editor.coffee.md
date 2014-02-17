@@ -31,6 +31,7 @@ Editor
       filetree = Filetree()
 
       self.extend
+        repository: Observable()
 
 Build the project, returning a promise that will be fulfilled with the `pkg`
 when complete.
@@ -103,6 +104,14 @@ auto-close the window.
           )
 
       self.include(Actions)
+
+      # TODO: Merge this in and clean up the `initBuilder` code
+      # Attach repo metadata to package
+      builder.addPostProcessor (pkg) ->
+        # TODO: Track commit SHA as well
+        pkg.repository = self.repository().toJSON()
+
+        pkg
 
       return self
 
