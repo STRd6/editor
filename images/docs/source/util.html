@@ -69,13 +69,11 @@
     items.forEach (item) -&gt;
       <span class="keyword">return</span> item <span class="keyword">unless</span> item.content
 
-      <span class="comment"># TODO: Expand to better handle all binary types</span>
-      console.log item
-
-      <span class="keyword">if</span> item.path.match <span class="regexp">/\.png$/</span> <span class="comment"># Binary</span>
+      <span class="keyword">if</span> isBinary(item.path)
         item.binary = <span class="literal">true</span>
         item.content = atob(item.content.replace(<span class="regexp">/\s/g</span>, <span class="string">""</span>))
       <span class="keyword">else</span> <span class="comment"># Text</span>
+        <span class="comment"># NOTE: This implementation of Base64 assumes utf-8</span>
         item.content = Base64.decode(item.content)
 
       item.encoding = <span class="string">"raw"</span>
@@ -99,6 +97,45 @@ file&#39;s path is a key and the fileData is the object.</p>
       hash[file.path] = file
 
 module.exports = Util</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <h2 id="helpers">Helpers</h2>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">isBinary</span></span> = (path) -&gt;
+  pathCheckRegEx = RegExp [
+    <span class="string">"gif"</span>
+    <span class="string">"jpeg"</span>
+    <span class="string">"jpg"</span>
+    <span class="string">"mp3"</span>
+    <span class="string">"png"</span>
+    <span class="string">"sfs"</span>
+    <span class="string">"wav"</span>
+  ].map (extension) -&gt;
+    <span class="string">"\\.<span class="subst">#{extension}</span>$"</span>
+  .join(<span class="string">"|"</span>)
+
+  path.match(pathCheckRegEx)</code></pre>
 </div>
         </li>
         
