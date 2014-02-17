@@ -44,6 +44,8 @@ file's path is a key and the fileData is the object.
 Helpers
 -------
 
+Determines if a file is a binary file by looking up common file extensions.
+
     isBinary = (path) ->
       pathCheckRegEx = RegExp [
         "gif"
