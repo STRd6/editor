@@ -283,6 +283,8 @@ Templates
         .fail classicError
 
     filetree.selectedFile.observe (file) ->
+      return if file.binary?()
+
       root = $root.children(".main")
       root.find(".editor-wrap").hide()
 

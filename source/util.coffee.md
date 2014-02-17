@@ -21,7 +21,15 @@ Decodes all content in place.
         items.forEach (item) ->
           return item unless item.content
 
-          item.content = Base64.decode(item.content)
+          # TODO: Expand to better handle all binary types
+          console.log item
+
+          if item.path.match /\.png$/ # Binary
+            item.binary = true
+            item.content = atob(item.content.replace(/\s/g, ""))
+          else # Text
+            item.content = Base64.decode(item.content)
+
           item.encoding = "raw"
 
         return items

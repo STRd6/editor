@@ -8,6 +8,6 @@ Handle converting images from a directory into an images.json
         fileData.reduce (hash, {path, content}) ->
           if path.match /\.png$/
             path = path.replace(/\.png$/, "").replace(/^images\//, "")
-            hash[path] = "data:image/png;base64,#{Base64.encode(content)}"
+            hash[path] = "data:image/png;base64,#{btoa(content)}"
           hash
         , {}
