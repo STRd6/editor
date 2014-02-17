@@ -349,6 +349,8 @@ actions =
     .fail classicError
 
 filetree.selectedFile.observe (file) -&gt;
+  <span class="keyword">return</span> <span class="keyword">if</span> file.binary?()
+
   root = $root.children(<span class="string">".main"</span>)
   root.find(<span class="string">".editor-wrap"</span>).hide()
 

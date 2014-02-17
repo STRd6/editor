@@ -40,7 +40,7 @@
     fileData.reduce (hash, {path, content}) -&gt;
       <span class="keyword">if</span> path.match <span class="regexp">/\.png$/</span>
         path = path.replace(<span class="regexp">/\.png$/, "").replace(/^images\//</span>, <span class="string">""</span>)
-        hash[path] = <span class="string">"data:image/png;base64,<span class="subst">#{Base64.encode(content)}</span>"</span>
+        hash[path] = <span class="string">"data:image/png;base64,<span class="subst">#{btoa(content)}</span>"</span>
       hash
     , {}</code></pre>
 </div>

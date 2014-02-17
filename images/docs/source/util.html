@@ -69,7 +69,15 @@
     items.forEach (item) -&gt;
       <span class="keyword">return</span> item <span class="keyword">unless</span> item.content
 
-      item.content = Base64.decode(item.content)
+      <span class="comment"># TODO: Expand to better handle all binary types</span>
+      console.log item
+
+      <span class="keyword">if</span> item.path.match <span class="regexp">/\.png$/</span> <span class="comment"># Binary</span>
+        item.binary = <span class="literal">true</span>
+        item.content = atob(item.content.replace(<span class="regexp">/\s/g</span>, <span class="string">""</span>))
+      <span class="keyword">else</span> <span class="comment"># Text</span>
+        item.content = Base64.decode(item.content)
+
       item.encoding = <span class="string">"raw"</span>
 
     <span class="keyword">return</span> items</code></pre>
