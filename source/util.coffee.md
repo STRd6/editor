@@ -1,5 +1,7 @@
+Util
+====
 
-    require "./duct_tape" # TODO: Only for CSON, which should be moved into Tempest
+    CSON = require "cson"
 
 A collection of shared utilities
 
