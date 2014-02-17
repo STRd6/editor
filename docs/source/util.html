@@ -18,9 +18,11 @@
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="util">Util</h1>
+
             </div>
-            <div class="content"><pre><code class="lang-coffeescript">require <span class="string">"./duct_tape"</span> <span class="comment"># TODO: Only for CSON, which should be moved into Tempest</span></code></pre>
+            <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
 </div>
         </li>
         
@@ -30,10 +32,9 @@
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>A collection of shared utilities</p>
-
+              
             </div>
-            <div class="content"><pre><code class="lang-coffeescript">Util =</code></pre>
+            <div class="content"><pre><code class="lang-coffeescript">CSON = require <span class="string">"cson"</span></code></pre>
 </div>
         </li>
         
@@ -42,6 +43,19 @@
             <div class="annotation">
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>A collection of shared utilities</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">Util =</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p>Read the config for the package from the package source.</p>
 
@@ -57,10 +71,10 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               <div class="pilwrap">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>Decodes all content in place.</p>
 
@@ -77,10 +91,10 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               <div class="pilwrap">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p><code>arrayToHash</code> converts an array of fileData objects into an object where each
 file&#39;s path is a key and the fileData is the object.</p>
