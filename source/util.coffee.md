@@ -21,13 +21,11 @@ Decodes all content in place.
         items.forEach (item) ->
           return item unless item.content
 
-          # TODO: Expand to better handle all binary types
-          console.log item
-
-          if item.path.match /\.png$/ # Binary
+          if isBinary(item.path)
             item.binary = true
             item.content = atob(item.content.replace(/\s/g, ""))
           else # Text
+            # NOTE: This implementation of Base64 assumes utf-8
             item.content = Base64.decode(item.content)
 
           item.encoding = "raw"
@@ -42,3 +40,21 @@ file's path is a key and the fileData is the object.
           hash[file.path] = file
 
     module.exports = Util
+
+Helpers
+-------
+
+    isBinary = (path) ->
+      pathCheckRegEx = RegExp [
+        "gif"
+        "jpeg"
+        "jpg"
+        "mp3"
+        "png"
+        "sfs"
+        "wav"
+      ].map (extension) ->
+        "\\.#{extension}$"
+      .join("|")
+
+      path.match(pathCheckRegEx)
