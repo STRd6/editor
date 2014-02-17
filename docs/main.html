@@ -212,6 +212,31 @@ actions =
       editor.runDocs({file})
       .fail errors
 
+  convert_images: -&gt;
+    <span class="comment"># Gather image data from images/</span>
+    imageFiles = editor.filesMatching(<span class="regexp">/^images\//</span>)
+
+    imageData = require(<span class="string">"./lib/images"</span>).convert imageFiles.map (file) -&gt;
+      path: file.path()
+      content: file.content()
+
+    <span class="comment"># Delete files in images/</span>
+    imageFiles.forEach (file) -&gt;
+      editor.files().remove(file)
+
+    <span class="comment"># Create/update images.json</span>
+    <span class="comment"># Read file if it exists</span>
+    <span class="keyword">try</span>
+      existingImages = JSON.parse(editor.fileContents(<span class="string">"images.json"</span>))
+    <span class="keyword">catch</span>
+      existingImages = {}
+
+    <span class="comment"># Merge data</span>
+    Object.extend existingImages, imageData
+
+    <span class="comment"># Write file</span>
+    editor.writeFile(<span class="string">"images.json"</span>, JSON.stringify(existingImages, <span class="literal">null</span>, <span class="number">2</span>))
+
   new_file: -&gt;
     <span class="keyword">if</span> name = prompt(<span class="string">"File Name"</span>, <span class="string">"newfile.coffee"</span>)
       file = File
@@ -324,6 +349,8 @@ actions =
     .fail classicError
 
 filetree.selectedFile.observe (file) -&gt;
+  <span class="keyword">return</span> <span class="keyword">if</span> file.binary?()
+
   root = $root.children(<span class="string">".main"</span>)
   root.find(<span class="string">".editor-wrap"</span>).hide()
 

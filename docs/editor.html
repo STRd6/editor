@@ -38,7 +38,7 @@
 Actions = require(<span class="string">"./source/actions"</span>)
 Builder = require(<span class="string">"builder"</span>)
 Packager = require(<span class="string">"packager"</span>)
-{Filetree} = require(<span class="string">"filetree"</span>)
+{Filetree, File} = require(<span class="string">"filetree"</span>)
 
 <span class="function"><span class="title">initBuilder</span></span> = -&gt;
   builder = Builder()
@@ -119,7 +119,36 @@ when complete.</p>
 
             </div>
             <div class="content"><pre><code class="lang-coffeescript">    filetree: -&gt;
-      filetree</code></pre>
+      filetree
+
+    files: -&gt;
+      filetree.files()
+
+    fileAt: (path) -&gt;
+      self.files().select (file) -&gt;
+        file.path() <span class="keyword">is</span> path
+      .first()
+
+    fileContents: (path) -&gt;
+      self.fileAt(path)?.content()
+
+    filesMatching: (expr) -&gt;
+      self.files().select (file) -&gt;
+        file.path().match expr
+
+    writeFile: (path, content) -&gt;
+      <span class="keyword">if</span> existingFile = self.fileAt(path)
+        existingFile.content(content)
+
+        <span class="keyword">return</span> existingFile
+      <span class="keyword">else</span>
+        file = File
+          path: path
+          content: content
+
+        filetree.files.push(file)
+
+        <span class="keyword">return</span> file</code></pre>
 </div>
         </li>
         
