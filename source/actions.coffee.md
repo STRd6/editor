@@ -48,7 +48,10 @@ The primary actions of the editor. This is a mixin that is included in the edito
           .then (pkg) ->
             documenter.documentAll(pkg)
             .then (docs) ->
-              self.repository().publish(Packager.standAlone(pkg, docs))
+              # NOTE: This metadata is added from the builder
+              publishBranch = pkg.repository.publishBranch
+
+              self.repository().publish(Packager.standAlone(pkg, docs), undefined, publishBranch)
 
         test: ->
           self.runInSandboxWindow self.config(),
