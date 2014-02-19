@@ -48,7 +48,17 @@ The primary actions of the editor. This is a mixin that is included in the edito
           .then (pkg) ->
             documenter.documentAll(pkg)
             .then (docs) ->
-              self.repository().publish(Packager.standAlone(pkg, docs))
+              # NOTE: This metadata is added from the builder
+              publishBranch = pkg.repository.publishBranch
+
+              # TODO: Don't pass files to packager, just merge them at the end
+              # TODO: Have differenty types of building (docs/main) that can
+              # be chosen in a config rather than hacks based on the branch name
+              repository = self.repository()
+              if repository.branch() is "blog" # HACK
+                self.repository().publish(docs, undefined, publishBranch)
+              else
+                self.repository().publish(Packager.standAlone(pkg, docs), undefined, publishBranch)
 
         test: ->
           self.runInSandboxWindow self.config(),
