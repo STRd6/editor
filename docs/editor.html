@@ -63,7 +63,8 @@ module.<span class="function"><span class="title">exports</span></span> = (I={},
   builder = initBuilder()
   filetree = Filetree()
 
-  self.extend</code></pre>
+  self.extend
+    repository: Observable()</code></pre>
 </div>
         </li>
         
@@ -100,8 +101,8 @@ when complete.</p>
 
           <span class="keyword">return</span> pkg
 
-    save: ({repository}) -&gt;
-      repository.commitTree
+    save: -&gt;
+      self.repository().commitTree
         tree: filetree.data()
 
     loadFiles: (fileData) -&gt;
@@ -202,6 +203,14 @@ auto-close the window.</p>
 
   self.include(Actions)
 
+  <span class="comment"># TODO: Merge this in and clean up the `initBuilder` code</span>
+  <span class="comment"># Attach repo metadata to package</span>
+  builder.addPostProcessor (pkg) -&gt;
+    <span class="comment"># TODO: Track commit SHA as well</span>
+    pkg.repository = self.repository().toJSON()
+
+    pkg
+
   <span class="keyword">return</span> self</code></pre>
 </div>
         </li>
@@ -241,7 +250,7 @@ auto-close the window.</p>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
 <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
-<script src="http://strd6.github.io/tempest/javascripts/envweb-v0.4.5.js"></script><script>
+<script src="http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js"></script><script>
   $.ajax({
     url: "http://strd6.github.io/interactive/v0.8.1.jsonp",
     dataType: "jsonp",

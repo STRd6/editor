@@ -151,7 +151,8 @@ templates[<span class="string">"issues"</span>] = issuesTemplate
 issues = Issues()
 
 <span class="comment"># Github repository observable</span>
-repository = Observable()
+<span class="comment"># TODO: Finalize move into editor module</span>
+repository = editor.repository
 
 repository.observe (repository) -&gt;
   issues.repository = repository
@@ -174,11 +175,7 @@ actions =
   save: -&gt;
     notify <span class="string">"Saving..."</span>
 
-    <span class="comment"># TODO: Move repository into editor</span>
-    repositoryInstance = repository()
-
-    editor.save
-      repository: repositoryInstance
+    editor.save()
     .<span class="keyword">then</span> -&gt;
       <span class="comment"># TODO: This could get slightly out of sync if there were changes</span>
       <span class="comment"># during the async call</span>
@@ -186,8 +183,7 @@ actions =
       <span class="comment"># but that's a little heavy duty for right now.</span>
       filetree.markSaved()
 
-      editor.publish
-        repository: repositoryInstance
+      editor.publish()
     .<span class="keyword">then</span> -&gt;
       notify <span class="string">"Saved and published!"</span>
     .fail (args...) -&gt;
@@ -271,7 +267,7 @@ actions =
     <span class="keyword">if</span> title = prompt(<span class="string">"Description"</span>)
       notify <span class="string">"Creating feature branch..."</span>
 
-      repository().createPullRequest
+      editor.repository().createPullRequest
         title: title
       .<span class="keyword">then</span> (data) -&gt;
         issue = Issue(data)
@@ -439,16 +435,7 @@ $root
 
 window.<span class="function"><span class="title">onbeforeunload</span></span> = -&gt;
   <span class="keyword">if</span> filetree.hasUnsavedChanges()
-    <span class="string">"You have some unsaved changes, if you leave now you will lose your work."</span>
-
-<span class="comment"># TODO: Find a better way to initialize this</span>
-
-<span class="comment"># Attach repo metadata to package</span>
-builder.addPostProcessor (pkg) -&gt;
-  <span class="comment"># TODO: Track commit SHA as well</span>
-  pkg.repository = repository().toJSON()
-
-  pkg</code></pre>
+    <span class="string">"You have some unsaved changes, if you leave now you will lose your work."</span></code></pre>
 </div>
         </li>
         
@@ -461,7 +448,7 @@ builder.addPostProcessor (pkg) -&gt;
 <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
 <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
-<script src="http://strd6.github.io/tempest/javascripts/envweb-v0.4.5.js"></script><script>
+<script src="http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js"></script><script>
   $.ajax({
     url: "http://strd6.github.io/interactive/v0.8.1.jsonp",
     dataType: "jsonp",
