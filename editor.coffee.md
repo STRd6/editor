@@ -59,8 +59,8 @@ when complete.
 
               return pkg
 
-        save: ({repository}) ->
-          repository.commitTree
+        save: ->
+          self.repository().commitTree
             tree: filetree.data()
 
         loadFiles: (fileData) ->
