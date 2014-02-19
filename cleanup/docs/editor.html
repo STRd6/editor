@@ -101,8 +101,8 @@ when complete.</p>
 
           <span class="keyword">return</span> pkg
 
-    save: ({repository}) -&gt;
-      repository.commitTree
+    save: -&gt;
+      self.repository().commitTree
         tree: filetree.data()
 
     loadFiles: (fileData) -&gt;

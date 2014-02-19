@@ -175,11 +175,7 @@ actions =
   save: -&gt;
     notify <span class="string">"Saving..."</span>
 
-    <span class="comment"># TODO: Move repository into editor</span>
-    repositoryInstance = repository()
-
-    editor.save
-      repository: repositoryInstance
+    editor.save()
     .<span class="keyword">then</span> -&gt;
       <span class="comment"># TODO: This could get slightly out of sync if there were changes</span>
       <span class="comment"># during the async call</span>
@@ -187,8 +183,7 @@ actions =
       <span class="comment"># but that's a little heavy duty for right now.</span>
       filetree.markSaved()
 
-      editor.publish
-        repository: repositoryInstance
+      editor.publish()
     .<span class="keyword">then</span> -&gt;
       notify <span class="string">"Saved and published!"</span>
     .fail (args...) -&gt;
@@ -247,7 +242,7 @@ actions =
     <span class="keyword">if</span> title = prompt(<span class="string">"Description"</span>)
       notify <span class="string">"Creating feature branch..."</span>
 
-      repository().createPullRequest
+      editor.repository().createPullRequest
         title: title
       .<span class="keyword">then</span> (data) -&gt;
         issue = Issue(data)

@@ -83,12 +83,12 @@ documenter = require(<span class="string">"md"</span>)</code></pre>
           <span class="keyword">else</span>
             <span class="string">"Failed to find file at <span class="subst">#{path}</span>"</span>
 
-    publish: ({repository}) -&gt;
+    publish: -&gt;
       self.build()
       .<span class="keyword">then</span> (pkg) -&gt;
         documenter.documentAll(pkg)
         .<span class="keyword">then</span> (docs) -&gt;
-          repository.publish(Packager.standAlone(pkg, docs))
+          self.repository().publish(Packager.standAlone(pkg, docs))
 
     test: -&gt;
       self.runInSandboxWindow self.config(),
@@ -102,6 +102,8 @@ documenter = require(<span class="string">"md"</span>)</code></pre>
     load: ({repository}) -&gt;
       repository.latestContent()
       .<span class="keyword">then</span> (results) -&gt;
+        self.repository repository
+
         files = processDirectory results
         self.loadFiles files
 
