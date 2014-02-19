@@ -206,8 +206,12 @@ auto-close the window.</p>
   <span class="comment"># TODO: Merge this in and clean up the `initBuilder` code</span>
   <span class="comment"># Attach repo metadata to package</span>
   builder.addPostProcessor (pkg) -&gt;
+    repository = self.repository()
     <span class="comment"># TODO: Track commit SHA as well</span>
-    pkg.repository = self.repository().toJSON()
+    pkg.repository = repository.toJSON()
+
+    <span class="comment"># Add publish branch</span>
+    pkg.repository.publishBranch = self.config().publishBranch <span class="keyword">or</span> repository.publishBranch()
 
     pkg
 

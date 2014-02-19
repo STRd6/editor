@@ -88,7 +88,17 @@ documenter = require(<span class="string">"md"</span>)</code></pre>
       .<span class="keyword">then</span> (pkg) -&gt;
         documenter.documentAll(pkg)
         .<span class="keyword">then</span> (docs) -&gt;
-          self.repository().publish(Packager.standAlone(pkg, docs))
+          <span class="comment"># NOTE: This metadata is added from the builder</span>
+          publishBranch = pkg.repository.publishBranch
+
+          <span class="comment"># TODO: Don't pass files to packager, just merge them at the end</span>
+          <span class="comment"># TODO: Have differenty types of building (docs/main) that can</span>
+          <span class="comment"># be chosen in a config rather than hacks based on the branch name</span>
+          repository = self.repository()
+          <span class="keyword">if</span> repository.branch() <span class="keyword">is</span> <span class="string">"blog"</span> <span class="comment"># HACK</span>
+            self.repository().publish(docs, <span class="literal">undefined</span>, publishBranch)
+          <span class="keyword">else</span>
+            self.repository().publish(Packager.standAlone(pkg, docs), <span class="literal">undefined</span>, publishBranch)
 
     test: -&gt;
       self.runInSandboxWindow self.config(),
