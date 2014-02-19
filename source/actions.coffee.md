@@ -43,12 +43,12 @@ The primary actions of the editor. This is a mixin that is included in the edito
               else
                 "Failed to find file at #{path}"
 
-        publish: ({repository}) ->
+        publish: ->
           self.build()
           .then (pkg) ->
             documenter.documentAll(pkg)
             .then (docs) ->
-              repository.publish(Packager.standAlone(pkg, docs))
+              self.repository().publish(Packager.standAlone(pkg, docs))
 
         test: ->
           self.runInSandboxWindow self.config(),
@@ -62,6 +62,8 @@ The primary actions of the editor. This is a mixin that is included in the edito
         load: ({repository}) ->
           repository.latestContent()
           .then (results) ->
+            self.repository repository
+
             files = processDirectory results
             self.loadFiles files
 

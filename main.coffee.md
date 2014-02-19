@@ -85,7 +85,8 @@ Templates
     issues = Issues()
 
     # Github repository observable
-    repository = Observable()
+    # TODO: Finalize move into editor module
+    repository = editor.repository
 
     repository.observe (repository) ->
       issues.repository = repository
@@ -108,11 +109,7 @@ Templates
       save: ->
         notify "Saving..."
 
-        # TODO: Move repository into editor
-        repositoryInstance = repository()
-
-        editor.save
-          repository: repositoryInstance
+        editor.save()
         .then ->
           # TODO: This could get slightly out of sync if there were changes
           # during the async call
@@ -120,8 +117,7 @@ Templates
           # but that's a little heavy duty for right now.
           filetree.markSaved()
 
-          editor.publish
-            repository: repositoryInstance
+          editor.publish()
         .then ->
           notify "Saved and published!"
         .fail (args...) ->
@@ -205,7 +201,7 @@ Templates
         if title = prompt("Description")
           notify "Creating feature branch..."
 
-          repository().createPullRequest
+          editor.repository().createPullRequest
             title: title
           .then (data) ->
             issue = Issue(data)
@@ -374,12 +370,3 @@ Templates
     window.onbeforeunload = ->
       if filetree.hasUnsavedChanges()
         "You have some unsaved changes, if you leave now you will lose your work."
-
-    # TODO: Find a better way to initialize this
-
-    # Attach repo metadata to package
-    builder.addPostProcessor (pkg) ->
-      # TODO: Track commit SHA as well
-      pkg.repository = repository().toJSON()
-
-      pkg
