@@ -37,7 +37,7 @@ single gist <a href="https://gist.github.com/STRd6/6286182/6196ffb39db7d10c56aa2
 <p>The original gist was an exploration in a self-hosting gist editor. One that
 could load gists via the Github API, update them, and create new gists. It
 succeeded at that, but I ran into the limits of the gist structure, namely no
-branches or folders. </p>
+branches or folders.</p>
 <p>I went on and created a git repo, merged in the gist history, and continued from
 there. Maybe if I were smarter I could have rewritten it from scratch to be better,
 but I had no idea what I was doing and still don&#39;t know to this day.</p>
@@ -162,13 +162,11 @@ notifications = require(<span class="string">"notifications"</span>)()
 templates.notifications = notifications.template
 {classicError, notify, errors} = notifications
 
-<span class="comment"># The root is the node that contains the script file.</span>
-runtime = Runtime(PACKAGE)
-rootNode = runtime.boot()
+Runtime(PACKAGE)
+  .boot()
+  .applyStyleSheet(require(<span class="string">'./style'</span>))
 
-runtime.applyStyleSheet(require(<span class="string">'./style'</span>))
-
-$root = $(rootNode)
+$root = $(<span class="string">"body"</span>)
 
 <span class="comment"># Branch Chooser using pull requests</span>
 {models:{Issue, Issues}, templates:{issues:issuesTemplate}} = require(<span class="string">"issues"</span>)
@@ -466,12 +464,10 @@ window.<span class="function"><span class="title">onbeforeunload</span></span> =
         
     </ul>
   </div>
-  <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
-<script src="http://strd6.github.io/require/v0.2.2.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
-<script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="http://www.danielx.net/require/v0.2.2.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
 <script src="https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
 <script src="http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js"></script><script>
   $.ajax({
