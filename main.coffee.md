@@ -7,7 +7,7 @@ single gist https://gist.github.com/STRd6/6286182/6196ffb39db7d10c56aa2631905253
 The original gist was an exploration in a self-hosting gist editor. One that
 could load gists via the Github API, update them, and create new gists. It
 succeeded at that, but I ran into the limits of the gist structure, namely no
-branches or folders. 
+branches or folders.
 
 I went on and created a git repo, merged in the gist history, and continued from
 there. Maybe if I were smarter I could have rewritten it from scratch to be better,
@@ -90,13 +90,11 @@ Templates
     templates.notifications = notifications.template
     {classicError, notify, errors} = notifications
 
-    # The root is the node that contains the script file.
-    runtime = Runtime(PACKAGE)
-    rootNode = runtime.boot()
+    Runtime(PACKAGE)
+      .boot()
+      .applyStyleSheet(require('./style'))
 
-    runtime.applyStyleSheet(require('./style'))
-
-    $root = $(rootNode)
+    $root = $("body")
 
     # Branch Chooser using pull requests
     {models:{Issue, Issues}, templates:{issues:issuesTemplate}} = require("issues")
