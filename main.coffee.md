@@ -160,12 +160,18 @@ Templates
           .fail errors
 
       convert_images: ->
-        # Gather image data from images/
-        imageFiles = editor.filesMatching(/^images\//)
+        outputFileName = "images.json"
+        matcher = /^images\/(.*)\.png$/
+        mimeType = "image/png"
 
-        imageData = require("./lib/images").convert imageFiles.map (file) ->
+        # Gather image data from images/
+        imageFiles = editor.filesMatching(matcher)
+
+        fileData = require("./lib/images").convert imageFiles.map (file) ->
           path: file.path()
           content: file.content()
+          mimeType: mimeType
+          replacer: matcher
 
         # Delete files in images/
         imageFiles.forEach (file) ->
@@ -174,15 +180,15 @@ Templates
         # Create/update images.json
         # Read file if it exists
         try
-          existingImages = JSON.parse(editor.fileContents("images.json"))
+          existingData = JSON.parse(editor.fileContents(outputFileName))
         catch
-          existingImages = {}
+          existingData = {}
 
         # Merge data
-        Object.extend existingImages, imageData
+        Object.extend existingData, fileData
 
         # Write file
-        editor.writeFile("images.json", JSON.stringify(existingImages, null, 2))
+        editor.writeFile(outputFileName, JSON.stringify(existingData, null, 2))
 
       new_file: ->
         if name = prompt("File Name", "newfile.coffee")
