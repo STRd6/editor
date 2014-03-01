@@ -231,36 +231,26 @@ actions =
       editor.runDocs({file})
       .fail errors
 
-  convert_images: -&gt;
-    outputFileName = <span class="string">"images.json"</span>
-    matcher = <span class="regexp">/^images\/(.*)\.png$/</span>
-    mimeType = <span class="string">"image/png"</span>
+  convert_data: -&gt;
+    converter = require(<span class="string">"./lib/converter"</span>).convertDataToJSON
 
-    <span class="comment"># Gather image data from images/</span>
-    imageFiles = editor.filesMatching(matcher)
+    converter
+      editor: editor
+      outputFileName: <span class="string">"images.json"</span>
+      matcher: <span class="regexp">/^images\/(.*)\.png$/</span>
+      mimeType: <span class="string">"image/png"</span>
 
-    fileData = require(<span class="string">"./lib/images"</span>).convert imageFiles.map (file) -&gt;
-      path: file.path()
-      content: file.content()
-      mimeType: mimeType
-      replacer: matcher
+    converter
+      editor: editor
+      outputFileName: <span class="string">"sounds.json"</span>
+      matcher: <span class="regexp">/^sounds\/(.*)\.wav$/</span>
+      mimeType: <span class="string">"audio/wav"</span>
 
-    <span class="comment"># Delete files in images/</span>
-    imageFiles.forEach (file) -&gt;
-      editor.files().remove(file)
-
-    <span class="comment"># Create/update images.json</span>
-    <span class="comment"># Read file if it exists</span>
-    <span class="keyword">try</span>
-      existingData = JSON.parse(editor.fileContents(outputFileName))
-    <span class="keyword">catch</span>
-      existingData = {}
-
-    <span class="comment"># Merge data</span>
-    Object.extend existingData, fileData
-
-    <span class="comment"># Write file</span>
-    editor.writeFile(outputFileName, JSON.stringify(existingData, <span class="literal">null</span>, <span class="number">2</span>))
+    converter
+      editor: editor
+      outputFileName: <span class="string">"music.json"</span>
+      matcher: <span class="regexp">/^sounds\/(.*)\.mp3$/</span>
+      mimeType: <span class="string">"audio/mp3"</span>
 
   new_file: -&gt;
     <span class="keyword">if</span> name = prompt(<span class="string">"File Name"</span>, <span class="string">"newfile.coffee"</span>)
