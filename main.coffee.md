@@ -159,36 +159,26 @@ Templates
           editor.runDocs({file})
           .fail errors
 
-      convert_images: ->
-        outputFileName = "images.json"
-        matcher = /^images\/(.*)\.png$/
-        mimeType = "image/png"
+      convert_data: ->
+        converter = require("./lib/converter").convertDataToJSON
 
-        # Gather image data from images/
-        imageFiles = editor.filesMatching(matcher)
+        converter
+          editor: editor
+          outputFileName: "images.json"
+          matcher: /^images\/(.*)\.png$/
+          mimeType: "image/png"
 
-        fileData = require("./lib/images").convert imageFiles.map (file) ->
-          path: file.path()
-          content: file.content()
-          mimeType: mimeType
-          replacer: matcher
+        converter
+          editor: editor
+          outputFileName: "sounds.json"
+          matcher: /^sounds\/(.*)\.wav$/
+          mimeType: "audio/wav"
 
-        # Delete files in images/
-        imageFiles.forEach (file) ->
-          editor.files().remove(file)
-
-        # Create/update images.json
-        # Read file if it exists
-        try
-          existingData = JSON.parse(editor.fileContents(outputFileName))
-        catch
-          existingData = {}
-
-        # Merge data
-        Object.extend existingData, fileData
-
-        # Write file
-        editor.writeFile(outputFileName, JSON.stringify(existingData, null, 2))
+        converter
+          editor: editor
+          outputFileName: "music.json"
+          matcher: /^sounds\/(.*)\.mp3$/
+          mimeType: "audio/mp3"
 
       new_file: ->
         if name = prompt("File Name", "newfile.coffee")
