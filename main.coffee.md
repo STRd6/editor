@@ -180,6 +180,9 @@ Templates
           matcher: /^sounds\/(.*)\.mp3$/
           mimeType: "audio/mp3"
 
+      upload_resources: ->
+        require("/lib/uploader").upload(editor)
+
       new_file: ->
         if name = prompt("File Name", "newfile.coffee")
           file = File
