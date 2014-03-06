@@ -231,30 +231,26 @@ actions =
       editor.runDocs({file})
       .fail errors
 
-  convert_images: -&gt;
-    <span class="comment"># Gather image data from images/</span>
-    imageFiles = editor.filesMatching(<span class="regexp">/^images\//</span>)
+  convert_data: -&gt;
+    converter = require(<span class="string">"./lib/converter"</span>).convertDataToJSON
 
-    imageData = require(<span class="string">"./lib/images"</span>).convert imageFiles.map (file) -&gt;
-      path: file.path()
-      content: file.content()
+    converter
+      editor: editor
+      outputFileName: <span class="string">"images.json"</span>
+      matcher: <span class="regexp">/^images\/(.*)\.png$/</span>
+      mimeType: <span class="string">"image/png"</span>
 
-    <span class="comment"># Delete files in images/</span>
-    imageFiles.forEach (file) -&gt;
-      editor.files().remove(file)
+    converter
+      editor: editor
+      outputFileName: <span class="string">"sounds.json"</span>
+      matcher: <span class="regexp">/^sounds\/(.*)\.wav$/</span>
+      mimeType: <span class="string">"audio/wav"</span>
 
-    <span class="comment"># Create/update images.json</span>
-    <span class="comment"># Read file if it exists</span>
-    <span class="keyword">try</span>
-      existingImages = JSON.parse(editor.fileContents(<span class="string">"images.json"</span>))
-    <span class="keyword">catch</span>
-      existingImages = {}
-
-    <span class="comment"># Merge data</span>
-    Object.extend existingImages, imageData
-
-    <span class="comment"># Write file</span>
-    editor.writeFile(<span class="string">"images.json"</span>, JSON.stringify(existingImages, <span class="literal">null</span>, <span class="number">2</span>))
+    converter
+      editor: editor
+      outputFileName: <span class="string">"music.json"</span>
+      matcher: <span class="regexp">/^sounds\/(.*)\.mp3$/</span>
+      mimeType: <span class="string">"audio/mp3"</span>
 
   new_file: -&gt;
     <span class="keyword">if</span> name = prompt(<span class="string">"File Name"</span>, <span class="string">"newfile.coffee"</span>)
