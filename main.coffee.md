@@ -159,6 +159,18 @@ Templates
           editor.runDocs({file})
           .fail errors
 
+      publish_chrapp: ->
+        Chrapps = require "chrapps"
+
+        notify "Chrapping..."
+
+        editor.build().then (pkg) ->
+          editor.repository().publish(Chrapps.processPackage(pkg), undefined, "chrapps")
+        .then ->
+          notify "Chrapped!"
+        .fail (args...) ->
+          errors args
+
       convert_data: ->
         converter = require("./lib/converter").convertDataToJSON
 
