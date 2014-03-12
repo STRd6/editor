@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>main</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="http://strd6.github.io/cdn/parallel/docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    <ul class="sections">
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <h1 id="editor">Editor</h1>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>The funny story about this editor is that it has an unbroken history from a
+single gist <a href="https://gist.github.com/STRd6/6286182/6196ffb39db7d10c56aa263190525318ca609db7">https://gist.github.com/STRd6/6286182/6196ffb39db7d10c56aa263190525318ca609db7</a></p>
+<p>The original gist was an exploration in a self-hosting gist editor. One that
+could load gists via the Github API, update them, and create new gists. It
+succeeded at that, but I ran into the limits of the gist structure, namely no
+branches or folders.</p>
+<p>I went on and created a git repo, merged in the gist history, and continued from
+there. Maybe if I were smarter I could have rewritten it from scratch to be better,
+but I had no idea what I was doing and still don&#39;t know to this day.</p>
+<p>So that may explain why this is in such need of a cleanup.</p>
+<h2 id="demo">Demo</h2>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p><a href="/editor">Run it!</a></p>
+<h2 id="components">Components</h2>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <ul>
+<li><a href="/packager/docs">Packager</a></li>
+<li><a href="/hygiene/docs">Hygiene</a></li>
+<li><a href="/runtime/docs">Runtime</a></li>
+</ul>
+<p>TODO: This needs a big cleanup.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript"><span class="comment"># Get stuff from our package</span>
+{source:files} = PACKAGE
+
+global.Sandbox = require <span class="string">'sandbox'</span>
+require <span class="string">"./source/duct_tape"</span>
+require <span class="string">"./source/deferred"</span>
+{processDirectory} = require <span class="string">"./source/util"</span>
+
+global.PACKAGE = PACKAGE
+global.require = require
+
+<span class="comment"># Create and auth a github API</span>
+<span class="comment"># Global until we consolidate editor/actions into something cleaner</span>
+global.github = require(<span class="string">"github"</span>)(require(<span class="string">"./source/github_auth"</span>)())</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <h2 id="templates">Templates</h2>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <ul>
+<li><a href="./templates/actions">Actions</a></li>
+<li><a href="./templates/editor">Editor</a></li>
+<li><a href="./templates/github_status">Github Status</a></li>
+<li><a href="./templates/text_editor">Text Editor</a></li>
+<li><a href="./templates/repo_info">Repo Info</a></li>
+</ul>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript"><span class="comment"># Load and attach Templates</span>
+templates = (HAMLjr.templates ||= {})
+[
+  <span class="string">"actions"</span>
+  <span class="string">"editor"</span>
+  <span class="string">"github_status"</span>
+  <span class="string">"text_editor"</span>
+  <span class="string">"repo_info"</span>
+].each (name) -&gt;
+  template = require(<span class="string">"./templates/<span class="subst">#{name}</span>"</span>)
+  <span class="comment"># TODO Transitional type check</span>
+  <span class="keyword">if</span> <span class="keyword">typeof</span> template <span class="keyword">is</span> <span class="string">"function"</span>
+    templates[name] = template
+
+Editor = require(<span class="string">"./editor"</span>)
+TextEditor = require(<span class="string">"./source/text_editor"</span>)
+
+editor = global.editor = Editor()
+editor.loadFiles(files)
+
+<span class="comment"># TODO: Don't expose these</span>
+builder = editor.builder()
+filetree = editor.filetree()
+
+{File, template:filetreeTemplate} = require <span class="string">"filetree"</span>
+templates[<span class="string">"filetree"</span>] = filetreeTemplate
+
+Hygiene = require <span class="string">"hygiene"</span>
+Runtime = require <span class="string">"runtime"</span>
+Packager = require <span class="string">"packager"</span>
+
+{readSourceConfig} = require(<span class="string">"./source/util"</span>)
+
+notifications = require(<span class="string">"notifications"</span>)()
+templates.notifications = notifications.template
+{classicError, notify, errors} = notifications
+
+Runtime(PACKAGE)
+  .boot()
+  .applyStyleSheet(require(<span class="string">'./style'</span>))
+
+$root = $(<span class="string">"body"</span>)
+
+<span class="comment"># Branch Chooser using pull requests</span>
+{models:{Issue, Issues}, templates:{issues:issuesTemplate}} = require(<span class="string">"issues"</span>)
+templates[<span class="string">"issues"</span>] = issuesTemplate
+issues = Issues()
+
+<span class="comment"># Github repository observable</span>
+<span class="comment"># TODO: Finalize move into editor module</span>
+repository = editor.repository
+
+repository.observe (repository) -&gt;
+  issues.repository = repository
+  repository.pullRequests().<span class="keyword">then</span> issues.reset
+
+  notify <span class="string">"Loaded repository: <span class="subst">#{repository.full_name()}</span>"</span>
+
+PACKAGE.repository.url ||= <span class="string">"repos/<span class="subst">#{PACKAGE.repository.full_name}</span>"</span>
+
+repository github.Repository(PACKAGE.repository)
+
+<span class="function"><span class="title">confirmUnsaved</span></span> = -&gt;
+  Deferred.ConfirmIf(filetree.hasUnsavedChanges(), <span class="string">"You will lose unsaved changes in your current branch, continue?"</span>)
+
+<span class="function"><span class="title">closeOpenEditors</span></span> = -&gt;
+  root = $root.children(<span class="string">".main"</span>)
+  root.find(<span class="string">".editor-wrap"</span>).remove()
+
+actions =
+  save: -&gt;
+    notify <span class="string">"Saving..."</span>
+
+    editor.save()
+    .<span class="keyword">then</span> -&gt;
+      <span class="comment"># TODO: This could get slightly out of sync if there were changes</span>
+      <span class="comment"># during the async call</span>
+      <span class="comment"># The correct solution will be to use git shas to determine changed status</span>
+      <span class="comment"># but that's a little heavy duty for right now.</span>
+      filetree.markSaved()
+
+      editor.publish()
+    .<span class="keyword">then</span> -&gt;
+      notify <span class="string">"Saved and published!"</span>
+    .fail (args...) -&gt;
+      errors args
+
+  run: -&gt;
+    notify <span class="string">"Running..."</span>
+
+    editor.run()
+    .fail classicError
+
+  test: -&gt;
+    notify <span class="string">"Running tests..."</span>
+
+    editor.test()
+    .fail errors
+
+  docs: -&gt;
+    notify <span class="string">"Running Docs..."</span>
+
+    <span class="keyword">if</span> file = prompt(<span class="string">"Docs file"</span>, <span class="string">"index"</span>)
+      editor.runDocs({file})
+      .fail errors
+
+  publish_chrapp: -&gt;
+    Chrapps = require <span class="string">"chrapps"</span>
+
+    notify <span class="string">"Chrapping..."</span>
+
+    editor.build().<span class="keyword">then</span> (pkg) -&gt;
+      editor.repository().publish(Chrapps.processPackage(pkg), <span class="literal">undefined</span>, <span class="string">"chrapps"</span>)
+    .<span class="keyword">then</span> -&gt;
+      notify <span class="string">"Chrapped!"</span>
+    .fail (args...) -&gt;
+      errors args
+
+  convert_data: -&gt;
+    converter = require(<span class="string">"./lib/converter"</span>).convertDataToJSON
+
+    converter
+      editor: editor
+      outputFileName: <span class="string">"images.json"</span>
+      matcher: <span class="regexp">/^images\/(.*)\.png$/</span>
+      mimeType: <span class="string">"image/png"</span>
+
+    converter
+      editor: editor
+      outputFileName: <span class="string">"sounds.json"</span>
+      matcher: <span class="regexp">/^sounds\/(.*)\.wav$/</span>
+      mimeType: <span class="string">"audio/wav"</span>
+
+    converter
+      editor: editor
+      outputFileName: <span class="string">"music.json"</span>
+      matcher: <span class="regexp">/^sounds\/(.*)\.mp3$/</span>
+      mimeType: <span class="string">"audio/mp3"</span>
+
+  new_file: -&gt;
+    <span class="keyword">if</span> name = prompt(<span class="string">"File Name"</span>, <span class="string">"newfile.coffee"</span>)
+      file = File
+        path: name
+        content: <span class="string">""</span>
+      filetree.files.push file
+      filetree.selectedFile file
+
+  load_repo: (skipPrompt) -&gt;
+    confirmUnsaved()
+    .<span class="keyword">then</span> -&gt;
+      currentRepositoryName = repository().full_name()
+
+      fullName = prompt(<span class="string">"Github repo"</span>, currentRepositoryName)
+
+      <span class="keyword">if</span> fullName
+        github.repository(fullName).<span class="keyword">then</span> repository
+      <span class="keyword">else</span>
+        Deferred().reject(<span class="string">"No repo given"</span>)
+    .<span class="keyword">then</span> (repositoryInstance) -&gt;
+      notify <span class="string">"Loading files..."</span>
+
+      editor.load
+        repository: repositoryInstance
+      .<span class="keyword">then</span> -&gt;
+        closeOpenEditors()
+
+        notifications.push <span class="string">"Loaded"</span>
+    .fail classicError
+
+  new_feature: -&gt;
+    <span class="keyword">if</span> title = prompt(<span class="string">"Description"</span>)
+      notify <span class="string">"Creating feature branch..."</span>
+
+      editor.repository().createPullRequest
+        title: title
+      .<span class="keyword">then</span> (data) -&gt;
+        issue = Issue(data)
+        issues.issues.push issue
+
+        <span class="comment"># TODO: Standardize this like backbone or something</span>
+        <span class="comment"># or think about using deferreds in some crazy way</span>
+        issues.silent = <span class="literal">true</span>
+        issues.currentIssue issue
+        issues.silent = <span class="literal">false</span>
+
+        notifications.push <span class="string">"Created!"</span>
+      , classicError
+
+  pull_master: -&gt;
+    confirmUnsaved()
+    .<span class="keyword">then</span>( -&gt;
+      notify <span class="string">"Merging in default branch..."</span>
+      repository().pullFromBranch()
+    , classicError
+    ).<span class="keyword">then</span> -&gt;
+      notifications.push <span class="string">"Merged!"</span>
+
+      branchName = repository().branch()
+      notifications.push <span class="string">"\nReloading branch <span class="subst">#{branchName}</span>..."</span>
+
+      editor.load
+        repository: repository()
+      .<span class="keyword">then</span> -&gt;
+        notifications.push <span class="string">"Loaded!"</span>
+      .fail -&gt;
+        classicError <span class="string">"Error loading <span class="subst">#{repository().url()}</span>"</span>
+
+  pull_upstream: -&gt;
+    confirmUnsaved()
+    .<span class="keyword">then</span>( -&gt;
+      notify <span class="string">"Pulling from upstream master"</span>
+
+      upstreamRepo = repository().parent().full_name
+
+      github.repository(upstreamRepo)
+      .<span class="keyword">then</span> (repository) -&gt;
+        repository.latestContent()
+      .<span class="keyword">then</span> (results) -&gt;
+        files = processDirectory results
+        editor.loadFiles files
+
+    , classicError
+    ).<span class="keyword">then</span> -&gt;
+      notifications.push <span class="string">"\nYour code is up to date with the upstream master"</span>
+      closeOpenEditors()
+
+  tag_version: -&gt;
+    notify <span class="string">"Building..."</span>
+
+    editor.build()
+    .<span class="keyword">then</span> (pkg) -&gt;
+      version = <span class="string">"v<span class="subst">#{readSourceConfig(pkg).version}</span>"</span>
+
+      notify <span class="string">"Tagging version <span class="subst">#{version}</span> ..."</span>
+
+      repository().createRef(<span class="string">"refs/tags/<span class="subst">#{version}</span>"</span>)
+      .<span class="keyword">then</span> -&gt;
+        notifications.push <span class="string">"Tagged <span class="subst">#{version}</span>"</span>
+      .<span class="keyword">then</span> -&gt;
+        notifications.push <span class="string">"\nPublishing..."</span>
+
+        <span class="comment"># Force branch for jsonp wrapper</span>
+        pkg.repository.branch = version
+
+        repository().publish Packager.standAlone(pkg), version
+      .<span class="keyword">then</span> -&gt;
+        notifications.push <span class="string">"Published!"</span>
+
+    .fail classicError
+
+filetree.selectedFile.observe (file) -&gt;
+  <span class="keyword">return</span> <span class="keyword">if</span> file.binary?()
+
+  root = $root.children(<span class="string">".main"</span>)
+  root.find(<span class="string">".editor-wrap"</span>).hide()
+
+  <span class="keyword">if</span> file.editor
+    file.editor.trigger(<span class="string">"show"</span>)
+  <span class="keyword">else</span>
+    root.append(HAMLjr.render <span class="string">"text_editor"</span>)
+    file.editor = root.find(<span class="string">".editor-wrap"</span>).last()
+
+    <span class="keyword">switch</span> file.path().extension()
+      <span class="keyword">when</span> <span class="string">"md"</span>, <span class="string">"coffee"</span>, <span class="string">"js"</span>, <span class="string">"styl"</span>, <span class="string">"cson"</span>
+        file.content Hygiene.clean file.content()
+
+    textEditor = TextEditor
+      text: file.content()
+      el: file.editor.find(<span class="string">'.editor'</span>).get(<span class="number">0</span>)
+      mode: file.mode()
+
+    file.editor.<span class="literal">on</span> <span class="string">"show"</span>, -&gt;
+      file.editor.show()
+      textEditor.editor.focus()
+
+    textEditor.text.observe (value) -&gt;
+      file.content(value)
+
+      <span class="comment"># TODO May want to move this into a collection listener for all files</span>
+      <span class="comment"># in the filetree</span>
+      <span class="keyword">if</span> file.path().match(<span class="regexp">/\.styl$/</span>)
+        hotReloadCSS(file)
+
+<span class="function"><span class="title">hotReloadCSS</span></span> = ( (file) -&gt;
+  <span class="keyword">try</span>
+    css = styl(file.content(), whitespace: <span class="literal">true</span>).toString()
+
+  editor.runner().hotReloadCSS(css) <span class="keyword">if</span> css
+).debounce(<span class="number">100</span>)
+
+issues?.currentIssue.observe (issue) -&gt;
+  <span class="comment"># TODO: Formalize this later</span>
+  <span class="keyword">return</span> <span class="keyword">if</span> issues.silent
+
+  <span class="function"><span class="title">changeBranch</span></span> = (branchName) -&gt;
+    previousBranch = repository().branch()
+
+    confirmUnsaved()
+    .<span class="keyword">then</span> -&gt;
+      closeOpenEditors()
+
+      <span class="comment"># Switch to branch for working on the issue</span>
+      repository().switchToBranch(branchName)
+      .<span class="keyword">then</span> -&gt;
+        notifications.push <span class="string">"\nLoading branch <span class="subst">#{branchName}</span>..."</span>
+
+        editor.load
+          repository: repository()
+        .<span class="keyword">then</span> -&gt;
+          notifications.push <span class="string">"Loaded!"</span>
+    , -&gt;
+      <span class="comment"># TODO: Issue will appear as being selected even though we cancelled</span>
+      <span class="comment"># To correctly handle this we may need to really beef up our observables.</span>
+      <span class="comment"># One possibility is to extend observables to full fledged deferreds</span>
+      <span class="comment"># which can be rejected by listeners added to the chain.</span>
+
+      repository.branch(previousBranch)
+
+      classicError <span class="string">"Error switching to <span class="subst">#{branchName}</span>, still on <span class="subst">#{previousBranch}</span>"</span>
+
+  <span class="keyword">if</span> issue
+    notify issue.fullDescription()
+
+    changeBranch issue.branchName()
+  <span class="keyword">else</span>
+    notify <span class="string">"Default branch selected"</span>
+
+    changeBranch repository().defaultBranch()
+
+$root
+  .append(HAMLjr.render <span class="string">"editor"</span>,
+    filetree: filetree
+    actions: actions
+    notifications: notifications
+    issues: issues
+    github: github
+    repository: repository
+  )
+
+window.<span class="function"><span class="title">onbeforeunload</span></span> = -&gt;
+  <span class="keyword">if</span> filetree.hasUnsavedChanges()
+    <span class="string">"You have some unsaved changes, if you leave now you will lose your work."</span></code></pre>
+</div>
+        </li>
+        
+    </ul>
+  </div>
+  <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
+<script src="http://www.danielx.net/require/v0.2.2.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+<script src="https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
+<script src="http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js"></script><script>
+  $.ajax({
+    url: "http://strd6.github.io/interactive/v0.8.1.jsonp",
+    dataType: "jsonp",
+    jsonpCallback: "STRd6/interactive:v0.8.1",
+    cache: true
+  }).then(function(PACKAGE) {
+    Require.generateFor(PACKAGE)("./" + PACKAGE.entryPoint)
+  })
+</script><script src="package.js"></script>
+</body>
+</html>
