@@ -30,7 +30,7 @@
     "pixie.cson": {
       "path": "pixie.cson",
       "mode": "100644",
-      "content": "version: \"0.3.0\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"https://code.jquery.com/jquery-1.10.1.min.js\"\n  \"https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js\"\n]\ndependencies:\n  builder: \"distri/builder:v0.3.2\"\n  cson: \"distri/cson:v0.1.0\"\n  issues: \"STRd6/issues:v0.2.0\"\n  sandbox: \"STRd6/sandbox:v0.2.0\"\n  notifications: \"STRd6/notifications:v0.2.0\"\n  md: \"STRd6/md:v0.3.2\"\n  github: \"STRd6/github:v0.4.2\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  runtime: \"distri/runtime:v0.3.0\"\n  packager: \"STRd6/packager:v0.5.0\"\n  filetree: \"STRd6/filetree:v0.3.0\"\n  runner: \"STRd6/runner:v0.2.0\"\n",
+      "content": "version: \"0.3.0\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"https://code.jquery.com/jquery-1.10.1.min.js\"\n  \"https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js\"\n]\ndependencies:\n  builder: \"distri/builder:v0.3.2\"\n  cson: \"distri/cson:v0.1.0\"\n  issues: \"STRd6/issues:v0.2.0\"\n  sandbox: \"STRd6/sandbox:v0.2.0\"\n  notifications: \"STRd6/notifications:v0.2.0\"\n  md: \"STRd6/md:v0.3.2\"\n  github: \"STRd6/github:v0.4.2\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  runtime: \"distri/runtime:v0.3.0\"\n  packager: \"distri/packager:v0.5.2\"\n  filetree: \"STRd6/filetree:v0.3.0\"\n  runner: \"STRd6/runner:v0.2.0\"\n",
       "type": "blob"
     },
     "source/actions.coffee.md": {
@@ -142,7 +142,7 @@
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.3.0\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"https://code.jquery.com/jquery-1.10.1.min.js\",\"https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\",\"http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js\"],\"dependencies\":{\"builder\":\"distri/builder:v0.3.2\",\"cson\":\"distri/cson:v0.1.0\",\"issues\":\"STRd6/issues:v0.2.0\",\"sandbox\":\"STRd6/sandbox:v0.2.0\",\"notifications\":\"STRd6/notifications:v0.2.0\",\"md\":\"STRd6/md:v0.3.2\",\"github\":\"STRd6/github:v0.4.2\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"runtime\":\"distri/runtime:v0.3.0\",\"packager\":\"STRd6/packager:v0.5.0\",\"filetree\":\"STRd6/filetree:v0.3.0\",\"runner\":\"STRd6/runner:v0.2.0\"}};",
+      "content": "module.exports = {\"version\":\"0.3.0\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"https://code.jquery.com/jquery-1.10.1.min.js\",\"https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\",\"http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js\"],\"dependencies\":{\"builder\":\"distri/builder:v0.3.2\",\"cson\":\"distri/cson:v0.1.0\",\"issues\":\"STRd6/issues:v0.2.0\",\"sandbox\":\"STRd6/sandbox:v0.2.0\",\"notifications\":\"STRd6/notifications:v0.2.0\",\"md\":\"STRd6/md:v0.3.2\",\"github\":\"STRd6/github:v0.4.2\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"runtime\":\"distri/runtime:v0.3.0\",\"packager\":\"distri/packager:v0.5.2\",\"filetree\":\"STRd6/filetree:v0.3.0\",\"runner\":\"STRd6/runner:v0.2.0\"}};",
       "type": "blob"
     },
     "source/actions": {
@@ -2569,123 +2569,144 @@
           "content": "packager\n========\n\nCreate standalone build products for web packages\n",
           "type": "blob"
         },
+        "deferred.coffee.md": {
+          "path": "deferred.coffee.md",
+          "mode": "100644",
+          "content": "Deferred\n========\n\nUse jQuery.Deferred to implement deferreds, but\nstay insulated by not blasting the $ all over our code\nthat doesn't really depend on jQuery\nThis let's us swap our our Deferred provider more easily later.\n\n    global.Deferred = $.Deferred\n\nA helper to return a promise that may be resolved or rejected by the passed\ncode block.\n\n    withDeferrence = (fn) ->\n      deferred = Deferred()\n\n      # TODO: This try catch may be useless from deferring the fn\n      try\n        fn.defer(deferred)\n      catch e\n        deferred.reject(e)\n\n      return deferred.promise()\n\nA deferred encapsulating a confirm dialog.\n\n    Deferred.Confirm = (message) ->\n      withDeferrence (deferred) ->\n        if window.confirm(message)\n          deferred.resolve()\n        else\n          deferred.reject()\n\nA deferred that may present a confirm dialog, but only if a certain condition is\nmet.\n\n    Deferred.ConfirmIf = (flag, message) ->\n      if flag\n        return Deferred.Confirm(message)\n      else\n        withDeferrence (deferred) ->\n          deferred.resolve()\n\nA deferred that encapsulates a conditional execution of a block that returns a\npromise. If the condition is met the promise returning block is executed,\notherwise the deferred is marked as resolved and the block is not executed.\n\n    Deferred.ExecuteIf = (flag, callback) ->\n      withDeferrence (deferred) ->\n        if flag\n          callback().then deferred.resolve\n        else\n          deferred.resolve()\n\nA touched up version of jQuery's `when`. Succeeds if all promises succeed, fails\nif any promise fails. Handles jQuery weirdness if only operating on one promise.\n\nTODO: We should think about the case when there are zero promises. Probably\nsucceed with an empty array for results.\n\n    Deferred.when = (promises) ->\n      $.when.apply(null, promises)\n      .then (results...) ->\n        # WTF: jQuery.when behaves differently for one argument than it does for\n        # two or more.\n\n        if promises.length is 1\n          results = [results]\n        else\n          results\n        \n        return results\n\n    module.exports = Deferred\n",
+          "type": "blob"
+        },
         "packager.coffee.md": {
           "path": "packager.coffee.md",
           "mode": "100644",
-          "content": "Packager\n========\n\nThe main responsibilities will be bundling dependencies, and creating the\npackage.\n\n    Packager =\n\nIf our string is an absolute URL then we assume that the server is CORS enabled\nand we can make a cross origin request to collect the JSON data.\n\nWe also handle a Github repo dependency. Something like `STRd6/issues:master`.\nThis uses JSONP to load the package from the gh-pages branch of the given repo.\n\n`STRd6/issues:master` will be accessible at `http://strd6.github.io/issues/master.jsonp`.\nThe callback is the same as the repo info string: `window[\"STRd6/issues:master\"](... DATA ...)`\n\nWhy all the madness? Github pages doesn't allow CORS right now, so we need to use\nthe JSONP hack to work around it. Because the files are static we can't allow the\nserver to generate a wrapper in response to our query string param so we need to\nwork out a unique one per file ahead of time. The `<user>/<repo>:<ref>` string is\nunique for all our packages so we use it to determine the URL and name callback.\n\n      collectDependencies: (dependencies, cachedDependencies={}) ->\n        names = Object.keys(dependencies)\n\n        Deferred.when(names.map (name) ->\n          value = dependencies[name]\n\n          if typeof value is \"string\"\n            if value.startsWith(\"http\")\n              $.getJSON(value)\n            else\n              if (match = value.match(/([^\\/]*)\\/([^\\:]*)\\:(.*)/))\n                [callback, user, repo, branch] = match\n\n                if cachedDependency = lookupCached(cachedDependencies, \"#{user}/#{repo}\", branch)\n                  [cachedDependency]\n                else\n                  $.ajax\n                    url: \"http://#{user}.github.io/#{repo}/#{branch}.json.js\"\n                    dataType: \"jsonp\"\n                    jsonpCallback: callback\n                    cache: true\n              else\n                reject \"\"\"\n                  Failed to parse repository info string #{value}, be sure it's in the\n                  form `<user>/<repo>:<ref>` for example: `STRd6/issues:master`\n                  or `STRd6/editor:v0.9.1`\n                \"\"\"\n          else\n            reject \"Can only handle url string dependencies right now\"\n        ).then (results) ->\n          bundledDependencies = {}\n\n          names.each (name, i) ->\n            bundledDependencies[name] = results[i].first()\n\n          return bundledDependencies\n\nCreate the standalone components of this package. An html page that loads the\nmain entry point for demonstration purposes and a json package that can be\nused as a dependency in other packages.\n\nThe html page is named `index.html` and is in the folder of the ref, or the root\nif our ref is the default branch.\n\nDocs are generated and placed in `docs` directory as a sibling to `index.html`.\n\nAn application manifest is served up as a sibling to `index.html` as well.\n\nThe `.js`, `.json`, and `.jsonp` build products are placed into the root level,\nas siblings to the folder containing `index.html`. If this branch is the default\nthen these build products are placed as siblings to `index.html`\n\nThe optional second argument is an array of files to be added to the final\npackage.\n\n      standAlone: (pkg, files=[]) ->\n        repository = pkg.repository\n        branch = repository.branch\n\n        if branch is repository.default_branch\n          base = \"\"\n        else\n          base = \"#{branch}/\"\n\n        add = (path, content) ->\n          files.push\n            content: content\n            mode: \"100644\"\n            path: path\n            type: \"blob\"\n\n        add \"#{base}index.html\", html(pkg)\n        add \"#{base}manifest.appcache\", cacheManifest(pkg)\n\n        json = JSON.stringify(pkg, null, 2)\n\n        add \"#{branch}.json.js\", jsonpWrapper(repository, json)\n\n        return files\n\nGenerates a standalone page for testing the app.\n\n      testScripts: (pkg) ->\n        {distribution} = pkg\n\n        testProgram = Object.keys(distribution).select (path) ->\n          path.match /test\\//\n        .map (testPath) ->\n          \"require('./#{testPath}')\"\n        .join \"\\n\"\n\n        \"\"\"\n          #{dependencyScripts(pkg.remoteDependencies)}\n          <script>\n            #{packageWrapper(pkg, testProgram)}\n          <\\/script>\n        \"\"\"\n\n    module.exports = Packager\n\nHelpers\n-------\n\nCreate a rejected deferred with the given message.\n\n    reject = (message) ->\n      Deferred().reject(message)\n\nA standalone html page for a package.\n\n    html = (pkg) ->\n      \"\"\"\n        <!DOCTYPE html>\n        <html manifest=\"manifest.appcache?#{+new Date}\">\n        <head>\n        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n        #{dependencyScripts(pkg.remoteDependencies)}\n        </head>\n        <body>\n        <script>\n        #{packageWrapper(pkg, \"require('./#{pkg.entryPoint}')\")}\n        <\\/script>\n        </body>\n        </html>\n      \"\"\"\n\nAn HTML5 cache manifest for a package.\n\n    cacheManifest = (pkg) ->\n      \"\"\"\n        CACHE MANIFEST\n        # #{+ new Date}\n\n        CACHE:\n        index.html\n        #{(pkg.remoteDependencies or []).join(\"\\n\")}\n\n        NETWORK:\n        https://*\n        http://*\n        *\n      \"\"\"\n\n`makeScript` returns a string representation of a script tag that has a src\nattribute.\n\n    makeScript = (src) ->\n      \"<script src=#{JSON.stringify(src)}><\\/script>\"\n\n`dependencyScripts` returns a string containing the script tags that are\nthe remote script dependencies of this build.\n\n    dependencyScripts = (remoteDependencies=[]) ->\n      remoteDependencies.map(makeScript).join(\"\\n\")\n\nWraps the given data in a JSONP function wrapper. This allows us to host our\npackages on Github pages and get around any same origin issues by using JSONP.\n\n    jsonpWrapper = (repository, data) ->\n      \"\"\"\n        window[\"#{repository.full_name}:#{repository.branch}\"](#{data});\n      \"\"\"\n\nWrap code in a closure that provides the package and a require function. This\ncan be used for generating standalone HTML pages, scripts, and tests.\n\n    packageWrapper = (pkg, code) ->\n      \"\"\"\n        ;(function(PACKAGE) {\n        var oldRequire = window.Require;\n        #{PACKAGE.dependencies.require.distribution.main.content}\n        var require = Require.generateFor(PACKAGE);\n        window.Require = oldRequire;\n        #{code}\n        })(#{JSON.stringify(pkg, null, 2)});\n      \"\"\"\n\nLookup a package from a cached list of packages.\n\n    lookupCached = (cache, fullName, branch) ->\n      name = Object.keys(cache).select (key) ->\n        repository = cache[key].repository\n\n        repository.full_name is fullName and repository.branch is branch\n      .first()\n\n      if name\n        cache[name]\n",
+          "content": "Packager\n========\n\nThe main responsibilities of the packager are bundling dependencies, and\ncreating the package.\n\nSpecification\n-------------\n\nA package is a json object with the following properties:\n\n`dependencies` an object whose keys are names of dependencies within our context\nand whose values are packages.\n\n`distribution` an object whose keys are extensionless file paths and whose\nvalues are executable code compiled from the source files that exist at those paths.\n\n`source` an object whose keys are file paths and whose values are source code.\nThe `source` can be loaded and modified in an editor to recreate the compiled\npackage.\n\nIf the environment or dependecies contain all the tools required to build the\npackage then theoretically `distribution` may be omitted as it can be recreated\nfrom `source`.\n\nFor a \"production\" distribution `source` may be omitted, but that will greatly\nlimit adaptability of packages.\n\nThe package specification is closely tied to the `require` method. This allows\nus to use a simplified Node.js style `require` from the browser.\n\n[Require Docs](/require/docs)\n\nImplementation\n--------------\n\n    Deferred = require \"./deferred\"\n\n    Packager =\n\nIf our string is an absolute URL then we assume that the server is CORS enabled\nand we can make a cross origin request to collect the JSON data.\n\nWe also handle a Github repo dependency. Something like `STRd6/issues:master`.\nThis uses JSONP to load the package from the gh-pages branch of the given repo.\n\n`STRd6/issues:master` will be accessible at `http://strd6.github.io/issues/master.jsonp`.\nThe callback is the same as the repo info string: `window[\"STRd6/issues:master\"](... DATA ...)`\n\nWhy all the madness? Github pages doesn't allow CORS right now, so we need to use\nthe JSONP hack to work around it. Because the files are static we can't allow the\nserver to generate a wrapper in response to our query string param so we need to\nwork out a unique one per file ahead of time. The `<user>/<repo>:<ref>` string is\nunique for all our packages so we use it to determine the URL and name callback.\n\n      collectDependencies: (dependencies, cachedDependencies={}) ->\n        names = Object.keys(dependencies)\n\n        Deferred.when(names.map (name) ->\n          value = dependencies[name]\n\n          if typeof value is \"string\"\n            if startsWith(value, \"http\")\n              $.getJSON(value)\n            else\n              if (match = value.match(/([^\\/]*)\\/([^\\:]*)\\:(.*)/))\n                [callback, user, repo, branch] = match\n\n                if cachedDependency = lookupCached(cachedDependencies, \"#{user}/#{repo}\", branch)\n                  # DOUBLE HACK: Because jQuery deferreds are so bad\n                  # we only need to make this an array if our length isn't exactly one\n                  if names.length is 1\n                    cachedDependency\n                  else\n                    [cachedDependency]\n                else\n                  url = \"http://#{user}.github.io/#{repo}/#{branch}.json.js\"\n                  console.log \"ajaxin\", url\n                  \n                  $.ajax\n                    url: url\n                    dataType: \"jsonp\"\n                    jsonpCallback: callback\n                    cache: true\n              else\n                reject \"\"\"\n                  Failed to parse repository info string #{value}, be sure it's in the\n                  form `<user>/<repo>:<ref>` for example: `STRd6/issues:master`\n                  or `STRd6/editor:v0.9.1`\n                \"\"\"\n          else\n            reject \"Can only handle url string dependencies right now\"\n        ).then (results) ->\n          bundledDependencies = {}\n\n          names.each (name, i) ->\n            bundledDependencies[name] = results[i][0]\n\n          return bundledDependencies\n\nCreate the standalone components of this package. An html page that loads the\nmain entry point for demonstration purposes and a json package that can be\nused as a dependency in other packages.\n\nThe html page is named `index.html` and is in the folder of the ref, or the root\nif our ref is the default branch.\n\nDocs are generated and placed in `docs` directory as a sibling to `index.html`.\n\nAn application manifest is served up as a sibling to `index.html` as well.\n\nThe `.json.js` build product is placed into the root level, as siblings to the\nfolder containing `index.html`. If this branch is the default then these build\nproducts are placed as siblings to `index.html`\n\nThe optional second argument is an array of files to be added to the final\npackage.\n\n      standAlone: (pkg, files=[]) ->\n        repository = pkg.repository\n        branch = repository.branch\n\n        if branch is repository.default_branch\n          base = \"\"\n        else\n          base = \"#{branch}/\"\n\n        add = (path, content) ->\n          files.push\n            content: content\n            mode: \"100644\"\n            path: path\n            type: \"blob\"\n\n        add \"#{base}index.html\", html(pkg)\n        add \"#{base}manifest.appcache\", cacheManifest(pkg)\n\n        json = JSON.stringify(pkg, null, 2)\n\n        add \"#{branch}.json.js\", jsonpWrapper(repository, json)\n\n        return files\n\nGenerates a standalone page for testing the app.\n\n      testScripts: (pkg) ->\n        {distribution} = pkg\n\n        testProgram = Object.keys(distribution).filter (path) ->\n          path.match /test\\//\n        .map (testPath) ->\n          \"require('./#{testPath}')\"\n        .join \"\\n\"\n\n        \"\"\"\n          #{dependencyScripts(pkg.remoteDependencies)}\n          <script>\n            #{packageWrapper(pkg, testProgram)}\n          <\\/script>\n        \"\"\"\n\n    module.exports = Packager\n\nHelpers\n-------\n\n    startsWith = (string, prefix) ->\n      string.match RegExp \"^#{prefix}\"\n\nCreate a rejected deferred with the given message.\n\n    reject = (message) ->\n      Deferred().reject(message)\n\nA standalone html page for a package.\n\n    html = (pkg) ->\n      \"\"\"\n        <!DOCTYPE html>\n        <html manifest=\"manifest.appcache?#{+new Date}\">\n        <head>\n        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n        #{dependencyScripts(pkg.remoteDependencies)}\n        </head>\n        <body>\n        <script>\n        #{packageWrapper(pkg, \"require('./#{pkg.entryPoint}')\")}\n        <\\/script>\n        </body>\n        </html>\n      \"\"\"\n\nAn HTML5 cache manifest for a package.\n\n    cacheManifest = (pkg) ->\n      \"\"\"\n        CACHE MANIFEST\n        # #{+ new Date}\n\n        CACHE:\n        index.html\n        #{(pkg.remoteDependencies or []).join(\"\\n\")}\n\n        NETWORK:\n        https://*\n        http://*\n        *\n      \"\"\"\n\n`makeScript` returns a string representation of a script tag that has a src\nattribute.\n\n    makeScript = (src) ->\n      \"<script src=#{JSON.stringify(src)}><\\/script>\"\n\n`dependencyScripts` returns a string containing the script tags that are\nthe remote script dependencies of this build.\n\n    dependencyScripts = (remoteDependencies=[]) ->\n      remoteDependencies.map(makeScript).join(\"\\n\")\n\nWraps the given data in a JSONP function wrapper. This allows us to host our\npackages on Github pages and get around any same origin issues by using JSONP.\n\n    jsonpWrapper = (repository, data) ->\n      \"\"\"\n        window[\"#{repository.full_name}:#{repository.branch}\"](#{data});\n      \"\"\"\n\nWrap code in a closure that provides the package and a require function. This\ncan be used for generating standalone HTML pages, scripts, and tests.\n\n    packageWrapper = (pkg, code) ->\n      \"\"\"\n        ;(function(PACKAGE) {\n        var oldRequire = window.Require;\n        #{PACKAGE.dependencies.require.distribution.main.content}\n        var require = Require.generateFor(PACKAGE);\n        window.Require = oldRequire;\n        #{code}\n        })(#{JSON.stringify(pkg, null, 2)});\n      \"\"\"\n\nLookup a package from a cached list of packages.\n\n    lookupCached = (cache, fullName, branch) ->\n      names = Object.keys(cache).filter (key) ->\n        repository = cache[key].repository\n\n        repository.full_name is fullName and repository.branch is branch\n\n      if names?[0]\n        cache[name]\n",
           "type": "blob"
         },
         "pixie.cson": {
           "path": "pixie.cson",
           "mode": "100644",
-          "content": "version: \"0.5.0\"\nentryPoint: \"packager\"\nremoteDependencies: [\n  \"https://code.jquery.com/jquery-1.10.1.min.js\"\n  \"http://strd6.github.io/tempest/javascripts/envweb.js\"\n]\ndependencies:\n  require: \"STRd6/require:v0.3.0\"\n",
+          "content": "version: \"0.5.2\"\nentryPoint: \"packager\"\nremoteDependencies: [\n  \"https://code.jquery.com/jquery-1.10.1.min.js\"\n]\ndependencies:\n  require: \"STRd6/require:v0.3.0\"\n",
+          "type": "blob"
+        },
+        "test/deferred.coffee": {
+          "path": "test/deferred.coffee",
+          "mode": "100644",
+          "content": "Deferred = require \"../deferred\"\n\ndescribe \"Deferred\", ->\n  describe \"when with multi-arg duders\", ->\n    it \"should work on an array of one\", (done) ->\n      deferred = Deferred()\n\n      Deferred.when([\n        deferred.promise()\n      ]).then (results) ->\n        console.log results\n        assert.equal results.length, 1, \"Results length should be 1\"\n\n        assert.equal results[0][0], \"result\", \"First result should be 'result'\"\n\n        done()\n\n      deferred.resolve(\"result\", \"wat\")\n\n    it \"should work on an array of more than one\", (done) ->\n      deferred1 = Deferred()\n      deferred2 = Deferred()\n\n      Deferred.when([\n        deferred1.promise()\n        deferred2.promise()\n      ]).then (results) ->\n        assert.equal results.length, 2\n\n        assert.equal results[0][0], \"result1\"\n        assert.equal results[1][0], \"result2\"\n\n        done()\n\n      deferred1.resolve(\"result1\", \"wat\")\n      deferred2.resolve(\"result2\", \"wat\")\n\n    it \"should work on an array of zero\", (done) ->\n      Deferred.when([]).then (results) ->\n        assert.equal results.length, 0\n\n        done()\n\n  describe \"when with single arg duders\", ->\n    it \"should work on an array of one\", (done) ->\n      deferred = Deferred()\n\n      Deferred.when([\n        deferred.promise()\n      ]).then (results) ->\n        console.log results\n        assert.equal results.length, 1, \"Results length should be 1\"\n\n        assert.equal results[0], \"result\", \"result should be 'result'\"\n\n        done()\n\n      deferred.resolve(\"result\")\n\n    it \"should work on an array of more than one\", (done) ->\n      deferred1 = Deferred()\n      deferred2 = Deferred()\n\n      Deferred.when([\n        deferred1.promise()\n        deferred2.promise()\n      ]).then (results) ->\n        assert.equal results.length, 2\n\n        assert.equal results[0], \"result1\"\n        assert.equal results[1], \"result2\"\n\n        done()\n\n      deferred1.resolve(\"result1\")\n      deferred2.resolve(\"result2\")\n",
           "type": "blob"
         },
         "test/packager.coffee": {
           "path": "test/packager.coffee",
           "mode": "100644",
-          "content": "Packager = require(\"../packager\")\n\ndescribe \"Packager\", ->\n  it \"should exist\", ->\n    assert Packager\n\n  it \"should be able to create a standalone html page\", ->\n    assert Packager.standAlone(PACKAGE)\n",
+          "content": "Packager = require(\"../packager\")\n\n{dependencies} = require(\"../pixie\")\n\ndescribe \"Packager\", ->\n  it \"should exist\", ->\n    assert Packager\n\n  it \"should be able to create a standalone html page\", ->\n    assert Packager.standAlone(PACKAGE)\n\n  it \"should be able to collect remote dependencies\", ->\n    Packager.collectDependencies(dependencies)\n    .then (results) ->\n      console.log \"success\"\n      console.log results\n    , (errors) ->\n      console.log errors\n",
           "type": "blob"
         }
       },
       "distribution": {
+        "deferred": {
+          "path": "deferred",
+          "content": "(function() {\n  var withDeferrence,\n    __slice = [].slice;\n\n  global.Deferred = $.Deferred;\n\n  withDeferrence = function(fn) {\n    var deferred, e;\n    deferred = Deferred();\n    try {\n      fn.defer(deferred);\n    } catch (_error) {\n      e = _error;\n      deferred.reject(e);\n    }\n    return deferred.promise();\n  };\n\n  Deferred.Confirm = function(message) {\n    return withDeferrence(function(deferred) {\n      if (window.confirm(message)) {\n        return deferred.resolve();\n      } else {\n        return deferred.reject();\n      }\n    });\n  };\n\n  Deferred.ConfirmIf = function(flag, message) {\n    if (flag) {\n      return Deferred.Confirm(message);\n    } else {\n      return withDeferrence(function(deferred) {\n        return deferred.resolve();\n      });\n    }\n  };\n\n  Deferred.ExecuteIf = function(flag, callback) {\n    return withDeferrence(function(deferred) {\n      if (flag) {\n        return callback().then(deferred.resolve);\n      } else {\n        return deferred.resolve();\n      }\n    });\n  };\n\n  Deferred.when = function(promises) {\n    return $.when.apply(null, promises).then(function() {\n      var results;\n      results = 1 <= arguments.length ? __slice.call(arguments, 0) : [];\n      if (promises.length === 1) {\n        results = [results];\n      } else {\n        results;\n      }\n      return results;\n    });\n  };\n\n  module.exports = Deferred;\n\n}).call(this);\n\n//# sourceURL=deferred.coffee",
+          "type": "blob"
+        },
         "packager": {
           "path": "packager",
-          "content": "(function() {\n  var Packager, cacheManifest, dependencyScripts, html, jsonpWrapper, lookupCached, makeScript, packageWrapper, reject;\n\n  Packager = {\n    collectDependencies: function(dependencies, cachedDependencies) {\n      var names;\n      if (cachedDependencies == null) {\n        cachedDependencies = {};\n      }\n      names = Object.keys(dependencies);\n      return Deferred.when(names.map(function(name) {\n        var branch, cachedDependency, callback, match, repo, user, value;\n        value = dependencies[name];\n        if (typeof value === \"string\") {\n          if (value.startsWith(\"http\")) {\n            return $.getJSON(value);\n          } else {\n            if ((match = value.match(/([^\\/]*)\\/([^\\:]*)\\:(.*)/))) {\n              callback = match[0], user = match[1], repo = match[2], branch = match[3];\n              if (cachedDependency = lookupCached(cachedDependencies, \"\" + user + \"/\" + repo, branch)) {\n                return [cachedDependency];\n              } else {\n                return $.ajax({\n                  url: \"http://\" + user + \".github.io/\" + repo + \"/\" + branch + \".json.js\",\n                  dataType: \"jsonp\",\n                  jsonpCallback: callback,\n                  cache: true\n                });\n              }\n            } else {\n              return reject(\"Failed to parse repository info string \" + value + \", be sure it's in the\\nform `<user>/<repo>:<ref>` for example: `STRd6/issues:master`\\nor `STRd6/editor:v0.9.1`\");\n            }\n          }\n        } else {\n          return reject(\"Can only handle url string dependencies right now\");\n        }\n      })).then(function(results) {\n        var bundledDependencies;\n        bundledDependencies = {};\n        names.each(function(name, i) {\n          return bundledDependencies[name] = results[i].first();\n        });\n        return bundledDependencies;\n      });\n    },\n    standAlone: function(pkg, files) {\n      var add, base, branch, json, repository;\n      if (files == null) {\n        files = [];\n      }\n      repository = pkg.repository;\n      branch = repository.branch;\n      if (branch === repository.default_branch) {\n        base = \"\";\n      } else {\n        base = \"\" + branch + \"/\";\n      }\n      add = function(path, content) {\n        return files.push({\n          content: content,\n          mode: \"100644\",\n          path: path,\n          type: \"blob\"\n        });\n      };\n      add(\"\" + base + \"index.html\", html(pkg));\n      add(\"\" + base + \"manifest.appcache\", cacheManifest(pkg));\n      json = JSON.stringify(pkg, null, 2);\n      add(\"\" + branch + \".json.js\", jsonpWrapper(repository, json));\n      return files;\n    },\n    testScripts: function(pkg) {\n      var distribution, testProgram;\n      distribution = pkg.distribution;\n      testProgram = Object.keys(distribution).select(function(path) {\n        return path.match(/test\\//);\n      }).map(function(testPath) {\n        return \"require('./\" + testPath + \"')\";\n      }).join(\"\\n\");\n      return \"\" + (dependencyScripts(pkg.remoteDependencies)) + \"\\n<script>\\n  \" + (packageWrapper(pkg, testProgram)) + \"\\n<\\/script>\";\n    }\n  };\n\n  module.exports = Packager;\n\n  reject = function(message) {\n    return Deferred().reject(message);\n  };\n\n  html = function(pkg) {\n    return \"<!DOCTYPE html>\\n<html manifest=\\\"manifest.appcache?\" + (+(new Date)) + \"\\\">\\n<head>\\n<meta http-equiv=\\\"Content-Type\\\" content=\\\"text/html; charset=UTF-8\\\" />\\n\" + (dependencyScripts(pkg.remoteDependencies)) + \"\\n</head>\\n<body>\\n<script>\\n\" + (packageWrapper(pkg, \"require('./\" + pkg.entryPoint + \"')\")) + \"\\n<\\/script>\\n</body>\\n</html>\";\n  };\n\n  cacheManifest = function(pkg) {\n    return \"CACHE MANIFEST\\n# \" + (+(new Date)) + \"\\n\\nCACHE:\\nindex.html\\n\" + ((pkg.remoteDependencies || []).join(\"\\n\")) + \"\\n\\nNETWORK:\\nhttps://*\\nhttp://*\\n*\";\n  };\n\n  makeScript = function(src) {\n    return \"<script src=\" + (JSON.stringify(src)) + \"><\\/script>\";\n  };\n\n  dependencyScripts = function(remoteDependencies) {\n    if (remoteDependencies == null) {\n      remoteDependencies = [];\n    }\n    return remoteDependencies.map(makeScript).join(\"\\n\");\n  };\n\n  jsonpWrapper = function(repository, data) {\n    return \"window[\\\"\" + repository.full_name + \":\" + repository.branch + \"\\\"](\" + data + \");\";\n  };\n\n  packageWrapper = function(pkg, code) {\n    return \";(function(PACKAGE) {\\nvar oldRequire = window.Require;\\n\" + PACKAGE.dependencies.require.distribution.main.content + \"\\nvar require = Require.generateFor(PACKAGE);\\nwindow.Require = oldRequire;\\n\" + code + \"\\n})(\" + (JSON.stringify(pkg, null, 2)) + \");\";\n  };\n\n  lookupCached = function(cache, fullName, branch) {\n    var name;\n    name = Object.keys(cache).select(function(key) {\n      var repository;\n      repository = cache[key].repository;\n      return repository.full_name === fullName && repository.branch === branch;\n    }).first();\n    if (name) {\n      return cache[name];\n    }\n  };\n\n}).call(this);\n\n//# sourceURL=packager.coffee",
+          "content": "(function() {\n  var Deferred, Packager, cacheManifest, dependencyScripts, html, jsonpWrapper, lookupCached, makeScript, packageWrapper, reject, startsWith;\n\n  Deferred = require(\"./deferred\");\n\n  Packager = {\n    collectDependencies: function(dependencies, cachedDependencies) {\n      var names;\n      if (cachedDependencies == null) {\n        cachedDependencies = {};\n      }\n      names = Object.keys(dependencies);\n      return Deferred.when(names.map(function(name) {\n        var branch, cachedDependency, callback, match, repo, url, user, value;\n        value = dependencies[name];\n        if (typeof value === \"string\") {\n          if (startsWith(value, \"http\")) {\n            return $.getJSON(value);\n          } else {\n            if ((match = value.match(/([^\\/]*)\\/([^\\:]*)\\:(.*)/))) {\n              callback = match[0], user = match[1], repo = match[2], branch = match[3];\n              if (cachedDependency = lookupCached(cachedDependencies, \"\" + user + \"/\" + repo, branch)) {\n                if (names.length === 1) {\n                  return cachedDependency;\n                } else {\n                  return [cachedDependency];\n                }\n              } else {\n                url = \"http://\" + user + \".github.io/\" + repo + \"/\" + branch + \".json.js\";\n                console.log(\"ajaxin\", url);\n                return $.ajax({\n                  url: url,\n                  dataType: \"jsonp\",\n                  jsonpCallback: callback,\n                  cache: true\n                });\n              }\n            } else {\n              return reject(\"Failed to parse repository info string \" + value + \", be sure it's in the\\nform `<user>/<repo>:<ref>` for example: `STRd6/issues:master`\\nor `STRd6/editor:v0.9.1`\");\n            }\n          }\n        } else {\n          return reject(\"Can only handle url string dependencies right now\");\n        }\n      })).then(function(results) {\n        var bundledDependencies;\n        bundledDependencies = {};\n        names.each(function(name, i) {\n          return bundledDependencies[name] = results[i][0];\n        });\n        return bundledDependencies;\n      });\n    },\n    standAlone: function(pkg, files) {\n      var add, base, branch, json, repository;\n      if (files == null) {\n        files = [];\n      }\n      repository = pkg.repository;\n      branch = repository.branch;\n      if (branch === repository.default_branch) {\n        base = \"\";\n      } else {\n        base = \"\" + branch + \"/\";\n      }\n      add = function(path, content) {\n        return files.push({\n          content: content,\n          mode: \"100644\",\n          path: path,\n          type: \"blob\"\n        });\n      };\n      add(\"\" + base + \"index.html\", html(pkg));\n      add(\"\" + base + \"manifest.appcache\", cacheManifest(pkg));\n      json = JSON.stringify(pkg, null, 2);\n      add(\"\" + branch + \".json.js\", jsonpWrapper(repository, json));\n      return files;\n    },\n    testScripts: function(pkg) {\n      var distribution, testProgram;\n      distribution = pkg.distribution;\n      testProgram = Object.keys(distribution).filter(function(path) {\n        return path.match(/test\\//);\n      }).map(function(testPath) {\n        return \"require('./\" + testPath + \"')\";\n      }).join(\"\\n\");\n      return \"\" + (dependencyScripts(pkg.remoteDependencies)) + \"\\n<script>\\n  \" + (packageWrapper(pkg, testProgram)) + \"\\n<\\/script>\";\n    }\n  };\n\n  module.exports = Packager;\n\n  startsWith = function(string, prefix) {\n    return string.match(RegExp(\"^\" + prefix));\n  };\n\n  reject = function(message) {\n    return Deferred().reject(message);\n  };\n\n  html = function(pkg) {\n    return \"<!DOCTYPE html>\\n<html manifest=\\\"manifest.appcache?\" + (+(new Date)) + \"\\\">\\n<head>\\n<meta http-equiv=\\\"Content-Type\\\" content=\\\"text/html; charset=UTF-8\\\" />\\n\" + (dependencyScripts(pkg.remoteDependencies)) + \"\\n</head>\\n<body>\\n<script>\\n\" + (packageWrapper(pkg, \"require('./\" + pkg.entryPoint + \"')\")) + \"\\n<\\/script>\\n</body>\\n</html>\";\n  };\n\n  cacheManifest = function(pkg) {\n    return \"CACHE MANIFEST\\n# \" + (+(new Date)) + \"\\n\\nCACHE:\\nindex.html\\n\" + ((pkg.remoteDependencies || []).join(\"\\n\")) + \"\\n\\nNETWORK:\\nhttps://*\\nhttp://*\\n*\";\n  };\n\n  makeScript = function(src) {\n    return \"<script src=\" + (JSON.stringify(src)) + \"><\\/script>\";\n  };\n\n  dependencyScripts = function(remoteDependencies) {\n    if (remoteDependencies == null) {\n      remoteDependencies = [];\n    }\n    return remoteDependencies.map(makeScript).join(\"\\n\");\n  };\n\n  jsonpWrapper = function(repository, data) {\n    return \"window[\\\"\" + repository.full_name + \":\" + repository.branch + \"\\\"](\" + data + \");\";\n  };\n\n  packageWrapper = function(pkg, code) {\n    return \";(function(PACKAGE) {\\nvar oldRequire = window.Require;\\n\" + PACKAGE.dependencies.require.distribution.main.content + \"\\nvar require = Require.generateFor(PACKAGE);\\nwindow.Require = oldRequire;\\n\" + code + \"\\n})(\" + (JSON.stringify(pkg, null, 2)) + \");\";\n  };\n\n  lookupCached = function(cache, fullName, branch) {\n    var names;\n    names = Object.keys(cache).filter(function(key) {\n      var repository;\n      repository = cache[key].repository;\n      return repository.full_name === fullName && repository.branch === branch;\n    });\n    if (names != null ? names[0] : void 0) {\n      return cache[name];\n    }\n  };\n\n}).call(this);\n\n//# sourceURL=packager.coffee",
           "type": "blob"
         },
         "pixie": {
           "path": "pixie",
-          "content": "module.exports = {\"version\":\"0.5.0\",\"entryPoint\":\"packager\",\"remoteDependencies\":[\"https://code.jquery.com/jquery-1.10.1.min.js\",\"http://strd6.github.io/tempest/javascripts/envweb.js\"],\"dependencies\":{\"require\":\"STRd6/require:v0.3.0\"}};",
+          "content": "module.exports = {\"version\":\"0.5.2\",\"entryPoint\":\"packager\",\"remoteDependencies\":[\"https://code.jquery.com/jquery-1.10.1.min.js\"],\"dependencies\":{\"require\":\"STRd6/require:v0.3.0\"}};",
+          "type": "blob"
+        },
+        "test/deferred": {
+          "path": "test/deferred",
+          "content": "(function() {\n  var Deferred;\n\n  Deferred = require(\"../deferred\");\n\n  describe(\"Deferred\", function() {\n    describe(\"when with multi-arg duders\", function() {\n      it(\"should work on an array of one\", function(done) {\n        var deferred;\n        deferred = Deferred();\n        Deferred.when([deferred.promise()]).then(function(results) {\n          console.log(results);\n          assert.equal(results.length, 1, \"Results length should be 1\");\n          assert.equal(results[0][0], \"result\", \"First result should be 'result'\");\n          return done();\n        });\n        return deferred.resolve(\"result\", \"wat\");\n      });\n      it(\"should work on an array of more than one\", function(done) {\n        var deferred1, deferred2;\n        deferred1 = Deferred();\n        deferred2 = Deferred();\n        Deferred.when([deferred1.promise(), deferred2.promise()]).then(function(results) {\n          assert.equal(results.length, 2);\n          assert.equal(results[0][0], \"result1\");\n          assert.equal(results[1][0], \"result2\");\n          return done();\n        });\n        deferred1.resolve(\"result1\", \"wat\");\n        return deferred2.resolve(\"result2\", \"wat\");\n      });\n      return it(\"should work on an array of zero\", function(done) {\n        return Deferred.when([]).then(function(results) {\n          assert.equal(results.length, 0);\n          return done();\n        });\n      });\n    });\n    return describe(\"when with single arg duders\", function() {\n      it(\"should work on an array of one\", function(done) {\n        var deferred;\n        deferred = Deferred();\n        Deferred.when([deferred.promise()]).then(function(results) {\n          console.log(results);\n          assert.equal(results.length, 1, \"Results length should be 1\");\n          assert.equal(results[0], \"result\", \"result should be 'result'\");\n          return done();\n        });\n        return deferred.resolve(\"result\");\n      });\n      return it(\"should work on an array of more than one\", function(done) {\n        var deferred1, deferred2;\n        deferred1 = Deferred();\n        deferred2 = Deferred();\n        Deferred.when([deferred1.promise(), deferred2.promise()]).then(function(results) {\n          assert.equal(results.length, 2);\n          assert.equal(results[0], \"result1\");\n          assert.equal(results[1], \"result2\");\n          return done();\n        });\n        deferred1.resolve(\"result1\");\n        return deferred2.resolve(\"result2\");\n      });\n    });\n  });\n\n}).call(this);\n\n//# sourceURL=test/deferred.coffee",
           "type": "blob"
         },
         "test/packager": {
           "path": "test/packager",
-          "content": "(function() {\n  var Packager;\n\n  Packager = require(\"../packager\");\n\n  describe(\"Packager\", function() {\n    it(\"should exist\", function() {\n      return assert(Packager);\n    });\n    return it(\"should be able to create a standalone html page\", function() {\n      return assert(Packager.standAlone(PACKAGE));\n    });\n  });\n\n}).call(this);\n\n//# sourceURL=test/packager.coffee",
+          "content": "(function() {\n  var Packager, dependencies;\n\n  Packager = require(\"../packager\");\n\n  dependencies = require(\"../pixie\").dependencies;\n\n  describe(\"Packager\", function() {\n    it(\"should exist\", function() {\n      return assert(Packager);\n    });\n    it(\"should be able to create a standalone html page\", function() {\n      return assert(Packager.standAlone(PACKAGE));\n    });\n    return it(\"should be able to collect remote dependencies\", function() {\n      return Packager.collectDependencies(dependencies).then(function(results) {\n        console.log(\"success\");\n        return console.log(results);\n      }, function(errors) {\n        return console.log(errors);\n      });\n    });\n  });\n\n}).call(this);\n\n//# sourceURL=test/packager.coffee",
           "type": "blob"
         }
       },
       "progenitor": {
         "url": "http://strd6.github.io/editor/"
       },
-      "version": "0.5.0",
+      "version": "0.5.2",
       "entryPoint": "packager",
       "remoteDependencies": [
-        "https://code.jquery.com/jquery-1.10.1.min.js",
-        "http://strd6.github.io/tempest/javascripts/envweb.js"
+        "https://code.jquery.com/jquery-1.10.1.min.js"
       ],
       "repository": {
         "id": 13223375,
         "name": "packager",
-        "full_name": "STRd6/packager",
+        "full_name": "distri/packager",
         "owner": {
-          "login": "STRd6",
-          "id": 18894,
-          "avatar_url": "https://0.gravatar.com/avatar/33117162fff8a9cf50544a604f60c045?d=https%3A%2F%2Fidenticons.github.com%2F39df222bffe39629d904e4883eabc654.png&r=x",
-          "gravatar_id": "33117162fff8a9cf50544a604f60c045",
-          "url": "https://api.github.com/users/STRd6",
-          "html_url": "https://github.com/STRd6",
-          "followers_url": "https://api.github.com/users/STRd6/followers",
-          "following_url": "https://api.github.com/users/STRd6/following{/other_user}",
-          "gists_url": "https://api.github.com/users/STRd6/gists{/gist_id}",
-          "starred_url": "https://api.github.com/users/STRd6/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/STRd6/subscriptions",
-          "organizations_url": "https://api.github.com/users/STRd6/orgs",
-          "repos_url": "https://api.github.com/users/STRd6/repos",
-          "events_url": "https://api.github.com/users/STRd6/events{/privacy}",
-          "received_events_url": "https://api.github.com/users/STRd6/received_events",
-          "type": "User",
+          "login": "distri",
+          "id": 6005125,
+          "avatar_url": "https://gravatar.com/avatar/192f3f168409e79c42107f081139d9f3?d=https%3A%2F%2Fidenticons.github.com%2Ff90c81ffc1498e260c820082f2e7ca5f.png&r=x",
+          "gravatar_id": "192f3f168409e79c42107f081139d9f3",
+          "url": "https://api.github.com/users/distri",
+          "html_url": "https://github.com/distri",
+          "followers_url": "https://api.github.com/users/distri/followers",
+          "following_url": "https://api.github.com/users/distri/following{/other_user}",
+          "gists_url": "https://api.github.com/users/distri/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/distri/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/distri/subscriptions",
+          "organizations_url": "https://api.github.com/users/distri/orgs",
+          "repos_url": "https://api.github.com/users/distri/repos",
+          "events_url": "https://api.github.com/users/distri/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/distri/received_events",
+          "type": "Organization",
           "site_admin": false
         },
         "private": false,
-        "html_url": "https://github.com/STRd6/packager",
+        "html_url": "https://github.com/distri/packager",
         "description": "Create standalone build products for web packages",
         "fork": false,
-        "url": "https://api.github.com/repos/STRd6/packager",
-        "forks_url": "https://api.github.com/repos/STRd6/packager/forks",
-        "keys_url": "https://api.github.com/repos/STRd6/packager/keys{/key_id}",
-        "collaborators_url": "https://api.github.com/repos/STRd6/packager/collaborators{/collaborator}",
-        "teams_url": "https://api.github.com/repos/STRd6/packager/teams",
-        "hooks_url": "https://api.github.com/repos/STRd6/packager/hooks",
-        "issue_events_url": "https://api.github.com/repos/STRd6/packager/issues/events{/number}",
-        "events_url": "https://api.github.com/repos/STRd6/packager/events",
-        "assignees_url": "https://api.github.com/repos/STRd6/packager/assignees{/user}",
-        "branches_url": "https://api.github.com/repos/STRd6/packager/branches{/branch}",
-        "tags_url": "https://api.github.com/repos/STRd6/packager/tags",
-        "blobs_url": "https://api.github.com/repos/STRd6/packager/git/blobs{/sha}",
-        "git_tags_url": "https://api.github.com/repos/STRd6/packager/git/tags{/sha}",
-        "git_refs_url": "https://api.github.com/repos/STRd6/packager/git/refs{/sha}",
-        "trees_url": "https://api.github.com/repos/STRd6/packager/git/trees{/sha}",
-        "statuses_url": "https://api.github.com/repos/STRd6/packager/statuses/{sha}",
-        "languages_url": "https://api.github.com/repos/STRd6/packager/languages",
-        "stargazers_url": "https://api.github.com/repos/STRd6/packager/stargazers",
-        "contributors_url": "https://api.github.com/repos/STRd6/packager/contributors",
-        "subscribers_url": "https://api.github.com/repos/STRd6/packager/subscribers",
-        "subscription_url": "https://api.github.com/repos/STRd6/packager/subscription",
-        "commits_url": "https://api.github.com/repos/STRd6/packager/commits{/sha}",
-        "git_commits_url": "https://api.github.com/repos/STRd6/packager/git/commits{/sha}",
-        "comments_url": "https://api.github.com/repos/STRd6/packager/comments{/number}",
-        "issue_comment_url": "https://api.github.com/repos/STRd6/packager/issues/comments/{number}",
-        "contents_url": "https://api.github.com/repos/STRd6/packager/contents/{+path}",
-        "compare_url": "https://api.github.com/repos/STRd6/packager/compare/{base}...{head}",
-        "merges_url": "https://api.github.com/repos/STRd6/packager/merges",
-        "archive_url": "https://api.github.com/repos/STRd6/packager/{archive_format}{/ref}",
-        "downloads_url": "https://api.github.com/repos/STRd6/packager/downloads",
-        "issues_url": "https://api.github.com/repos/STRd6/packager/issues{/number}",
-        "pulls_url": "https://api.github.com/repos/STRd6/packager/pulls{/number}",
-        "milestones_url": "https://api.github.com/repos/STRd6/packager/milestones{/number}",
-        "notifications_url": "https://api.github.com/repos/STRd6/packager/notifications{?since,all,participating}",
-        "labels_url": "https://api.github.com/repos/STRd6/packager/labels{/name}",
-        "releases_url": "https://api.github.com/repos/STRd6/packager/releases{/id}",
+        "url": "https://api.github.com/repos/distri/packager",
+        "forks_url": "https://api.github.com/repos/distri/packager/forks",
+        "keys_url": "https://api.github.com/repos/distri/packager/keys{/key_id}",
+        "collaborators_url": "https://api.github.com/repos/distri/packager/collaborators{/collaborator}",
+        "teams_url": "https://api.github.com/repos/distri/packager/teams",
+        "hooks_url": "https://api.github.com/repos/distri/packager/hooks",
+        "issue_events_url": "https://api.github.com/repos/distri/packager/issues/events{/number}",
+        "events_url": "https://api.github.com/repos/distri/packager/events",
+        "assignees_url": "https://api.github.com/repos/distri/packager/assignees{/user}",
+        "branches_url": "https://api.github.com/repos/distri/packager/branches{/branch}",
+        "tags_url": "https://api.github.com/repos/distri/packager/tags",
+        "blobs_url": "https://api.github.com/repos/distri/packager/git/blobs{/sha}",
+        "git_tags_url": "https://api.github.com/repos/distri/packager/git/tags{/sha}",
+        "git_refs_url": "https://api.github.com/repos/distri/packager/git/refs{/sha}",
+        "trees_url": "https://api.github.com/repos/distri/packager/git/trees{/sha}",
+        "statuses_url": "https://api.github.com/repos/distri/packager/statuses/{sha}",
+        "languages_url": "https://api.github.com/repos/distri/packager/languages",
+        "stargazers_url": "https://api.github.com/repos/distri/packager/stargazers",
+        "contributors_url": "https://api.github.com/repos/distri/packager/contributors",
+        "subscribers_url": "https://api.github.com/repos/distri/packager/subscribers",
+        "subscription_url": "https://api.github.com/repos/distri/packager/subscription",
+        "commits_url": "https://api.github.com/repos/distri/packager/commits{/sha}",
+        "git_commits_url": "https://api.github.com/repos/distri/packager/git/commits{/sha}",
+        "comments_url": "https://api.github.com/repos/distri/packager/comments{/number}",
+        "issue_comment_url": "https://api.github.com/repos/distri/packager/issues/comments/{number}",
+        "contents_url": "https://api.github.com/repos/distri/packager/contents/{+path}",
+        "compare_url": "https://api.github.com/repos/distri/packager/compare/{base}...{head}",
+        "merges_url": "https://api.github.com/repos/distri/packager/merges",
+        "archive_url": "https://api.github.com/repos/distri/packager/{archive_format}{/ref}",
+        "downloads_url": "https://api.github.com/repos/distri/packager/downloads",
+        "issues_url": "https://api.github.com/repos/distri/packager/issues{/number}",
+        "pulls_url": "https://api.github.com/repos/distri/packager/pulls{/number}",
+        "milestones_url": "https://api.github.com/repos/distri/packager/milestones{/number}",
+        "notifications_url": "https://api.github.com/repos/distri/packager/notifications{?since,all,participating}",
+        "labels_url": "https://api.github.com/repos/distri/packager/labels{/name}",
+        "releases_url": "https://api.github.com/repos/distri/packager/releases{/id}",
         "created_at": "2013-09-30T18:28:31Z",
-        "updated_at": "2013-12-03T20:36:46Z",
-        "pushed_at": "2013-12-03T20:36:41Z",
-        "git_url": "git://github.com/STRd6/packager.git",
-        "ssh_url": "git@github.com:STRd6/packager.git",
-        "clone_url": "https://github.com/STRd6/packager.git",
-        "svn_url": "https://github.com/STRd6/packager",
+        "updated_at": "2014-03-12T23:57:08Z",
+        "pushed_at": "2014-03-12T23:55:54Z",
+        "git_url": "git://github.com/distri/packager.git",
+        "ssh_url": "git@github.com:distri/packager.git",
+        "clone_url": "https://github.com/distri/packager.git",
+        "svn_url": "https://github.com/distri/packager",
         "homepage": null,
-        "size": 4012,
+        "size": 540,
         "stargazers_count": 0,
         "watchers_count": 0,
         "language": "CoffeeScript",
@@ -2699,16 +2720,34 @@
         "open_issues": 1,
         "watchers": 0,
         "default_branch": "master",
-        "master_branch": "master",
         "permissions": {
           "admin": true,
           "push": true,
           "pull": true
         },
+        "organization": {
+          "login": "distri",
+          "id": 6005125,
+          "avatar_url": "https://gravatar.com/avatar/192f3f168409e79c42107f081139d9f3?d=https%3A%2F%2Fidenticons.github.com%2Ff90c81ffc1498e260c820082f2e7ca5f.png&r=x",
+          "gravatar_id": "192f3f168409e79c42107f081139d9f3",
+          "url": "https://api.github.com/users/distri",
+          "html_url": "https://github.com/distri",
+          "followers_url": "https://api.github.com/users/distri/followers",
+          "following_url": "https://api.github.com/users/distri/following{/other_user}",
+          "gists_url": "https://api.github.com/users/distri/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/distri/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/distri/subscriptions",
+          "organizations_url": "https://api.github.com/users/distri/orgs",
+          "repos_url": "https://api.github.com/users/distri/repos",
+          "events_url": "https://api.github.com/users/distri/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/distri/received_events",
+          "type": "Organization",
+          "site_admin": false
+        },
         "network_count": 0,
         "subscribers_count": 1,
-        "branch": "v0.5.0",
-        "defaultBranch": "master"
+        "branch": "v0.5.2",
+        "publishBranch": "gh-pages"
       },
       "dependencies": {
         "require": {
@@ -2908,8 +2947,7 @@
           },
           "dependencies": {}
         }
-      },
-      "name": "packager"
+      }
     },
     "filetree": {
       "source": {
