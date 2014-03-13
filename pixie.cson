@@ -10,7 +10,7 @@ remoteDependencies: [
   "http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js"
 ]
 dependencies:
-  builder: "distri/builder:v0.3.3-alpha.0"
+  builder: "distri/builder:v0.3.3"
   cson: "distri/cson:v0.1.0"
   issues: "STRd6/issues:v0.2.0"
   sandbox: "STRd6/sandbox:v0.2.0"
