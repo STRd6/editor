@@ -231,6 +231,18 @@ actions =
       editor.runDocs({file})
       .fail errors
 
+  publish_chrapp: -&gt;
+    Chrapps = require <span class="string">"chrapps"</span>
+
+    notify <span class="string">"Chrapping..."</span>
+
+    editor.build().<span class="keyword">then</span> (pkg) -&gt;
+      editor.repository().publish(Chrapps.processPackage(pkg), <span class="literal">undefined</span>, <span class="string">"chrapps"</span>)
+    .<span class="keyword">then</span> -&gt;
+      notify <span class="string">"Chrapped!"</span>
+    .fail (args...) -&gt;
+      errors args
+
   convert_data: -&gt;
     converter = require(<span class="string">"./lib/converter"</span>).convertDataToJSON
 
