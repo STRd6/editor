@@ -40,6 +40,8 @@ TODO: This needs a big cleanup.
     global.PACKAGE = PACKAGE
     global.require = require
 
+    require("analytics").init("UA-3464282-15")
+
     # Create and auth a github API
     # Global until we consolidate editor/actions into something cleaner
     global.github = require("github")(require("./source/github_auth")())

@@ -10,6 +10,7 @@ remoteDependencies: [
   "http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js"
 ]
 dependencies:
+  analytics: "distri/google-analytics:v0.1.0"
   builder: "distri/builder:v0.3.3"
   chrapps: "distri/chrapps:v0.1.0-alpha.3"
   cson: "distri/cson:v0.1.0"
