@@ -90,6 +90,8 @@ require <span class="string">"./source/deferred"</span>
 global.PACKAGE = PACKAGE
 global.require = require
 
+require(<span class="string">"analytics"</span>).init(<span class="string">"UA-3464282-15"</span>)
+
 <span class="comment"># Create and auth a github API</span>
 <span class="comment"># Global until we consolidate editor/actions into something cleaner</span>
 global.github = require(<span class="string">"github"</span>)(require(<span class="string">"./source/github_auth"</span>)())</code></pre>
