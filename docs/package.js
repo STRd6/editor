@@ -1,6 +1,6 @@
 (function(pkg) {
   (function() {
-  var cacheFor, circularGuard, defaultEntryPoint, fileSeparator, generateRequireFn, global, isPackage, loadModule, loadPackage, loadPath, normalizePath, rootModule, startsWith,
+  var annotateSourceURL, cacheFor, circularGuard, defaultEntryPoint, fileSeparator, generateRequireFn, global, isPackage, loadModule, loadPackage, loadPath, normalizePath, rootModule, startsWith,
     __slice = [].slice;
 
   fileSeparator = '/';
@@ -63,10 +63,10 @@
     return result.join(fileSeparator);
   };
 
-  loadPackage = function(parentModule, pkg) {
+  loadPackage = function(pkg) {
     var path;
     path = pkg.entryPoint || defaultEntryPoint;
-    return loadPath(parentModule, pkg, path);
+    return loadPath(rootModule, pkg, path);
   };
 
   loadModule = function(pkg, path) {
@@ -74,7 +74,7 @@
     if (!(file = pkg.distribution[path])) {
       throw "Could not find file at " + path + " in " + pkg.name;
     }
-    program = file.content;
+    program = annotateSourceURL(file.content, pkg, path);
     dirname = path.split(fileSeparator).slice(0, -1).join(fileSeparator);
     module = {
       path: dirname,
@@ -112,6 +112,9 @@
     if (pkg.name == null) {
       pkg.name = "ROOT";
     }
+    if (pkg.scopedName == null) {
+      pkg.scopedName = "ROOT";
+    }
     return function(path) {
       var otherPackage;
       if (isPackage(path)) {
@@ -121,7 +124,10 @@
         if (otherPackage.name == null) {
           otherPackage.name = path;
         }
-        return loadPackage(rootModule, otherPackage);
+        if (otherPackage.scopedName == null) {
+          otherPackage.scopedName = "" + pkg.scopedName + ":" + path;
+        }
+        return loadPackage(otherPackage);
       } else {
         return loadPath(module, pkg, path);
       }
@@ -148,6 +154,10 @@
       value: {}
     });
     return pkg.cache;
+  };
+
+  annotateSourceURL = function(program, pkg, path) {
+    return "" + program + "\n//# sourceURL=" + pkg.scopedName + "/" + path;
   };
 
 }).call(this);
@@ -183,7 +193,7 @@
     "pixie.cson": {
       "path": "pixie.cson",
       "mode": "100644",
-      "content": "version: \"0.3.0\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"https://code.jquery.com/jquery-1.10.1.min.js\"\n  \"https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js\"\n]\ndependencies:\n  analytics: \"distri/google-analytics:v0.1.0\"\n  builder: \"distri/builder:v0.3.5\"\n  chrapps: \"distri/chrapps:v0.1.0-alpha.3\"\n  cson: \"distri/cson:v0.1.0\"\n  issues: \"STRd6/issues:v0.2.0\"\n  sandbox: \"STRd6/sandbox:v0.2.0\"\n  notifications: \"STRd6/notifications:v0.2.0\"\n  md: \"STRd6/md:v0.4.0-alpha.5\"\n  github: \"STRd6/github:v0.4.2\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  runtime: \"distri/runtime:v0.3.0\"\n  packager: \"distri/packager:v0.5.5\"\n  filetree: \"STRd6/filetree:v0.3.0\"\n  runner: \"STRd6/runner:v0.2.0\"\n",
+      "content": "version: \"0.3.0\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"https://code.jquery.com/jquery-1.10.1.min.js\"\n  \"https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\"\n  \"http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js\"\n]\ndependencies:\n  analytics: \"distri/google-analytics:v0.1.0\"\n  builder: \"distri/builder:v0.3.5\"\n  chrapps: \"distri/chrapps:v0.1.0\"\n  cson: \"distri/cson:v0.1.0\"\n  issues: \"STRd6/issues:v0.2.0\"\n  sandbox: \"STRd6/sandbox:v0.2.0\"\n  notifications: \"STRd6/notifications:v0.2.0\"\n  md: \"distri/md:v0.4.0\"\n  github: \"STRd6/github:v0.4.2\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  runtime: \"distri/runtime:v0.3.0\"\n  packager: \"distri/packager:v0.5.5\"\n  filetree: \"STRd6/filetree:v0.3.0\"\n  runner: \"STRd6/runner:v0.2.0\"\n",
       "type": "blob"
     },
     "source/actions.coffee.md": {
@@ -295,7 +305,7 @@
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.3.0\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"https://code.jquery.com/jquery-1.10.1.min.js\",\"https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\",\"http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js\"],\"dependencies\":{\"analytics\":\"distri/google-analytics:v0.1.0\",\"builder\":\"distri/builder:v0.3.5\",\"chrapps\":\"distri/chrapps:v0.1.0-alpha.3\",\"cson\":\"distri/cson:v0.1.0\",\"issues\":\"STRd6/issues:v0.2.0\",\"sandbox\":\"STRd6/sandbox:v0.2.0\",\"notifications\":\"STRd6/notifications:v0.2.0\",\"md\":\"STRd6/md:v0.4.0-alpha.5\",\"github\":\"STRd6/github:v0.4.2\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"runtime\":\"distri/runtime:v0.3.0\",\"packager\":\"distri/packager:v0.5.5\",\"filetree\":\"STRd6/filetree:v0.3.0\",\"runner\":\"STRd6/runner:v0.2.0\"}};",
+      "content": "module.exports = {\"version\":\"0.3.0\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"https://code.jquery.com/jquery-1.10.1.min.js\",\"https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js\",\"http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js\"],\"dependencies\":{\"analytics\":\"distri/google-analytics:v0.1.0\",\"builder\":\"distri/builder:v0.3.5\",\"chrapps\":\"distri/chrapps:v0.1.0\",\"cson\":\"distri/cson:v0.1.0\",\"issues\":\"STRd6/issues:v0.2.0\",\"sandbox\":\"STRd6/sandbox:v0.2.0\",\"notifications\":\"STRd6/notifications:v0.2.0\",\"md\":\"distri/md:v0.4.0\",\"github\":\"STRd6/github:v0.4.2\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"runtime\":\"distri/runtime:v0.3.0\",\"packager\":\"distri/packager:v0.5.5\",\"filetree\":\"STRd6/filetree:v0.3.0\",\"runner\":\"STRd6/runner:v0.2.0\"}};",
       "type": "blob"
     },
     "source/actions": {
@@ -1295,16 +1305,16 @@
           "content": "Chrapps\n=======\n\nChrappify a package to be a packaged Chrome App, or Chrapp (pronounced kræp).\n\nTo do this we take a package and process it into a Chrome App package.\n\nMuch of this code is lifted from http://github.com/STRd6/packager\n\nWe convert all the \"files\" into functions that can be executed instead of eval'd.\n\nWe need to do this so our `require` will continue to work in the Chrome app\nsecurity sandbox.\n\n    convertFile = (file) ->\n      \"\"\"\n        function(require, global, module, exports, PACKAGE) {\n          #{file.content};\n\n          return module.exports;\n        }\n      \"\"\"\n\n    convertPackage = (pkg) ->\n      {dependencies, distribution} = pkg\n\n      result = extend {}, pkg,\n        dependencies: \n          Object.keys(dependencies).reduce (processed, key) ->\n            processed[key] = convertPackage(dependencies[key])\n            processed \n          , {}\n        distribution: \n          Object.keys(distribution).reduce (processed, key) ->\n            processed[key] = convertFile distribution[key]\n            processed\n          , {}\n\nWe provide our own modified [`require`](./require) that works with that .\n\nWe set up the `background.js` and anything else Chrapps need.\n\n    generateBackgroundPage = (data) ->\n      \"\"\"\n        chrome.app.runtime.onLaunched.addListener(function() {\n          chrome.app.window.create('window.html', {\n            'bounds': {\n              'width': #{data.width},\n              'height': #{data.height}\n            }\n          });\n        });\n      \"\"\"\n\nGenerate `manifest.json`\n\n    generateManifest = (data) ->\n      data.app =\n        background:\n          scripts: [\"background.js\"]\n\n      JSON.stringify(data)\n\n    stringifier = require(\"./stringifier\")\n\nWrap code in a closure that provides the package and a require function. This\ncan be used for generating standalone HTML pages, scripts, and tests.\n\n    packageWrapper = (pkg, code) ->\n      \"\"\"\n        ;(function(PACKAGE) {\n        var oldRequire = window.Require;\n        #{PACKAGE.distribution.require.content}\n        var require = Require.generateFor(PACKAGE);\n        window.Require = oldRequire;\n        #{code}\n        })(#{stringifier(convertPackage(pkg))});\n      \"\"\"\n\n    html = (pkg) ->\n      \"\"\"\n        <!DOCTYPE html>\n        <head>\n        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n        #{dependencyScripts(pkg.remoteDependencies)}\n        </head>\n        <body>\n        <script src=\"./app.js\"><\\/script>\n        </body>\n        </html>\n      \"\"\"\n\n    appJS = (pkg) ->\n      packageWrapper(pkg, \"require('./#{pkg.entryPoint}')\")\n\nLoad the config from our app package.\n\n    loadAppConfig = (pkg) ->\n      module = {}\n      Function(\"module\", pkg.distribution.pixie.content)(module)\n      return module.exports\n\n`makeScript` returns a string representation of a script tag that has a src\nattribute.\n\n    makeScript = (src) ->\n      \"<script src=#{JSON.stringify(src)}><\\/script>\"\n\n`dependencyScripts` returns a string containing the script tags that are\nthe remote script dependencies of this build.\n\n    dependencyScripts = (remoteDependencies=[]) ->\n      remoteDependencies.map(makeScript).join(\"\\n\")\n\nExport our Chrapp processor.\n\n    module.exports =\n      processPackage: (pkg) ->\n        files = []\n\n        add = (path, content) ->\n          files.push\n            content: content\n            mode: \"100644\"\n            path: path\n            type: \"blob\"\n\n        # TODO: Add all external dependencies as libs\n\n        add \"window.html\", html(pkg)\n        add \"app.js\", appJS(pkg)\n        add \"background.js\", generateBackgroundPage loadAppConfig(pkg)\n        add \"manifest.json\", generateManifest loadAppConfig(pkg)\n\n        return files\n\nExtend helper\n\n    extend = (target, sources...) ->\n      for source in sources\n        for name of source\n          target[name] = source[name]\n  \n      return target\n",
           "type": "blob"
         },
+        "pixie.cson": {
+          "path": "pixie.cson",
+          "mode": "100644",
+          "content": "name: \"Chrapps\"\nversion: \"0.1.0\"\n",
+          "type": "blob"
+        },
         "require.coffee.md": {
           "path": "require.coffee.md",
           "mode": "100644",
           "content": "Require\n=======\n\nNOTE: This is a slightly modified version of http://github.com/STRd6/require\n\nA Node.js compatible require implementation for pure client side apps.\n\nEach file is a module. Modules are responsible for exporting an object. Unlike\ntraditional client side JavaScript, Ruby, or other common languages the module\nis not responsible for naming its product in the context of the requirer. This\nmaintains encapsulation because it is impossible from within a module to know\nwhat external name would be correct to prevent errors of composition in all\npossible uses.\n\nDefinitions\n-----------\n\n### Module\n\nA module is a file.\n\n### Package\n\nA package is an aggregation of modules. A package is a json object with the\nfollowing properties:\n\n- `distribution` An object whose keys are paths and properties are `fileData`\n- `entryPoint` Path to the primary module that requiring this package will require.\n- `dependencies` An object whose keys are names and whose values are packages.\n\nIt may have additional properties such as `source`, `repository`, and `docs`.\n\n### Application\n\nAn application is a package which has an `entryPoint` and may have dependencies.\nAdditionally an application's dependencies may have dependencies. Dependencies\nmust be bundled with the package.\n\nUses\n----\n\nFrom a module require another module in the same package.\n\n>     require \"./soup\"\n\nRequire a module in the parent directory\n\n>     require \"../nuts\"\n\nRequire a module from the root directory in the same package.\n\nNOTE: This could behave slightly differently under Node.js if your package does\nnot have it's own jailed filesystem.\n\n>     require \"/silence\"\n\nFrom a module within a package, require a dependent package.\n\n>     require \"console\"\n\nThe dependency will be delcared something like\n\n>     dependencies:\n>       console: \"http://strd6.github.io/console/v1.2.2.json\"\n\nImplementation\n--------------\n\nFile separator is '/'\n\n    fileSeparator = '/'\n\nIn the browser `global` is `window`.\n\n    global = window\n\nDefault entry point\n\n    defaultEntryPoint = \"main\"\n\nA sentinal against circular requires.\n\n    circularGuard = {}\n\nA top-level module so that all other modules won't have to be orphans.\n\n    rootModule =\n      path: \"\"\n\nRequire a module given a path within a package. Each file is its own separate\nmodule. An application is composed of packages.\n\n    loadPath = (parentModule, pkg, path) ->\n      if startsWith(path, '/')\n        localPath = []\n      else\n        localPath = parentModule.path.split(fileSeparator)\n\n      normalizedPath = normalizePath(path, localPath)\n\n      cache = cacheFor(pkg)\n\n      if module = cache[normalizedPath]\n        if module is circularGuard\n          throw \"Circular dependency detected when requiring #{normalizedPath}\"\n      else\n        cache[normalizedPath] = circularGuard\n\n        try\n          cache[normalizedPath] = module = loadModule(pkg, normalizedPath)\n        finally\n          delete cache[normalizedPath] if cache[normalizedPath] is circularGuard\n\n      return module.exports\n\nTo normalize the path we convert local paths to a standard form that does not\ncontain an references to current or parent directories.\n\n    normalizePath = (path, base=[]) ->\n      base = base.concat path.split(fileSeparator)\n      result = []\n\nChew up all the pieces into a standardized path.\n\n      while base.length\n        switch piece = base.shift()\n          when \"..\"\n            result.pop()\n          when \"\", \".\"\n            # Skip\n          else\n            result.push(piece)\n\n      return result.join(fileSeparator)\n\n`loadPackage` Loads a dependent package at that packages entry point.\n\n    loadPackage = (parentModule, pkg) ->\n      path = pkg.entryPoint or defaultEntryPoint\n\n      loadPath(parentModule, pkg, path)\n\nLoad a program from within a package.\n\n    loadModule = (pkg, path) ->\n      unless (program = pkg.distribution[path])\n        throw \"Could not find program at #{path} in #{pkg.name}\"\n\n      dirname = path.split(fileSeparator)[0...-1].join(fileSeparator)\n\n      module =\n        path: dirname\n        exports: {}\n\nThis external context provides some variable that modules have access to.\n\nA `require` function is exposed to modules so they may require other modules.\n\nAdditional properties such as a reference to the global object and some metadata\nare also exposed.\n\n      context =\n        require: generateRequireFn(pkg, module)\n        global: global\n        module: module\n        exports: module.exports\n        PACKAGE: pkg\n\n      args = Object.keys(context)\n      values = args.map (name) -> context[name]\n\nExecute the program within the module and given context.\n\n      program.apply(module, values)\n\n      return module\n\nHelper to detect if a given path is a package.\n\n    isPackage = (path) ->\n      if !(startsWith(path, fileSeparator) or\n        startsWith(path, \".#{fileSeparator}\") or\n        startsWith(path, \"..#{fileSeparator}\")\n      )\n        path.split(fileSeparator)[0]\n      else\n        false\n\nGenerate a require function for a given module in a package.\n\nIf we are loading a package in another module then we strip out the module part\nof the name and use the `rootModule` rather than the local module we came from.\nThat way our local path won't affect the lookup path in another package.\n\nLoading a module within our package, uses the requiring module as a parent for\nlocal path resolution.\n\n    generateRequireFn = (pkg, module=rootModule) ->\n      pkg.name ?= \"ROOT\"\n\n      (path) ->\n        if isPackage(path)\n          unless otherPackage = pkg.dependencies[path]\n            throw \"Package: #{path} not found.\"\n\n          otherPackage.name ?= path\n\n          loadPackage(rootModule, otherPackage)\n        else\n          loadPath(module, pkg, path)\n\nBecause we can't actually `require('require')` we need to export it a little\ndifferently.\n\n    if exports?\n      exports.generateFor = generateRequireFn\n    else\n      global.Require =\n        generateFor: generateRequireFn\n\nNotes\n-----\n\nWe have to use `pkg` as a variable name because `package` is a reserved word.\n\nNode needs to check file extensions, but because we only load compiled products\nwe never have extensions in our path.\n\nSo while Node may need to check for either `path/somefile.js` or `path/somefile.coffee`\nthat will already have been resolved for us and we will only check `path/somefile`\n\nCircular dependencies are not allowed and raise an exception when detected.\n\nHelpers\n-------\n\nDetect if a string starts with a given prefix.\n\n    startsWith = (string, prefix) ->\n      string.lastIndexOf(prefix, 0) is 0\n\nCreates a cache for modules within a package. It uses `defineProperty` so that\nthe cache doesn't end up being enumerated or serialized to json.\n\n    cacheFor = (pkg) ->\n      return pkg.cache if pkg.cache\n\n      Object.defineProperty pkg, \"cache\",\n        value: {}\n\n      return pkg.cache\n",
-          "type": "blob"
-        },
-        "test/stringifier.coffee": {
-          "path": "test/stringifier.coffee",
-          "mode": "100644",
-          "content": "stringifier = require \"../stringifier\"\n\ndescribe \"stringifier\", ->\n  it \"should generally stringify stuff\", ->\n    assert.equal JSON.parse(stringifier(2)), 2\n    assert.equal JSON.parse(stringifier(\"3\")), \"3\"\n    assert.equal JSON.parse(stringifier({a: {b: \"c\"}})).a.b, \"c\"\n\n  it \"should do that function madness\", ->\n    obj =\n      fn: \"\"\"\n        function(require, global, module, exports, PACKAGE) {\n          console.log(\"I'm in the function\")\n        }\n      \"\"\"\n\n    result = stringifier(obj)\n\n    console.log result\n\n    fn = eval(\"(#{result})\").fn\n    \n    assert.equal typeof fn, \"function\"\n",
           "type": "blob"
         },
         "stringifier.coffee.md": {
@@ -1319,49 +1329,49 @@
           "content": "{processPackage} = require \"../main\"\n\ndescribe \"Chrapps\", ->\n  it \"should chrapp all over the place\", ->\n    console.log processPackage(PACKAGE)\n",
           "type": "blob"
         },
-        "pixie.cson": {
-          "path": "pixie.cson",
+        "test/stringifier.coffee": {
+          "path": "test/stringifier.coffee",
           "mode": "100644",
-          "content": "name: \"Chrapps\"\nversion: \"0.1.0-alpha.3\"\n",
+          "content": "stringifier = require \"../stringifier\"\n\ndescribe \"stringifier\", ->\n  it \"should generally stringify stuff\", ->\n    assert.equal JSON.parse(stringifier(2)), 2\n    assert.equal JSON.parse(stringifier(\"3\")), \"3\"\n    assert.equal JSON.parse(stringifier({a: {b: \"c\"}})).a.b, \"c\"\n\n  it \"should do that function madness\", ->\n    obj =\n      fn: \"\"\"\n        function(require, global, module, exports, PACKAGE) {\n          console.log(\"I'm in the function\")\n        }\n      \"\"\"\n\n    result = stringifier(obj)\n\n    console.log result\n\n    fn = eval(\"(#{result})\").fn\n    \n    assert.equal typeof fn, \"function\"\n",
           "type": "blob"
         }
       },
       "distribution": {
         "main": {
           "path": "main",
-          "content": "(function() {\n  var appJS, convertFile, convertPackage, dependencyScripts, extend, generateBackgroundPage, generateManifest, html, loadAppConfig, makeScript, packageWrapper, stringifier,\n    __slice = [].slice;\n\n  convertFile = function(file) {\n    return \"function(require, global, module, exports, PACKAGE) {\\n  \" + file.content + \";\\n\\n  return module.exports;\\n}\";\n  };\n\n  convertPackage = function(pkg) {\n    var dependencies, distribution, result;\n    dependencies = pkg.dependencies, distribution = pkg.distribution;\n    return result = extend({}, pkg, {\n      dependencies: Object.keys(dependencies).reduce(function(processed, key) {\n        processed[key] = convertPackage(dependencies[key]);\n        return processed;\n      }, {}),\n      distribution: Object.keys(distribution).reduce(function(processed, key) {\n        processed[key] = convertFile(distribution[key]);\n        return processed;\n      }, {})\n    });\n  };\n\n  generateBackgroundPage = function(data) {\n    return \"chrome.app.runtime.onLaunched.addListener(function() {\\n  chrome.app.window.create('window.html', {\\n    'bounds': {\\n      'width': \" + data.width + \",\\n      'height': \" + data.height + \"\\n    }\\n  });\\n});\";\n  };\n\n  generateManifest = function(data) {\n    data.app = {\n      background: {\n        scripts: [\"background.js\"]\n      }\n    };\n    return JSON.stringify(data);\n  };\n\n  stringifier = require(\"./stringifier\");\n\n  packageWrapper = function(pkg, code) {\n    return \";(function(PACKAGE) {\\nvar oldRequire = window.Require;\\n\" + PACKAGE.distribution.require.content + \"\\nvar require = Require.generateFor(PACKAGE);\\nwindow.Require = oldRequire;\\n\" + code + \"\\n})(\" + (stringifier(convertPackage(pkg))) + \");\";\n  };\n\n  html = function(pkg) {\n    return \"<!DOCTYPE html>\\n<head>\\n<meta http-equiv=\\\"Content-Type\\\" content=\\\"text/html; charset=UTF-8\\\" />\\n\" + (dependencyScripts(pkg.remoteDependencies)) + \"\\n</head>\\n<body>\\n<script src=\\\"./app.js\\\"><\\/script>\\n</body>\\n</html>\";\n  };\n\n  appJS = function(pkg) {\n    return packageWrapper(pkg, \"require('./\" + pkg.entryPoint + \"')\");\n  };\n\n  loadAppConfig = function(pkg) {\n    var module;\n    module = {};\n    Function(\"module\", pkg.distribution.pixie.content)(module);\n    return module.exports;\n  };\n\n  makeScript = function(src) {\n    return \"<script src=\" + (JSON.stringify(src)) + \"><\\/script>\";\n  };\n\n  dependencyScripts = function(remoteDependencies) {\n    if (remoteDependencies == null) {\n      remoteDependencies = [];\n    }\n    return remoteDependencies.map(makeScript).join(\"\\n\");\n  };\n\n  module.exports = {\n    processPackage: function(pkg) {\n      var add, files;\n      files = [];\n      add = function(path, content) {\n        return files.push({\n          content: content,\n          mode: \"100644\",\n          path: path,\n          type: \"blob\"\n        });\n      };\n      add(\"window.html\", html(pkg));\n      add(\"app.js\", appJS(pkg));\n      add(\"background.js\", generateBackgroundPage(loadAppConfig(pkg)));\n      add(\"manifest.json\", generateManifest(loadAppConfig(pkg)));\n      return files;\n    }\n  };\n\n  extend = function() {\n    var name, source, sources, target, _i, _len;\n    target = arguments[0], sources = 2 <= arguments.length ? __slice.call(arguments, 1) : [];\n    for (_i = 0, _len = sources.length; _i < _len; _i++) {\n      source = sources[_i];\n      for (name in source) {\n        target[name] = source[name];\n      }\n    }\n    return target;\n  };\n\n}).call(this);\n\n//# sourceURL=main.coffee",
-          "type": "blob"
-        },
-        "require": {
-          "path": "require",
-          "content": "(function() {\n  var cacheFor, circularGuard, defaultEntryPoint, fileSeparator, generateRequireFn, global, isPackage, loadModule, loadPackage, loadPath, normalizePath, rootModule, startsWith;\n\n  fileSeparator = '/';\n\n  global = window;\n\n  defaultEntryPoint = \"main\";\n\n  circularGuard = {};\n\n  rootModule = {\n    path: \"\"\n  };\n\n  loadPath = function(parentModule, pkg, path) {\n    var cache, localPath, module, normalizedPath;\n    if (startsWith(path, '/')) {\n      localPath = [];\n    } else {\n      localPath = parentModule.path.split(fileSeparator);\n    }\n    normalizedPath = normalizePath(path, localPath);\n    cache = cacheFor(pkg);\n    if (module = cache[normalizedPath]) {\n      if (module === circularGuard) {\n        throw \"Circular dependency detected when requiring \" + normalizedPath;\n      }\n    } else {\n      cache[normalizedPath] = circularGuard;\n      try {\n        cache[normalizedPath] = module = loadModule(pkg, normalizedPath);\n      } finally {\n        if (cache[normalizedPath] === circularGuard) {\n          delete cache[normalizedPath];\n        }\n      }\n    }\n    return module.exports;\n  };\n\n  normalizePath = function(path, base) {\n    var piece, result;\n    if (base == null) {\n      base = [];\n    }\n    base = base.concat(path.split(fileSeparator));\n    result = [];\n    while (base.length) {\n      switch (piece = base.shift()) {\n        case \"..\":\n          result.pop();\n          break;\n        case \"\":\n        case \".\":\n          break;\n        default:\n          result.push(piece);\n      }\n    }\n    return result.join(fileSeparator);\n  };\n\n  loadPackage = function(parentModule, pkg) {\n    var path;\n    path = pkg.entryPoint || defaultEntryPoint;\n    return loadPath(parentModule, pkg, path);\n  };\n\n  loadModule = function(pkg, path) {\n    var args, context, dirname, module, program, values;\n    if (!(program = pkg.distribution[path])) {\n      throw \"Could not find program at \" + path + \" in \" + pkg.name;\n    }\n    dirname = path.split(fileSeparator).slice(0, -1).join(fileSeparator);\n    module = {\n      path: dirname,\n      exports: {}\n    };\n    context = {\n      require: generateRequireFn(pkg, module),\n      global: global,\n      module: module,\n      exports: module.exports,\n      PACKAGE: pkg\n    };\n    args = Object.keys(context);\n    values = args.map(function(name) {\n      return context[name];\n    });\n    program.apply(module, values);\n    return module;\n  };\n\n  isPackage = function(path) {\n    if (!(startsWith(path, fileSeparator) || startsWith(path, \".\" + fileSeparator) || startsWith(path, \"..\" + fileSeparator))) {\n      return path.split(fileSeparator)[0];\n    } else {\n      return false;\n    }\n  };\n\n  generateRequireFn = function(pkg, module) {\n    if (module == null) {\n      module = rootModule;\n    }\n    if (pkg.name == null) {\n      pkg.name = \"ROOT\";\n    }\n    return function(path) {\n      var otherPackage;\n      if (isPackage(path)) {\n        if (!(otherPackage = pkg.dependencies[path])) {\n          throw \"Package: \" + path + \" not found.\";\n        }\n        if (otherPackage.name == null) {\n          otherPackage.name = path;\n        }\n        return loadPackage(rootModule, otherPackage);\n      } else {\n        return loadPath(module, pkg, path);\n      }\n    };\n  };\n\n  if (typeof exports !== \"undefined\" && exports !== null) {\n    exports.generateFor = generateRequireFn;\n  } else {\n    global.Require = {\n      generateFor: generateRequireFn\n    };\n  }\n\n  startsWith = function(string, prefix) {\n    return string.lastIndexOf(prefix, 0) === 0;\n  };\n\n  cacheFor = function(pkg) {\n    if (pkg.cache) {\n      return pkg.cache;\n    }\n    Object.defineProperty(pkg, \"cache\", {\n      value: {}\n    });\n    return pkg.cache;\n  };\n\n}).call(this);\n\n//# sourceURL=require.coffee",
-          "type": "blob"
-        },
-        "test/stringifier": {
-          "path": "test/stringifier",
-          "content": "(function() {\n  var stringifier;\n\n  stringifier = require(\"../stringifier\");\n\n  describe(\"stringifier\", function() {\n    it(\"should generally stringify stuff\", function() {\n      assert.equal(JSON.parse(stringifier(2)), 2);\n      assert.equal(JSON.parse(stringifier(\"3\")), \"3\");\n      return assert.equal(JSON.parse(stringifier({\n        a: {\n          b: \"c\"\n        }\n      })).a.b, \"c\");\n    });\n    return it(\"should do that function madness\", function() {\n      var fn, obj, result;\n      obj = {\n        fn: \"function(require, global, module, exports, PACKAGE) {\\n  console.log(\\\"I'm in the function\\\")\\n}\"\n      };\n      result = stringifier(obj);\n      console.log(result);\n      fn = eval(\"(\" + result + \")\").fn;\n      return assert.equal(typeof fn, \"function\");\n    });\n  });\n\n}).call(this);\n\n//# sourceURL=test/stringifier.coffee",
-          "type": "blob"
-        },
-        "stringifier": {
-          "path": "stringifier",
-          "content": "(function() {\n  var stringifiers, stringify;\n\n  stringify = function(data) {\n    var stringifier;\n    if (stringifier = stringifiers[typeof data]) {\n      return stringifier(data);\n    } else {\n      return JSON.stringify(data);\n    }\n  };\n\n  stringifiers = {\n    undefined: function() {\n      return \"undefined\";\n    },\n    string: function(string) {\n      if (string.match(/^function\\(require, global, module, exports, PACKAGE\\)/)) {\n        return string;\n      } else {\n        return JSON.stringify(string);\n      }\n    },\n    object: function(obj) {\n      var string;\n      if (obj) {\n        string = Object.keys(obj).map(function(key) {\n          var value;\n          value = obj[key];\n          return \"\" + (stringify(key)) + \":\" + (stringify(value));\n        }).join(\",\");\n        return \"{\" + string + \"}\";\n      } else {\n        return \"null\";\n      }\n    }\n  };\n\n  module.exports = stringify;\n\n}).call(this);\n\n//# sourceURL=stringifier.coffee",
-          "type": "blob"
-        },
-        "test/chrapps": {
-          "path": "test/chrapps",
-          "content": "(function() {\n  var processPackage;\n\n  processPackage = require(\"../main\").processPackage;\n\n  describe(\"Chrapps\", function() {\n    return it(\"should chrapp all over the place\", function() {\n      return console.log(processPackage(PACKAGE));\n    });\n  });\n\n}).call(this);\n\n//# sourceURL=test/chrapps.coffee",
+          "content": "(function() {\n  var appJS, convertFile, convertPackage, dependencyScripts, extend, generateBackgroundPage, generateManifest, html, loadAppConfig, makeScript, packageWrapper, stringifier,\n    __slice = [].slice;\n\n  convertFile = function(file) {\n    return \"function(require, global, module, exports, PACKAGE) {\\n  \" + file.content + \";\\n\\n  return module.exports;\\n}\";\n  };\n\n  convertPackage = function(pkg) {\n    var dependencies, distribution, result;\n    dependencies = pkg.dependencies, distribution = pkg.distribution;\n    return result = extend({}, pkg, {\n      dependencies: Object.keys(dependencies).reduce(function(processed, key) {\n        processed[key] = convertPackage(dependencies[key]);\n        return processed;\n      }, {}),\n      distribution: Object.keys(distribution).reduce(function(processed, key) {\n        processed[key] = convertFile(distribution[key]);\n        return processed;\n      }, {})\n    });\n  };\n\n  generateBackgroundPage = function(data) {\n    return \"chrome.app.runtime.onLaunched.addListener(function() {\\n  chrome.app.window.create('window.html', {\\n    'bounds': {\\n      'width': \" + data.width + \",\\n      'height': \" + data.height + \"\\n    }\\n  });\\n});\";\n  };\n\n  generateManifest = function(data) {\n    data.app = {\n      background: {\n        scripts: [\"background.js\"]\n      }\n    };\n    return JSON.stringify(data);\n  };\n\n  stringifier = require(\"./stringifier\");\n\n  packageWrapper = function(pkg, code) {\n    return \";(function(PACKAGE) {\\nvar oldRequire = window.Require;\\n\" + PACKAGE.distribution.require.content + \"\\nvar require = Require.generateFor(PACKAGE);\\nwindow.Require = oldRequire;\\n\" + code + \"\\n})(\" + (stringifier(convertPackage(pkg))) + \");\";\n  };\n\n  html = function(pkg) {\n    return \"<!DOCTYPE html>\\n<head>\\n<meta http-equiv=\\\"Content-Type\\\" content=\\\"text/html; charset=UTF-8\\\" />\\n\" + (dependencyScripts(pkg.remoteDependencies)) + \"\\n</head>\\n<body>\\n<script src=\\\"./app.js\\\"><\\/script>\\n</body>\\n</html>\";\n  };\n\n  appJS = function(pkg) {\n    return packageWrapper(pkg, \"require('./\" + pkg.entryPoint + \"')\");\n  };\n\n  loadAppConfig = function(pkg) {\n    var module;\n    module = {};\n    Function(\"module\", pkg.distribution.pixie.content)(module);\n    return module.exports;\n  };\n\n  makeScript = function(src) {\n    return \"<script src=\" + (JSON.stringify(src)) + \"><\\/script>\";\n  };\n\n  dependencyScripts = function(remoteDependencies) {\n    if (remoteDependencies == null) {\n      remoteDependencies = [];\n    }\n    return remoteDependencies.map(makeScript).join(\"\\n\");\n  };\n\n  module.exports = {\n    processPackage: function(pkg) {\n      var add, files;\n      files = [];\n      add = function(path, content) {\n        return files.push({\n          content: content,\n          mode: \"100644\",\n          path: path,\n          type: \"blob\"\n        });\n      };\n      add(\"window.html\", html(pkg));\n      add(\"app.js\", appJS(pkg));\n      add(\"background.js\", generateBackgroundPage(loadAppConfig(pkg)));\n      add(\"manifest.json\", generateManifest(loadAppConfig(pkg)));\n      return files;\n    }\n  };\n\n  extend = function() {\n    var name, source, sources, target, _i, _len;\n    target = arguments[0], sources = 2 <= arguments.length ? __slice.call(arguments, 1) : [];\n    for (_i = 0, _len = sources.length; _i < _len; _i++) {\n      source = sources[_i];\n      for (name in source) {\n        target[name] = source[name];\n      }\n    }\n    return target;\n  };\n\n}).call(this);\n",
           "type": "blob"
         },
         "pixie": {
           "path": "pixie",
-          "content": "module.exports = {\"name\":\"Chrapps\",\"version\":\"0.1.0-alpha.3\"};",
+          "content": "module.exports = {\"name\":\"Chrapps\",\"version\":\"0.1.0\"};",
+          "type": "blob"
+        },
+        "require": {
+          "path": "require",
+          "content": "(function() {\n  var cacheFor, circularGuard, defaultEntryPoint, fileSeparator, generateRequireFn, global, isPackage, loadModule, loadPackage, loadPath, normalizePath, rootModule, startsWith;\n\n  fileSeparator = '/';\n\n  global = window;\n\n  defaultEntryPoint = \"main\";\n\n  circularGuard = {};\n\n  rootModule = {\n    path: \"\"\n  };\n\n  loadPath = function(parentModule, pkg, path) {\n    var cache, localPath, module, normalizedPath;\n    if (startsWith(path, '/')) {\n      localPath = [];\n    } else {\n      localPath = parentModule.path.split(fileSeparator);\n    }\n    normalizedPath = normalizePath(path, localPath);\n    cache = cacheFor(pkg);\n    if (module = cache[normalizedPath]) {\n      if (module === circularGuard) {\n        throw \"Circular dependency detected when requiring \" + normalizedPath;\n      }\n    } else {\n      cache[normalizedPath] = circularGuard;\n      try {\n        cache[normalizedPath] = module = loadModule(pkg, normalizedPath);\n      } finally {\n        if (cache[normalizedPath] === circularGuard) {\n          delete cache[normalizedPath];\n        }\n      }\n    }\n    return module.exports;\n  };\n\n  normalizePath = function(path, base) {\n    var piece, result;\n    if (base == null) {\n      base = [];\n    }\n    base = base.concat(path.split(fileSeparator));\n    result = [];\n    while (base.length) {\n      switch (piece = base.shift()) {\n        case \"..\":\n          result.pop();\n          break;\n        case \"\":\n        case \".\":\n          break;\n        default:\n          result.push(piece);\n      }\n    }\n    return result.join(fileSeparator);\n  };\n\n  loadPackage = function(parentModule, pkg) {\n    var path;\n    path = pkg.entryPoint || defaultEntryPoint;\n    return loadPath(parentModule, pkg, path);\n  };\n\n  loadModule = function(pkg, path) {\n    var args, context, dirname, module, program, values;\n    if (!(program = pkg.distribution[path])) {\n      throw \"Could not find program at \" + path + \" in \" + pkg.name;\n    }\n    dirname = path.split(fileSeparator).slice(0, -1).join(fileSeparator);\n    module = {\n      path: dirname,\n      exports: {}\n    };\n    context = {\n      require: generateRequireFn(pkg, module),\n      global: global,\n      module: module,\n      exports: module.exports,\n      PACKAGE: pkg\n    };\n    args = Object.keys(context);\n    values = args.map(function(name) {\n      return context[name];\n    });\n    program.apply(module, values);\n    return module;\n  };\n\n  isPackage = function(path) {\n    if (!(startsWith(path, fileSeparator) || startsWith(path, \".\" + fileSeparator) || startsWith(path, \"..\" + fileSeparator))) {\n      return path.split(fileSeparator)[0];\n    } else {\n      return false;\n    }\n  };\n\n  generateRequireFn = function(pkg, module) {\n    if (module == null) {\n      module = rootModule;\n    }\n    if (pkg.name == null) {\n      pkg.name = \"ROOT\";\n    }\n    return function(path) {\n      var otherPackage;\n      if (isPackage(path)) {\n        if (!(otherPackage = pkg.dependencies[path])) {\n          throw \"Package: \" + path + \" not found.\";\n        }\n        if (otherPackage.name == null) {\n          otherPackage.name = path;\n        }\n        return loadPackage(rootModule, otherPackage);\n      } else {\n        return loadPath(module, pkg, path);\n      }\n    };\n  };\n\n  if (typeof exports !== \"undefined\" && exports !== null) {\n    exports.generateFor = generateRequireFn;\n  } else {\n    global.Require = {\n      generateFor: generateRequireFn\n    };\n  }\n\n  startsWith = function(string, prefix) {\n    return string.lastIndexOf(prefix, 0) === 0;\n  };\n\n  cacheFor = function(pkg) {\n    if (pkg.cache) {\n      return pkg.cache;\n    }\n    Object.defineProperty(pkg, \"cache\", {\n      value: {}\n    });\n    return pkg.cache;\n  };\n\n}).call(this);\n",
+          "type": "blob"
+        },
+        "stringifier": {
+          "path": "stringifier",
+          "content": "(function() {\n  var stringifiers, stringify;\n\n  stringify = function(data) {\n    var stringifier;\n    if (stringifier = stringifiers[typeof data]) {\n      return stringifier(data);\n    } else {\n      return JSON.stringify(data);\n    }\n  };\n\n  stringifiers = {\n    undefined: function() {\n      return \"undefined\";\n    },\n    string: function(string) {\n      if (string.match(/^function\\(require, global, module, exports, PACKAGE\\)/)) {\n        return string;\n      } else {\n        return JSON.stringify(string);\n      }\n    },\n    object: function(obj) {\n      var string;\n      if (obj) {\n        string = Object.keys(obj).map(function(key) {\n          var value;\n          value = obj[key];\n          return \"\" + (stringify(key)) + \":\" + (stringify(value));\n        }).join(\",\");\n        return \"{\" + string + \"}\";\n      } else {\n        return \"null\";\n      }\n    }\n  };\n\n  module.exports = stringify;\n\n}).call(this);\n",
+          "type": "blob"
+        },
+        "test/chrapps": {
+          "path": "test/chrapps",
+          "content": "(function() {\n  var processPackage;\n\n  processPackage = require(\"../main\").processPackage;\n\n  describe(\"Chrapps\", function() {\n    return it(\"should chrapp all over the place\", function() {\n      return console.log(processPackage(PACKAGE));\n    });\n  });\n\n}).call(this);\n",
+          "type": "blob"
+        },
+        "test/stringifier": {
+          "path": "test/stringifier",
+          "content": "(function() {\n  var stringifier;\n\n  stringifier = require(\"../stringifier\");\n\n  describe(\"stringifier\", function() {\n    it(\"should generally stringify stuff\", function() {\n      assert.equal(JSON.parse(stringifier(2)), 2);\n      assert.equal(JSON.parse(stringifier(\"3\")), \"3\");\n      return assert.equal(JSON.parse(stringifier({\n        a: {\n          b: \"c\"\n        }\n      })).a.b, \"c\");\n    });\n    return it(\"should do that function madness\", function() {\n      var fn, obj, result;\n      obj = {\n        fn: \"function(require, global, module, exports, PACKAGE) {\\n  console.log(\\\"I'm in the function\\\")\\n}\"\n      };\n      result = stringifier(obj);\n      console.log(result);\n      fn = eval(\"(\" + result + \")\").fn;\n      return assert.equal(typeof fn, \"function\");\n    });\n  });\n\n}).call(this);\n",
           "type": "blob"
         }
       },
       "progenitor": {
         "url": "http://strd6.github.io/editor/"
       },
-      "version": "0.1.0-alpha.3",
+      "version": "0.1.0",
       "entryPoint": "main",
       "repository": {
         "id": 17644489,
@@ -1370,7 +1380,7 @@
         "owner": {
           "login": "distri",
           "id": 6005125,
-          "avatar_url": "https://gravatar.com/avatar/192f3f168409e79c42107f081139d9f3?d=https%3A%2F%2Fidenticons.github.com%2Ff90c81ffc1498e260c820082f2e7ca5f.png&r=x",
+          "avatar_url": "https://avatars.githubusercontent.com/u/6005125?",
           "gravatar_id": "192f3f168409e79c42107f081139d9f3",
           "url": "https://api.github.com/users/distri",
           "html_url": "https://github.com/distri",
@@ -1427,17 +1437,17 @@
         "labels_url": "https://api.github.com/repos/distri/chrapps/labels{/name}",
         "releases_url": "https://api.github.com/repos/distri/chrapps/releases{/id}",
         "created_at": "2014-03-11T20:11:10Z",
-        "updated_at": "2014-03-11T20:11:10Z",
-        "pushed_at": "2014-03-11T20:11:10Z",
+        "updated_at": "2014-03-12T19:47:35Z",
+        "pushed_at": "2014-03-12T19:47:33Z",
         "git_url": "git://github.com/distri/chrapps.git",
         "ssh_url": "git@github.com:distri/chrapps.git",
         "clone_url": "https://github.com/distri/chrapps.git",
         "svn_url": "https://github.com/distri/chrapps",
         "homepage": null,
-        "size": 0,
+        "size": 172,
         "stargazers_count": 0,
         "watchers_count": 0,
-        "language": null,
+        "language": "CoffeeScript",
         "has_issues": true,
         "has_downloads": true,
         "has_wiki": true,
@@ -1457,7 +1467,7 @@
         "organization": {
           "login": "distri",
           "id": 6005125,
-          "avatar_url": "https://gravatar.com/avatar/192f3f168409e79c42107f081139d9f3?d=https%3A%2F%2Fidenticons.github.com%2Ff90c81ffc1498e260c820082f2e7ca5f.png&r=x",
+          "avatar_url": "https://avatars.githubusercontent.com/u/6005125?",
           "gravatar_id": "192f3f168409e79c42107f081139d9f3",
           "url": "https://api.github.com/users/distri",
           "html_url": "https://github.com/distri",
@@ -1475,7 +1485,7 @@
         },
         "network_count": 0,
         "subscribers_count": 2,
-        "branch": "v0.1.0-alpha.3",
+        "branch": "v0.1.0",
         "publishBranch": "gh-pages"
       },
       "dependencies": {}
@@ -2160,7 +2170,7 @@
         "pixie.cson": {
           "path": "pixie.cson",
           "mode": "100644",
-          "content": "version: \"0.4.0-alpha.5\"\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://code.jquery.com/jquery-1.10.1.min.js\" # TODO: Eliminate this, currently just using for Deferred\n]\ndependencies:\n  require: \"distri/require:v0.4.1\"\n  interactive: \"distri/interactive:v0.8.2\"\n",
+          "content": "version: \"0.4.0\"\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://code.jquery.com/jquery-1.10.1.min.js\" # TODO: Eliminate this, currently just using for Deferred\n]\ndependencies:\n  require: \"distri/require:v0.4.2\"\n  interactive: \"distri/interactive:v0.8.2\"\n",
           "type": "blob"
         },
         "template.coffee.md": {
@@ -2206,44 +2216,44 @@
         },
         "main": {
           "path": "main",
-          "content": "(function() {\n  var dependencyScripts, doctor, extension, highlight, interactiveLoader, languages, makeScript, marked, packageScript, relativeScriptPath, unique, withoutExtension;\n\n  marked = require(\"./lib/marked\");\n\n  highlight = require(\"./lib/highlight\");\n\n  languages = require(\"./languages\");\n\n  if (global.Deferred == null) {\n    global.Deferred = $.Deferred;\n  }\n\n  marked.setOptions({\n    highlight: function(code, lang) {\n      if (highlight.LANGUAGES[lang]) {\n        return highlight.highlight(lang, code).value;\n      } else {\n        console.warn(\"couldn't highlight code block with unknown language '\" + lang + \"'\");\n        return code;\n      }\n    }\n  });\n\n  module.exports = doctor = {\n    parse: require('./parse'),\n    template: require('./template'),\n    compile: function(content, language) {\n      if (language == null) {\n        language = \"coffeescript\";\n      }\n      return doctor.parse(content).map(function(_arg) {\n        var code, text;\n        text = _arg.text, code = _arg.code;\n        return {\n          docsHtml: marked(text),\n          codeHtml: marked(\"```\" + language + \"\\n\" + code + \"\\n```\")\n        };\n      });\n    },\n    documentAll: function(pkg) {\n      var base, branch, default_branch, documentableFiles, entryPoint, extras, repository, results, scripts, source;\n      entryPoint = pkg.entryPoint, source = pkg.source, repository = pkg.repository;\n      branch = repository.branch, default_branch = repository.default_branch;\n      if (branch === \"blog\") {\n        base = \"\";\n      } else if (branch === default_branch) {\n        base = \"docs/\";\n      } else {\n        base = \"\" + branch + \"/docs/\";\n      }\n      documentableFiles = Object.keys(source).filter(function(name) {\n        return extension(name) === \"md\";\n      });\n      results = documentableFiles.map(function(name) {\n        var language;\n        language = extension(withoutExtension(name));\n        language = languages[language] || language;\n        return doctor.compile(source[name].content, language);\n      });\n      extras = [packageScript(base, pkg)];\n      scripts = dependencyScripts(unique([\"https://code.jquery.com/jquery-1.10.1.min.js\", \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"].concat(pkg.remoteDependencies || [])));\n      scripts += interactiveLoader;\n      results = results.map(function(result, i) {\n        var content, name;\n        name = withoutExtension(withoutExtension(documentableFiles[i]));\n        content = doctor.template({\n          title: name,\n          sections: result,\n          scripts: \"\" + scripts + (makeScript(relativeScriptPath(name)))\n        });\n        if (name === entryPoint) {\n          extras.push({\n            content: doctor.template({\n              title: \"index\",\n              sections: result,\n              scripts: \"\" + scripts + (makeScript(relativeScriptPath(\"index\")))\n            }),\n            mode: \"100644\",\n            path: \"\" + base + \"index.html\",\n            type: \"blob\"\n          });\n        }\n        return {\n          content: content,\n          mode: \"100644\",\n          path: \"\" + base + name + \".html\",\n          type: \"blob\"\n        };\n      });\n      return Deferred().resolve(extras.concat(results));\n    }\n  };\n\n  makeScript = function(src) {\n    var script;\n    script = document.createElement(\"script\");\n    script.src = src;\n    return script.outerHTML;\n  };\n\n  dependencyScripts = function(remoteDependencies) {\n    if (remoteDependencies == null) {\n      remoteDependencies = [];\n    }\n    return remoteDependencies.map(makeScript).join(\"\\n\");\n  };\n\n  unique = function(array) {\n    return array.reduce(function(results, item) {\n      if (results.indexOf(item) === -1) {\n        results.push(item);\n      }\n      return results;\n    }, []);\n  };\n\n  interactiveLoader = \"<script>\\n  \" + PACKAGE.dependencies.interactive.distribution.interactive.content + \"\\n<\\/script>\";\n\n  packageScript = function(base, pkg) {\n    return {\n      content: \"(function(pkg) {\\n  \" + PACKAGE.dependencies.require.distribution.main.content + \"\\n  window.require = Require.generateFor(pkg);\\n})(\" + (JSON.stringify(pkg, null, 2)) + \");\",\n      mode: \"100644\",\n      path: \"\" + base + \"package.js\",\n      type: \"blob\"\n    };\n  };\n\n  relativeScriptPath = function(path) {\n    var levels, results, upOne, _i, _results;\n    upOne = \"../\";\n    results = [];\n    levels = path.split(\"/\").length - 1;\n    if (levels > 0) {\n      (function() {\n        _results = [];\n        for (var _i = 0; 0 <= levels ? _i < levels : _i > levels; 0 <= levels ? _i++ : _i--){ _results.push(_i); }\n        return _results;\n      }).apply(this).forEach(function() {\n        return results.push(upOne);\n      });\n    }\n    return results.concat(\"package.js\").join(\"\");\n  };\n\n  extension = function(str) {\n    var match;\n    if (match = str.match(/\\.([^\\.]*)$/, '')) {\n      return match[match.length - 1];\n    } else {\n      return '';\n    }\n  };\n\n  withoutExtension = function(str) {\n    return str.replace(/\\.[^\\.]*$/, \"\");\n  };\n\n}).call(this);\n\n//# sourceURL=main.coffee",
+          "content": "(function() {\n  var dependencyScripts, doctor, extension, highlight, interactiveLoader, languages, makeScript, marked, packageScript, relativeScriptPath, unique, withoutExtension;\n\n  marked = require(\"./lib/marked\");\n\n  highlight = require(\"./lib/highlight\");\n\n  languages = require(\"./languages\");\n\n  if (global.Deferred == null) {\n    global.Deferred = $.Deferred;\n  }\n\n  marked.setOptions({\n    highlight: function(code, lang) {\n      if (highlight.LANGUAGES[lang]) {\n        return highlight.highlight(lang, code).value;\n      } else {\n        console.warn(\"couldn't highlight code block with unknown language '\" + lang + \"'\");\n        return code;\n      }\n    }\n  });\n\n  module.exports = doctor = {\n    parse: require('./parse'),\n    template: require('./template'),\n    compile: function(content, language) {\n      if (language == null) {\n        language = \"coffeescript\";\n      }\n      return doctor.parse(content).map(function(_arg) {\n        var code, text;\n        text = _arg.text, code = _arg.code;\n        return {\n          docsHtml: marked(text),\n          codeHtml: marked(\"```\" + language + \"\\n\" + code + \"\\n```\")\n        };\n      });\n    },\n    documentAll: function(pkg) {\n      var base, branch, default_branch, documentableFiles, entryPoint, extras, repository, results, scripts, source;\n      entryPoint = pkg.entryPoint, source = pkg.source, repository = pkg.repository;\n      branch = repository.branch, default_branch = repository.default_branch;\n      if (branch === \"blog\") {\n        base = \"\";\n      } else if (branch === default_branch) {\n        base = \"docs/\";\n      } else {\n        base = \"\" + branch + \"/docs/\";\n      }\n      documentableFiles = Object.keys(source).filter(function(name) {\n        return extension(name) === \"md\";\n      });\n      results = documentableFiles.map(function(name) {\n        var language;\n        language = extension(withoutExtension(name));\n        language = languages[language] || language;\n        return doctor.compile(source[name].content, language);\n      });\n      extras = [packageScript(base, pkg)];\n      scripts = dependencyScripts(unique([\"https://code.jquery.com/jquery-1.10.1.min.js\", \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"].concat(pkg.remoteDependencies || [])));\n      scripts += interactiveLoader;\n      results = results.map(function(result, i) {\n        var content, name;\n        name = withoutExtension(withoutExtension(documentableFiles[i]));\n        content = doctor.template({\n          title: name,\n          sections: result,\n          scripts: \"\" + scripts + (makeScript(relativeScriptPath(name)))\n        });\n        if (name === entryPoint) {\n          extras.push({\n            content: doctor.template({\n              title: \"index\",\n              sections: result,\n              scripts: \"\" + scripts + (makeScript(relativeScriptPath(\"index\")))\n            }),\n            mode: \"100644\",\n            path: \"\" + base + \"index.html\",\n            type: \"blob\"\n          });\n        }\n        return {\n          content: content,\n          mode: \"100644\",\n          path: \"\" + base + name + \".html\",\n          type: \"blob\"\n        };\n      });\n      return Deferred().resolve(extras.concat(results));\n    }\n  };\n\n  makeScript = function(src) {\n    var script;\n    script = document.createElement(\"script\");\n    script.src = src;\n    return script.outerHTML;\n  };\n\n  dependencyScripts = function(remoteDependencies) {\n    if (remoteDependencies == null) {\n      remoteDependencies = [];\n    }\n    return remoteDependencies.map(makeScript).join(\"\\n\");\n  };\n\n  unique = function(array) {\n    return array.reduce(function(results, item) {\n      if (results.indexOf(item) === -1) {\n        results.push(item);\n      }\n      return results;\n    }, []);\n  };\n\n  interactiveLoader = \"<script>\\n  \" + PACKAGE.dependencies.interactive.distribution.interactive.content + \"\\n<\\/script>\";\n\n  packageScript = function(base, pkg) {\n    return {\n      content: \"(function(pkg) {\\n  \" + PACKAGE.dependencies.require.distribution.main.content + \"\\n  window.require = Require.generateFor(pkg);\\n})(\" + (JSON.stringify(pkg, null, 2)) + \");\",\n      mode: \"100644\",\n      path: \"\" + base + \"package.js\",\n      type: \"blob\"\n    };\n  };\n\n  relativeScriptPath = function(path) {\n    var levels, results, upOne, _i, _results;\n    upOne = \"../\";\n    results = [];\n    levels = path.split(\"/\").length - 1;\n    if (levels > 0) {\n      (function() {\n        _results = [];\n        for (var _i = 0; 0 <= levels ? _i < levels : _i > levels; 0 <= levels ? _i++ : _i--){ _results.push(_i); }\n        return _results;\n      }).apply(this).forEach(function() {\n        return results.push(upOne);\n      });\n    }\n    return results.concat(\"package.js\").join(\"\");\n  };\n\n  extension = function(str) {\n    var match;\n    if (match = str.match(/\\.([^\\.]*)$/, '')) {\n      return match[match.length - 1];\n    } else {\n      return '';\n    }\n  };\n\n  withoutExtension = function(str) {\n    return str.replace(/\\.[^\\.]*$/, \"\");\n  };\n\n}).call(this);\n",
           "type": "blob"
         },
         "parse": {
           "path": "parse",
-          "content": "(function() {\n  var blank, indent, parse, sectionBreak, truncateEmpties;\n\n  indent = /^([ ]{4}|\\t)/;\n\n  blank = /^\\s*$/;\n\n  sectionBreak = /^(---+|===+)$/;\n\n  parse = function(source) {\n    var Section, lastSection, lastWasCode, pushCode, pushEmpty, pushText, sections;\n    Section = function() {\n      return {\n        text: [],\n        code: []\n      };\n    };\n    sections = [Section()];\n    lastSection = function() {\n      return sections[sections.length - 1];\n    };\n    pushCode = function(code) {\n      return lastSection().code.push(code);\n    };\n    pushText = function(text) {\n      var section;\n      if (lastSection().code.length) {\n        section = Section();\n        section.text.push(text);\n        return sections.push(section);\n      } else {\n        lastSection().text.push(text);\n        if (sectionBreak.test(text)) {\n          return sections.push(Section());\n        }\n      }\n    };\n    pushEmpty = function() {\n      if (lastWasCode) {\n        return pushCode(\"\");\n      } else {\n        return lastSection().text.push(\"\");\n      }\n    };\n    lastWasCode = false;\n    source.split(\"\\n\").forEach(function(line) {\n      var match;\n      if (blank.exec(line)) {\n        return pushEmpty();\n      } else if (match = indent.exec(line)) {\n        lastWasCode = true;\n        return pushCode(line.slice(match[0].length));\n      } else {\n        lastWasCode = false;\n        return pushText(line);\n      }\n    });\n    sections.forEach(function(section) {\n      section.text = truncateEmpties(section.text).join(\"\\n\");\n      return section.code = truncateEmpties(section.code).join(\"\\n\");\n    });\n    return sections;\n  };\n\n  module.exports = parse;\n\n  truncateEmpties = function(array) {\n    var last;\n    while (((last = array[array.length - 1]) != null) && last === \"\") {\n      array.pop();\n    }\n    return array;\n  };\n\n}).call(this);\n\n//# sourceURL=parse.coffee",
+          "content": "(function() {\n  var blank, indent, parse, sectionBreak, truncateEmpties;\n\n  indent = /^([ ]{4}|\\t)/;\n\n  blank = /^\\s*$/;\n\n  sectionBreak = /^(---+|===+)$/;\n\n  parse = function(source) {\n    var Section, lastSection, lastWasCode, pushCode, pushEmpty, pushText, sections;\n    Section = function() {\n      return {\n        text: [],\n        code: []\n      };\n    };\n    sections = [Section()];\n    lastSection = function() {\n      return sections[sections.length - 1];\n    };\n    pushCode = function(code) {\n      return lastSection().code.push(code);\n    };\n    pushText = function(text) {\n      var section;\n      if (lastSection().code.length) {\n        section = Section();\n        section.text.push(text);\n        return sections.push(section);\n      } else {\n        lastSection().text.push(text);\n        if (sectionBreak.test(text)) {\n          return sections.push(Section());\n        }\n      }\n    };\n    pushEmpty = function() {\n      if (lastWasCode) {\n        return pushCode(\"\");\n      } else {\n        return lastSection().text.push(\"\");\n      }\n    };\n    lastWasCode = false;\n    source.split(\"\\n\").forEach(function(line) {\n      var match;\n      if (blank.exec(line)) {\n        return pushEmpty();\n      } else if (match = indent.exec(line)) {\n        lastWasCode = true;\n        return pushCode(line.slice(match[0].length));\n      } else {\n        lastWasCode = false;\n        return pushText(line);\n      }\n    });\n    sections.forEach(function(section) {\n      section.text = truncateEmpties(section.text).join(\"\\n\");\n      return section.code = truncateEmpties(section.code).join(\"\\n\");\n    });\n    return sections;\n  };\n\n  module.exports = parse;\n\n  truncateEmpties = function(array) {\n    var last;\n    while (((last = array[array.length - 1]) != null) && last === \"\") {\n      array.pop();\n    }\n    return array;\n  };\n\n}).call(this);\n",
           "type": "blob"
         },
         "pixie": {
           "path": "pixie",
-          "content": "module.exports = {\"version\":\"0.4.0-alpha.5\",\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://code.jquery.com/jquery-1.10.1.min.js\"],\"dependencies\":{\"require\":\"distri/require:v0.4.1\",\"interactive\":\"distri/interactive:v0.8.2\"}};",
+          "content": "module.exports = {\"version\":\"0.4.0\",\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://code.jquery.com/jquery-1.10.1.min.js\"],\"dependencies\":{\"require\":\"distri/require:v0.4.2\",\"interactive\":\"distri/interactive:v0.8.2\"}};",
           "type": "blob"
         },
         "template": {
           "path": "template",
-          "content": "(function() {\n  var template;\n\n  template = _.template(\"<!DOCTYPE html>\\n\\n<html>\\n<head>\\n  <title><%= title %></title>\\n  <meta http-equiv=\\\"content-type\\\" content=\\\"text/html; charset=UTF-8\\\">\\n  <meta name=\\\"viewport\\\" content=\\\"width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;\\\">\\n  <link rel=\\\"stylesheet\\\" media=\\\"all\\\" href=\\\"http://strd6.github.io/cdn/parallel/docco.css\\\" />\\n</head>\\n<body>\\n  <div id=\\\"container\\\">\\n    <div id=\\\"background\\\"></div>\\n    <ul class=\\\"sections\\\">\\n        <% for (var i=0, l=sections.length; i<l; i++) { %>\\n        <% var section = sections[i]; %>\\n        <li id=\\\"section-<%= i + 1 %>\\\">\\n            <div class=\\\"annotation\\\">\\n              <div class=\\\"pilwrap\\\">\\n                <a class=\\\"pilcrow\\\" href=\\\"#section-<%= i + 1 %>\\\">&#182;</a>\\n              </div>\\n              <%= section.docsHtml %>\\n            </div>\\n            <div class=\\\"content\\\"><%= section.codeHtml %></div>\\n        </li>\\n        <% } %>\\n    </ul>\\n  </div>\\n  <%= scripts %>\\n</body>\\n</html>\");\n\n  module.exports = template;\n\n}).call(this);\n\n//# sourceURL=template.coffee",
+          "content": "(function() {\n  var template;\n\n  template = _.template(\"<!DOCTYPE html>\\n\\n<html>\\n<head>\\n  <title><%= title %></title>\\n  <meta http-equiv=\\\"content-type\\\" content=\\\"text/html; charset=UTF-8\\\">\\n  <meta name=\\\"viewport\\\" content=\\\"width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;\\\">\\n  <link rel=\\\"stylesheet\\\" media=\\\"all\\\" href=\\\"http://strd6.github.io/cdn/parallel/docco.css\\\" />\\n</head>\\n<body>\\n  <div id=\\\"container\\\">\\n    <div id=\\\"background\\\"></div>\\n    <ul class=\\\"sections\\\">\\n        <% for (var i=0, l=sections.length; i<l; i++) { %>\\n        <% var section = sections[i]; %>\\n        <li id=\\\"section-<%= i + 1 %>\\\">\\n            <div class=\\\"annotation\\\">\\n              <div class=\\\"pilwrap\\\">\\n                <a class=\\\"pilcrow\\\" href=\\\"#section-<%= i + 1 %>\\\">&#182;</a>\\n              </div>\\n              <%= section.docsHtml %>\\n            </div>\\n            <div class=\\\"content\\\"><%= section.codeHtml %></div>\\n        </li>\\n        <% } %>\\n    </ul>\\n  </div>\\n  <%= scripts %>\\n</body>\\n</html>\");\n\n  module.exports = template;\n\n}).call(this);\n",
           "type": "blob"
         },
         "test/languages": {
           "path": "test/languages",
-          "content": "(function() {\n  var languages;\n\n  languages = require(\"../languages\");\n\n  describe(\"languages\", function() {\n    return it(\"should know of coffeescript and javascript\", function() {\n      assert(languages.js === \"javascript\");\n      return assert(languages.coffee === \"coffeescript\");\n    });\n  });\n\n}).call(this);\n\n//# sourceURL=test/languages.coffee",
+          "content": "(function() {\n  var languages;\n\n  languages = require(\"../languages\");\n\n  describe(\"languages\", function() {\n    return it(\"should know of coffeescript and javascript\", function() {\n      assert(languages.js === \"javascript\");\n      return assert(languages.coffee === \"coffeescript\");\n    });\n  });\n\n}).call(this);\n",
           "type": "blob"
         },
         "test/main": {
           "path": "test/main",
-          "content": "(function() {\n  var highlight, marked, md;\n\n  md = require(\"../main\");\n\n  marked = require(\"../lib/marked\");\n\n  highlight = require(\"../lib/highlight\");\n\n  describe(\"marked markdown generation\", function() {\n    return it(\"should compile markdown\", function() {\n      return assert(marked('I am using __markdown__.'));\n    });\n  });\n\n  describe(\"hightlight.js\", function() {\n    return it(\"highlight stuff\", function() {\n      return assert(highlight);\n    });\n  });\n\n  describe(\"Parsing\", function() {\n    return it(\"should return an array of sections\", function() {\n      var sections;\n      sections = md.parse(\"A sample text + code section\\n\\n    I'm the code\");\n      assert(sections.length === 1);\n      assert(sections[0].text === \"A sample text + code section\");\n      return assert(sections[0].code === \"I'm the code\");\n    });\n  });\n\n  describe(\"Stuff spanning multiple lines\", function() {\n    return it(\"should be split by newline characters\", function() {\n      var sections;\n      sections = md.parse(\"1\\n2\\n3\\n\\n    Code1\\n    Code2\");\n      assert(sections.length === 1);\n      assert(sections[0].text === \"1\\n2\\n3\");\n      return assert(sections[0].code === \"Code1\\nCode2\");\n    });\n  });\n\n  describe(\"A normal markdown paragraph\", function() {\n    return it(\"should keep newlines within\", function() {\n      var sections;\n      sections = md.parse(\"I'm talking about stuff.\\n\\nParagraph two is rad!\");\n      return assert(sections[0].text.match(\"\\n\\n\"));\n    });\n  });\n\n  describe(\"Headers\", function() {\n    return it(\"should split sections\", function() {\n      var sections;\n      sections = md.parse(\"Intro\\n-----\\n\\nSome other stuff\");\n      return assert(sections.length === 2);\n    });\n  });\n\n  describe(\"Many code text sequences\", function() {\n    return it(\"should add text in new sections after code\", function() {\n      var sections;\n      sections = md.parse(\"Some description\\n\\n    Code\\n\\nAnother description\\n\\n    More code\\n\\nHey\");\n      return assert(sections.length === 3);\n    });\n  });\n\n  describe(\"documenting a file\", function() {\n    return it(\"should document a single file\", function() {\n      return assert(md.compile(\"Hey\"));\n    });\n  });\n\n  describe(\"documenting a file package\", function() {\n    return it(\"should document all files in the package\", function(done) {\n      return md.documentAll({\n        repository: {\n          branch: \"master\",\n          default_branch: \"master\"\n        },\n        entryPoint: \"main\",\n        source: {\n          \"main.coffee.md\": {\n            content: \"Yolo is a lifestyle choice\\n    alert 'wat'\"\n          }\n        }\n      }).then(function(results) {\n        console.log(results);\n        return done();\n      });\n    });\n  });\n\n}).call(this);\n\n//# sourceURL=test/main.coffee",
+          "content": "(function() {\n  var highlight, marked, md;\n\n  md = require(\"../main\");\n\n  marked = require(\"../lib/marked\");\n\n  highlight = require(\"../lib/highlight\");\n\n  describe(\"marked markdown generation\", function() {\n    return it(\"should compile markdown\", function() {\n      return assert(marked('I am using __markdown__.'));\n    });\n  });\n\n  describe(\"hightlight.js\", function() {\n    return it(\"highlight stuff\", function() {\n      return assert(highlight);\n    });\n  });\n\n  describe(\"Parsing\", function() {\n    return it(\"should return an array of sections\", function() {\n      var sections;\n      sections = md.parse(\"A sample text + code section\\n\\n    I'm the code\");\n      assert(sections.length === 1);\n      assert(sections[0].text === \"A sample text + code section\");\n      return assert(sections[0].code === \"I'm the code\");\n    });\n  });\n\n  describe(\"Stuff spanning multiple lines\", function() {\n    return it(\"should be split by newline characters\", function() {\n      var sections;\n      sections = md.parse(\"1\\n2\\n3\\n\\n    Code1\\n    Code2\");\n      assert(sections.length === 1);\n      assert(sections[0].text === \"1\\n2\\n3\");\n      return assert(sections[0].code === \"Code1\\nCode2\");\n    });\n  });\n\n  describe(\"A normal markdown paragraph\", function() {\n    return it(\"should keep newlines within\", function() {\n      var sections;\n      sections = md.parse(\"I'm talking about stuff.\\n\\nParagraph two is rad!\");\n      return assert(sections[0].text.match(\"\\n\\n\"));\n    });\n  });\n\n  describe(\"Headers\", function() {\n    return it(\"should split sections\", function() {\n      var sections;\n      sections = md.parse(\"Intro\\n-----\\n\\nSome other stuff\");\n      return assert(sections.length === 2);\n    });\n  });\n\n  describe(\"Many code text sequences\", function() {\n    return it(\"should add text in new sections after code\", function() {\n      var sections;\n      sections = md.parse(\"Some description\\n\\n    Code\\n\\nAnother description\\n\\n    More code\\n\\nHey\");\n      return assert(sections.length === 3);\n    });\n  });\n\n  describe(\"documenting a file\", function() {\n    return it(\"should document a single file\", function() {\n      return assert(md.compile(\"Hey\"));\n    });\n  });\n\n  describe(\"documenting a file package\", function() {\n    return it(\"should document all files in the package\", function(done) {\n      return md.documentAll({\n        repository: {\n          branch: \"master\",\n          default_branch: \"master\"\n        },\n        entryPoint: \"main\",\n        source: {\n          \"main.coffee.md\": {\n            content: \"Yolo is a lifestyle choice\\n    alert 'wat'\"\n          }\n        }\n      }).then(function(results) {\n        console.log(results);\n        return done();\n      });\n    });\n  });\n\n}).call(this);\n",
           "type": "blob"
         },
         "test/template": {
           "path": "test/template",
-          "content": "(function() {\n  var template;\n\n  template = require(\"../template\");\n\n  describe(\"template\", function() {\n    it(\"should exist\", function() {\n      return assert(template);\n    });\n    return it(\"should render html when given a title and sections\", function() {\n      var result;\n      result = template({\n        scripts: \"\",\n        title: \"Test\",\n        sections: [\n          {\n            docsHtml: \"<h1>Hello</h1>\",\n            codeHtml: \"<pre>1 + 1 == 2</pre>\"\n          }\n        ]\n      });\n      return assert(result);\n    });\n  });\n\n}).call(this);\n\n//# sourceURL=test/template.coffee",
+          "content": "(function() {\n  var template;\n\n  template = require(\"../template\");\n\n  describe(\"template\", function() {\n    it(\"should exist\", function() {\n      return assert(template);\n    });\n    return it(\"should render html when given a title and sections\", function() {\n      var result;\n      result = template({\n        scripts: \"\",\n        title: \"Test\",\n        sections: [\n          {\n            docsHtml: \"<h1>Hello</h1>\",\n            codeHtml: \"<pre>1 + 1 == 2</pre>\"\n          }\n        ]\n      });\n      return assert(result);\n    });\n  });\n\n}).call(this);\n",
           "type": "blob"
         }
       },
       "progenitor": {
         "url": "http://strd6.github.io/editor/"
       },
-      "version": "0.4.0-alpha.5",
+      "version": "0.4.0",
       "entryPoint": "main",
       "remoteDependencies": [
         "https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js",
@@ -2252,75 +2262,75 @@
       "repository": {
         "id": 13102476,
         "name": "md",
-        "full_name": "STRd6/md",
+        "full_name": "distri/md",
         "owner": {
-          "login": "STRd6",
-          "id": 18894,
-          "avatar_url": "https://avatars.githubusercontent.com/u/18894?",
-          "gravatar_id": "33117162fff8a9cf50544a604f60c045",
-          "url": "https://api.github.com/users/STRd6",
-          "html_url": "https://github.com/STRd6",
-          "followers_url": "https://api.github.com/users/STRd6/followers",
-          "following_url": "https://api.github.com/users/STRd6/following{/other_user}",
-          "gists_url": "https://api.github.com/users/STRd6/gists{/gist_id}",
-          "starred_url": "https://api.github.com/users/STRd6/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/STRd6/subscriptions",
-          "organizations_url": "https://api.github.com/users/STRd6/orgs",
-          "repos_url": "https://api.github.com/users/STRd6/repos",
-          "events_url": "https://api.github.com/users/STRd6/events{/privacy}",
-          "received_events_url": "https://api.github.com/users/STRd6/received_events",
-          "type": "User",
+          "login": "distri",
+          "id": 6005125,
+          "avatar_url": "https://avatars.githubusercontent.com/u/6005125?",
+          "gravatar_id": "192f3f168409e79c42107f081139d9f3",
+          "url": "https://api.github.com/users/distri",
+          "html_url": "https://github.com/distri",
+          "followers_url": "https://api.github.com/users/distri/followers",
+          "following_url": "https://api.github.com/users/distri/following{/other_user}",
+          "gists_url": "https://api.github.com/users/distri/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/distri/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/distri/subscriptions",
+          "organizations_url": "https://api.github.com/users/distri/orgs",
+          "repos_url": "https://api.github.com/users/distri/repos",
+          "events_url": "https://api.github.com/users/distri/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/distri/received_events",
+          "type": "Organization",
           "site_admin": false
         },
         "private": false,
-        "html_url": "https://github.com/STRd6/md",
+        "html_url": "https://github.com/distri/md",
         "description": "Generate documentation from from literate code files.",
         "fork": false,
-        "url": "https://api.github.com/repos/STRd6/md",
-        "forks_url": "https://api.github.com/repos/STRd6/md/forks",
-        "keys_url": "https://api.github.com/repos/STRd6/md/keys{/key_id}",
-        "collaborators_url": "https://api.github.com/repos/STRd6/md/collaborators{/collaborator}",
-        "teams_url": "https://api.github.com/repos/STRd6/md/teams",
-        "hooks_url": "https://api.github.com/repos/STRd6/md/hooks",
-        "issue_events_url": "https://api.github.com/repos/STRd6/md/issues/events{/number}",
-        "events_url": "https://api.github.com/repos/STRd6/md/events",
-        "assignees_url": "https://api.github.com/repos/STRd6/md/assignees{/user}",
-        "branches_url": "https://api.github.com/repos/STRd6/md/branches{/branch}",
-        "tags_url": "https://api.github.com/repos/STRd6/md/tags",
-        "blobs_url": "https://api.github.com/repos/STRd6/md/git/blobs{/sha}",
-        "git_tags_url": "https://api.github.com/repos/STRd6/md/git/tags{/sha}",
-        "git_refs_url": "https://api.github.com/repos/STRd6/md/git/refs{/sha}",
-        "trees_url": "https://api.github.com/repos/STRd6/md/git/trees{/sha}",
-        "statuses_url": "https://api.github.com/repos/STRd6/md/statuses/{sha}",
-        "languages_url": "https://api.github.com/repos/STRd6/md/languages",
-        "stargazers_url": "https://api.github.com/repos/STRd6/md/stargazers",
-        "contributors_url": "https://api.github.com/repos/STRd6/md/contributors",
-        "subscribers_url": "https://api.github.com/repos/STRd6/md/subscribers",
-        "subscription_url": "https://api.github.com/repos/STRd6/md/subscription",
-        "commits_url": "https://api.github.com/repos/STRd6/md/commits{/sha}",
-        "git_commits_url": "https://api.github.com/repos/STRd6/md/git/commits{/sha}",
-        "comments_url": "https://api.github.com/repos/STRd6/md/comments{/number}",
-        "issue_comment_url": "https://api.github.com/repos/STRd6/md/issues/comments/{number}",
-        "contents_url": "https://api.github.com/repos/STRd6/md/contents/{+path}",
-        "compare_url": "https://api.github.com/repos/STRd6/md/compare/{base}...{head}",
-        "merges_url": "https://api.github.com/repos/STRd6/md/merges",
-        "archive_url": "https://api.github.com/repos/STRd6/md/{archive_format}{/ref}",
-        "downloads_url": "https://api.github.com/repos/STRd6/md/downloads",
-        "issues_url": "https://api.github.com/repos/STRd6/md/issues{/number}",
-        "pulls_url": "https://api.github.com/repos/STRd6/md/pulls{/number}",
-        "milestones_url": "https://api.github.com/repos/STRd6/md/milestones{/number}",
-        "notifications_url": "https://api.github.com/repos/STRd6/md/notifications{?since,all,participating}",
-        "labels_url": "https://api.github.com/repos/STRd6/md/labels{/name}",
-        "releases_url": "https://api.github.com/repos/STRd6/md/releases{/id}",
+        "url": "https://api.github.com/repos/distri/md",
+        "forks_url": "https://api.github.com/repos/distri/md/forks",
+        "keys_url": "https://api.github.com/repos/distri/md/keys{/key_id}",
+        "collaborators_url": "https://api.github.com/repos/distri/md/collaborators{/collaborator}",
+        "teams_url": "https://api.github.com/repos/distri/md/teams",
+        "hooks_url": "https://api.github.com/repos/distri/md/hooks",
+        "issue_events_url": "https://api.github.com/repos/distri/md/issues/events{/number}",
+        "events_url": "https://api.github.com/repos/distri/md/events",
+        "assignees_url": "https://api.github.com/repos/distri/md/assignees{/user}",
+        "branches_url": "https://api.github.com/repos/distri/md/branches{/branch}",
+        "tags_url": "https://api.github.com/repos/distri/md/tags",
+        "blobs_url": "https://api.github.com/repos/distri/md/git/blobs{/sha}",
+        "git_tags_url": "https://api.github.com/repos/distri/md/git/tags{/sha}",
+        "git_refs_url": "https://api.github.com/repos/distri/md/git/refs{/sha}",
+        "trees_url": "https://api.github.com/repos/distri/md/git/trees{/sha}",
+        "statuses_url": "https://api.github.com/repos/distri/md/statuses/{sha}",
+        "languages_url": "https://api.github.com/repos/distri/md/languages",
+        "stargazers_url": "https://api.github.com/repos/distri/md/stargazers",
+        "contributors_url": "https://api.github.com/repos/distri/md/contributors",
+        "subscribers_url": "https://api.github.com/repos/distri/md/subscribers",
+        "subscription_url": "https://api.github.com/repos/distri/md/subscription",
+        "commits_url": "https://api.github.com/repos/distri/md/commits{/sha}",
+        "git_commits_url": "https://api.github.com/repos/distri/md/git/commits{/sha}",
+        "comments_url": "https://api.github.com/repos/distri/md/comments{/number}",
+        "issue_comment_url": "https://api.github.com/repos/distri/md/issues/comments/{number}",
+        "contents_url": "https://api.github.com/repos/distri/md/contents/{+path}",
+        "compare_url": "https://api.github.com/repos/distri/md/compare/{base}...{head}",
+        "merges_url": "https://api.github.com/repos/distri/md/merges",
+        "archive_url": "https://api.github.com/repos/distri/md/{archive_format}{/ref}",
+        "downloads_url": "https://api.github.com/repos/distri/md/downloads",
+        "issues_url": "https://api.github.com/repos/distri/md/issues{/number}",
+        "pulls_url": "https://api.github.com/repos/distri/md/pulls{/number}",
+        "milestones_url": "https://api.github.com/repos/distri/md/milestones{/number}",
+        "notifications_url": "https://api.github.com/repos/distri/md/notifications{?since,all,participating}",
+        "labels_url": "https://api.github.com/repos/distri/md/labels{/name}",
+        "releases_url": "https://api.github.com/repos/distri/md/releases{/id}",
         "created_at": "2013-09-25T18:55:25Z",
-        "updated_at": "2014-02-19T22:13:11Z",
-        "pushed_at": "2014-02-19T22:13:10Z",
-        "git_url": "git://github.com/STRd6/md.git",
-        "ssh_url": "git@github.com:STRd6/md.git",
-        "clone_url": "https://github.com/STRd6/md.git",
-        "svn_url": "https://github.com/STRd6/md",
+        "updated_at": "2014-03-24T23:52:56Z",
+        "pushed_at": "2014-03-20T21:30:29Z",
+        "git_url": "git://github.com/distri/md.git",
+        "ssh_url": "git@github.com:distri/md.git",
+        "clone_url": "https://github.com/distri/md.git",
+        "svn_url": "https://github.com/distri/md",
         "homepage": null,
-        "size": 996,
+        "size": 1016,
         "stargazers_count": 0,
         "watchers_count": 0,
         "language": "JavaScript",
@@ -2340,9 +2350,28 @@
           "push": true,
           "pull": true
         },
+        "organization": {
+          "login": "distri",
+          "id": 6005125,
+          "avatar_url": "https://avatars.githubusercontent.com/u/6005125?",
+          "gravatar_id": "192f3f168409e79c42107f081139d9f3",
+          "url": "https://api.github.com/users/distri",
+          "html_url": "https://github.com/distri",
+          "followers_url": "https://api.github.com/users/distri/followers",
+          "following_url": "https://api.github.com/users/distri/following{/other_user}",
+          "gists_url": "https://api.github.com/users/distri/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/distri/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/distri/subscriptions",
+          "organizations_url": "https://api.github.com/users/distri/orgs",
+          "repos_url": "https://api.github.com/users/distri/repos",
+          "events_url": "https://api.github.com/users/distri/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/distri/received_events",
+          "type": "Organization",
+          "site_admin": false
+        },
         "network_count": 0,
         "subscribers_count": 1,
-        "branch": "v0.4.0-alpha.5",
+        "branch": "v0.4.0",
         "publishBranch": "gh-pages"
       },
       "dependencies": {
@@ -2357,19 +2386,19 @@
             "README.md": {
               "path": "README.md",
               "mode": "100644",
-              "content": "require\n=======\n\nRequire system for self replicating client side apps\n",
+              "content": "require\n=======\n\nRequire system for self replicating client side apps\n\n[Docs](http://distri.github.io/require/docs)\n",
               "type": "blob"
             },
             "main.coffee.md": {
               "path": "main.coffee.md",
               "mode": "100644",
-              "content": "Require\n=======\n\nA Node.js compatible require implementation for pure client side apps.\n\nEach file is a module. Modules are responsible for exporting an object. Unlike\ntraditional client side JavaScript, Ruby, or other common languages the module\nis not responsible for naming its product in the context of the requirer. This\nmaintains encapsulation because it is impossible from within a module to know\nwhat external name would be correct to prevent errors of composition in all\npossible uses.\n\nDefinitions\n-----------\n\n### Module\n\nA module is a file.\n\n### Package\n\nA package is an aggregation of modules. A package is a json object with the\nfollowing properties:\n\n- `distribution` An object whose keys are paths and properties are `fileData`\n- `entryPoint` Path to the primary module that requiring this package will require.\n- `dependencies` An object whose keys are names and whose values are packages.\n\nIt may have additional properties such as `source`, `repository`, and `docs`.\n\n### Application\n\nAn application is a package which has an `entryPoint` and may have dependencies.\nAdditionally an application's dependencies may have dependencies. Dependencies\nmust be bundled with the package.\n\nUses\n----\n\nFrom a module require another module in the same package.\n\n>     require \"./soup\"\n\nRequire a module in the parent directory\n\n>     require \"../nuts\"\n\nRequire a module from the root directory in the same package.\n\nNOTE: This could behave slightly differently under Node.js if your package does\nnot have it's own jailed filesystem.\n\n>     require \"/silence\"\n\nFrom a module within a package, require a dependent package.\n\n>     require \"console\"\n\nThe dependency will be delcared something like\n\n>     dependencies:\n>       console: \"http://strd6.github.io/console/v1.2.2.json\"\n\nImplementation\n--------------\n\nFile separator is '/'\n\n    fileSeparator = '/'\n\nIn the browser `global` is `window`.\n\n    global = window\n\nDefault entry point\n\n    defaultEntryPoint = \"main\"\n\nA sentinal against circular requires.\n\n    circularGuard = {}\n\nA top-level module so that all other modules won't have to be orphans.\n\n    rootModule =\n      path: \"\"\n\nRequire a module given a path within a package. Each file is its own separate\nmodule. An application is composed of packages.\n\n    loadPath = (parentModule, pkg, path) ->\n      if startsWith(path, '/')\n        localPath = []\n      else\n        localPath = parentModule.path.split(fileSeparator)\n\n      normalizedPath = normalizePath(path, localPath)\n\n      cache = cacheFor(pkg)\n\n      if module = cache[normalizedPath]\n        if module is circularGuard\n          throw \"Circular dependency detected when requiring #{normalizedPath}\"\n      else\n        cache[normalizedPath] = circularGuard\n\n        try\n          cache[normalizedPath] = module = loadModule(pkg, normalizedPath)\n        finally\n          delete cache[normalizedPath] if cache[normalizedPath] is circularGuard\n\n      return module.exports\n\nTo normalize the path we convert local paths to a standard form that does not\ncontain an references to current or parent directories.\n\n    normalizePath = (path, base=[]) ->\n      base = base.concat path.split(fileSeparator)\n      result = []\n\nChew up all the pieces into a standardized path.\n\n      while base.length\n        switch piece = base.shift()\n          when \"..\"\n            result.pop()\n          when \"\", \".\"\n            # Skip\n          else\n            result.push(piece)\n\n      return result.join(fileSeparator)\n\n`loadPackage` Loads a dependent package at that packages entry point.\n\n    loadPackage = (parentModule, pkg) ->\n      path = pkg.entryPoint or defaultEntryPoint\n\n      loadPath(parentModule, pkg, path)\n\nLoad a file from within a package.\n\n    loadModule = (pkg, path) ->\n      unless (file = pkg.distribution[path])\n        throw \"Could not find file at #{path} in #{pkg.name}\"\n\n      program = file.content\n      dirname = path.split(fileSeparator)[0...-1].join(fileSeparator)\n\n      module =\n        path: dirname\n        exports: {}\n\nThis external context provides some variable that modules have access to.\n\nA `require` function is exposed to modules so they may require other modules.\n\nAdditional properties such as a reference to the global object and some metadata\nare also exposed.\n\n      context =\n        require: generateRequireFn(pkg, module)\n        global: global\n        module: module\n        exports: module.exports\n        PACKAGE: pkg\n        __filename: path\n        __dirname: dirname\n\n      args = Object.keys(context)\n      values = args.map (name) -> context[name]\n\nExecute the program within the module and given context.\n\n      Function(args..., program).apply(module, values)\n\n      return module\n\nHelper to detect if a given path is a package.\n\n    isPackage = (path) ->\n      if !(startsWith(path, fileSeparator) or\n        startsWith(path, \".#{fileSeparator}\") or\n        startsWith(path, \"..#{fileSeparator}\")\n      )\n        path.split(fileSeparator)[0]\n      else\n        false\n\nGenerate a require function for a given module in a package.\n\nIf we are loading a package in another module then we strip out the module part\nof the name and use the `rootModule` rather than the local module we came from.\nThat way our local path won't affect the lookup path in another package.\n\nLoading a module within our package, uses the requiring module as a parent for\nlocal path resolution.\n\n    generateRequireFn = (pkg, module=rootModule) ->\n      pkg.name ?= \"ROOT\"\n\n      (path) ->\n        if isPackage(path)\n          unless otherPackage = pkg.dependencies[path]\n            throw \"Package: #{path} not found.\"\n\n          otherPackage.name ?= path\n\n          loadPackage(rootModule, otherPackage)\n        else\n          loadPath(module, pkg, path)\n\nBecause we can't actually `require('require')` we need to export it a little\ndifferently.\n\n    if exports?\n      exports.generateFor = generateRequireFn\n    else\n      global.Require =\n        generateFor: generateRequireFn\n\nNotes\n-----\n\nWe have to use `pkg` as a variable name because `package` is a reserved word.\n\nNode needs to check file extensions, but because we only load compiled products\nwe never have extensions in our path.\n\nSo while Node may need to check for either `path/somefile.js` or `path/somefile.coffee`\nthat will already have been resolved for us and we will only check `path/somefile`\n\nCircular dependencies are not allowed and raise an exception when detected.\n\nHelpers\n-------\n\nDetect if a string starts with a given prefix.\n\n    startsWith = (string, prefix) ->\n      string.lastIndexOf(prefix, 0) is 0\n\nCreates a cache for modules within a package. It uses `defineProperty` so that\nthe cache doesn't end up being enumerated or serialized to json.\n\n    cacheFor = (pkg) ->\n      return pkg.cache if pkg.cache\n\n      Object.defineProperty pkg, \"cache\",\n        value: {}\n\n      return pkg.cache\n",
+              "content": "Require\n=======\n\nA Node.js compatible require implementation for pure client side apps.\n\nEach file is a module. Modules are responsible for exporting an object. Unlike\ntraditional client side JavaScript, Ruby, or other common languages the module\nis not responsible for naming its product in the context of the requirer. This\nmaintains encapsulation because it is impossible from within a module to know\nwhat external name would be correct to prevent errors of composition in all\npossible uses.\n\nUses\n----\n\nFrom a module require another module in the same package.\n\n>     require \"./soup\"\n\nRequire a module in the parent directory\n\n>     require \"../nuts\"\n\nRequire a module from the root directory in the same package.\n\nNOTE: This could behave slightly differently under Node.js if your package does\nnot have it's own jailed filesystem.\n\n>     require \"/silence\"\n\nFrom a module within a package, require a dependent package.\n\n>     require \"console\"\n\nThe dependency will be delcared something like\n\n>     dependencies:\n>       console: \"http://strd6.github.io/console/v1.2.2.json\"\n\nImplementation\n--------------\n\nFile separator is '/'\n\n    fileSeparator = '/'\n\nIn the browser `global` is `window`.\n\n    global = window\n\nDefault entry point\n\n    defaultEntryPoint = \"main\"\n\nA sentinal against circular requires.\n\n    circularGuard = {}\n\nA top-level module so that all other modules won't have to be orphans.\n\n    rootModule =\n      path: \"\"\n\nRequire a module given a path within a package. Each file is its own separate\nmodule. An application is composed of packages.\n\n    loadPath = (parentModule, pkg, path) ->\n      if startsWith(path, '/')\n        localPath = []\n      else\n        localPath = parentModule.path.split(fileSeparator)\n\n      normalizedPath = normalizePath(path, localPath)\n\n      cache = cacheFor(pkg)\n\n      if module = cache[normalizedPath]\n        if module is circularGuard\n          throw \"Circular dependency detected when requiring #{normalizedPath}\"\n      else\n        cache[normalizedPath] = circularGuard\n\n        try\n          cache[normalizedPath] = module = loadModule(pkg, normalizedPath)\n        finally\n          delete cache[normalizedPath] if cache[normalizedPath] is circularGuard\n\n      return module.exports\n\nTo normalize the path we convert local paths to a standard form that does not\ncontain an references to current or parent directories.\n\n    normalizePath = (path, base=[]) ->\n      base = base.concat path.split(fileSeparator)\n      result = []\n\nChew up all the pieces into a standardized path.\n\n      while base.length\n        switch piece = base.shift()\n          when \"..\"\n            result.pop()\n          when \"\", \".\"\n            # Skip\n          else\n            result.push(piece)\n\n      return result.join(fileSeparator)\n\n`loadPackage` Loads a dependent package at that packages entry point.\n\n    loadPackage = (pkg) ->\n      path = pkg.entryPoint or defaultEntryPoint\n\n      loadPath(rootModule, pkg, path)\n\nLoad a file from within a package.\n\n    loadModule = (pkg, path) ->\n      unless (file = pkg.distribution[path])\n        throw \"Could not find file at #{path} in #{pkg.name}\"\n\n      program = annotateSourceURL file.content, pkg, path\n      dirname = path.split(fileSeparator)[0...-1].join(fileSeparator)\n\n      module =\n        path: dirname\n        exports: {}\n\nThis external context provides some variable that modules have access to.\n\nA `require` function is exposed to modules so they may require other modules.\n\nAdditional properties such as a reference to the global object and some metadata\nare also exposed.\n\n      context =\n        require: generateRequireFn(pkg, module)\n        global: global\n        module: module\n        exports: module.exports\n        PACKAGE: pkg\n        __filename: path\n        __dirname: dirname\n\n      args = Object.keys(context)\n      values = args.map (name) -> context[name]\n\nExecute the program within the module and given context.\n\n      Function(args..., program).apply(module, values)\n\n      return module\n\nHelper to detect if a given path is a package.\n\n    isPackage = (path) ->\n      if !(startsWith(path, fileSeparator) or\n        startsWith(path, \".#{fileSeparator}\") or\n        startsWith(path, \"..#{fileSeparator}\")\n      )\n        path.split(fileSeparator)[0]\n      else\n        false\n\nGenerate a require function for a given module in a package.\n\nIf we are loading a package in another module then we strip out the module part\nof the name and use the `rootModule` rather than the local module we came from.\nThat way our local path won't affect the lookup path in another package.\n\nLoading a module within our package, uses the requiring module as a parent for\nlocal path resolution.\n\n    generateRequireFn = (pkg, module=rootModule) ->\n      pkg.name ?= \"ROOT\"\n      pkg.scopedName ?= \"ROOT\"\n\n      (path) ->\n        if isPackage(path)\n          unless otherPackage = pkg.dependencies[path]\n            throw \"Package: #{path} not found.\"\n\n          otherPackage.name ?= path\n          otherPackage.scopedName ?= \"#{pkg.scopedName}:#{path}\"\n\n          loadPackage(otherPackage)\n        else\n          loadPath(module, pkg, path)\n\nBecause we can't actually `require('require')` we need to export it a little\ndifferently.\n\n    if exports?\n      exports.generateFor = generateRequireFn\n    else\n      global.Require =\n        generateFor: generateRequireFn\n\nNotes\n-----\n\nWe have to use `pkg` as a variable name because `package` is a reserved word.\n\nNode needs to check file extensions, but because we only load compiled products\nwe never have extensions in our path.\n\nSo while Node may need to check for either `path/somefile.js` or `path/somefile.coffee`\nthat will already have been resolved for us and we will only check `path/somefile`\n\nCircular dependencies are not allowed and raise an exception when detected.\n\nHelpers\n-------\n\nDetect if a string starts with a given prefix.\n\n    startsWith = (string, prefix) ->\n      string.lastIndexOf(prefix, 0) is 0\n\nCreates a cache for modules within a package. It uses `defineProperty` so that\nthe cache doesn't end up being enumerated or serialized to json.\n\n    cacheFor = (pkg) ->\n      return pkg.cache if pkg.cache\n\n      Object.defineProperty pkg, \"cache\",\n        value: {}\n\n      return pkg.cache\n\nAnnotate a program with a source url so we can debug in Chrome's dev tools.\n\n    annotateSourceURL = (program, pkg, path) ->\n      \"\"\"\n        #{program}\n        //# sourceURL=#{pkg.scopedName}/#{path}\n      \"\"\"\n\nDefinitions\n-----------\n\n### Module\n\nA module is a file.\n\n### Package\n\nA package is an aggregation of modules. A package is a json object with the\nfollowing properties:\n\n- `distribution` An object whose keys are paths and properties are `fileData`\n- `entryPoint` Path to the primary module that requiring this package will require.\n- `dependencies` An object whose keys are names and whose values are packages.\n\nIt may have additional properties such as `source`, `repository`, and `docs`.\n\n### Application\n\nAn application is a package which has an `entryPoint` and may have dependencies.\nAdditionally an application's dependencies may have dependencies. Dependencies\nmust be bundled with the package.\n",
               "type": "blob"
             },
             "pixie.cson": {
               "path": "pixie.cson",
               "mode": "100644",
-              "content": "version: \"0.4.1\"\n",
+              "content": "version: \"0.4.2\"\n",
               "type": "blob"
             },
             "samples/circular.coffee": {
@@ -2406,12 +2435,12 @@
           "distribution": {
             "main": {
               "path": "main",
-              "content": "(function() {\n  var cacheFor, circularGuard, defaultEntryPoint, fileSeparator, generateRequireFn, global, isPackage, loadModule, loadPackage, loadPath, normalizePath, rootModule, startsWith,\n    __slice = [].slice;\n\n  fileSeparator = '/';\n\n  global = window;\n\n  defaultEntryPoint = \"main\";\n\n  circularGuard = {};\n\n  rootModule = {\n    path: \"\"\n  };\n\n  loadPath = function(parentModule, pkg, path) {\n    var cache, localPath, module, normalizedPath;\n    if (startsWith(path, '/')) {\n      localPath = [];\n    } else {\n      localPath = parentModule.path.split(fileSeparator);\n    }\n    normalizedPath = normalizePath(path, localPath);\n    cache = cacheFor(pkg);\n    if (module = cache[normalizedPath]) {\n      if (module === circularGuard) {\n        throw \"Circular dependency detected when requiring \" + normalizedPath;\n      }\n    } else {\n      cache[normalizedPath] = circularGuard;\n      try {\n        cache[normalizedPath] = module = loadModule(pkg, normalizedPath);\n      } finally {\n        if (cache[normalizedPath] === circularGuard) {\n          delete cache[normalizedPath];\n        }\n      }\n    }\n    return module.exports;\n  };\n\n  normalizePath = function(path, base) {\n    var piece, result;\n    if (base == null) {\n      base = [];\n    }\n    base = base.concat(path.split(fileSeparator));\n    result = [];\n    while (base.length) {\n      switch (piece = base.shift()) {\n        case \"..\":\n          result.pop();\n          break;\n        case \"\":\n        case \".\":\n          break;\n        default:\n          result.push(piece);\n      }\n    }\n    return result.join(fileSeparator);\n  };\n\n  loadPackage = function(parentModule, pkg) {\n    var path;\n    path = pkg.entryPoint || defaultEntryPoint;\n    return loadPath(parentModule, pkg, path);\n  };\n\n  loadModule = function(pkg, path) {\n    var args, context, dirname, file, module, program, values;\n    if (!(file = pkg.distribution[path])) {\n      throw \"Could not find file at \" + path + \" in \" + pkg.name;\n    }\n    program = file.content;\n    dirname = path.split(fileSeparator).slice(0, -1).join(fileSeparator);\n    module = {\n      path: dirname,\n      exports: {}\n    };\n    context = {\n      require: generateRequireFn(pkg, module),\n      global: global,\n      module: module,\n      exports: module.exports,\n      PACKAGE: pkg,\n      __filename: path,\n      __dirname: dirname\n    };\n    args = Object.keys(context);\n    values = args.map(function(name) {\n      return context[name];\n    });\n    Function.apply(null, __slice.call(args).concat([program])).apply(module, values);\n    return module;\n  };\n\n  isPackage = function(path) {\n    if (!(startsWith(path, fileSeparator) || startsWith(path, \".\" + fileSeparator) || startsWith(path, \"..\" + fileSeparator))) {\n      return path.split(fileSeparator)[0];\n    } else {\n      return false;\n    }\n  };\n\n  generateRequireFn = function(pkg, module) {\n    if (module == null) {\n      module = rootModule;\n    }\n    if (pkg.name == null) {\n      pkg.name = \"ROOT\";\n    }\n    return function(path) {\n      var otherPackage;\n      if (isPackage(path)) {\n        if (!(otherPackage = pkg.dependencies[path])) {\n          throw \"Package: \" + path + \" not found.\";\n        }\n        if (otherPackage.name == null) {\n          otherPackage.name = path;\n        }\n        return loadPackage(rootModule, otherPackage);\n      } else {\n        return loadPath(module, pkg, path);\n      }\n    };\n  };\n\n  if (typeof exports !== \"undefined\" && exports !== null) {\n    exports.generateFor = generateRequireFn;\n  } else {\n    global.Require = {\n      generateFor: generateRequireFn\n    };\n  }\n\n  startsWith = function(string, prefix) {\n    return string.lastIndexOf(prefix, 0) === 0;\n  };\n\n  cacheFor = function(pkg) {\n    if (pkg.cache) {\n      return pkg.cache;\n    }\n    Object.defineProperty(pkg, \"cache\", {\n      value: {}\n    });\n    return pkg.cache;\n  };\n\n}).call(this);\n\n//# sourceURL=main.coffee",
+              "content": "(function() {\n  var annotateSourceURL, cacheFor, circularGuard, defaultEntryPoint, fileSeparator, generateRequireFn, global, isPackage, loadModule, loadPackage, loadPath, normalizePath, rootModule, startsWith,\n    __slice = [].slice;\n\n  fileSeparator = '/';\n\n  global = window;\n\n  defaultEntryPoint = \"main\";\n\n  circularGuard = {};\n\n  rootModule = {\n    path: \"\"\n  };\n\n  loadPath = function(parentModule, pkg, path) {\n    var cache, localPath, module, normalizedPath;\n    if (startsWith(path, '/')) {\n      localPath = [];\n    } else {\n      localPath = parentModule.path.split(fileSeparator);\n    }\n    normalizedPath = normalizePath(path, localPath);\n    cache = cacheFor(pkg);\n    if (module = cache[normalizedPath]) {\n      if (module === circularGuard) {\n        throw \"Circular dependency detected when requiring \" + normalizedPath;\n      }\n    } else {\n      cache[normalizedPath] = circularGuard;\n      try {\n        cache[normalizedPath] = module = loadModule(pkg, normalizedPath);\n      } finally {\n        if (cache[normalizedPath] === circularGuard) {\n          delete cache[normalizedPath];\n        }\n      }\n    }\n    return module.exports;\n  };\n\n  normalizePath = function(path, base) {\n    var piece, result;\n    if (base == null) {\n      base = [];\n    }\n    base = base.concat(path.split(fileSeparator));\n    result = [];\n    while (base.length) {\n      switch (piece = base.shift()) {\n        case \"..\":\n          result.pop();\n          break;\n        case \"\":\n        case \".\":\n          break;\n        default:\n          result.push(piece);\n      }\n    }\n    return result.join(fileSeparator);\n  };\n\n  loadPackage = function(pkg) {\n    var path;\n    path = pkg.entryPoint || defaultEntryPoint;\n    return loadPath(rootModule, pkg, path);\n  };\n\n  loadModule = function(pkg, path) {\n    var args, context, dirname, file, module, program, values;\n    if (!(file = pkg.distribution[path])) {\n      throw \"Could not find file at \" + path + \" in \" + pkg.name;\n    }\n    program = annotateSourceURL(file.content, pkg, path);\n    dirname = path.split(fileSeparator).slice(0, -1).join(fileSeparator);\n    module = {\n      path: dirname,\n      exports: {}\n    };\n    context = {\n      require: generateRequireFn(pkg, module),\n      global: global,\n      module: module,\n      exports: module.exports,\n      PACKAGE: pkg,\n      __filename: path,\n      __dirname: dirname\n    };\n    args = Object.keys(context);\n    values = args.map(function(name) {\n      return context[name];\n    });\n    Function.apply(null, __slice.call(args).concat([program])).apply(module, values);\n    return module;\n  };\n\n  isPackage = function(path) {\n    if (!(startsWith(path, fileSeparator) || startsWith(path, \".\" + fileSeparator) || startsWith(path, \"..\" + fileSeparator))) {\n      return path.split(fileSeparator)[0];\n    } else {\n      return false;\n    }\n  };\n\n  generateRequireFn = function(pkg, module) {\n    if (module == null) {\n      module = rootModule;\n    }\n    if (pkg.name == null) {\n      pkg.name = \"ROOT\";\n    }\n    if (pkg.scopedName == null) {\n      pkg.scopedName = \"ROOT\";\n    }\n    return function(path) {\n      var otherPackage;\n      if (isPackage(path)) {\n        if (!(otherPackage = pkg.dependencies[path])) {\n          throw \"Package: \" + path + \" not found.\";\n        }\n        if (otherPackage.name == null) {\n          otherPackage.name = path;\n        }\n        if (otherPackage.scopedName == null) {\n          otherPackage.scopedName = \"\" + pkg.scopedName + \":\" + path;\n        }\n        return loadPackage(otherPackage);\n      } else {\n        return loadPath(module, pkg, path);\n      }\n    };\n  };\n\n  if (typeof exports !== \"undefined\" && exports !== null) {\n    exports.generateFor = generateRequireFn;\n  } else {\n    global.Require = {\n      generateFor: generateRequireFn\n    };\n  }\n\n  startsWith = function(string, prefix) {\n    return string.lastIndexOf(prefix, 0) === 0;\n  };\n\n  cacheFor = function(pkg) {\n    if (pkg.cache) {\n      return pkg.cache;\n    }\n    Object.defineProperty(pkg, \"cache\", {\n      value: {}\n    });\n    return pkg.cache;\n  };\n\n  annotateSourceURL = function(program, pkg, path) {\n    return \"\" + program + \"\\n//# sourceURL=\" + pkg.scopedName + \"/\" + path;\n  };\n\n}).call(this);\n\n//# sourceURL=main.coffee",
               "type": "blob"
             },
             "pixie": {
               "path": "pixie",
-              "content": "module.exports = {\"version\":\"0.4.1\"};",
+              "content": "module.exports = {\"version\":\"0.4.2\"};",
               "type": "blob"
             },
             "samples/circular": {
@@ -2443,7 +2472,7 @@
           "progenitor": {
             "url": "http://strd6.github.io/editor/"
           },
-          "version": "0.4.1",
+          "version": "0.4.2",
           "entryPoint": "main",
           "repository": {
             "id": 12814740,
@@ -2452,7 +2481,7 @@
             "owner": {
               "login": "distri",
               "id": 6005125,
-              "avatar_url": "https://gravatar.com/avatar/192f3f168409e79c42107f081139d9f3?d=https%3A%2F%2Fidenticons.github.com%2Ff90c81ffc1498e260c820082f2e7ca5f.png&r=x",
+              "avatar_url": "https://avatars.githubusercontent.com/u/6005125?",
               "gravatar_id": "192f3f168409e79c42107f081139d9f3",
               "url": "https://api.github.com/users/distri",
               "html_url": "https://github.com/distri",
@@ -2509,14 +2538,14 @@
             "labels_url": "https://api.github.com/repos/distri/require/labels{/name}",
             "releases_url": "https://api.github.com/repos/distri/require/releases{/id}",
             "created_at": "2013-09-13T17:00:23Z",
-            "updated_at": "2014-03-13T16:53:59Z",
-            "pushed_at": "2014-02-19T21:16:06Z",
+            "updated_at": "2014-03-21T21:14:33Z",
+            "pushed_at": "2014-03-21T21:14:34Z",
             "git_url": "git://github.com/distri/require.git",
             "ssh_url": "git@github.com:distri/require.git",
             "clone_url": "https://github.com/distri/require.git",
             "svn_url": "https://github.com/distri/require",
             "homepage": null,
-            "size": 584,
+            "size": 632,
             "stargazers_count": 1,
             "watchers_count": 1,
             "language": "CoffeeScript",
@@ -2539,7 +2568,7 @@
             "organization": {
               "login": "distri",
               "id": 6005125,
-              "avatar_url": "https://gravatar.com/avatar/192f3f168409e79c42107f081139d9f3?d=https%3A%2F%2Fidenticons.github.com%2Ff90c81ffc1498e260c820082f2e7ca5f.png&r=x",
+              "avatar_url": "https://avatars.githubusercontent.com/u/6005125?",
               "gravatar_id": "192f3f168409e79c42107f081139d9f3",
               "url": "https://api.github.com/users/distri",
               "html_url": "https://github.com/distri",
@@ -2557,7 +2586,7 @@
             },
             "network_count": 0,
             "subscribers_count": 1,
-            "branch": "v0.4.1",
+            "branch": "v0.4.2",
             "publishBranch": "gh-pages"
           },
           "dependencies": {}
