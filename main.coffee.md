@@ -71,7 +71,6 @@ Templates
         templates[name] = template
 
     Editor = require("./editor")
-    TextEditor = require("./source/text_editor")
 
     editor = global.editor = Editor()
     editor.loadFiles(files)
@@ -326,14 +325,13 @@ Templates
         textEditor = ValueWidget
           value: file.content()
           iframe: iframe
-          url: "http://distri.github.io/text"
-          mode: file.mode() # TODO: Allow passing of options 
+          url: "http://distri.github.io/text/v0.1.0/"
+          options:
+            mode: file.mode()
 
         file.editor.on "show", ->
           file.editor.show()
-
-          # TODO
-          # textEditor.editor.focus()
+          textEditor.send "focus"
 
         textEditor.observe (value) ->
           file.content(value)
