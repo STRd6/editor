@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html manifest="manifest.appcache?1395886941700">
+<html manifest="manifest.appcache?1395887407004">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
 <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
-<script src="http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js"></script>
+<script src="http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js"></script>
 </head>
 <body>
 <script>
@@ -207,7 +207,7 @@ require('./main')
     "pixie.cson": {
       "path": "pixie.cson",
       "mode": "100644",
-      "content": "version: \"0.3.0\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"https://code.jquery.com/jquery-1.10.1.min.js\"\n  \"http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js\"\n]\ndependencies:\n  analytics: \"distri/google-analytics:v0.1.0\"\n  builder: \"distri/builder:v0.3.5\"\n  chrapps: \"distri/chrapps:v0.1.0\"\n  cson: \"distri/cson:v0.1.0\"\n  issues: \"STRd6/issues:v0.2.0\"\n  sandbox: \"STRd6/sandbox:v0.2.0\"\n  notifications: \"STRd6/notifications:v0.2.0\"\n  md: \"distri/md:v0.4.0\"\n  observable: \"distri/observable:v0.1.0\"\n  github: \"STRd6/github:v0.4.2\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  runtime: \"distri/runtime:v0.3.0\"\n  packager: \"distri/packager:v0.5.5\"\n  filetree: \"STRd6/filetree:v0.3.0\"\n  runner: \"STRd6/runner:v0.2.0\"\n  \"value-widget\": \"distri/value-widget:v0.1.1\"\n",
+      "content": "version: \"0.3.0\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"https://code.jquery.com/jquery-1.10.1.min.js\"\n  \"http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js\"\n]\ndependencies:\n  analytics: \"distri/google-analytics:v0.1.0\"\n  builder: \"distri/builder:v0.3.5\"\n  chrapps: \"distri/chrapps:v0.1.0\"\n  cson: \"distri/cson:v0.1.0\"\n  issues: \"STRd6/issues:v0.2.0\"\n  sandbox: \"STRd6/sandbox:v0.2.0\"\n  notifications: \"STRd6/notifications:v0.2.0\"\n  md: \"distri/md:v0.4.0\"\n  observable: \"distri/observable:v0.1.0\"\n  github: \"STRd6/github:v0.4.2\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  runtime: \"distri/runtime:v0.3.0\"\n  packager: \"distri/packager:v0.5.5\"\n  filetree: \"STRd6/filetree:v0.3.0\"\n  runner: \"STRd6/runner:v0.2.0\"\n  \"value-widget\": \"distri/value-widget:v0.1.1\"\n",
       "type": "blob"
     },
     "source/actions.coffee.md": {
@@ -225,7 +225,7 @@ require('./main')
     "source/duct_tape.coffee.md": {
       "path": "source/duct_tape.coffee.md",
       "mode": "100644",
-      "content": "Duct Tape\n=========\n\nHACK: Using global observable until we eliminate envweb.\n\n    global.Observable = require \"observable\"\n\nHere we have simple extension and utility methods that should be moved into our framework's environment libraries.\n\n`String#dasherize` should be moved into inflecta.\n\nConvert a string with spaces and mixed case into all lower case with spaces replaced with dashes. This is the style that Github branch names are commonly in.\n\n    String::dasherize = ->\n      @trim()\n        .replace(/\\s+/g, \"-\")\n        .toLowerCase()\n\nAdds a `render` helper method to HAMLjr. This should work it's way back into the\nHAMLjr runtime.\n\n`render` Looks up a template and renders it with the given object.\n\n    HAMLjr.render = (templateName, object) ->\n      templates = HAMLjr.templates\n      template = templates[templateName] or templates[\"templates/#{templateName}\"]\n\n      if template\n        template(object)\n      else\n        throw \"Could not find template named #{templateName}\"\n",
+      "content": "Duct Tape\n=========\n\nHere we have simple extension and utility methods that should be moved into our framework's environment libraries.\n\n`String#dasherize` should be moved into inflecta.\n\nConvert a string with spaces and mixed case into all lower case with spaces replaced with dashes. This is the style that Github branch names are commonly in.\n\n    String::dasherize = ->\n      @trim()\n        .replace(/\\s+/g, \"-\")\n        .toLowerCase()\n\nAdds a `render` helper method to HAMLjr. This should work it's way back into the\nHAMLjr runtime.\n\n`render` Looks up a template and renders it with the given object.\n\n    HAMLjr.render = (templateName, object) ->\n      templates = HAMLjr.templates\n      template = templates[templateName] or templates[\"templates/#{templateName}\"]\n\n      if template\n        template(object)\n      else\n        throw \"Could not find template named #{templateName}\"\n",
       "type": "blob"
     },
     "source/github_auth.coffee.md": {
@@ -307,7 +307,7 @@ require('./main')
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.3.0\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"https://code.jquery.com/jquery-1.10.1.min.js\",\"http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js\"],\"dependencies\":{\"analytics\":\"distri/google-analytics:v0.1.0\",\"builder\":\"distri/builder:v0.3.5\",\"chrapps\":\"distri/chrapps:v0.1.0\",\"cson\":\"distri/cson:v0.1.0\",\"issues\":\"STRd6/issues:v0.2.0\",\"sandbox\":\"STRd6/sandbox:v0.2.0\",\"notifications\":\"STRd6/notifications:v0.2.0\",\"md\":\"distri/md:v0.4.0\",\"observable\":\"distri/observable:v0.1.0\",\"github\":\"STRd6/github:v0.4.2\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"runtime\":\"distri/runtime:v0.3.0\",\"packager\":\"distri/packager:v0.5.5\",\"filetree\":\"STRd6/filetree:v0.3.0\",\"runner\":\"STRd6/runner:v0.2.0\",\"value-widget\":\"distri/value-widget:v0.1.1\"}};",
+      "content": "module.exports = {\"version\":\"0.3.0\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"https://code.jquery.com/jquery-1.10.1.min.js\",\"http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js\"],\"dependencies\":{\"analytics\":\"distri/google-analytics:v0.1.0\",\"builder\":\"distri/builder:v0.3.5\",\"chrapps\":\"distri/chrapps:v0.1.0\",\"cson\":\"distri/cson:v0.1.0\",\"issues\":\"STRd6/issues:v0.2.0\",\"sandbox\":\"STRd6/sandbox:v0.2.0\",\"notifications\":\"STRd6/notifications:v0.2.0\",\"md\":\"distri/md:v0.4.0\",\"observable\":\"distri/observable:v0.1.0\",\"github\":\"STRd6/github:v0.4.2\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"runtime\":\"distri/runtime:v0.3.0\",\"packager\":\"distri/packager:v0.5.5\",\"filetree\":\"STRd6/filetree:v0.3.0\",\"runner\":\"STRd6/runner:v0.2.0\",\"value-widget\":\"distri/value-widget:v0.1.1\"}};",
       "type": "blob"
     },
     "source/actions": {
@@ -322,7 +322,7 @@ require('./main')
     },
     "source/duct_tape": {
       "path": "source/duct_tape",
-      "content": "(function() {\n  global.Observable = require(\"observable\");\n\n  String.prototype.dasherize = function() {\n    return this.trim().replace(/\\s+/g, \"-\").toLowerCase();\n  };\n\n  HAMLjr.render = function(templateName, object) {\n    var template, templates;\n    templates = HAMLjr.templates;\n    template = templates[templateName] || templates[\"templates/\" + templateName];\n    if (template) {\n      return template(object);\n    } else {\n      throw \"Could not find template named \" + templateName;\n    }\n  };\n\n}).call(this);\n",
+      "content": "(function() {\n  String.prototype.dasherize = function() {\n    return this.trim().replace(/\\s+/g, \"-\").toLowerCase();\n  };\n\n  HAMLjr.render = function(templateName, object) {\n    var template, templates;\n    templates = HAMLjr.templates;\n    template = templates[templateName] || templates[\"templates/\" + templateName];\n    if (template) {\n      return template(object);\n    } else {\n      throw \"Could not find template named \" + templateName;\n    }\n  };\n\n}).call(this);\n",
       "type": "blob"
     },
     "source/github_auth": {
@@ -390,7 +390,7 @@ require('./main')
     "https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js",
     "https://code.jquery.com/jquery-1.10.1.min.js",
-    "http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js"
+    "http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js"
   ],
   "repository": {
     "id": 12478000,
