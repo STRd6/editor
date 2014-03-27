@@ -1,10 +1,6 @@
 Duct Tape
 =========
 
-HACK: Using global observable until we eliminate envweb.
-
-    global.Observable = require "observable"
-
 Here we have simple extension and utility methods that should be moved into our framework's environment libraries.
 
 `String#dasherize` should be moved into inflecta.
