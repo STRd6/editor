@@ -23,4 +23,4 @@ dependencies:
   packager: "distri/packager:v0.5.5"
   filetree: "STRd6/filetree:v0.3.0"
   runner: "STRd6/runner:v0.2.0"
-  "value-widget": "distri/value-widget:v0.1.1-pre.7"
+  "value-widget": "distri/value-widget:v0.1.1"
