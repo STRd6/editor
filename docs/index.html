@@ -94,7 +94,9 @@ require(<span class="string">"analytics"</span>).init(<span class="string">"UA-3
 
 <span class="comment"># Create and auth a github API</span>
 <span class="comment"># Global until we consolidate editor/actions into something cleaner</span>
-global.github = require(<span class="string">"github"</span>)(require(<span class="string">"./source/github_auth"</span>)())</code></pre>
+global.github = require(<span class="string">"github"</span>)(require(<span class="string">"./source/github_auth"</span>)())
+
+ValueWidget = require <span class="string">"value-widget"</span></code></pre>
 </div>
         </li>
         
@@ -133,7 +135,6 @@ templates = (HAMLjr.templates ||= {})
   <span class="string">"actions"</span>
   <span class="string">"editor"</span>
   <span class="string">"github_status"</span>
-  <span class="string">"text_editor"</span>
   <span class="string">"repo_info"</span>
 ].each (name) -&gt;
   template = require(<span class="string">"./templates/<span class="subst">#{name}</span>"</span>)
@@ -142,7 +143,6 @@ templates = (HAMLjr.templates ||= {})
     templates[name] = template
 
 Editor = require(<span class="string">"./editor"</span>)
-TextEditor = require(<span class="string">"./source/text_editor"</span>)
 
 editor = global.editor = Editor()
 editor.loadFiles(files)
@@ -381,28 +381,31 @@ filetree.selectedFile.observe (file) -&gt;
   <span class="keyword">return</span> <span class="keyword">if</span> file.binary?()
 
   root = $root.children(<span class="string">".main"</span>)
-  root.find(<span class="string">".editor-wrap"</span>).hide()
+  root.find(<span class="string">"iframe"</span>).hide()
 
   <span class="keyword">if</span> file.editor
     file.editor.trigger(<span class="string">"show"</span>)
   <span class="keyword">else</span>
-    root.append(HAMLjr.render <span class="string">"text_editor"</span>)
-    file.editor = root.find(<span class="string">".editor-wrap"</span>).last()
+    iframe = document.createElement <span class="string">"iframe"</span>
+    root.append iframe
+    file.editor = $(iframe)
 
     <span class="keyword">switch</span> file.path().extension()
       <span class="keyword">when</span> <span class="string">"md"</span>, <span class="string">"coffee"</span>, <span class="string">"js"</span>, <span class="string">"styl"</span>, <span class="string">"cson"</span>
         file.content Hygiene.clean file.content()
 
-    textEditor = TextEditor
-      text: file.content()
-      el: file.editor.find(<span class="string">'.editor'</span>).get(<span class="number">0</span>)
-      mode: file.mode()
+    textEditor = ValueWidget
+      value: file.content()
+      iframe: iframe
+      url: <span class="string">"http://distri.github.io/text/v0.1.0/"</span>
+      options:
+        mode: file.mode()
 
     file.editor.<span class="literal">on</span> <span class="string">"show"</span>, -&gt;
       file.editor.show()
-      textEditor.editor.focus()
+      textEditor.send <span class="string">"focus"</span>
 
-    textEditor.text.observe (value) -&gt;
+    textEditor.observe (value) -&gt;
       file.content(value)
 
       <span class="comment"># TODO May want to move this into a collection listener for all files</span>
@@ -477,7 +480,6 @@ window.<span class="function"><span class="title">onbeforeunload</span></span> =
   <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-<script src="https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
 <script src="http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js"></script><script>
   (function() {
   var ErrorReporter, bindUpdates, createEditor, exec, findInteractiveElements, readShebang, runners;
