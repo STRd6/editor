@@ -27,7 +27,7 @@ window["STRd6/editor:text-value-widget"]({
     "pixie.cson": {
       "path": "pixie.cson",
       "mode": "100644",
-      "content": "version: \"0.3.0\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"https://code.jquery.com/jquery-1.10.1.min.js\"\n  \"http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js\"\n]\ndependencies:\n  analytics: \"distri/google-analytics:v0.1.0\"\n  builder: \"distri/builder:v0.3.5\"\n  chrapps: \"distri/chrapps:v0.1.0\"\n  cson: \"distri/cson:v0.1.0\"\n  issues: \"STRd6/issues:v0.2.0\"\n  sandbox: \"STRd6/sandbox:v0.2.0\"\n  notifications: \"STRd6/notifications:v0.2.0\"\n  md: \"distri/md:v0.4.0\"\n  github: \"STRd6/github:v0.4.2\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  runtime: \"distri/runtime:v0.3.0\"\n  packager: \"distri/packager:v0.5.5\"\n  filetree: \"STRd6/filetree:v0.3.0\"\n  runner: \"STRd6/runner:v0.2.0\"\n  \"value-widget\": \"distri/value-widget:v0.1.1-pre.7\"\n",
+      "content": "version: \"0.3.0\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"https://code.jquery.com/jquery-1.10.1.min.js\"\n  \"http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js\"\n]\ndependencies:\n  analytics: \"distri/google-analytics:v0.1.0\"\n  builder: \"distri/builder:v0.3.5\"\n  chrapps: \"distri/chrapps:v0.1.0\"\n  cson: \"distri/cson:v0.1.0\"\n  issues: \"STRd6/issues:v0.2.0\"\n  sandbox: \"STRd6/sandbox:v0.2.0\"\n  notifications: \"STRd6/notifications:v0.2.0\"\n  md: \"distri/md:v0.4.0\"\n  github: \"STRd6/github:v0.4.2\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  runtime: \"distri/runtime:v0.3.0\"\n  packager: \"distri/packager:v0.5.5\"\n  filetree: \"STRd6/filetree:v0.3.0\"\n  runner: \"STRd6/runner:v0.2.0\"\n  \"value-widget\": \"distri/value-widget:v0.1.1\"\n",
       "type": "blob"
     },
     "source/actions.coffee.md": {
@@ -127,7 +127,7 @@ window["STRd6/editor:text-value-widget"]({
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.3.0\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"https://code.jquery.com/jquery-1.10.1.min.js\",\"http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js\"],\"dependencies\":{\"analytics\":\"distri/google-analytics:v0.1.0\",\"builder\":\"distri/builder:v0.3.5\",\"chrapps\":\"distri/chrapps:v0.1.0\",\"cson\":\"distri/cson:v0.1.0\",\"issues\":\"STRd6/issues:v0.2.0\",\"sandbox\":\"STRd6/sandbox:v0.2.0\",\"notifications\":\"STRd6/notifications:v0.2.0\",\"md\":\"distri/md:v0.4.0\",\"github\":\"STRd6/github:v0.4.2\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"runtime\":\"distri/runtime:v0.3.0\",\"packager\":\"distri/packager:v0.5.5\",\"filetree\":\"STRd6/filetree:v0.3.0\",\"runner\":\"STRd6/runner:v0.2.0\",\"value-widget\":\"distri/value-widget:v0.1.1-pre.7\"}};",
+      "content": "module.exports = {\"version\":\"0.3.0\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"https://code.jquery.com/jquery-1.10.1.min.js\",\"http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js\"],\"dependencies\":{\"analytics\":\"distri/google-analytics:v0.1.0\",\"builder\":\"distri/builder:v0.3.5\",\"chrapps\":\"distri/chrapps:v0.1.0\",\"cson\":\"distri/cson:v0.1.0\",\"issues\":\"STRd6/issues:v0.2.0\",\"sandbox\":\"STRd6/sandbox:v0.2.0\",\"notifications\":\"STRd6/notifications:v0.2.0\",\"md\":\"distri/md:v0.4.0\",\"github\":\"STRd6/github:v0.4.2\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"runtime\":\"distri/runtime:v0.3.0\",\"packager\":\"distri/packager:v0.5.5\",\"filetree\":\"STRd6/filetree:v0.3.0\",\"runner\":\"STRd6/runner:v0.2.0\",\"value-widget\":\"distri/value-widget:v0.1.1\"}};",
       "type": "blob"
     },
     "source/actions": {
@@ -4334,7 +4334,7 @@ window["STRd6/editor:text-value-widget"]({
         "pixie.cson": {
           "path": "pixie.cson",
           "mode": "100644",
-          "content": "version: \"0.1.1-pre.7\"\ndependencies:\n  observable: \"distri/observable:v0.1.0\"\n",
+          "content": "version: \"0.1.1\"\ndependencies:\n  observable: \"distri/observable:v0.1.0\"\n",
           "type": "blob"
         },
         "demo.styl": {
@@ -4352,7 +4352,7 @@ window["STRd6/editor:text-value-widget"]({
         },
         "pixie": {
           "path": "pixie",
-          "content": "module.exports = {\"version\":\"0.1.1-pre.7\",\"dependencies\":{\"observable\":\"distri/observable:v0.1.0\"}};",
+          "content": "module.exports = {\"version\":\"0.1.1\",\"dependencies\":{\"observable\":\"distri/observable:v0.1.0\"}};",
           "type": "blob"
         },
         "demo": {
@@ -4364,7 +4364,7 @@ window["STRd6/editor:text-value-widget"]({
       "progenitor": {
         "url": "http://strd6.github.io/editor/"
       },
-      "version": "0.1.1-pre.7",
+      "version": "0.1.1",
       "entryPoint": "main",
       "repository": {
         "id": 17844287,
@@ -4478,7 +4478,7 @@ window["STRd6/editor:text-value-widget"]({
         },
         "network_count": 0,
         "subscribers_count": 2,
-        "branch": "v0.1.1-pre.7",
+        "branch": "v0.1.1",
         "publishBranch": "gh-pages"
       },
       "dependencies": {
