@@ -6,7 +6,6 @@ remoteDependencies: [
   "https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"
   "https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"
   "https://code.jquery.com/jquery-1.10.1.min.js"
-  "https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"
   "http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js"
 ]
 dependencies:
@@ -24,3 +23,4 @@ dependencies:
   packager: "distri/packager:v0.5.5"
   filetree: "STRd6/filetree:v0.3.0"
   runner: "STRd6/runner:v0.2.0"
+  "value-widget": "distri/value-widget:v0.1.1"

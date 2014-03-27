@@ -46,6 +46,8 @@ TODO: This needs a big cleanup.
     # Global until we consolidate editor/actions into something cleaner
     global.github = require("github")(require("./source/github_auth")())
 
+    ValueWidget = require "value-widget"
+
 Templates
 ---------
 
@@ -61,7 +63,6 @@ Templates
       "actions"
       "editor"
       "github_status"
-      "text_editor"
       "repo_info"
     ].each (name) ->
       template = require("./templates/#{name}")
@@ -70,7 +71,6 @@ Templates
         templates[name] = template
 
     Editor = require("./editor")
-    TextEditor = require("./source/text_editor")
 
     editor = global.editor = Editor()
     editor.loadFiles(files)
@@ -309,28 +309,31 @@ Templates
       return if file.binary?()
 
       root = $root.children(".main")
-      root.find(".editor-wrap").hide()
+      root.find("iframe").hide()
 
       if file.editor
         file.editor.trigger("show")
       else
-        root.append(HAMLjr.render "text_editor")
-        file.editor = root.find(".editor-wrap").last()
+        iframe = document.createElement "iframe"
+        root.append iframe
+        file.editor = $(iframe)
 
         switch file.path().extension()
           when "md", "coffee", "js", "styl", "cson"
             file.content Hygiene.clean file.content()
 
-        textEditor = TextEditor
-          text: file.content()
-          el: file.editor.find('.editor').get(0)
-          mode: file.mode()
+        textEditor = ValueWidget
+          value: file.content()
+          iframe: iframe
+          url: "http://distri.github.io/text/v0.1.0/"
+          options:
+            mode: file.mode()
 
         file.editor.on "show", ->
           file.editor.show()
-          textEditor.editor.focus()
+          textEditor.send "focus"
 
-        textEditor.text.observe (value) ->
+        textEditor.observe (value) ->
           file.content(value)
 
           # TODO May want to move this into a collection listener for all files
