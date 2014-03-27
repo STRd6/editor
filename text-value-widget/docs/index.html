@@ -143,7 +143,6 @@ templates = (HAMLjr.templates ||= {})
     templates[name] = template
 
 Editor = require(<span class="string">"./editor"</span>)
-TextEditor = require(<span class="string">"./source/text_editor"</span>)
 
 editor = global.editor = Editor()
 editor.loadFiles(files)
@@ -398,14 +397,13 @@ filetree.selectedFile.observe (file) -&gt;
     textEditor = ValueWidget
       value: file.content()
       iframe: iframe
-      url: <span class="string">"http://distri.github.io/text"</span>
-      mode: file.mode() <span class="comment"># TODO: Allow passing of options </span>
+      url: <span class="string">"http://distri.github.io/text/v0.1.0/"</span>
+      options:
+        mode: file.mode()
 
     file.editor.<span class="literal">on</span> <span class="string">"show"</span>, -&gt;
       file.editor.show()
-
-      <span class="comment"># TODO</span>
-      <span class="comment"># textEditor.editor.focus()</span>
+      textEditor.send <span class="string">"focus"</span>
 
     textEditor.observe (value) -&gt;
       file.content(value)
