@@ -15,7 +15,7 @@ dependencies:
   cson: "distri/cson:v0.1.0"
   issues: "STRd6/issues:v0.2.0"
   sandbox: "STRd6/sandbox:v0.2.0"
-  notifications: "STRd6/notifications:v0.2.0"
+  notifications: "distri/notifications:v0.3.0"
   md: "distri/md:v0.4.0"
   github: "STRd6/github:v0.4.2"
   hygiene: "STRd6/hygiene:v0.2.0"

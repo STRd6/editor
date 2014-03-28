@@ -89,7 +89,6 @@ Templates
     {readSourceConfig} = require("./source/util")
 
     notifications = require("notifications")()
-    templates.notifications = notifications.template
     {classicError, notify, errors} = notifications
 
     Runtime(PACKAGE)
