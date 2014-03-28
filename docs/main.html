@@ -193,7 +193,7 @@ repository github.Repository(PACKAGE.repository)
 
 <span class="function"><span class="title">closeOpenEditors</span></span> = -&gt;
   root = $root.children(<span class="string">".main"</span>)
-  root.find(<span class="string">".editor-wrap"</span>).remove()
+  root.find(<span class="string">"iframe"</span>).remove()
 
 actions =
   save: -&gt;
