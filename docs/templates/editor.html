@@ -24,7 +24,7 @@
             <div class="content"><pre><code class="lang-haml">.main
   = HAMLjr.render &quot;actions&quot;, actions: @actions, issues: @issues
   = HAMLjr.render &quot;filetree&quot;, @filetree
-  = HAMLjr.render &quot;notifications&quot;, @notifications
+  = @notifications.view
   = HAMLjr.render &quot;repo_info&quot;, @repository
   = HAMLjr.render &quot;github_status&quot;, @github</code></pre>
 </div>
