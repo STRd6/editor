@@ -121,7 +121,7 @@ Templates
 
     closeOpenEditors = ->
       root = $root.children(".main")
-      root.find(".editor-wrap").remove()
+      root.find("iframe").remove()
 
     actions =
       save: ->
