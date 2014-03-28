@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>source/deferred</title>
+  <title>editor</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="http://strd6.github.io/cdn/parallel/docco.css" />
@@ -18,7 +18,7 @@
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h1 id="deferred">Deferred</h1>
+              <h1 id="editor">Editor</h1>
 
             </div>
             <div class="content"><pre><code class="lang-coffeescript">
@@ -32,13 +32,39 @@
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Use jQuery.Deferred to implement deferreds, but
-stay insulated by not blasting the $ all over our code
-that doesn&#39;t really depend on jQuery
-This let&#39;s us swap our our Deferred provider more easily later.</p>
-
+              
             </div>
-            <div class="content"><pre><code class="lang-coffeescript">global.Deferred = $.Deferred</code></pre>
+            <div class="content"><pre><code class="lang-coffeescript">Runner = require(<span class="string">"runner"</span>)
+Actions = require(<span class="string">"./source/actions"</span>)
+Builder = require(<span class="string">"builder"</span>)
+Packager = require(<span class="string">"packager"</span>)
+{Filetree, File} = require(<span class="string">"filetree"</span>)
+
+<span class="function"><span class="title">initBuilder</span></span> = -&gt;
+  builder = Builder()
+
+  <span class="comment"># Add editor's metadata</span>
+  builder.addPostProcessor (pkg) -&gt;
+    pkg.progenitor =
+      url: <span class="string">"http://strd6.github.io/editor/"</span>
+
+  <span class="comment"># Add metadata from our config</span>
+  builder.addPostProcessor (pkg) -&gt;
+    config = readSourceConfig(pkg)
+
+    pkg.version = config.version
+    pkg.entryPoint = config.entryPoint <span class="keyword">or</span> <span class="string">"main"</span>
+    pkg.remoteDependencies = config.remoteDependencies
+
+  <span class="keyword">return</span> builder
+
+module.<span class="function"><span class="title">exports</span></span> = (I={}, self=Model(I)) -&gt;
+  runner = Runner()
+  builder = initBuilder()
+  filetree = Filetree()
+
+  self.extend
+    repository: Observable()</code></pre>
 </div>
         </li>
         
@@ -48,20 +74,39 @@ This let&#39;s us swap our our Deferred provider more easily later.</p>
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>A helper to return a promise that may be resolved or rejected by the passed
-code block.</p>
+              <p>Build the project, returning a promise that will be fulfilled with the <code>pkg</code>
+when complete.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">withDeferrence</span></span> = (fn) -&gt;
-  deferred = Deferred()
+            <div class="content"><pre><code class="lang-coffeescript">    build: -&gt;
+      data = filetree.data()
 
-  <span class="comment"># TODO: This try catch may be useless from deferring the fn</span>
-  <span class="keyword">try</span>
-    fn.defer(deferred)
-  <span class="keyword">catch</span> e
-    deferred.reject(e)
+      builder.build(data)
+      .<span class="keyword">then</span> (pkg) -&gt;
+        config = readSourceConfig(pkg)
 
-  <span class="keyword">return</span> deferred.promise()</code></pre>
+        <span class="comment"># TODO: Robustify bundled dependencies</span>
+        <span class="comment"># Right now we're always loading them from remote urls during the</span>
+        <span class="comment"># build step. The default http caching is probably fine to speed this</span>
+        <span class="comment"># up, but we may want to look into keeping our own cache during dev</span>
+        <span class="comment"># in addition to using the package's existing dependencies rather</span>
+        <span class="comment"># than always updating</span>
+        dependencies = config.dependencies <span class="keyword">or</span> {}
+
+        <span class="comment"># TODO: We will want a more robust dependency cache instead of just</span>
+        <span class="comment"># grabbing our own package's dependencies</span>
+        Packager.collectDependencies(dependencies, PACKAGE.dependencies)
+        .<span class="keyword">then</span> (dependencies) -&gt;
+          pkg.dependencies = dependencies
+
+          <span class="keyword">return</span> pkg
+
+    save: -&gt;
+      self.repository().commitTree
+        tree: filetree.data()
+
+    loadFiles: (fileData) -&gt;
+      filetree.load fileData</code></pre>
 </div>
         </li>
         
@@ -71,15 +116,40 @@ code block.</p>
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>A deferred encapsulating a confirm dialog.</p>
+              <p>Currently we&#39;re exposing the filetree though in the future we shouldn&#39;t be.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-coffeescript">Deferred.<span class="function"><span class="title">Confirm</span></span> = (message) -&gt;
-  withDeferrence (deferred) -&gt;
-    <span class="keyword">if</span> window.confirm(message)
-      deferred.resolve()
-    <span class="keyword">else</span>
-      deferred.reject()</code></pre>
+            <div class="content"><pre><code class="lang-coffeescript">    filetree: -&gt;
+      filetree
+
+    files: -&gt;
+      filetree.files()
+
+    fileAt: (path) -&gt;
+      self.files().select (file) -&gt;
+        file.path() <span class="keyword">is</span> path
+      .first()
+
+    fileContents: (path) -&gt;
+      self.fileAt(path)?.content()
+
+    filesMatching: (expr) -&gt;
+      self.files().select (file) -&gt;
+        file.path().match expr
+
+    writeFile: (path, content) -&gt;
+      <span class="keyword">if</span> existingFile = self.fileAt(path)
+        existingFile.content(content)
+
+        <span class="keyword">return</span> existingFile
+      <span class="keyword">else</span>
+        file = File
+          path: path
+          content: content
+
+        filetree.files.push(file)
+
+        <span class="keyword">return</span> file</code></pre>
 </div>
         </li>
         
@@ -89,16 +159,18 @@ code block.</p>
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>A deferred that may present a confirm dialog, but only if a certain condition is
-met.</p>
+              <p>Likewise we shouldn&#39;t expose the builder directly either.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-coffeescript">Deferred.<span class="function"><span class="title">ConfirmIf</span></span> = (flag, message) -&gt;
-  <span class="keyword">if</span> flag
-    <span class="keyword">return</span> Deferred.Confirm(message)
-  <span class="keyword">else</span>
-    withDeferrence (deferred) -&gt;
-      deferred.resolve()</code></pre>
+            <div class="content"><pre><code class="lang-coffeescript">    builder: -&gt;
+      builder
+
+    config: -&gt;
+      readSourceConfig(source: arrayToHash(filetree.data()))
+
+    <span class="comment"># TODO: Don't expose this, instead expose things like `runDocs`, `runTests`, etc.</span>
+    runner: -&gt;
+      runner</code></pre>
 </div>
         </li>
         
@@ -108,17 +180,42 @@ met.</p>
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>A deferred that encapsulates a conditional execution of a block that returns a
-promise. If the condition is met the promise returning block is executed,
-otherwise the deferred is marked as resolved and the block is not executed.</p>
+              <p>Run some code in a sandboxed popup window. We need to popup the window immediately
+in response to user input to prevent pop-up blocking so we also pass a promise
+that will contain the content to render in the window. If the promise fails we
+auto-close the window.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-coffeescript">Deferred.<span class="function"><span class="title">ExecuteIf</span></span> = (flag, callback) -&gt;
-  withDeferrence (deferred) -&gt;
-    <span class="keyword">if</span> flag
-      callback().<span class="keyword">then</span> deferred.resolve
-    <span class="keyword">else</span>
-      deferred.resolve()</code></pre>
+            <div class="content"><pre><code class="lang-coffeescript">    runInSandboxWindow: (config, promise) -&gt;
+      sandbox = runner.run
+        config: config
+
+      promise.<span class="keyword">then</span>(
+        (content) -&gt;
+          sandbox.document.open()
+          sandbox.document.write(content)
+          sandbox.document.close()
+        , (error) -&gt;
+          sandbox.close()
+
+          <span class="keyword">return</span> error
+      )
+
+  self.include(Actions)
+
+  <span class="comment"># TODO: Merge this in and clean up the `initBuilder` code</span>
+  <span class="comment"># Attach repo metadata to package</span>
+  builder.addPostProcessor (pkg) -&gt;
+    repository = self.repository()
+    <span class="comment"># TODO: Track commit SHA as well</span>
+    pkg.repository = repository.toJSON()
+
+    <span class="comment"># Add publish branch</span>
+    pkg.repository.publishBranch = self.config().publishBranch <span class="keyword">or</span> repository.publishBranch()
+
+    pkg
+
+  <span class="keyword">return</span> self</code></pre>
 </div>
         </li>
         
@@ -128,21 +225,23 @@ otherwise the deferred is marked as resolved and the block is not executed.</p>
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>A touched up version of jQuery&#39;s <code>when</code>. Succeeds if all promises succeed, fails
-if any promise fails. Handles jQuery weirdness if only operating on one promise.</p>
-<p>TODO: We should think about the case when there are zero promises. Probably
-succeed with an empty array for results.</p>
+              <h2 id="helpers">Helpers</h2>
 
             </div>
-            <div class="content"><pre><code class="lang-coffeescript">Deferred.<span class="function"><span class="title">when</span></span> = (promises) -&gt;
-  $.<span class="keyword">when</span>.apply(<span class="literal">null</span>, promises)
-  .<span class="keyword">then</span> (results...) -&gt;
-    <span class="comment"># WTF: jQuery.when behaves differently for one argument than it does for</span>
-    <span class="comment"># two or more.</span>
-    <span class="keyword">if</span> promises.length <span class="keyword">is</span> <span class="number">1</span>
-      results = [results]
-    <span class="keyword">else</span>
-      results</code></pre>
+            <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">{readSourceConfig, arrayToHash} = require(<span class="string">"./source/util"</span>)</code></pre>
 </div>
         </li>
         
@@ -289,6 +388,6 @@ succeed with an empty array for results.</p>
 }).call(this);
 
 //# sourceURL=interactive.coffee
-</script><script src="../package.js"></script>
+</script><script src="package.js"></script>
 </body>
 </html>
