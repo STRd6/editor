@@ -324,7 +324,7 @@ Templates
         textEditor = ValueWidget
           value: file.content()
           iframe: iframe
-          url: "http://distri.github.io/text/v0.1.0/"
+          url: "http://distri.github.io/text/v0.1.1/"
           options:
             mode: file.mode()
 
