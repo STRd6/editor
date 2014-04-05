@@ -32,7 +32,6 @@ TODO: This needs a big cleanup.
     # Get stuff from our package
     {source:files} = PACKAGE
 
-    global.Sandbox = require 'sandbox'
     require "./source/duct_tape"
     require "./source/deferred"
     {processDirectory} = require "./source/util"
@@ -336,6 +335,7 @@ Templates
           file.content(value)
 
           # TODO: Trigger hot reload
+          editor.hotReload()
 
     issues?.currentIssue.observe (issue) ->
       # TODO: Formalize this later

@@ -108,6 +108,14 @@ Likewise we shouldn't expose the builder directly either.
         config: ->
           readSourceConfig(source: arrayToHash(filetree.data()))
 
+Rebuild the package and send the reload message to the runner with the newest package.
+
+        hotReload: ->
+          # TODO: Need to speed up the build significantly for this to be good.
+          self.build()
+          .then (pkg) ->
+            runner.reload(pkg)
+
         # TODO: Don't expose this, instead expose things like `runDocs`, `runTests`, etc.
         runner: ->
           runner
