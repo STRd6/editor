@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html manifest="manifest.appcache?1396715208934">
+<html manifest="manifest.appcache?1396727372207">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
@@ -189,7 +189,7 @@ require('./main')
     "editor.coffee.md": {
       "path": "editor.coffee.md",
       "mode": "100644",
-      "content": "Editor\n======\n\n    Runner = require(\"runner\")\n    Actions = require(\"./source/actions\")\n    Builder = require(\"builder\")\n    Packager = require(\"packager\")\n    {Filetree, File} = require(\"filetree\")\n\n    initBuilder = ->\n      builder = Builder()\n\n      # Add editor's metadata\n      builder.addPostProcessor (pkg) ->\n        pkg.progenitor =\n          url: \"http://strd6.github.io/editor/\"\n\n      # Add metadata from our config\n      builder.addPostProcessor (pkg) ->\n        config = readSourceConfig(pkg)\n\n        pkg.version = config.version\n        pkg.entryPoint = config.entryPoint or \"main\"\n        pkg.remoteDependencies = config.remoteDependencies\n\n      return builder\n\n    module.exports = (I={}, self=Model(I)) ->\n      runner = Runner()\n      builder = initBuilder()\n      filetree = Filetree()\n\n      self.extend\n        repository: Observable()\n\nBuild the project, returning a promise that will be fulfilled with the `pkg`\nwhen complete.\n\n        build: ->\n          data = filetree.data()\n\n          builder.build(data)\n          .then (pkg) ->\n            config = readSourceConfig(pkg)\n\n            # TODO: Robustify bundled dependencies\n            # Right now we're always loading them from remote urls during the\n            # build step. The default http caching is probably fine to speed this\n            # up, but we may want to look into keeping our own cache during dev\n            # in addition to using the package's existing dependencies rather\n            # than always updating\n            dependencies = config.dependencies or {}\n\n            # TODO: We will want a more robust dependency cache instead of just\n            # grabbing our own package's dependencies\n            Packager.collectDependencies(dependencies, PACKAGE.dependencies)\n            .then (dependencies) ->\n              pkg.dependencies = dependencies\n\n              return pkg\n\n        save: ->\n          self.repository().commitTree\n            tree: filetree.data()\n\n        loadFiles: (fileData) ->\n          filetree.load fileData\n\nCurrently we're exposing the filetree though in the future we shouldn't be.\n\n        filetree: ->\n          filetree\n\n        files: ->\n          filetree.files()\n\n        fileAt: (path) ->\n          self.files().select (file) ->\n            file.path() is path\n          .first()\n\n        fileContents: (path) ->\n          self.fileAt(path)?.content()\n\n        filesMatching: (expr) ->\n          self.files().select (file) ->\n            file.path().match expr\n\n        writeFile: (path, content) ->\n          if existingFile = self.fileAt(path)\n            existingFile.content(content)\n\n            return existingFile\n          else\n            file = File\n              path: path\n              content: content\n\n            filetree.files.push(file)\n\n            return file\n\nLikewise we shouldn't expose the builder directly either.\n\n        builder: ->\n          builder\n\n        config: ->\n          readSourceConfig(source: arrayToHash(filetree.data()))\n\n        # TODO: Don't expose this, instead expose things like `runDocs`, `runTests`, etc.\n        runner: ->\n          runner\n\nRun some code in a sandboxed popup window. We need to popup the window immediately\nin response to user input to prevent pop-up blocking so we also pass a promise\nthat will contain the content to render in the window. If the promise fails we\nauto-close the window.\n\n        runInSandboxWindow: (config, promise) ->\n          sandbox = runner.run\n            config: config\n\n          promise.then(\n            (content) ->\n              sandbox.document.open()\n              sandbox.document.write(content)\n              sandbox.document.close()\n            , (error) ->\n              sandbox.close()\n\n              return error\n          )\n\n      self.include(Actions)\n\n      # TODO: Merge this in and clean up the `initBuilder` code\n      # Attach repo metadata to package\n      builder.addPostProcessor (pkg) ->\n        repository = self.repository()\n        # TODO: Track commit SHA as well\n        pkg.repository = repository.toJSON()\n\n        # Add publish branch\n        pkg.repository.publishBranch = self.config().publishBranch or repository.publishBranch()\n\n        pkg\n\n      return self\n\nHelpers\n-------\n\n    {readSourceConfig, arrayToHash} = require(\"./source/util\")\n",
+      "content": "Editor\n======\n\n    Runner = require(\"runner\")\n    Actions = require(\"./source/actions\")\n    Builder = require(\"builder\")\n    Packager = require(\"packager\")\n    {Filetree, File} = require(\"filetree\")\n\n    initBuilder = ->\n      builder = Builder()\n\n      # Add editor's metadata\n      builder.addPostProcessor (pkg) ->\n        pkg.progenitor =\n          url: \"http://strd6.github.io/editor/\"\n\n      # Add metadata from our config\n      builder.addPostProcessor (pkg) ->\n        config = readSourceConfig(pkg)\n\n        pkg.version = config.version\n        pkg.entryPoint = config.entryPoint or \"main\"\n        pkg.remoteDependencies = config.remoteDependencies\n\n      return builder\n\n    module.exports = (I={}, self=Model(I)) ->\n      runner = Runner()\n      builder = initBuilder()\n      filetree = Filetree()\n\n      self.extend\n        repository: Observable()\n\nBuild the project, returning a promise that will be fulfilled with the `pkg`\nwhen complete.\n\n        build: ->\n          data = filetree.data()\n\n          builder.build(data)\n          .then (pkg) ->\n            config = readSourceConfig(pkg)\n\n            # TODO: Robustify bundled dependencies\n            # Right now we're always loading them from remote urls during the\n            # build step. The default http caching is probably fine to speed this\n            # up, but we may want to look into keeping our own cache during dev\n            # in addition to using the package's existing dependencies rather\n            # than always updating\n            dependencies = config.dependencies or {}\n\n            # TODO: We will want a more robust dependency cache instead of just\n            # grabbing our own package's dependencies\n            Packager.collectDependencies(dependencies, PACKAGE.dependencies)\n            .then (dependencies) ->\n              pkg.dependencies = dependencies\n\n              return pkg\n\n        save: ->\n          self.repository().commitTree\n            tree: filetree.data()\n\n        loadFiles: (fileData) ->\n          filetree.load fileData\n\nCurrently we're exposing the filetree though in the future we shouldn't be.\n\n        filetree: ->\n          filetree\n\n        files: ->\n          filetree.files()\n\n        fileAt: (path) ->\n          self.files().select (file) ->\n            file.path() is path\n          .first()\n\n        fileContents: (path) ->\n          self.fileAt(path)?.content()\n\n        filesMatching: (expr) ->\n          self.files().select (file) ->\n            file.path().match expr\n\n        writeFile: (path, content) ->\n          if existingFile = self.fileAt(path)\n            existingFile.content(content)\n\n            return existingFile\n          else\n            file = File\n              path: path\n              content: content\n\n            filetree.files.push(file)\n\n            return file\n\nLikewise we shouldn't expose the builder directly either.\n\n        builder: ->\n          builder\n\n        config: ->\n          readSourceConfig(source: arrayToHash(filetree.data()))\n\nRebuild the package and send the reload message to the runner with the newest package.\n\n        hotReload: ->\n          # TODO: Need to speed up the build significantly for this to be good.\n          self.build()\n          .then (pkg) ->\n            runner.reload(pkg)\n\n        # TODO: Don't expose this, instead expose things like `runDocs`, `runTests`, etc.\n        runner: ->\n          runner\n\nRun some code in a sandboxed popup window. We need to popup the window immediately\nin response to user input to prevent pop-up blocking so we also pass a promise\nthat will contain the content to render in the window. If the promise fails we\nauto-close the window.\n\n        runInSandboxWindow: (config, promise) ->\n          sandbox = runner.run\n            config: config\n\n          promise.then(\n            (content) ->\n              sandbox.document.open()\n              sandbox.document.write(content)\n              sandbox.document.close()\n            , (error) ->\n              sandbox.close()\n\n              return error\n          )\n\n      self.include(Actions)\n\n      # TODO: Merge this in and clean up the `initBuilder` code\n      # Attach repo metadata to package\n      builder.addPostProcessor (pkg) ->\n        repository = self.repository()\n        # TODO: Track commit SHA as well\n        pkg.repository = repository.toJSON()\n\n        # Add publish branch\n        pkg.repository.publishBranch = self.config().publishBranch or repository.publishBranch()\n\n        pkg\n\n      return self\n\nHelpers\n-------\n\n    {readSourceConfig, arrayToHash} = require(\"./source/util\")\n",
       "type": "blob"
     },
     "lib/converter.coffee.md": {
@@ -201,13 +201,13 @@ require('./main')
     "main.coffee.md": {
       "path": "main.coffee.md",
       "mode": "100644",
-      "content": "Editor\n======\n\nThe funny story about this editor is that it has an unbroken history from a\nsingle gist https://gist.github.com/STRd6/6286182/6196ffb39db7d10c56aa263190525318ca609db7\n\nThe original gist was an exploration in a self-hosting gist editor. One that\ncould load gists via the Github API, update them, and create new gists. It\nsucceeded at that, but I ran into the limits of the gist structure, namely no\nbranches or folders.\n\nI went on and created a git repo, merged in the gist history, and continued from\nthere. Maybe if I were smarter I could have rewritten it from scratch to be better,\nbut I had no idea what I was doing and still don't know to this day.\n\nSo that may explain why this is in such need of a cleanup.\n\nDemo\n----\n\n[Run it!](/editor)\n\nComponents\n----------\n\n- [Packager](/packager/docs)\n- [Hygiene](/hygiene/docs)\n- [Runtime](/runtime/docs)\n\nTODO: This needs a big cleanup.\n\n    # Get stuff from our package\n    {source:files} = PACKAGE\n\n    global.Sandbox = require 'sandbox'\n    require \"./source/duct_tape\"\n    require \"./source/deferred\"\n    {processDirectory} = require \"./source/util\"\n\n    global.PACKAGE = PACKAGE\n    global.require = require\n\n    require(\"analytics\").init(\"UA-3464282-15\")\n\n    # Create and auth a github API\n    # Global until we consolidate editor/actions into something cleaner\n    global.github = require(\"github\")(require(\"./source/github_auth\")())\n\n    ValueWidget = require \"value-widget\"\n\nTemplates\n---------\n\n- [Actions](./templates/actions)\n- [Editor](./templates/editor)\n- [Github Status](./templates/github_status)\n- [Text Editor](./templates/text_editor)\n- [Repo Info](./templates/repo_info)\n\n    # Load and attach Templates\n    templates = (HAMLjr.templates ||= {})\n    [\n      \"actions\"\n      \"editor\"\n      \"github_status\"\n      \"repo_info\"\n    ].each (name) ->\n      template = require(\"./templates/#{name}\")\n      # TODO Transitional type check\n      if typeof template is \"function\"\n        templates[name] = template\n\n    Editor = require(\"./editor\")\n\n    editor = global.editor = Editor()\n    editor.loadFiles(files)\n\n    # TODO: Don't expose these\n    builder = editor.builder()\n    filetree = editor.filetree()\n\n    {File, template:filetreeTemplate} = require \"filetree\"\n    templates[\"filetree\"] = filetreeTemplate\n\n    Hygiene = require \"hygiene\"\n    Runtime = require \"runtime\"\n    Packager = require \"packager\"\n\n    {readSourceConfig} = require(\"./source/util\")\n\n    notifications = require(\"notifications\")()\n    {classicError, notify, errors} = notifications\n\n    Runtime(PACKAGE)\n      .boot()\n      .applyStyleSheet(require('./style'))\n\n    $root = $(\"body\")\n\n    # Branch Chooser using pull requests\n    {models:{Issue, Issues}, templates:{issues:issuesTemplate}} = require(\"issues\")\n    templates[\"issues\"] = issuesTemplate\n    issues = Issues()\n\n    # Github repository observable\n    # TODO: Finalize move into editor module\n    repository = editor.repository\n\n    repository.observe (repository) ->\n      issues.repository = repository\n      repository.pullRequests().then issues.reset\n\n      notify \"Loaded repository: #{repository.full_name()}\"\n\n    PACKAGE.repository.url ||= \"repos/#{PACKAGE.repository.full_name}\"\n\n    repository github.Repository(PACKAGE.repository)\n\n    confirmUnsaved = ->\n      Deferred.ConfirmIf(filetree.hasUnsavedChanges(), \"You will lose unsaved changes in your current branch, continue?\")\n\n    closeOpenEditors = ->\n      root = $root.children(\".main\")\n      root.find(\"iframe\").remove()\n\n    actions =\n      save: ->\n        notify \"Saving...\"\n\n        editor.save()\n        .then ->\n          # TODO: This could get slightly out of sync if there were changes\n          # during the async call\n          # The correct solution will be to use git shas to determine changed status\n          # but that's a little heavy duty for right now.\n          filetree.markSaved()\n\n          editor.publish()\n        .then ->\n          notify \"Saved and published!\"\n        .fail (args...) ->\n          errors args\n\n      run: ->\n        notify \"Running...\"\n\n        editor.run()\n        .fail classicError\n\n      test: ->\n        notify \"Running tests...\"\n\n        editor.test()\n        .fail errors\n\n      docs: ->\n        notify \"Running Docs...\"\n\n        if file = prompt(\"Docs file\", \"index\")\n          editor.runDocs({file})\n          .fail errors\n\n      publish_chrapp: ->\n        Chrapps = require \"chrapps\"\n\n        notify \"Chrapping...\"\n\n        editor.build().then (pkg) ->\n          editor.repository().publish(Chrapps.processPackage(pkg), undefined, \"chrapps\")\n        .then ->\n          notify \"Chrapped!\"\n        .fail (args...) ->\n          errors args\n\n      convert_data: ->\n        converter = require(\"./lib/converter\").convertDataToJSON\n\n        converter\n          editor: editor\n          outputFileName: \"images.json\"\n          matcher: /^images\\/(.*)\\.png$/\n          mimeType: \"image/png\"\n\n        converter\n          editor: editor\n          outputFileName: \"sounds.json\"\n          matcher: /^sounds\\/(.*)\\.wav$/\n          mimeType: \"audio/wav\"\n\n        converter\n          editor: editor\n          outputFileName: \"music.json\"\n          matcher: /^sounds\\/(.*)\\.mp3$/\n          mimeType: \"audio/mp3\"\n\n      new_file: ->\n        if name = prompt(\"File Name\", \"newfile.coffee\")\n          file = File\n            path: name\n            content: \"\"\n          filetree.files.push file\n          filetree.selectedFile file\n\n      load_repo: (skipPrompt) ->\n        confirmUnsaved()\n        .then ->\n          currentRepositoryName = repository().full_name()\n\n          fullName = prompt(\"Github repo\", currentRepositoryName)\n\n          if fullName\n            github.repository(fullName).then repository\n          else\n            Deferred().reject(\"No repo given\")\n        .then (repositoryInstance) ->\n          notify \"Loading files...\"\n\n          editor.load\n            repository: repositoryInstance\n          .then ->\n            closeOpenEditors()\n\n            notifications.push \"Loaded\"\n        .fail classicError\n\n      new_feature: ->\n        if title = prompt(\"Description\")\n          notify \"Creating feature branch...\"\n\n          editor.repository().createPullRequest\n            title: title\n          .then (data) ->\n            issue = Issue(data)\n            issues.issues.push issue\n\n            # TODO: Standardize this like backbone or something\n            # or think about using deferreds in some crazy way\n            issues.silent = true\n            issues.currentIssue issue\n            issues.silent = false\n\n            notifications.push \"Created!\"\n          , classicError\n\n      pull_master: ->\n        confirmUnsaved()\n        .then( ->\n          notify \"Merging in default branch...\"\n          repository().pullFromBranch()\n        , classicError\n        ).then ->\n          notifications.push \"Merged!\"\n\n          branchName = repository().branch()\n          notifications.push \"\\nReloading branch #{branchName}...\"\n\n          editor.load\n            repository: repository()\n          .then ->\n            notifications.push \"Loaded!\"\n          .fail ->\n            classicError \"Error loading #{repository().url()}\"\n\n      pull_upstream: ->\n        confirmUnsaved()\n        .then( ->\n          notify \"Pulling from upstream master\"\n\n          upstreamRepo = repository().parent().full_name\n\n          github.repository(upstreamRepo)\n          .then (repository) ->\n            repository.latestContent()\n          .then (results) ->\n            files = processDirectory results\n            editor.loadFiles files\n\n        , classicError\n        ).then ->\n          notifications.push \"\\nYour code is up to date with the upstream master\"\n          closeOpenEditors()\n\n      tag_version: ->\n        notify \"Building...\"\n\n        editor.build()\n        .then (pkg) ->\n          version = \"v#{readSourceConfig(pkg).version}\"\n\n          notify \"Tagging version #{version} ...\"\n\n          repository().createRef(\"refs/tags/#{version}\")\n          .then ->\n            notifications.push \"Tagged #{version}\"\n          .then ->\n            notifications.push \"\\nPublishing...\"\n\n            # Force branch for jsonp wrapper\n            pkg.repository.branch = version\n\n            repository().publish Packager.standAlone(pkg), version\n          .then ->\n            notifications.push \"Published!\"\n\n        .fail classicError\n\n    filetree.selectedFile.observe (file) ->\n      return if file.binary?()\n\n      root = $root.children(\".main\")\n      root.find(\"iframe\").hide()\n\n      if file.editor\n        file.editor.trigger(\"show\")\n      else\n        iframe = document.createElement \"iframe\"\n        root.append iframe\n        file.editor = $(iframe)\n\n        switch file.path().extension()\n          when \"md\", \"coffee\", \"js\", \"styl\", \"cson\"\n            file.content Hygiene.clean file.content()\n\n        textEditor = ValueWidget\n          value: file.content()\n          iframe: iframe\n          url: \"http://distri.github.io/text/v0.1.1/\"\n          options:\n            mode: file.mode()\n\n        file.editor.on \"show\", ->\n          file.editor.show()\n          textEditor.send \"focus\"\n\n        textEditor.observe (value) ->\n          file.content(value)\n\n          # TODO: Trigger hot reload\n\n    issues?.currentIssue.observe (issue) ->\n      # TODO: Formalize this later\n      return if issues.silent\n\n      changeBranch = (branchName) ->\n        previousBranch = repository().branch()\n\n        confirmUnsaved()\n        .then ->\n          closeOpenEditors()\n\n          # Switch to branch for working on the issue\n          repository().switchToBranch(branchName)\n          .then ->\n            notifications.push \"\\nLoading branch #{branchName}...\"\n\n            editor.load\n              repository: repository()\n            .then ->\n              notifications.push \"Loaded!\"\n        , ->\n          # TODO: Issue will appear as being selected even though we cancelled\n          # To correctly handle this we may need to really beef up our observables.\n          # One possibility is to extend observables to full fledged deferreds\n          # which can be rejected by listeners added to the chain.\n\n          repository.branch(previousBranch)\n\n          classicError \"Error switching to #{branchName}, still on #{previousBranch}\"\n\n      if issue\n        notify issue.fullDescription()\n\n        changeBranch issue.branchName()\n      else\n        notify \"Default branch selected\"\n\n        changeBranch repository().defaultBranch()\n\n    $root\n      .append(HAMLjr.render \"editor\",\n        filetree: filetree\n        actions: actions\n        notifications: notifications\n        issues: issues\n        github: github\n        repository: repository\n      )\n\n    window.onbeforeunload = ->\n      if filetree.hasUnsavedChanges()\n        \"You have some unsaved changes, if you leave now you will lose your work.\"\n",
+      "content": "Editor\n======\n\nThe funny story about this editor is that it has an unbroken history from a\nsingle gist https://gist.github.com/STRd6/6286182/6196ffb39db7d10c56aa263190525318ca609db7\n\nThe original gist was an exploration in a self-hosting gist editor. One that\ncould load gists via the Github API, update them, and create new gists. It\nsucceeded at that, but I ran into the limits of the gist structure, namely no\nbranches or folders.\n\nI went on and created a git repo, merged in the gist history, and continued from\nthere. Maybe if I were smarter I could have rewritten it from scratch to be better,\nbut I had no idea what I was doing and still don't know to this day.\n\nSo that may explain why this is in such need of a cleanup.\n\nDemo\n----\n\n[Run it!](/editor)\n\nComponents\n----------\n\n- [Packager](/packager/docs)\n- [Hygiene](/hygiene/docs)\n- [Runtime](/runtime/docs)\n\nTODO: This needs a big cleanup.\n\n    # Get stuff from our package\n    {source:files} = PACKAGE\n\n    require \"./source/duct_tape\"\n    require \"./source/deferred\"\n    {processDirectory} = require \"./source/util\"\n\n    global.PACKAGE = PACKAGE\n    global.require = require\n\n    require(\"analytics\").init(\"UA-3464282-15\")\n\n    # Create and auth a github API\n    # Global until we consolidate editor/actions into something cleaner\n    global.github = require(\"github\")(require(\"./source/github_auth\")())\n\n    ValueWidget = require \"value-widget\"\n\nTemplates\n---------\n\n- [Actions](./templates/actions)\n- [Editor](./templates/editor)\n- [Github Status](./templates/github_status)\n- [Text Editor](./templates/text_editor)\n- [Repo Info](./templates/repo_info)\n\n    # Load and attach Templates\n    templates = (HAMLjr.templates ||= {})\n    [\n      \"actions\"\n      \"editor\"\n      \"github_status\"\n      \"repo_info\"\n    ].each (name) ->\n      template = require(\"./templates/#{name}\")\n      # TODO Transitional type check\n      if typeof template is \"function\"\n        templates[name] = template\n\n    Editor = require(\"./editor\")\n\n    editor = global.editor = Editor()\n    editor.loadFiles(files)\n\n    # TODO: Don't expose these\n    builder = editor.builder()\n    filetree = editor.filetree()\n\n    {File, template:filetreeTemplate} = require \"filetree\"\n    templates[\"filetree\"] = filetreeTemplate\n\n    Hygiene = require \"hygiene\"\n    Runtime = require \"runtime\"\n    Packager = require \"packager\"\n\n    {readSourceConfig} = require(\"./source/util\")\n\n    notifications = require(\"notifications\")()\n    {classicError, notify, errors} = notifications\n\n    Runtime(PACKAGE)\n      .boot()\n      .applyStyleSheet(require('./style'))\n\n    $root = $(\"body\")\n\n    # Branch Chooser using pull requests\n    {models:{Issue, Issues}, templates:{issues:issuesTemplate}} = require(\"issues\")\n    templates[\"issues\"] = issuesTemplate\n    issues = Issues()\n\n    # Github repository observable\n    # TODO: Finalize move into editor module\n    repository = editor.repository\n\n    repository.observe (repository) ->\n      issues.repository = repository\n      repository.pullRequests().then issues.reset\n\n      notify \"Loaded repository: #{repository.full_name()}\"\n\n    PACKAGE.repository.url ||= \"repos/#{PACKAGE.repository.full_name}\"\n\n    repository github.Repository(PACKAGE.repository)\n\n    confirmUnsaved = ->\n      Deferred.ConfirmIf(filetree.hasUnsavedChanges(), \"You will lose unsaved changes in your current branch, continue?\")\n\n    closeOpenEditors = ->\n      root = $root.children(\".main\")\n      root.find(\"iframe\").remove()\n\n    actions =\n      save: ->\n        notify \"Saving...\"\n\n        editor.save()\n        .then ->\n          # TODO: This could get slightly out of sync if there were changes\n          # during the async call\n          # The correct solution will be to use git shas to determine changed status\n          # but that's a little heavy duty for right now.\n          filetree.markSaved()\n\n          editor.publish()\n        .then ->\n          notify \"Saved and published!\"\n        .fail (args...) ->\n          errors args\n\n      run: ->\n        notify \"Running...\"\n\n        editor.run()\n        .fail classicError\n\n      test: ->\n        notify \"Running tests...\"\n\n        editor.test()\n        .fail errors\n\n      docs: ->\n        notify \"Running Docs...\"\n\n        if file = prompt(\"Docs file\", \"index\")\n          editor.runDocs({file})\n          .fail errors\n\n      publish_chrapp: ->\n        Chrapps = require \"chrapps\"\n\n        notify \"Chrapping...\"\n\n        editor.build().then (pkg) ->\n          editor.repository().publish(Chrapps.processPackage(pkg), undefined, \"chrapps\")\n        .then ->\n          notify \"Chrapped!\"\n        .fail (args...) ->\n          errors args\n\n      convert_data: ->\n        converter = require(\"./lib/converter\").convertDataToJSON\n\n        converter\n          editor: editor\n          outputFileName: \"images.json\"\n          matcher: /^images\\/(.*)\\.png$/\n          mimeType: \"image/png\"\n\n        converter\n          editor: editor\n          outputFileName: \"sounds.json\"\n          matcher: /^sounds\\/(.*)\\.wav$/\n          mimeType: \"audio/wav\"\n\n        converter\n          editor: editor\n          outputFileName: \"music.json\"\n          matcher: /^sounds\\/(.*)\\.mp3$/\n          mimeType: \"audio/mp3\"\n\n      new_file: ->\n        if name = prompt(\"File Name\", \"newfile.coffee\")\n          file = File\n            path: name\n            content: \"\"\n          filetree.files.push file\n          filetree.selectedFile file\n\n      load_repo: (skipPrompt) ->\n        confirmUnsaved()\n        .then ->\n          currentRepositoryName = repository().full_name()\n\n          fullName = prompt(\"Github repo\", currentRepositoryName)\n\n          if fullName\n            github.repository(fullName).then repository\n          else\n            Deferred().reject(\"No repo given\")\n        .then (repositoryInstance) ->\n          notify \"Loading files...\"\n\n          editor.load\n            repository: repositoryInstance\n          .then ->\n            closeOpenEditors()\n\n            notifications.push \"Loaded\"\n        .fail classicError\n\n      new_feature: ->\n        if title = prompt(\"Description\")\n          notify \"Creating feature branch...\"\n\n          editor.repository().createPullRequest\n            title: title\n          .then (data) ->\n            issue = Issue(data)\n            issues.issues.push issue\n\n            # TODO: Standardize this like backbone or something\n            # or think about using deferreds in some crazy way\n            issues.silent = true\n            issues.currentIssue issue\n            issues.silent = false\n\n            notifications.push \"Created!\"\n          , classicError\n\n      pull_master: ->\n        confirmUnsaved()\n        .then( ->\n          notify \"Merging in default branch...\"\n          repository().pullFromBranch()\n        , classicError\n        ).then ->\n          notifications.push \"Merged!\"\n\n          branchName = repository().branch()\n          notifications.push \"\\nReloading branch #{branchName}...\"\n\n          editor.load\n            repository: repository()\n          .then ->\n            notifications.push \"Loaded!\"\n          .fail ->\n            classicError \"Error loading #{repository().url()}\"\n\n      pull_upstream: ->\n        confirmUnsaved()\n        .then( ->\n          notify \"Pulling from upstream master\"\n\n          upstreamRepo = repository().parent().full_name\n\n          github.repository(upstreamRepo)\n          .then (repository) ->\n            repository.latestContent()\n          .then (results) ->\n            files = processDirectory results\n            editor.loadFiles files\n\n        , classicError\n        ).then ->\n          notifications.push \"\\nYour code is up to date with the upstream master\"\n          closeOpenEditors()\n\n      tag_version: ->\n        notify \"Building...\"\n\n        editor.build()\n        .then (pkg) ->\n          version = \"v#{readSourceConfig(pkg).version}\"\n\n          notify \"Tagging version #{version} ...\"\n\n          repository().createRef(\"refs/tags/#{version}\")\n          .then ->\n            notifications.push \"Tagged #{version}\"\n          .then ->\n            notifications.push \"\\nPublishing...\"\n\n            # Force branch for jsonp wrapper\n            pkg.repository.branch = version\n\n            repository().publish Packager.standAlone(pkg), version\n          .then ->\n            notifications.push \"Published!\"\n\n        .fail classicError\n\n    filetree.selectedFile.observe (file) ->\n      return if file.binary?()\n\n      root = $root.children(\".main\")\n      root.find(\"iframe\").hide()\n\n      if file.editor\n        file.editor.trigger(\"show\")\n      else\n        iframe = document.createElement \"iframe\"\n        root.append iframe\n        file.editor = $(iframe)\n\n        switch file.path().extension()\n          when \"md\", \"coffee\", \"js\", \"styl\", \"cson\"\n            file.content Hygiene.clean file.content()\n\n        textEditor = ValueWidget\n          value: file.content()\n          iframe: iframe\n          url: \"http://distri.github.io/text/v0.1.1/\"\n          options:\n            mode: file.mode()\n\n        file.editor.on \"show\", ->\n          file.editor.show()\n          textEditor.send \"focus\"\n\n        textEditor.observe (value) ->\n          file.content(value)\n\n          # TODO: Trigger hot reload\n          editor.hotReload()\n\n    issues?.currentIssue.observe (issue) ->\n      # TODO: Formalize this later\n      return if issues.silent\n\n      changeBranch = (branchName) ->\n        previousBranch = repository().branch()\n\n        confirmUnsaved()\n        .then ->\n          closeOpenEditors()\n\n          # Switch to branch for working on the issue\n          repository().switchToBranch(branchName)\n          .then ->\n            notifications.push \"\\nLoading branch #{branchName}...\"\n\n            editor.load\n              repository: repository()\n            .then ->\n              notifications.push \"Loaded!\"\n        , ->\n          # TODO: Issue will appear as being selected even though we cancelled\n          # To correctly handle this we may need to really beef up our observables.\n          # One possibility is to extend observables to full fledged deferreds\n          # which can be rejected by listeners added to the chain.\n\n          repository.branch(previousBranch)\n\n          classicError \"Error switching to #{branchName}, still on #{previousBranch}\"\n\n      if issue\n        notify issue.fullDescription()\n\n        changeBranch issue.branchName()\n      else\n        notify \"Default branch selected\"\n\n        changeBranch repository().defaultBranch()\n\n    $root\n      .append(HAMLjr.render \"editor\",\n        filetree: filetree\n        actions: actions\n        notifications: notifications\n        issues: issues\n        github: github\n        repository: repository\n      )\n\n    window.onbeforeunload = ->\n      if filetree.hasUnsavedChanges()\n        \"You have some unsaved changes, if you leave now you will lose your work.\"\n",
       "type": "blob"
     },
     "pixie.cson": {
       "path": "pixie.cson",
       "mode": "100644",
-      "content": "version: \"0.3.0\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"https://code.jquery.com/jquery-1.10.1.min.js\"\n  \"http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js\"\n]\ndependencies:\n  analytics: \"distri/google-analytics:v0.1.0\"\n  builder: \"distri/builder:v0.3.5\"\n  chrapps: \"distri/chrapps:v0.1.0\"\n  cson: \"distri/cson:v0.1.0\"\n  issues: \"STRd6/issues:v0.2.0\"\n  sandbox: \"STRd6/sandbox:v0.2.0\"\n  notifications: \"distri/notifications:v0.3.0\"\n  md: \"distri/md:v0.4.1\"\n  github: \"STRd6/github:v0.4.2\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  runtime: \"distri/runtime:v0.3.0\"\n  packager: \"distri/packager:v0.5.5\"\n  filetree: \"STRd6/filetree:v0.3.0\"\n  runner: \"STRd6/runner:v0.2.0\"\n  \"value-widget\": \"distri/value-widget:v0.1.2\"\n",
+      "content": "version: \"0.3.0\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"https://code.jquery.com/jquery-1.10.1.min.js\"\n  \"http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js\"\n]\ndependencies:\n  analytics: \"distri/google-analytics:v0.1.0\"\n  builder: \"distri/builder:v0.3.5\"\n  chrapps: \"distri/chrapps:v0.1.0\"\n  cson: \"distri/cson:v0.1.0\"\n  issues: \"STRd6/issues:v0.2.0\"\n  notifications: \"distri/notifications:v0.3.0\"\n  md: \"distri/md:v0.4.1\"\n  github: \"STRd6/github:v0.4.2\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  runtime: \"distri/runtime:v0.3.0\"\n  packager: \"distri/packager:v0.5.5\"\n  filetree: \"STRd6/filetree:v0.3.0\"\n  runner: \"distri/runner:v0.2.2\"\n  \"value-widget\": \"distri/value-widget:v0.1.2\"\n",
       "type": "blob"
     },
     "source/actions.coffee.md": {
@@ -292,7 +292,7 @@ require('./main')
   "distribution": {
     "editor": {
       "path": "editor",
-      "content": "(function() {\n  var Actions, Builder, File, Filetree, Packager, Runner, arrayToHash, initBuilder, readSourceConfig, _ref, _ref1;\n\n  Runner = require(\"runner\");\n\n  Actions = require(\"./source/actions\");\n\n  Builder = require(\"builder\");\n\n  Packager = require(\"packager\");\n\n  _ref = require(\"filetree\"), Filetree = _ref.Filetree, File = _ref.File;\n\n  initBuilder = function() {\n    var builder;\n    builder = Builder();\n    builder.addPostProcessor(function(pkg) {\n      return pkg.progenitor = {\n        url: \"http://strd6.github.io/editor/\"\n      };\n    });\n    builder.addPostProcessor(function(pkg) {\n      var config;\n      config = readSourceConfig(pkg);\n      pkg.version = config.version;\n      pkg.entryPoint = config.entryPoint || \"main\";\n      return pkg.remoteDependencies = config.remoteDependencies;\n    });\n    return builder;\n  };\n\n  module.exports = function(I, self) {\n    var builder, filetree, runner;\n    if (I == null) {\n      I = {};\n    }\n    if (self == null) {\n      self = Model(I);\n    }\n    runner = Runner();\n    builder = initBuilder();\n    filetree = Filetree();\n    self.extend({\n      repository: Observable(),\n      build: function() {\n        var data;\n        data = filetree.data();\n        return builder.build(data).then(function(pkg) {\n          var config, dependencies;\n          config = readSourceConfig(pkg);\n          dependencies = config.dependencies || {};\n          return Packager.collectDependencies(dependencies, PACKAGE.dependencies).then(function(dependencies) {\n            pkg.dependencies = dependencies;\n            return pkg;\n          });\n        });\n      },\n      save: function() {\n        return self.repository().commitTree({\n          tree: filetree.data()\n        });\n      },\n      loadFiles: function(fileData) {\n        return filetree.load(fileData);\n      },\n      filetree: function() {\n        return filetree;\n      },\n      files: function() {\n        return filetree.files();\n      },\n      fileAt: function(path) {\n        return self.files().select(function(file) {\n          return file.path() === path;\n        }).first();\n      },\n      fileContents: function(path) {\n        var _ref1;\n        return (_ref1 = self.fileAt(path)) != null ? _ref1.content() : void 0;\n      },\n      filesMatching: function(expr) {\n        return self.files().select(function(file) {\n          return file.path().match(expr);\n        });\n      },\n      writeFile: function(path, content) {\n        var existingFile, file;\n        if (existingFile = self.fileAt(path)) {\n          existingFile.content(content);\n          return existingFile;\n        } else {\n          file = File({\n            path: path,\n            content: content\n          });\n          filetree.files.push(file);\n          return file;\n        }\n      },\n      builder: function() {\n        return builder;\n      },\n      config: function() {\n        return readSourceConfig({\n          source: arrayToHash(filetree.data())\n        });\n      },\n      runner: function() {\n        return runner;\n      },\n      runInSandboxWindow: function(config, promise) {\n        var sandbox;\n        sandbox = runner.run({\n          config: config\n        });\n        return promise.then(function(content) {\n          sandbox.document.open();\n          sandbox.document.write(content);\n          return sandbox.document.close();\n        }, function(error) {\n          sandbox.close();\n          return error;\n        });\n      }\n    });\n    self.include(Actions);\n    builder.addPostProcessor(function(pkg) {\n      var repository;\n      repository = self.repository();\n      pkg.repository = repository.toJSON();\n      pkg.repository.publishBranch = self.config().publishBranch || repository.publishBranch();\n      return pkg;\n    });\n    return self;\n  };\n\n  _ref1 = require(\"./source/util\"), readSourceConfig = _ref1.readSourceConfig, arrayToHash = _ref1.arrayToHash;\n\n}).call(this);\n",
+      "content": "(function() {\n  var Actions, Builder, File, Filetree, Packager, Runner, arrayToHash, initBuilder, readSourceConfig, _ref, _ref1;\n\n  Runner = require(\"runner\");\n\n  Actions = require(\"./source/actions\");\n\n  Builder = require(\"builder\");\n\n  Packager = require(\"packager\");\n\n  _ref = require(\"filetree\"), Filetree = _ref.Filetree, File = _ref.File;\n\n  initBuilder = function() {\n    var builder;\n    builder = Builder();\n    builder.addPostProcessor(function(pkg) {\n      return pkg.progenitor = {\n        url: \"http://strd6.github.io/editor/\"\n      };\n    });\n    builder.addPostProcessor(function(pkg) {\n      var config;\n      config = readSourceConfig(pkg);\n      pkg.version = config.version;\n      pkg.entryPoint = config.entryPoint || \"main\";\n      return pkg.remoteDependencies = config.remoteDependencies;\n    });\n    return builder;\n  };\n\n  module.exports = function(I, self) {\n    var builder, filetree, runner;\n    if (I == null) {\n      I = {};\n    }\n    if (self == null) {\n      self = Model(I);\n    }\n    runner = Runner();\n    builder = initBuilder();\n    filetree = Filetree();\n    self.extend({\n      repository: Observable(),\n      build: function() {\n        var data;\n        data = filetree.data();\n        return builder.build(data).then(function(pkg) {\n          var config, dependencies;\n          config = readSourceConfig(pkg);\n          dependencies = config.dependencies || {};\n          return Packager.collectDependencies(dependencies, PACKAGE.dependencies).then(function(dependencies) {\n            pkg.dependencies = dependencies;\n            return pkg;\n          });\n        });\n      },\n      save: function() {\n        return self.repository().commitTree({\n          tree: filetree.data()\n        });\n      },\n      loadFiles: function(fileData) {\n        return filetree.load(fileData);\n      },\n      filetree: function() {\n        return filetree;\n      },\n      files: function() {\n        return filetree.files();\n      },\n      fileAt: function(path) {\n        return self.files().select(function(file) {\n          return file.path() === path;\n        }).first();\n      },\n      fileContents: function(path) {\n        var _ref1;\n        return (_ref1 = self.fileAt(path)) != null ? _ref1.content() : void 0;\n      },\n      filesMatching: function(expr) {\n        return self.files().select(function(file) {\n          return file.path().match(expr);\n        });\n      },\n      writeFile: function(path, content) {\n        var existingFile, file;\n        if (existingFile = self.fileAt(path)) {\n          existingFile.content(content);\n          return existingFile;\n        } else {\n          file = File({\n            path: path,\n            content: content\n          });\n          filetree.files.push(file);\n          return file;\n        }\n      },\n      builder: function() {\n        return builder;\n      },\n      config: function() {\n        return readSourceConfig({\n          source: arrayToHash(filetree.data())\n        });\n      },\n      hotReload: function() {\n        return self.build().then(function(pkg) {\n          return runner.reload(pkg);\n        });\n      },\n      runner: function() {\n        return runner;\n      },\n      runInSandboxWindow: function(config, promise) {\n        var sandbox;\n        sandbox = runner.run({\n          config: config\n        });\n        return promise.then(function(content) {\n          sandbox.document.open();\n          sandbox.document.write(content);\n          return sandbox.document.close();\n        }, function(error) {\n          sandbox.close();\n          return error;\n        });\n      }\n    });\n    self.include(Actions);\n    builder.addPostProcessor(function(pkg) {\n      var repository;\n      repository = self.repository();\n      pkg.repository = repository.toJSON();\n      pkg.repository.publishBranch = self.config().publishBranch || repository.publishBranch();\n      return pkg;\n    });\n    return self;\n  };\n\n  _ref1 = require(\"./source/util\"), readSourceConfig = _ref1.readSourceConfig, arrayToHash = _ref1.arrayToHash;\n\n}).call(this);\n",
       "type": "blob"
     },
     "lib/converter": {
@@ -302,12 +302,12 @@ require('./main')
     },
     "main": {
       "path": "main",
-      "content": "(function() {\n  var $root, Editor, File, Hygiene, Issue, Issues, Packager, Runtime, ValueWidget, actions, builder, classicError, closeOpenEditors, confirmUnsaved, editor, errors, files, filetree, filetreeTemplate, issues, issuesTemplate, notifications, notify, processDirectory, readSourceConfig, repository, templates, _base, _ref, _ref1, _ref2, _ref3,\n    __slice = [].slice;\n\n  files = PACKAGE.source;\n\n  global.Sandbox = require('sandbox');\n\n  require(\"./source/duct_tape\");\n\n  require(\"./source/deferred\");\n\n  processDirectory = require(\"./source/util\").processDirectory;\n\n  global.PACKAGE = PACKAGE;\n\n  global.require = require;\n\n  require(\"analytics\").init(\"UA-3464282-15\");\n\n  global.github = require(\"github\")(require(\"./source/github_auth\")());\n\n  ValueWidget = require(\"value-widget\");\n\n  templates = (HAMLjr.templates || (HAMLjr.templates = {}));\n\n  [\"actions\", \"editor\", \"github_status\", \"repo_info\"].each(function(name) {\n    var template;\n    template = require(\"./templates/\" + name);\n    if (typeof template === \"function\") {\n      return templates[name] = template;\n    }\n  });\n\n  Editor = require(\"./editor\");\n\n  editor = global.editor = Editor();\n\n  editor.loadFiles(files);\n\n  builder = editor.builder();\n\n  filetree = editor.filetree();\n\n  _ref = require(\"filetree\"), File = _ref.File, filetreeTemplate = _ref.template;\n\n  templates[\"filetree\"] = filetreeTemplate;\n\n  Hygiene = require(\"hygiene\");\n\n  Runtime = require(\"runtime\");\n\n  Packager = require(\"packager\");\n\n  readSourceConfig = require(\"./source/util\").readSourceConfig;\n\n  notifications = require(\"notifications\")();\n\n  classicError = notifications.classicError, notify = notifications.notify, errors = notifications.errors;\n\n  Runtime(PACKAGE).boot().applyStyleSheet(require('./style'));\n\n  $root = $(\"body\");\n\n  _ref1 = require(\"issues\"), (_ref2 = _ref1.models, Issue = _ref2.Issue, Issues = _ref2.Issues), (_ref3 = _ref1.templates, issuesTemplate = _ref3.issues);\n\n  templates[\"issues\"] = issuesTemplate;\n\n  issues = Issues();\n\n  repository = editor.repository;\n\n  repository.observe(function(repository) {\n    issues.repository = repository;\n    repository.pullRequests().then(issues.reset);\n    return notify(\"Loaded repository: \" + (repository.full_name()));\n  });\n\n  (_base = PACKAGE.repository).url || (_base.url = \"repos/\" + PACKAGE.repository.full_name);\n\n  repository(github.Repository(PACKAGE.repository));\n\n  confirmUnsaved = function() {\n    return Deferred.ConfirmIf(filetree.hasUnsavedChanges(), \"You will lose unsaved changes in your current branch, continue?\");\n  };\n\n  closeOpenEditors = function() {\n    var root;\n    root = $root.children(\".main\");\n    return root.find(\"iframe\").remove();\n  };\n\n  actions = {\n    save: function() {\n      notify(\"Saving...\");\n      return editor.save().then(function() {\n        filetree.markSaved();\n        return editor.publish();\n      }).then(function() {\n        return notify(\"Saved and published!\");\n      }).fail(function() {\n        var args;\n        args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];\n        return errors(args);\n      });\n    },\n    run: function() {\n      notify(\"Running...\");\n      return editor.run().fail(classicError);\n    },\n    test: function() {\n      notify(\"Running tests...\");\n      return editor.test().fail(errors);\n    },\n    docs: function() {\n      var file;\n      notify(\"Running Docs...\");\n      if (file = prompt(\"Docs file\", \"index\")) {\n        return editor.runDocs({\n          file: file\n        }).fail(errors);\n      }\n    },\n    publish_chrapp: function() {\n      var Chrapps;\n      Chrapps = require(\"chrapps\");\n      notify(\"Chrapping...\");\n      return editor.build().then(function(pkg) {\n        return editor.repository().publish(Chrapps.processPackage(pkg), void 0, \"chrapps\");\n      }).then(function() {\n        return notify(\"Chrapped!\");\n      }).fail(function() {\n        var args;\n        args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];\n        return errors(args);\n      });\n    },\n    convert_data: function() {\n      var converter;\n      converter = require(\"./lib/converter\").convertDataToJSON;\n      converter({\n        editor: editor,\n        outputFileName: \"images.json\",\n        matcher: /^images\\/(.*)\\.png$/,\n        mimeType: \"image/png\"\n      });\n      converter({\n        editor: editor,\n        outputFileName: \"sounds.json\",\n        matcher: /^sounds\\/(.*)\\.wav$/,\n        mimeType: \"audio/wav\"\n      });\n      return converter({\n        editor: editor,\n        outputFileName: \"music.json\",\n        matcher: /^sounds\\/(.*)\\.mp3$/,\n        mimeType: \"audio/mp3\"\n      });\n    },\n    new_file: function() {\n      var file, name;\n      if (name = prompt(\"File Name\", \"newfile.coffee\")) {\n        file = File({\n          path: name,\n          content: \"\"\n        });\n        filetree.files.push(file);\n        return filetree.selectedFile(file);\n      }\n    },\n    load_repo: function(skipPrompt) {\n      return confirmUnsaved().then(function() {\n        var currentRepositoryName, fullName;\n        currentRepositoryName = repository().full_name();\n        fullName = prompt(\"Github repo\", currentRepositoryName);\n        if (fullName) {\n          return github.repository(fullName).then(repository);\n        } else {\n          return Deferred().reject(\"No repo given\");\n        }\n      }).then(function(repositoryInstance) {\n        notify(\"Loading files...\");\n        return editor.load({\n          repository: repositoryInstance\n        }).then(function() {\n          closeOpenEditors();\n          return notifications.push(\"Loaded\");\n        });\n      }).fail(classicError);\n    },\n    new_feature: function() {\n      var title;\n      if (title = prompt(\"Description\")) {\n        notify(\"Creating feature branch...\");\n        return editor.repository().createPullRequest({\n          title: title\n        }).then(function(data) {\n          var issue;\n          issue = Issue(data);\n          issues.issues.push(issue);\n          issues.silent = true;\n          issues.currentIssue(issue);\n          issues.silent = false;\n          return notifications.push(\"Created!\");\n        }, classicError);\n      }\n    },\n    pull_master: function() {\n      return confirmUnsaved().then(function() {\n        notify(\"Merging in default branch...\");\n        return repository().pullFromBranch();\n      }, classicError).then(function() {\n        var branchName;\n        notifications.push(\"Merged!\");\n        branchName = repository().branch();\n        notifications.push(\"\\nReloading branch \" + branchName + \"...\");\n        return editor.load({\n          repository: repository()\n        }).then(function() {\n          return notifications.push(\"Loaded!\");\n        }).fail(function() {\n          return classicError(\"Error loading \" + (repository().url()));\n        });\n      });\n    },\n    pull_upstream: function() {\n      return confirmUnsaved().then(function() {\n        var upstreamRepo;\n        notify(\"Pulling from upstream master\");\n        upstreamRepo = repository().parent().full_name;\n        return github.repository(upstreamRepo).then(function(repository) {\n          return repository.latestContent();\n        }).then(function(results) {\n          files = processDirectory(results);\n          return editor.loadFiles(files);\n        });\n      }, classicError).then(function() {\n        notifications.push(\"\\nYour code is up to date with the upstream master\");\n        return closeOpenEditors();\n      });\n    },\n    tag_version: function() {\n      notify(\"Building...\");\n      return editor.build().then(function(pkg) {\n        var version;\n        version = \"v\" + (readSourceConfig(pkg).version);\n        notify(\"Tagging version \" + version + \" ...\");\n        return repository().createRef(\"refs/tags/\" + version).then(function() {\n          return notifications.push(\"Tagged \" + version);\n        }).then(function() {\n          notifications.push(\"\\nPublishing...\");\n          pkg.repository.branch = version;\n          return repository().publish(Packager.standAlone(pkg), version);\n        }).then(function() {\n          return notifications.push(\"Published!\");\n        });\n      }).fail(classicError);\n    }\n  };\n\n  filetree.selectedFile.observe(function(file) {\n    var iframe, root, textEditor;\n    if (typeof file.binary === \"function\" ? file.binary() : void 0) {\n      return;\n    }\n    root = $root.children(\".main\");\n    root.find(\"iframe\").hide();\n    if (file.editor) {\n      return file.editor.trigger(\"show\");\n    } else {\n      iframe = document.createElement(\"iframe\");\n      root.append(iframe);\n      file.editor = $(iframe);\n      switch (file.path().extension()) {\n        case \"md\":\n        case \"coffee\":\n        case \"js\":\n        case \"styl\":\n        case \"cson\":\n          file.content(Hygiene.clean(file.content()));\n      }\n      textEditor = ValueWidget({\n        value: file.content(),\n        iframe: iframe,\n        url: \"http://distri.github.io/text/v0.1.1/\",\n        options: {\n          mode: file.mode()\n        }\n      });\n      file.editor.on(\"show\", function() {\n        file.editor.show();\n        return textEditor.send(\"focus\");\n      });\n      return textEditor.observe(function(value) {\n        return file.content(value);\n      });\n    }\n  });\n\n  if (issues != null) {\n    issues.currentIssue.observe(function(issue) {\n      var changeBranch;\n      if (issues.silent) {\n        return;\n      }\n      changeBranch = function(branchName) {\n        var previousBranch;\n        previousBranch = repository().branch();\n        return confirmUnsaved().then(function() {\n          closeOpenEditors();\n          return repository().switchToBranch(branchName).then(function() {\n            notifications.push(\"\\nLoading branch \" + branchName + \"...\");\n            return editor.load({\n              repository: repository()\n            }).then(function() {\n              return notifications.push(\"Loaded!\");\n            });\n          });\n        }, function() {\n          repository.branch(previousBranch);\n          return classicError(\"Error switching to \" + branchName + \", still on \" + previousBranch);\n        });\n      };\n      if (issue) {\n        notify(issue.fullDescription());\n        return changeBranch(issue.branchName());\n      } else {\n        notify(\"Default branch selected\");\n        return changeBranch(repository().defaultBranch());\n      }\n    });\n  }\n\n  $root.append(HAMLjr.render(\"editor\", {\n    filetree: filetree,\n    actions: actions,\n    notifications: notifications,\n    issues: issues,\n    github: github,\n    repository: repository\n  }));\n\n  window.onbeforeunload = function() {\n    if (filetree.hasUnsavedChanges()) {\n      return \"You have some unsaved changes, if you leave now you will lose your work.\";\n    }\n  };\n\n}).call(this);\n",
+      "content": "(function() {\n  var $root, Editor, File, Hygiene, Issue, Issues, Packager, Runtime, ValueWidget, actions, builder, classicError, closeOpenEditors, confirmUnsaved, editor, errors, files, filetree, filetreeTemplate, issues, issuesTemplate, notifications, notify, processDirectory, readSourceConfig, repository, templates, _base, _ref, _ref1, _ref2, _ref3,\n    __slice = [].slice;\n\n  files = PACKAGE.source;\n\n  require(\"./source/duct_tape\");\n\n  require(\"./source/deferred\");\n\n  processDirectory = require(\"./source/util\").processDirectory;\n\n  global.PACKAGE = PACKAGE;\n\n  global.require = require;\n\n  require(\"analytics\").init(\"UA-3464282-15\");\n\n  global.github = require(\"github\")(require(\"./source/github_auth\")());\n\n  ValueWidget = require(\"value-widget\");\n\n  templates = (HAMLjr.templates || (HAMLjr.templates = {}));\n\n  [\"actions\", \"editor\", \"github_status\", \"repo_info\"].each(function(name) {\n    var template;\n    template = require(\"./templates/\" + name);\n    if (typeof template === \"function\") {\n      return templates[name] = template;\n    }\n  });\n\n  Editor = require(\"./editor\");\n\n  editor = global.editor = Editor();\n\n  editor.loadFiles(files);\n\n  builder = editor.builder();\n\n  filetree = editor.filetree();\n\n  _ref = require(\"filetree\"), File = _ref.File, filetreeTemplate = _ref.template;\n\n  templates[\"filetree\"] = filetreeTemplate;\n\n  Hygiene = require(\"hygiene\");\n\n  Runtime = require(\"runtime\");\n\n  Packager = require(\"packager\");\n\n  readSourceConfig = require(\"./source/util\").readSourceConfig;\n\n  notifications = require(\"notifications\")();\n\n  classicError = notifications.classicError, notify = notifications.notify, errors = notifications.errors;\n\n  Runtime(PACKAGE).boot().applyStyleSheet(require('./style'));\n\n  $root = $(\"body\");\n\n  _ref1 = require(\"issues\"), (_ref2 = _ref1.models, Issue = _ref2.Issue, Issues = _ref2.Issues), (_ref3 = _ref1.templates, issuesTemplate = _ref3.issues);\n\n  templates[\"issues\"] = issuesTemplate;\n\n  issues = Issues();\n\n  repository = editor.repository;\n\n  repository.observe(function(repository) {\n    issues.repository = repository;\n    repository.pullRequests().then(issues.reset);\n    return notify(\"Loaded repository: \" + (repository.full_name()));\n  });\n\n  (_base = PACKAGE.repository).url || (_base.url = \"repos/\" + PACKAGE.repository.full_name);\n\n  repository(github.Repository(PACKAGE.repository));\n\n  confirmUnsaved = function() {\n    return Deferred.ConfirmIf(filetree.hasUnsavedChanges(), \"You will lose unsaved changes in your current branch, continue?\");\n  };\n\n  closeOpenEditors = function() {\n    var root;\n    root = $root.children(\".main\");\n    return root.find(\"iframe\").remove();\n  };\n\n  actions = {\n    save: function() {\n      notify(\"Saving...\");\n      return editor.save().then(function() {\n        filetree.markSaved();\n        return editor.publish();\n      }).then(function() {\n        return notify(\"Saved and published!\");\n      }).fail(function() {\n        var args;\n        args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];\n        return errors(args);\n      });\n    },\n    run: function() {\n      notify(\"Running...\");\n      return editor.run().fail(classicError);\n    },\n    test: function() {\n      notify(\"Running tests...\");\n      return editor.test().fail(errors);\n    },\n    docs: function() {\n      var file;\n      notify(\"Running Docs...\");\n      if (file = prompt(\"Docs file\", \"index\")) {\n        return editor.runDocs({\n          file: file\n        }).fail(errors);\n      }\n    },\n    publish_chrapp: function() {\n      var Chrapps;\n      Chrapps = require(\"chrapps\");\n      notify(\"Chrapping...\");\n      return editor.build().then(function(pkg) {\n        return editor.repository().publish(Chrapps.processPackage(pkg), void 0, \"chrapps\");\n      }).then(function() {\n        return notify(\"Chrapped!\");\n      }).fail(function() {\n        var args;\n        args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];\n        return errors(args);\n      });\n    },\n    convert_data: function() {\n      var converter;\n      converter = require(\"./lib/converter\").convertDataToJSON;\n      converter({\n        editor: editor,\n        outputFileName: \"images.json\",\n        matcher: /^images\\/(.*)\\.png$/,\n        mimeType: \"image/png\"\n      });\n      converter({\n        editor: editor,\n        outputFileName: \"sounds.json\",\n        matcher: /^sounds\\/(.*)\\.wav$/,\n        mimeType: \"audio/wav\"\n      });\n      return converter({\n        editor: editor,\n        outputFileName: \"music.json\",\n        matcher: /^sounds\\/(.*)\\.mp3$/,\n        mimeType: \"audio/mp3\"\n      });\n    },\n    new_file: function() {\n      var file, name;\n      if (name = prompt(\"File Name\", \"newfile.coffee\")) {\n        file = File({\n          path: name,\n          content: \"\"\n        });\n        filetree.files.push(file);\n        return filetree.selectedFile(file);\n      }\n    },\n    load_repo: function(skipPrompt) {\n      return confirmUnsaved().then(function() {\n        var currentRepositoryName, fullName;\n        currentRepositoryName = repository().full_name();\n        fullName = prompt(\"Github repo\", currentRepositoryName);\n        if (fullName) {\n          return github.repository(fullName).then(repository);\n        } else {\n          return Deferred().reject(\"No repo given\");\n        }\n      }).then(function(repositoryInstance) {\n        notify(\"Loading files...\");\n        return editor.load({\n          repository: repositoryInstance\n        }).then(function() {\n          closeOpenEditors();\n          return notifications.push(\"Loaded\");\n        });\n      }).fail(classicError);\n    },\n    new_feature: function() {\n      var title;\n      if (title = prompt(\"Description\")) {\n        notify(\"Creating feature branch...\");\n        return editor.repository().createPullRequest({\n          title: title\n        }).then(function(data) {\n          var issue;\n          issue = Issue(data);\n          issues.issues.push(issue);\n          issues.silent = true;\n          issues.currentIssue(issue);\n          issues.silent = false;\n          return notifications.push(\"Created!\");\n        }, classicError);\n      }\n    },\n    pull_master: function() {\n      return confirmUnsaved().then(function() {\n        notify(\"Merging in default branch...\");\n        return repository().pullFromBranch();\n      }, classicError).then(function() {\n        var branchName;\n        notifications.push(\"Merged!\");\n        branchName = repository().branch();\n        notifications.push(\"\\nReloading branch \" + branchName + \"...\");\n        return editor.load({\n          repository: repository()\n        }).then(function() {\n          return notifications.push(\"Loaded!\");\n        }).fail(function() {\n          return classicError(\"Error loading \" + (repository().url()));\n        });\n      });\n    },\n    pull_upstream: function() {\n      return confirmUnsaved().then(function() {\n        var upstreamRepo;\n        notify(\"Pulling from upstream master\");\n        upstreamRepo = repository().parent().full_name;\n        return github.repository(upstreamRepo).then(function(repository) {\n          return repository.latestContent();\n        }).then(function(results) {\n          files = processDirectory(results);\n          return editor.loadFiles(files);\n        });\n      }, classicError).then(function() {\n        notifications.push(\"\\nYour code is up to date with the upstream master\");\n        return closeOpenEditors();\n      });\n    },\n    tag_version: function() {\n      notify(\"Building...\");\n      return editor.build().then(function(pkg) {\n        var version;\n        version = \"v\" + (readSourceConfig(pkg).version);\n        notify(\"Tagging version \" + version + \" ...\");\n        return repository().createRef(\"refs/tags/\" + version).then(function() {\n          return notifications.push(\"Tagged \" + version);\n        }).then(function() {\n          notifications.push(\"\\nPublishing...\");\n          pkg.repository.branch = version;\n          return repository().publish(Packager.standAlone(pkg), version);\n        }).then(function() {\n          return notifications.push(\"Published!\");\n        });\n      }).fail(classicError);\n    }\n  };\n\n  filetree.selectedFile.observe(function(file) {\n    var iframe, root, textEditor;\n    if (typeof file.binary === \"function\" ? file.binary() : void 0) {\n      return;\n    }\n    root = $root.children(\".main\");\n    root.find(\"iframe\").hide();\n    if (file.editor) {\n      return file.editor.trigger(\"show\");\n    } else {\n      iframe = document.createElement(\"iframe\");\n      root.append(iframe);\n      file.editor = $(iframe);\n      switch (file.path().extension()) {\n        case \"md\":\n        case \"coffee\":\n        case \"js\":\n        case \"styl\":\n        case \"cson\":\n          file.content(Hygiene.clean(file.content()));\n      }\n      textEditor = ValueWidget({\n        value: file.content(),\n        iframe: iframe,\n        url: \"http://distri.github.io/text/v0.1.1/\",\n        options: {\n          mode: file.mode()\n        }\n      });\n      file.editor.on(\"show\", function() {\n        file.editor.show();\n        return textEditor.send(\"focus\");\n      });\n      return textEditor.observe(function(value) {\n        file.content(value);\n        return editor.hotReload();\n      });\n    }\n  });\n\n  if (issues != null) {\n    issues.currentIssue.observe(function(issue) {\n      var changeBranch;\n      if (issues.silent) {\n        return;\n      }\n      changeBranch = function(branchName) {\n        var previousBranch;\n        previousBranch = repository().branch();\n        return confirmUnsaved().then(function() {\n          closeOpenEditors();\n          return repository().switchToBranch(branchName).then(function() {\n            notifications.push(\"\\nLoading branch \" + branchName + \"...\");\n            return editor.load({\n              repository: repository()\n            }).then(function() {\n              return notifications.push(\"Loaded!\");\n            });\n          });\n        }, function() {\n          repository.branch(previousBranch);\n          return classicError(\"Error switching to \" + branchName + \", still on \" + previousBranch);\n        });\n      };\n      if (issue) {\n        notify(issue.fullDescription());\n        return changeBranch(issue.branchName());\n      } else {\n        notify(\"Default branch selected\");\n        return changeBranch(repository().defaultBranch());\n      }\n    });\n  }\n\n  $root.append(HAMLjr.render(\"editor\", {\n    filetree: filetree,\n    actions: actions,\n    notifications: notifications,\n    issues: issues,\n    github: github,\n    repository: repository\n  }));\n\n  window.onbeforeunload = function() {\n    if (filetree.hasUnsavedChanges()) {\n      return \"You have some unsaved changes, if you leave now you will lose your work.\";\n    }\n  };\n\n}).call(this);\n",
       "type": "blob"
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.3.0\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"https://code.jquery.com/jquery-1.10.1.min.js\",\"http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js\"],\"dependencies\":{\"analytics\":\"distri/google-analytics:v0.1.0\",\"builder\":\"distri/builder:v0.3.5\",\"chrapps\":\"distri/chrapps:v0.1.0\",\"cson\":\"distri/cson:v0.1.0\",\"issues\":\"STRd6/issues:v0.2.0\",\"sandbox\":\"STRd6/sandbox:v0.2.0\",\"notifications\":\"distri/notifications:v0.3.0\",\"md\":\"distri/md:v0.4.1\",\"github\":\"STRd6/github:v0.4.2\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"runtime\":\"distri/runtime:v0.3.0\",\"packager\":\"distri/packager:v0.5.5\",\"filetree\":\"STRd6/filetree:v0.3.0\",\"runner\":\"STRd6/runner:v0.2.0\",\"value-widget\":\"distri/value-widget:v0.1.2\"}};",
+      "content": "module.exports = {\"version\":\"0.3.0\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"https://code.jquery.com/jquery-1.10.1.min.js\",\"http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js\"],\"dependencies\":{\"analytics\":\"distri/google-analytics:v0.1.0\",\"builder\":\"distri/builder:v0.3.5\",\"chrapps\":\"distri/chrapps:v0.1.0\",\"cson\":\"distri/cson:v0.1.0\",\"issues\":\"STRd6/issues:v0.2.0\",\"notifications\":\"distri/notifications:v0.3.0\",\"md\":\"distri/md:v0.4.1\",\"github\":\"STRd6/github:v0.4.2\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"runtime\":\"distri/runtime:v0.3.0\",\"packager\":\"distri/packager:v0.5.5\",\"filetree\":\"STRd6/filetree:v0.3.0\",\"runner\":\"distri/runner:v0.2.2\",\"value-widget\":\"distri/value-widget:v0.1.2\"}};",
       "type": "blob"
     },
     "source/actions": {
@@ -1796,148 +1796,6 @@ require('./main')
         "stargazers_count": 0,
         "watchers_count": 0,
         "language": "JavaScript",
-        "has_issues": true,
-        "has_downloads": true,
-        "has_wiki": true,
-        "forks_count": 0,
-        "mirror_url": null,
-        "open_issues_count": 0,
-        "forks": 0,
-        "open_issues": 0,
-        "watchers": 0,
-        "default_branch": "master",
-        "master_branch": "master",
-        "permissions": {
-          "admin": true,
-          "push": true,
-          "pull": true
-        },
-        "network_count": 0,
-        "subscribers_count": 1,
-        "branch": "v0.2.0",
-        "defaultBranch": "master"
-      },
-      "dependencies": {}
-    },
-    "sandbox": {
-      "source": {
-        "LICENSE": {
-          "path": "LICENSE",
-          "mode": "100644",
-          "content": "The MIT License (MIT)\n\nCopyright (c) 2013 Daniel X Moore\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the \"Software\"), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of\nthe Software, and to permit persons to whom the Software is furnished to do so,\nsubject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\nFOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR\nCOPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER\nIN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN\nCONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n",
-          "type": "blob"
-        },
-        "README.md": {
-          "path": "README.md",
-          "mode": "100644",
-          "content": "sandbox\n=======\n\nRun code in a popup window filled with sand.\n",
-          "type": "blob"
-        },
-        "main.coffee.md": {
-          "path": "main.coffee.md",
-          "mode": "100644",
-          "content": "Sandbox\n=======\n\nSandbox creates a popup window in which you can run code.\n\nYou can pass in a width and a height to set the size of the window.\n\n    module.exports = ({name, width, height, methods}={}) ->\n      name ?= \"sandbox\" + new Date\n      width ?= 800\n      height ?= 600\n      methods ?= {}\n\n      sandbox = window.open(\n        \"\"\n        name\n        \"width=#{width},height=#{height}\"\n      )\n\nPass in functions to attach to the running window. Useful for things like\n`onerror` or other utilities if you would like the running code to be able to\ncommunicate back to the parent.\n\n      Object.extend sandbox, methods\n\nThe newly created window is returned.\n\n      return sandbox\n",
-          "type": "blob"
-        },
-        "pixie.cson": {
-          "path": "pixie.cson",
-          "mode": "100644",
-          "content": "version: \"0.2.0\"\n",
-          "type": "blob"
-        }
-      },
-      "distribution": {
-        "main": {
-          "path": "main",
-          "content": "(function() {\n  module.exports = function(_arg) {\n    var height, methods, name, sandbox, width, _ref;\n    _ref = _arg != null ? _arg : {}, name = _ref.name, width = _ref.width, height = _ref.height, methods = _ref.methods;\n    if (name == null) {\n      name = \"sandbox\" + new Date;\n    }\n    if (width == null) {\n      width = 800;\n    }\n    if (height == null) {\n      height = 600;\n    }\n    if (methods == null) {\n      methods = {};\n    }\n    sandbox = window.open(\"\", name, \"width=\" + width + \",height=\" + height);\n    Object.extend(sandbox, methods);\n    return sandbox;\n  };\n\n}).call(this);\n\n//# sourceURL=main.coffee",
-          "type": "blob"
-        },
-        "pixie": {
-          "path": "pixie",
-          "content": "module.exports = {\"version\":\"0.2.0\"};",
-          "type": "blob"
-        }
-      },
-      "progenitor": {
-        "url": "http://strd6.github.io/editor/"
-      },
-      "version": "0.2.0",
-      "entryPoint": "main",
-      "repository": {
-        "id": 12746310,
-        "name": "sandbox",
-        "full_name": "STRd6/sandbox",
-        "owner": {
-          "login": "STRd6",
-          "id": 18894,
-          "avatar_url": "https://1.gravatar.com/avatar/33117162fff8a9cf50544a604f60c045?d=https%3A%2F%2Fidenticons.github.com%2F39df222bffe39629d904e4883eabc654.png&r=x",
-          "gravatar_id": "33117162fff8a9cf50544a604f60c045",
-          "url": "https://api.github.com/users/STRd6",
-          "html_url": "https://github.com/STRd6",
-          "followers_url": "https://api.github.com/users/STRd6/followers",
-          "following_url": "https://api.github.com/users/STRd6/following{/other_user}",
-          "gists_url": "https://api.github.com/users/STRd6/gists{/gist_id}",
-          "starred_url": "https://api.github.com/users/STRd6/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/STRd6/subscriptions",
-          "organizations_url": "https://api.github.com/users/STRd6/orgs",
-          "repos_url": "https://api.github.com/users/STRd6/repos",
-          "events_url": "https://api.github.com/users/STRd6/events{/privacy}",
-          "received_events_url": "https://api.github.com/users/STRd6/received_events",
-          "type": "User",
-          "site_admin": false
-        },
-        "private": false,
-        "html_url": "https://github.com/STRd6/sandbox",
-        "description": "Run code in a popup window filled with sand.",
-        "fork": false,
-        "url": "https://api.github.com/repos/STRd6/sandbox",
-        "forks_url": "https://api.github.com/repos/STRd6/sandbox/forks",
-        "keys_url": "https://api.github.com/repos/STRd6/sandbox/keys{/key_id}",
-        "collaborators_url": "https://api.github.com/repos/STRd6/sandbox/collaborators{/collaborator}",
-        "teams_url": "https://api.github.com/repos/STRd6/sandbox/teams",
-        "hooks_url": "https://api.github.com/repos/STRd6/sandbox/hooks",
-        "issue_events_url": "https://api.github.com/repos/STRd6/sandbox/issues/events{/number}",
-        "events_url": "https://api.github.com/repos/STRd6/sandbox/events",
-        "assignees_url": "https://api.github.com/repos/STRd6/sandbox/assignees{/user}",
-        "branches_url": "https://api.github.com/repos/STRd6/sandbox/branches{/branch}",
-        "tags_url": "https://api.github.com/repos/STRd6/sandbox/tags",
-        "blobs_url": "https://api.github.com/repos/STRd6/sandbox/git/blobs{/sha}",
-        "git_tags_url": "https://api.github.com/repos/STRd6/sandbox/git/tags{/sha}",
-        "git_refs_url": "https://api.github.com/repos/STRd6/sandbox/git/refs{/sha}",
-        "trees_url": "https://api.github.com/repos/STRd6/sandbox/git/trees{/sha}",
-        "statuses_url": "https://api.github.com/repos/STRd6/sandbox/statuses/{sha}",
-        "languages_url": "https://api.github.com/repos/STRd6/sandbox/languages",
-        "stargazers_url": "https://api.github.com/repos/STRd6/sandbox/stargazers",
-        "contributors_url": "https://api.github.com/repos/STRd6/sandbox/contributors",
-        "subscribers_url": "https://api.github.com/repos/STRd6/sandbox/subscribers",
-        "subscription_url": "https://api.github.com/repos/STRd6/sandbox/subscription",
-        "commits_url": "https://api.github.com/repos/STRd6/sandbox/commits{/sha}",
-        "git_commits_url": "https://api.github.com/repos/STRd6/sandbox/git/commits{/sha}",
-        "comments_url": "https://api.github.com/repos/STRd6/sandbox/comments{/number}",
-        "issue_comment_url": "https://api.github.com/repos/STRd6/sandbox/issues/comments/{number}",
-        "contents_url": "https://api.github.com/repos/STRd6/sandbox/contents/{+path}",
-        "compare_url": "https://api.github.com/repos/STRd6/sandbox/compare/{base}...{head}",
-        "merges_url": "https://api.github.com/repos/STRd6/sandbox/merges",
-        "archive_url": "https://api.github.com/repos/STRd6/sandbox/{archive_format}{/ref}",
-        "downloads_url": "https://api.github.com/repos/STRd6/sandbox/downloads",
-        "issues_url": "https://api.github.com/repos/STRd6/sandbox/issues{/number}",
-        "pulls_url": "https://api.github.com/repos/STRd6/sandbox/pulls{/number}",
-        "milestones_url": "https://api.github.com/repos/STRd6/sandbox/milestones{/number}",
-        "notifications_url": "https://api.github.com/repos/STRd6/sandbox/notifications{?since,all,participating}",
-        "labels_url": "https://api.github.com/repos/STRd6/sandbox/labels{/name}",
-        "releases_url": "https://api.github.com/repos/STRd6/sandbox/releases{/id}",
-        "created_at": "2013-09-11T03:03:50Z",
-        "updated_at": "2013-10-07T19:59:04Z",
-        "pushed_at": "2013-10-07T19:59:04Z",
-        "git_url": "git://github.com/STRd6/sandbox.git",
-        "ssh_url": "git@github.com:STRd6/sandbox.git",
-        "clone_url": "https://github.com/STRd6/sandbox.git",
-        "svn_url": "https://github.com/STRd6/sandbox",
-        "homepage": null,
-        "size": 696,
-        "stargazers_count": 0,
-        "watchers_count": 0,
-        "language": "CoffeeScript",
         "has_issues": true,
         "has_downloads": true,
         "has_wiki": true,
@@ -4563,105 +4421,116 @@ require('./main')
         "pixie.cson": {
           "path": "pixie.cson",
           "mode": "100644",
-          "content": "version: \"0.2.0\"\nentryPoint: \"runner\"\n",
+          "content": "version: \"0.2.2\"\nentryPoint: \"runner\"\ndependencies:\n  sandbox: \"distri/sandbox:v0.2.1\"\n",
           "type": "blob"
         },
         "runner.coffee.md": {
           "path": "runner.coffee.md",
           "mode": "100644",
-          "content": "Runner\n======\n\nRunner manages running apps in sandboxed windows and passing messages back and\nforth from the parent to the running instances.\n\nWe keep a list of running windows so we can hot-update them when we modify our\nown code.\n\nOne cool example use is if you are modifying your css you can run several\ninstances of your app and navigate to different states. Then you can see in real\ntime how the css changes affect each one.\n\n    runningWindows = []\n\n    Runner = ->\n      run: ({config}={}) ->\n        {width, height} = (config or {})\n\n        sandbox = Sandbox\n          width: width\n          height: height\n\n        runningWindows.push sandbox\n\n        return sandbox\n\nGenerate an html template that runs the given script tag strings as tests.\n\n      testsHtml: (testScripts) ->\n        \"\"\"\n          <html>\n          <head>\n            <meta charset=\"utf-8\">\n            <title>Mocha Tests</title>\n            <link rel=\"stylesheet\" href=\"http://strd6.github.io/tests/mocha.css\"/>\n          </head>\n          <body>\n            <div id=\"mocha\"></div>\n            <script src=\"http://strd6.github.io/tests/assert.js\"><\\/script>\n            <script src=\"http://strd6.github.io/tests/mocha.js\"><\\/script>\n            <script>mocha.setup('bdd')<\\/script>\n            #{testScripts}\n            <script>\n              mocha.checkLeaks();\n              mocha.globals(['jQuery']);\n              mocha.run();\n            <\\/script>\n          </body>\n          </html>\n        \"\"\"\n\n      hotReloadCSS: (css) ->\n        runningWindows = runningWindows.select (window) ->\n          return false if window.closed\n\n          # TODO: We're assuming only one style in the body\n          # which is reasonable in most cases, but we may want\n          # to scope it by the path of the specific css file\n          # to handle a wider range of situations\n          $(window.document).find(\"body style:eq(0)\").html(css)\n\n          return true\n\n    module.exports = Runner\n",
+          "content": "Runner\n======\n\nRunner manages running apps in sandboxed windows and passing messages back and\nforth from the parent to the running instances.\n\nWe keep a list of running windows so we can hot-update them when we modify our\nown code.\n\nOne cool example use is if you are modifying your css you can run several\ninstances of your app and navigate to different states. Then you can see in real\ntime how the css changes affect each one.\n\n    Sandbox = require \"sandbox\"\n\n    runningWindows = []\n\n    Runner = ->\n      run: ({config}={}) ->\n        {width, height} = (config or {})\n\n        sandbox = Sandbox\n          width: width\n          height: height\n\n        runningWindows.push sandbox\n\n        return sandbox\n\nGenerate an html template that runs the given script tag strings as tests.\n\n      testsHtml: (testScripts) ->\n        \"\"\"\n          <html>\n          <head>\n            <meta charset=\"utf-8\">\n            <title>Mocha Tests</title>\n            <link rel=\"stylesheet\" href=\"http://strd6.github.io/tests/mocha.css\"/>\n          </head>\n          <body>\n            <div id=\"mocha\"></div>\n            <script src=\"http://strd6.github.io/tests/assert.js\"><\\/script>\n            <script src=\"http://strd6.github.io/tests/mocha.js\"><\\/script>\n            <script>mocha.setup('bdd')<\\/script>\n            #{testScripts}\n            <script>\n              mocha.checkLeaks();\n              mocha.globals(['jQuery']);\n              mocha.run();\n            <\\/script>\n          </body>\n          </html>\n        \"\"\"\n\n      hotReloadCSS: (css) ->\n        runningWindows = runningWindows.filter (window) ->\n          return false if window.closed\n\n          # TODO: We're assuming only one style in the body\n          # which is reasonable in most cases, but we may want\n          # to scope it by the path of the specific css file\n          # to handle a wider range of situations\n          $(window.document).find(\"body style:eq(0)\").html(css)\n\n          return true\n\nCall a global reload method on each running window, passing in the given args.\nWe may want to switch to using `postMessage` in the future.\n\n      reload: (args...) ->\n        runningWindows = runningWindows.filter (window) ->\n          return false if window.closed\n\n          window.reload?(args...)\n\n          return true\n\n    module.exports = Runner\n",
+          "type": "blob"
+        },
+        "test/runner.coffee": {
+          "path": "test/runner.coffee",
+          "mode": "100644",
+          "content": "Runner = require \"../runner\"\n\ndescribe \"runner\", ->\n  it \"should hot reload\", (done) ->\n    runner = Runner()\n    r = null\n\n    setTimeout ->\n      r = runner.run()\n      runner.reload(\"test\")\n      \n      assert r != window, \"Popup should not be this window\"\n    , 500\n\n    setTimeout ->\n      r.close()\n      done()\n    , 1000\n",
           "type": "blob"
         }
       },
       "distribution": {
         "pixie": {
           "path": "pixie",
-          "content": "module.exports = {\"version\":\"0.2.0\",\"entryPoint\":\"runner\"};",
+          "content": "module.exports = {\"version\":\"0.2.2\",\"entryPoint\":\"runner\",\"dependencies\":{\"sandbox\":\"distri/sandbox:v0.2.1\"}};",
           "type": "blob"
         },
         "runner": {
           "path": "runner",
-          "content": "(function() {\n  var Runner, runningWindows;\n\n  runningWindows = [];\n\n  Runner = function() {\n    return {\n      run: function(_arg) {\n        var config, height, sandbox, width, _ref;\n        config = (_arg != null ? _arg : {}).config;\n        _ref = config || {}, width = _ref.width, height = _ref.height;\n        sandbox = Sandbox({\n          width: width,\n          height: height\n        });\n        runningWindows.push(sandbox);\n        return sandbox;\n      },\n      testsHtml: function(testScripts) {\n        return \"<html>\\n<head>\\n  <meta charset=\\\"utf-8\\\">\\n  <title>Mocha Tests</title>\\n  <link rel=\\\"stylesheet\\\" href=\\\"http://strd6.github.io/tests/mocha.css\\\"/>\\n</head>\\n<body>\\n  <div id=\\\"mocha\\\"></div>\\n  <script src=\\\"http://strd6.github.io/tests/assert.js\\\"><\\/script>\\n  <script src=\\\"http://strd6.github.io/tests/mocha.js\\\"><\\/script>\\n  <script>mocha.setup('bdd')<\\/script>\\n  \" + testScripts + \"\\n  <script>\\n    mocha.checkLeaks();\\n    mocha.globals(['jQuery']);\\n    mocha.run();\\n  <\\/script>\\n</body>\\n</html>\";\n      },\n      hotReloadCSS: function(css) {\n        return runningWindows = runningWindows.select(function(window) {\n          if (window.closed) {\n            return false;\n          }\n          $(window.document).find(\"body style:eq(0)\").html(css);\n          return true;\n        });\n      }\n    };\n  };\n\n  module.exports = Runner;\n\n}).call(this);\n\n//# sourceURL=runner.coffee",
+          "content": "(function() {\n  var Runner, Sandbox, runningWindows,\n    __slice = [].slice;\n\n  Sandbox = require(\"sandbox\");\n\n  runningWindows = [];\n\n  Runner = function() {\n    return {\n      run: function(_arg) {\n        var config, height, sandbox, width, _ref;\n        config = (_arg != null ? _arg : {}).config;\n        _ref = config || {}, width = _ref.width, height = _ref.height;\n        sandbox = Sandbox({\n          width: width,\n          height: height\n        });\n        runningWindows.push(sandbox);\n        return sandbox;\n      },\n      testsHtml: function(testScripts) {\n        return \"<html>\\n<head>\\n  <meta charset=\\\"utf-8\\\">\\n  <title>Mocha Tests</title>\\n  <link rel=\\\"stylesheet\\\" href=\\\"http://strd6.github.io/tests/mocha.css\\\"/>\\n</head>\\n<body>\\n  <div id=\\\"mocha\\\"></div>\\n  <script src=\\\"http://strd6.github.io/tests/assert.js\\\"><\\/script>\\n  <script src=\\\"http://strd6.github.io/tests/mocha.js\\\"><\\/script>\\n  <script>mocha.setup('bdd')<\\/script>\\n  \" + testScripts + \"\\n  <script>\\n    mocha.checkLeaks();\\n    mocha.globals(['jQuery']);\\n    mocha.run();\\n  <\\/script>\\n</body>\\n</html>\";\n      },\n      hotReloadCSS: function(css) {\n        return runningWindows = runningWindows.filter(function(window) {\n          if (window.closed) {\n            return false;\n          }\n          $(window.document).find(\"body style:eq(0)\").html(css);\n          return true;\n        });\n      },\n      reload: function() {\n        var args;\n        args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];\n        return runningWindows = runningWindows.filter(function(window) {\n          if (window.closed) {\n            return false;\n          }\n          if (typeof window.reload === \"function\") {\n            window.reload.apply(window, args);\n          }\n          return true;\n        });\n      }\n    };\n  };\n\n  module.exports = Runner;\n\n}).call(this);\n",
+          "type": "blob"
+        },
+        "test/runner": {
+          "path": "test/runner",
+          "content": "(function() {\n  var Runner;\n\n  Runner = require(\"../runner\");\n\n  describe(\"runner\", function() {\n    return it(\"should hot reload\", function(done) {\n      var r, runner;\n      runner = Runner();\n      r = null;\n      setTimeout(function() {\n        r = runner.run();\n        runner.reload(\"test\");\n        return assert(r !== window, \"Popup should not be this window\");\n      }, 500);\n      return setTimeout(function() {\n        r.close();\n        return done();\n      }, 1000);\n    });\n  });\n\n}).call(this);\n",
           "type": "blob"
         }
       },
       "progenitor": {
         "url": "http://strd6.github.io/editor/"
       },
-      "version": "0.2.0",
+      "version": "0.2.2",
       "entryPoint": "runner",
       "repository": {
         "id": 13482507,
         "name": "runner",
-        "full_name": "STRd6/runner",
+        "full_name": "distri/runner",
         "owner": {
-          "login": "STRd6",
-          "id": 18894,
-          "avatar_url": "https://1.gravatar.com/avatar/33117162fff8a9cf50544a604f60c045?d=https%3A%2F%2Fidenticons.github.com%2F39df222bffe39629d904e4883eabc654.png&r=x",
-          "gravatar_id": "33117162fff8a9cf50544a604f60c045",
-          "url": "https://api.github.com/users/STRd6",
-          "html_url": "https://github.com/STRd6",
-          "followers_url": "https://api.github.com/users/STRd6/followers",
-          "following_url": "https://api.github.com/users/STRd6/following{/other_user}",
-          "gists_url": "https://api.github.com/users/STRd6/gists{/gist_id}",
-          "starred_url": "https://api.github.com/users/STRd6/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/STRd6/subscriptions",
-          "organizations_url": "https://api.github.com/users/STRd6/orgs",
-          "repos_url": "https://api.github.com/users/STRd6/repos",
-          "events_url": "https://api.github.com/users/STRd6/events{/privacy}",
-          "received_events_url": "https://api.github.com/users/STRd6/received_events",
-          "type": "User",
+          "login": "distri",
+          "id": 6005125,
+          "avatar_url": "https://avatars.githubusercontent.com/u/6005125?",
+          "gravatar_id": "192f3f168409e79c42107f081139d9f3",
+          "url": "https://api.github.com/users/distri",
+          "html_url": "https://github.com/distri",
+          "followers_url": "https://api.github.com/users/distri/followers",
+          "following_url": "https://api.github.com/users/distri/following{/other_user}",
+          "gists_url": "https://api.github.com/users/distri/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/distri/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/distri/subscriptions",
+          "organizations_url": "https://api.github.com/users/distri/orgs",
+          "repos_url": "https://api.github.com/users/distri/repos",
+          "events_url": "https://api.github.com/users/distri/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/distri/received_events",
+          "type": "Organization",
           "site_admin": false
         },
         "private": false,
-        "html_url": "https://github.com/STRd6/runner",
+        "html_url": "https://github.com/distri/runner",
         "description": "Runner manages running apps in sandboxed windows and passing messages back and forth from the parent to the running instances.",
         "fork": false,
-        "url": "https://api.github.com/repos/STRd6/runner",
-        "forks_url": "https://api.github.com/repos/STRd6/runner/forks",
-        "keys_url": "https://api.github.com/repos/STRd6/runner/keys{/key_id}",
-        "collaborators_url": "https://api.github.com/repos/STRd6/runner/collaborators{/collaborator}",
-        "teams_url": "https://api.github.com/repos/STRd6/runner/teams",
-        "hooks_url": "https://api.github.com/repos/STRd6/runner/hooks",
-        "issue_events_url": "https://api.github.com/repos/STRd6/runner/issues/events{/number}",
-        "events_url": "https://api.github.com/repos/STRd6/runner/events",
-        "assignees_url": "https://api.github.com/repos/STRd6/runner/assignees{/user}",
-        "branches_url": "https://api.github.com/repos/STRd6/runner/branches{/branch}",
-        "tags_url": "https://api.github.com/repos/STRd6/runner/tags",
-        "blobs_url": "https://api.github.com/repos/STRd6/runner/git/blobs{/sha}",
-        "git_tags_url": "https://api.github.com/repos/STRd6/runner/git/tags{/sha}",
-        "git_refs_url": "https://api.github.com/repos/STRd6/runner/git/refs{/sha}",
-        "trees_url": "https://api.github.com/repos/STRd6/runner/git/trees{/sha}",
-        "statuses_url": "https://api.github.com/repos/STRd6/runner/statuses/{sha}",
-        "languages_url": "https://api.github.com/repos/STRd6/runner/languages",
-        "stargazers_url": "https://api.github.com/repos/STRd6/runner/stargazers",
-        "contributors_url": "https://api.github.com/repos/STRd6/runner/contributors",
-        "subscribers_url": "https://api.github.com/repos/STRd6/runner/subscribers",
-        "subscription_url": "https://api.github.com/repos/STRd6/runner/subscription",
-        "commits_url": "https://api.github.com/repos/STRd6/runner/commits{/sha}",
-        "git_commits_url": "https://api.github.com/repos/STRd6/runner/git/commits{/sha}",
-        "comments_url": "https://api.github.com/repos/STRd6/runner/comments{/number}",
-        "issue_comment_url": "https://api.github.com/repos/STRd6/runner/issues/comments/{number}",
-        "contents_url": "https://api.github.com/repos/STRd6/runner/contents/{+path}",
-        "compare_url": "https://api.github.com/repos/STRd6/runner/compare/{base}...{head}",
-        "merges_url": "https://api.github.com/repos/STRd6/runner/merges",
-        "archive_url": "https://api.github.com/repos/STRd6/runner/{archive_format}{/ref}",
-        "downloads_url": "https://api.github.com/repos/STRd6/runner/downloads",
-        "issues_url": "https://api.github.com/repos/STRd6/runner/issues{/number}",
-        "pulls_url": "https://api.github.com/repos/STRd6/runner/pulls{/number}",
-        "milestones_url": "https://api.github.com/repos/STRd6/runner/milestones{/number}",
-        "notifications_url": "https://api.github.com/repos/STRd6/runner/notifications{?since,all,participating}",
-        "labels_url": "https://api.github.com/repos/STRd6/runner/labels{/name}",
-        "releases_url": "https://api.github.com/repos/STRd6/runner/releases{/id}",
+        "url": "https://api.github.com/repos/distri/runner",
+        "forks_url": "https://api.github.com/repos/distri/runner/forks",
+        "keys_url": "https://api.github.com/repos/distri/runner/keys{/key_id}",
+        "collaborators_url": "https://api.github.com/repos/distri/runner/collaborators{/collaborator}",
+        "teams_url": "https://api.github.com/repos/distri/runner/teams",
+        "hooks_url": "https://api.github.com/repos/distri/runner/hooks",
+        "issue_events_url": "https://api.github.com/repos/distri/runner/issues/events{/number}",
+        "events_url": "https://api.github.com/repos/distri/runner/events",
+        "assignees_url": "https://api.github.com/repos/distri/runner/assignees{/user}",
+        "branches_url": "https://api.github.com/repos/distri/runner/branches{/branch}",
+        "tags_url": "https://api.github.com/repos/distri/runner/tags",
+        "blobs_url": "https://api.github.com/repos/distri/runner/git/blobs{/sha}",
+        "git_tags_url": "https://api.github.com/repos/distri/runner/git/tags{/sha}",
+        "git_refs_url": "https://api.github.com/repos/distri/runner/git/refs{/sha}",
+        "trees_url": "https://api.github.com/repos/distri/runner/git/trees{/sha}",
+        "statuses_url": "https://api.github.com/repos/distri/runner/statuses/{sha}",
+        "languages_url": "https://api.github.com/repos/distri/runner/languages",
+        "stargazers_url": "https://api.github.com/repos/distri/runner/stargazers",
+        "contributors_url": "https://api.github.com/repos/distri/runner/contributors",
+        "subscribers_url": "https://api.github.com/repos/distri/runner/subscribers",
+        "subscription_url": "https://api.github.com/repos/distri/runner/subscription",
+        "commits_url": "https://api.github.com/repos/distri/runner/commits{/sha}",
+        "git_commits_url": "https://api.github.com/repos/distri/runner/git/commits{/sha}",
+        "comments_url": "https://api.github.com/repos/distri/runner/comments{/number}",
+        "issue_comment_url": "https://api.github.com/repos/distri/runner/issues/comments/{number}",
+        "contents_url": "https://api.github.com/repos/distri/runner/contents/{+path}",
+        "compare_url": "https://api.github.com/repos/distri/runner/compare/{base}...{head}",
+        "merges_url": "https://api.github.com/repos/distri/runner/merges",
+        "archive_url": "https://api.github.com/repos/distri/runner/{archive_format}{/ref}",
+        "downloads_url": "https://api.github.com/repos/distri/runner/downloads",
+        "issues_url": "https://api.github.com/repos/distri/runner/issues{/number}",
+        "pulls_url": "https://api.github.com/repos/distri/runner/pulls{/number}",
+        "milestones_url": "https://api.github.com/repos/distri/runner/milestones{/number}",
+        "notifications_url": "https://api.github.com/repos/distri/runner/notifications{?since,all,participating}",
+        "labels_url": "https://api.github.com/repos/distri/runner/labels{/name}",
+        "releases_url": "https://api.github.com/repos/distri/runner/releases{/id}",
         "created_at": "2013-10-10T20:42:25Z",
-        "updated_at": "2013-11-08T23:24:31Z",
-        "pushed_at": "2013-11-08T23:24:30Z",
-        "git_url": "git://github.com/STRd6/runner.git",
-        "ssh_url": "git@github.com:STRd6/runner.git",
-        "clone_url": "https://github.com/STRd6/runner.git",
-        "svn_url": "https://github.com/STRd6/runner",
+        "updated_at": "2014-04-05T16:37:55Z",
+        "pushed_at": "2014-04-05T16:37:12Z",
+        "git_url": "git://github.com/distri/runner.git",
+        "ssh_url": "git@github.com:distri/runner.git",
+        "clone_url": "https://github.com/distri/runner.git",
+        "svn_url": "https://github.com/distri/runner",
         "homepage": null,
-        "size": 852,
+        "size": 156,
         "stargazers_count": 0,
         "watchers_count": 0,
         "language": "CoffeeScript",
@@ -4670,9 +4539,9 @@ require('./main')
         "has_wiki": true,
         "forks_count": 0,
         "mirror_url": null,
-        "open_issues_count": 0,
+        "open_issues_count": 1,
         "forks": 0,
-        "open_issues": 0,
+        "open_issues": 1,
         "watchers": 0,
         "default_branch": "master",
         "master_branch": "master",
@@ -4681,12 +4550,204 @@ require('./main')
           "push": true,
           "pull": true
         },
+        "organization": {
+          "login": "distri",
+          "id": 6005125,
+          "avatar_url": "https://avatars.githubusercontent.com/u/6005125?",
+          "gravatar_id": "192f3f168409e79c42107f081139d9f3",
+          "url": "https://api.github.com/users/distri",
+          "html_url": "https://github.com/distri",
+          "followers_url": "https://api.github.com/users/distri/followers",
+          "following_url": "https://api.github.com/users/distri/following{/other_user}",
+          "gists_url": "https://api.github.com/users/distri/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/distri/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/distri/subscriptions",
+          "organizations_url": "https://api.github.com/users/distri/orgs",
+          "repos_url": "https://api.github.com/users/distri/repos",
+          "events_url": "https://api.github.com/users/distri/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/distri/received_events",
+          "type": "Organization",
+          "site_admin": false
+        },
         "network_count": 0,
         "subscribers_count": 1,
-        "branch": "v0.2.0",
-        "defaultBranch": "master"
+        "branch": "v0.2.2",
+        "publishBranch": "gh-pages"
       },
-      "dependencies": {}
+      "dependencies": {
+        "sandbox": {
+          "source": {
+            "LICENSE": {
+              "path": "LICENSE",
+              "mode": "100644",
+              "content": "The MIT License (MIT)\n\nCopyright (c) 2013 Daniel X Moore\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the \"Software\"), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of\nthe Software, and to permit persons to whom the Software is furnished to do so,\nsubject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\nFOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR\nCOPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER\nIN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN\nCONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n",
+              "type": "blob"
+            },
+            "README.md": {
+              "path": "README.md",
+              "mode": "100644",
+              "content": "sandbox\n=======\n\nRun code in a popup window filled with sand.\n",
+              "type": "blob"
+            },
+            "main.coffee.md": {
+              "path": "main.coffee.md",
+              "mode": "100644",
+              "content": "Sandbox\n=======\n\nSandbox creates a popup window in which you can run code.\n\nYou can pass in a width and a height to set the size of the window.\n\n    module.exports = ({name, width, height, methods}={}) ->\n      name ?= \"sandbox\" + new Date\n      width ?= 800\n      height ?= 600\n      methods ?= {}\n\n      sandbox = window.open(\n        \"\"\n        name\n        \"width=#{width},height=#{height}\"\n      )\n\nPass in functions to attach to the running window. Useful for things like\n`onerror` or other utilities if you would like the running code to be able to\ncommunicate back to the parent.\n\n      extend sandbox, methods\n\nThe newly created window is returned.\n\n      return sandbox\n\nHelpers\n-------\n\n    extend = (target, sources...) ->\n      for source in sources\n        for name of source\n          target[name] = source[name]\n\n      return target\n",
+              "type": "blob"
+            },
+            "pixie.cson": {
+              "path": "pixie.cson",
+              "mode": "100644",
+              "content": "version: \"0.2.1\"\n",
+              "type": "blob"
+            },
+            "test/sandbox.coffee": {
+              "path": "test/sandbox.coffee",
+              "mode": "100644",
+              "content": "Sandbox = require \"../main\"\n\ndescribe \"sandbox\", ->\n  it \"should be able to open a window\", ->\n    sandbox = Sandbox()\n\n    assert sandbox\n\n    assert sandbox != window, \"Popup should not be this window\"\n\n    sandbox.close()\n",
+              "type": "blob"
+            }
+          },
+          "distribution": {
+            "main": {
+              "path": "main",
+              "content": "(function() {\n  var extend,\n    __slice = [].slice;\n\n  module.exports = function(_arg) {\n    var height, methods, name, sandbox, width, _ref;\n    _ref = _arg != null ? _arg : {}, name = _ref.name, width = _ref.width, height = _ref.height, methods = _ref.methods;\n    if (name == null) {\n      name = \"sandbox\" + new Date;\n    }\n    if (width == null) {\n      width = 800;\n    }\n    if (height == null) {\n      height = 600;\n    }\n    if (methods == null) {\n      methods = {};\n    }\n    sandbox = window.open(\"\", name, \"width=\" + width + \",height=\" + height);\n    extend(sandbox, methods);\n    return sandbox;\n  };\n\n  extend = function() {\n    var name, source, sources, target, _i, _len;\n    target = arguments[0], sources = 2 <= arguments.length ? __slice.call(arguments, 1) : [];\n    for (_i = 0, _len = sources.length; _i < _len; _i++) {\n      source = sources[_i];\n      for (name in source) {\n        target[name] = source[name];\n      }\n    }\n    return target;\n  };\n\n}).call(this);\n",
+              "type": "blob"
+            },
+            "pixie": {
+              "path": "pixie",
+              "content": "module.exports = {\"version\":\"0.2.1\"};",
+              "type": "blob"
+            },
+            "test/sandbox": {
+              "path": "test/sandbox",
+              "content": "(function() {\n  var Sandbox;\n\n  Sandbox = require(\"../main\");\n\n  describe(\"sandbox\", function() {\n    return it(\"should be able to open a window\", function() {\n      var sandbox;\n      sandbox = Sandbox();\n      assert(sandbox);\n      assert(sandbox !== window, \"Popup should not be this window\");\n      return sandbox.close();\n    });\n  });\n\n}).call(this);\n",
+              "type": "blob"
+            }
+          },
+          "progenitor": {
+            "url": "http://strd6.github.io/editor/"
+          },
+          "version": "0.2.1",
+          "entryPoint": "main",
+          "repository": {
+            "id": 12746310,
+            "name": "sandbox",
+            "full_name": "distri/sandbox",
+            "owner": {
+              "login": "distri",
+              "id": 6005125,
+              "avatar_url": "https://avatars.githubusercontent.com/u/6005125?",
+              "gravatar_id": "192f3f168409e79c42107f081139d9f3",
+              "url": "https://api.github.com/users/distri",
+              "html_url": "https://github.com/distri",
+              "followers_url": "https://api.github.com/users/distri/followers",
+              "following_url": "https://api.github.com/users/distri/following{/other_user}",
+              "gists_url": "https://api.github.com/users/distri/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/distri/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/distri/subscriptions",
+              "organizations_url": "https://api.github.com/users/distri/orgs",
+              "repos_url": "https://api.github.com/users/distri/repos",
+              "events_url": "https://api.github.com/users/distri/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/distri/received_events",
+              "type": "Organization",
+              "site_admin": false
+            },
+            "private": false,
+            "html_url": "https://github.com/distri/sandbox",
+            "description": "Run code in a popup window filled with sand.",
+            "fork": false,
+            "url": "https://api.github.com/repos/distri/sandbox",
+            "forks_url": "https://api.github.com/repos/distri/sandbox/forks",
+            "keys_url": "https://api.github.com/repos/distri/sandbox/keys{/key_id}",
+            "collaborators_url": "https://api.github.com/repos/distri/sandbox/collaborators{/collaborator}",
+            "teams_url": "https://api.github.com/repos/distri/sandbox/teams",
+            "hooks_url": "https://api.github.com/repos/distri/sandbox/hooks",
+            "issue_events_url": "https://api.github.com/repos/distri/sandbox/issues/events{/number}",
+            "events_url": "https://api.github.com/repos/distri/sandbox/events",
+            "assignees_url": "https://api.github.com/repos/distri/sandbox/assignees{/user}",
+            "branches_url": "https://api.github.com/repos/distri/sandbox/branches{/branch}",
+            "tags_url": "https://api.github.com/repos/distri/sandbox/tags",
+            "blobs_url": "https://api.github.com/repos/distri/sandbox/git/blobs{/sha}",
+            "git_tags_url": "https://api.github.com/repos/distri/sandbox/git/tags{/sha}",
+            "git_refs_url": "https://api.github.com/repos/distri/sandbox/git/refs{/sha}",
+            "trees_url": "https://api.github.com/repos/distri/sandbox/git/trees{/sha}",
+            "statuses_url": "https://api.github.com/repos/distri/sandbox/statuses/{sha}",
+            "languages_url": "https://api.github.com/repos/distri/sandbox/languages",
+            "stargazers_url": "https://api.github.com/repos/distri/sandbox/stargazers",
+            "contributors_url": "https://api.github.com/repos/distri/sandbox/contributors",
+            "subscribers_url": "https://api.github.com/repos/distri/sandbox/subscribers",
+            "subscription_url": "https://api.github.com/repos/distri/sandbox/subscription",
+            "commits_url": "https://api.github.com/repos/distri/sandbox/commits{/sha}",
+            "git_commits_url": "https://api.github.com/repos/distri/sandbox/git/commits{/sha}",
+            "comments_url": "https://api.github.com/repos/distri/sandbox/comments{/number}",
+            "issue_comment_url": "https://api.github.com/repos/distri/sandbox/issues/comments/{number}",
+            "contents_url": "https://api.github.com/repos/distri/sandbox/contents/{+path}",
+            "compare_url": "https://api.github.com/repos/distri/sandbox/compare/{base}...{head}",
+            "merges_url": "https://api.github.com/repos/distri/sandbox/merges",
+            "archive_url": "https://api.github.com/repos/distri/sandbox/{archive_format}{/ref}",
+            "downloads_url": "https://api.github.com/repos/distri/sandbox/downloads",
+            "issues_url": "https://api.github.com/repos/distri/sandbox/issues{/number}",
+            "pulls_url": "https://api.github.com/repos/distri/sandbox/pulls{/number}",
+            "milestones_url": "https://api.github.com/repos/distri/sandbox/milestones{/number}",
+            "notifications_url": "https://api.github.com/repos/distri/sandbox/notifications{?since,all,participating}",
+            "labels_url": "https://api.github.com/repos/distri/sandbox/labels{/name}",
+            "releases_url": "https://api.github.com/repos/distri/sandbox/releases{/id}",
+            "created_at": "2013-09-11T03:03:50Z",
+            "updated_at": "2014-04-05T16:45:49Z",
+            "pushed_at": "2013-11-29T20:10:21Z",
+            "git_url": "git://github.com/distri/sandbox.git",
+            "ssh_url": "git@github.com:distri/sandbox.git",
+            "clone_url": "https://github.com/distri/sandbox.git",
+            "svn_url": "https://github.com/distri/sandbox",
+            "homepage": null,
+            "size": 232,
+            "stargazers_count": 0,
+            "watchers_count": 0,
+            "language": "CoffeeScript",
+            "has_issues": true,
+            "has_downloads": true,
+            "has_wiki": true,
+            "forks_count": 0,
+            "mirror_url": null,
+            "open_issues_count": 0,
+            "forks": 0,
+            "open_issues": 0,
+            "watchers": 0,
+            "default_branch": "master",
+            "master_branch": "master",
+            "permissions": {
+              "admin": true,
+              "push": true,
+              "pull": true
+            },
+            "organization": {
+              "login": "distri",
+              "id": 6005125,
+              "avatar_url": "https://avatars.githubusercontent.com/u/6005125?",
+              "gravatar_id": "192f3f168409e79c42107f081139d9f3",
+              "url": "https://api.github.com/users/distri",
+              "html_url": "https://github.com/distri",
+              "followers_url": "https://api.github.com/users/distri/followers",
+              "following_url": "https://api.github.com/users/distri/following{/other_user}",
+              "gists_url": "https://api.github.com/users/distri/gists{/gist_id}",
+              "starred_url": "https://api.github.com/users/distri/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/distri/subscriptions",
+              "organizations_url": "https://api.github.com/users/distri/orgs",
+              "repos_url": "https://api.github.com/users/distri/repos",
+              "events_url": "https://api.github.com/users/distri/events{/privacy}",
+              "received_events_url": "https://api.github.com/users/distri/received_events",
+              "type": "Organization",
+              "site_admin": false
+            },
+            "network_count": 0,
+            "subscribers_count": 1,
+            "branch": "v0.2.1",
+            "publishBranch": "gh-pages"
+          },
+          "dependencies": {}
+        }
+      }
     },
     "value-widget": {
       "source": {

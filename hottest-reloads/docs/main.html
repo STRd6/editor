@@ -82,7 +82,6 @@ but I had no idea what I was doing and still don&#39;t know to this day.</p>
             <div class="content"><pre><code class="lang-coffeescript"><span class="comment"># Get stuff from our package</span>
 {source:files} = PACKAGE
 
-global.Sandbox = require <span class="string">'sandbox'</span>
 require <span class="string">"./source/duct_tape"</span>
 require <span class="string">"./source/deferred"</span>
 {processDirectory} = require <span class="string">"./source/util"</span>
@@ -408,6 +407,7 @@ filetree.selectedFile.observe (file) -&gt;
       file.content(value)
 
       <span class="comment"># TODO: Trigger hot reload</span>
+      editor.hotReload()
 
 issues?.currentIssue.observe (issue) -&gt;
   <span class="comment"># TODO: Formalize this later</span>
