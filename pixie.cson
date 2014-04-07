@@ -10,7 +10,7 @@ remoteDependencies: [
 ]
 dependencies:
   analytics: "distri/google-analytics:v0.1.0"
-  builder: "distri/builder:v0.3.5"
+  builder: "distri/builder:v0.3.6"
   chrapps: "distri/chrapps:v0.1.0"
   cson: "distri/cson:v0.1.0"
   issues: "STRd6/issues:v0.2.0"
