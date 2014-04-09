@@ -406,7 +406,6 @@ filetree.selectedFile.observe (file) -&gt;
     textEditor.observe (value) -&gt;
       file.content(value)
 
-      <span class="comment"># TODO: Trigger hot reload</span>
       editor.hotReload()
 
 issues?.currentIssue.observe (issue) -&gt;
