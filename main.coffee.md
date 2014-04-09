@@ -331,10 +331,14 @@ Templates
           file.editor.show()
           textEditor.send "focus"
 
+        hotReload = (->
+          editor.hotReload()
+        ).debounce 500
+
         textEditor.observe (value) ->
           file.content(value)
 
-          editor.hotReload()
+          hotReload()
 
     issues?.currentIssue.observe (issue) ->
       # TODO: Formalize this later
