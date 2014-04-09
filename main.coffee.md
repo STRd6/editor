@@ -334,7 +334,6 @@ Templates
         textEditor.observe (value) ->
           file.content(value)
 
-          # TODO: Trigger hot reload
           editor.hotReload()
 
     issues?.currentIssue.observe (issue) ->
