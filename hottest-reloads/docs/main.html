@@ -403,10 +403,14 @@ filetree.selectedFile.observe (file) -&gt;
       file.editor.show()
       textEditor.send <span class="string">"focus"</span>
 
+    hotReload = (-&gt;
+      editor.hotReload()
+    ).debounce <span class="number">500</span>
+
     textEditor.observe (value) -&gt;
       file.content(value)
 
-      editor.hotReload()
+      hotReload()
 
 issues?.currentIssue.observe (issue) -&gt;
   <span class="comment"># TODO: Formalize this later</span>
