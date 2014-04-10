@@ -81,21 +81,15 @@ when complete.</p>
             <div class="content"><pre><code class="lang-coffeescript">    build: -&gt;
       data = filetree.data()
 
+      console.log data
+
       builder.build(data)
       .<span class="keyword">then</span> (pkg) -&gt;
         config = readSourceConfig(pkg)
 
-        <span class="comment"># TODO: Robustify bundled dependencies</span>
-        <span class="comment"># Right now we're always loading them from remote urls during the</span>
-        <span class="comment"># build step. The default http caching is probably fine to speed this</span>
-        <span class="comment"># up, but we may want to look into keeping our own cache during dev</span>
-        <span class="comment"># in addition to using the package's existing dependencies rather</span>
-        <span class="comment"># than always updating</span>
         dependencies = config.dependencies <span class="keyword">or</span> {}
 
-        <span class="comment"># TODO: We will want a more robust dependency cache instead of just</span>
-        <span class="comment"># grabbing our own package's dependencies</span>
-        Packager.collectDependencies(dependencies, PACKAGE.dependencies)
+        Packager.collectDependencies(dependencies)
         .<span class="keyword">then</span> (dependencies) -&gt;
           pkg.dependencies = dependencies
 
@@ -103,7 +97,7 @@ when complete.</p>
 
     save: -&gt;
       self.repository().commitTree
-        tree: filetree.data()
+        tree: filetree.githubTree()
 
     loadFiles: (fileData) -&gt;
       filetree.load fileData</code></pre>
