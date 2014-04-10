@@ -38,22 +38,16 @@ when complete.
 
         build: ->
           data = filetree.data()
+          
+          console.log data
 
           builder.build(data)
           .then (pkg) ->
             config = readSourceConfig(pkg)
 
-            # TODO: Robustify bundled dependencies
-            # Right now we're always loading them from remote urls during the
-            # build step. The default http caching is probably fine to speed this
-            # up, but we may want to look into keeping our own cache during dev
-            # in addition to using the package's existing dependencies rather
-            # than always updating
             dependencies = config.dependencies or {}
 
-            # TODO: We will want a more robust dependency cache instead of just
-            # grabbing our own package's dependencies
-            Packager.collectDependencies(dependencies, PACKAGE.dependencies)
+            Packager.collectDependencies(dependencies)
             .then (dependencies) ->
               pkg.dependencies = dependencies
 
@@ -61,7 +55,7 @@ when complete.
 
         save: ->
           self.repository().commitTree
-            tree: filetree.data()
+            tree: filetree.githubTree()
 
         loadFiles: (fileData) ->
           filetree.load fileData
@@ -160,3 +154,4 @@ Helpers
 -------
 
     {readSourceConfig, arrayToHash} = require("./source/util")
+
