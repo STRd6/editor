@@ -38,8 +38,6 @@ when complete.
 
         build: ->
           data = filetree.data()
-          
-          console.log data
 
           builder.build(data)
           .then (pkg) ->
