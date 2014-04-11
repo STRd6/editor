@@ -55,7 +55,7 @@ when complete.
 
         save: ->
           self.repository().commitTree
-            tree: filetree.githubTree()
+            tree: filetree.data()
 
         loadFiles: (fileData) ->
           filetree.load fileData
