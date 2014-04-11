@@ -32,7 +32,6 @@ TODO: This needs a big cleanup.
     # Get stuff from our package
     {source:files} = PACKAGE
 
-    global.Sandbox = require 'sandbox'
     require "./source/duct_tape"
     require "./source/deferred"
     {processDirectory} = require "./source/util"
@@ -332,20 +331,14 @@ Templates
           file.editor.show()
           textEditor.send "focus"
 
+        hotReload = (->
+          editor.hotReload()
+        ).debounce 500
+
         textEditor.observe (value) ->
           file.content(value)
 
-          # TODO May want to move this into a collection listener for all files
-          # in the filetree
-          if file.path().match(/\.styl$/)
-            hotReloadCSS(file)
-
-    hotReloadCSS = ( (file) ->
-      try
-        css = styl(file.content(), whitespace: true).toString()
-
-      editor.runner().hotReloadCSS(css) if css
-    ).debounce(100)
+          hotReload()
 
     issues?.currentIssue.observe (issue) ->
       # TODO: Formalize this later

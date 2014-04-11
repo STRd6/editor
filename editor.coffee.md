@@ -43,17 +43,9 @@ when complete.
           .then (pkg) ->
             config = readSourceConfig(pkg)
 
-            # TODO: Robustify bundled dependencies
-            # Right now we're always loading them from remote urls during the
-            # build step. The default http caching is probably fine to speed this
-            # up, but we may want to look into keeping our own cache during dev
-            # in addition to using the package's existing dependencies rather
-            # than always updating
             dependencies = config.dependencies or {}
 
-            # TODO: We will want a more robust dependency cache instead of just
-            # grabbing our own package's dependencies
-            Packager.collectDependencies(dependencies, PACKAGE.dependencies)
+            Packager.collectDependencies(dependencies)
             .then (dependencies) ->
               pkg.dependencies = dependencies
 
@@ -108,6 +100,14 @@ Likewise we shouldn't expose the builder directly either.
         config: ->
           readSourceConfig(source: arrayToHash(filetree.data()))
 
+Rebuild the package and send the reload message to the runner with the newest package.
+
+        hotReload: ->
+          # TODO: Need to speed up the build significantly for this to be good.
+          self.build()
+          .then (pkg) ->
+            runner.reload(pkg)
+
         # TODO: Don't expose this, instead expose things like `runDocs`, `runTests`, etc.
         runner: ->
           runner
@@ -152,3 +152,4 @@ Helpers
 -------
 
     {readSourceConfig, arrayToHash} = require("./source/util")
+
