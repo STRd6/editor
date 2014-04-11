@@ -85,17 +85,9 @@ when complete.</p>
       .<span class="keyword">then</span> (pkg) -&gt;
         config = readSourceConfig(pkg)
 
-        <span class="comment"># TODO: Robustify bundled dependencies</span>
-        <span class="comment"># Right now we're always loading them from remote urls during the</span>
-        <span class="comment"># build step. The default http caching is probably fine to speed this</span>
-        <span class="comment"># up, but we may want to look into keeping our own cache during dev</span>
-        <span class="comment"># in addition to using the package's existing dependencies rather</span>
-        <span class="comment"># than always updating</span>
         dependencies = config.dependencies <span class="keyword">or</span> {}
 
-        <span class="comment"># TODO: We will want a more robust dependency cache instead of just</span>
-        <span class="comment"># grabbing our own package's dependencies</span>
-        Packager.collectDependencies(dependencies, PACKAGE.dependencies)
+        Packager.collectDependencies(dependencies)
         .<span class="keyword">then</span> (dependencies) -&gt;
           pkg.dependencies = dependencies
 
@@ -166,11 +158,7 @@ when complete.</p>
       builder
 
     config: -&gt;
-      readSourceConfig(source: arrayToHash(filetree.data()))
-
-    <span class="comment"># TODO: Don't expose this, instead expose things like `runDocs`, `runTests`, etc.</span>
-    runner: -&gt;
-      runner</code></pre>
+      readSourceConfig(source: arrayToHash(filetree.data()))</code></pre>
 </div>
         </li>
         
@@ -179,6 +167,27 @@ when complete.</p>
             <div class="annotation">
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Rebuild the package and send the reload message to the runner with the newest package.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">    hotReload: -&gt;
+      <span class="comment"># TODO: Need to speed up the build significantly for this to be good.</span>
+      self.build()
+      .<span class="keyword">then</span> (pkg) -&gt;
+        runner.reload(pkg)
+
+    <span class="comment"># TODO: Don't expose this, instead expose things like `runDocs`, `runTests`, etc.</span>
+    runner: -&gt;
+      runner</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>Run some code in a sandboxed popup window. We need to popup the window immediately
 in response to user input to prevent pop-up blocking so we also pass a promise
@@ -220,10 +229,10 @@ auto-close the window.</p>
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               <div class="pilwrap">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <h2 id="helpers">Helpers</h2>
 
@@ -234,10 +243,10 @@ auto-close the window.</p>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-9">
             <div class="annotation">
               <div class="pilwrap">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               
             </div>

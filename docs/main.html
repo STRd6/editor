@@ -82,7 +82,6 @@ but I had no idea what I was doing and still don&#39;t know to this day.</p>
             <div class="content"><pre><code class="lang-coffeescript"><span class="comment"># Get stuff from our package</span>
 {source:files} = PACKAGE
 
-global.Sandbox = require <span class="string">'sandbox'</span>
 require <span class="string">"./source/duct_tape"</span>
 require <span class="string">"./source/deferred"</span>
 {processDirectory} = require <span class="string">"./source/util"</span>
@@ -404,20 +403,14 @@ filetree.selectedFile.observe (file) -&gt;
       file.editor.show()
       textEditor.send <span class="string">"focus"</span>
 
+    hotReload = (-&gt;
+      editor.hotReload()
+    ).debounce <span class="number">500</span>
+
     textEditor.observe (value) -&gt;
       file.content(value)
 
-      <span class="comment"># TODO May want to move this into a collection listener for all files</span>
-      <span class="comment"># in the filetree</span>
-      <span class="keyword">if</span> file.path().match(<span class="regexp">/\.styl$/</span>)
-        hotReloadCSS(file)
-
-<span class="function"><span class="title">hotReloadCSS</span></span> = ( (file) -&gt;
-  <span class="keyword">try</span>
-    css = styl(file.content(), whitespace: <span class="literal">true</span>).toString()
-
-  editor.runner().hotReloadCSS(css) <span class="keyword">if</span> css
-).debounce(<span class="number">100</span>)
+      hotReload()
 
 issues?.currentIssue.observe (issue) -&gt;
   <span class="comment"># TODO: Formalize this later</span>
