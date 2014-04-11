@@ -81,8 +81,6 @@ when complete.</p>
             <div class="content"><pre><code class="lang-coffeescript">    build: -&gt;
       data = filetree.data()
 
-      console.log data
-
       builder.build(data)
       .<span class="keyword">then</span> (pkg) -&gt;
         config = readSourceConfig(pkg)
