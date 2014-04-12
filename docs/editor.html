@@ -46,7 +46,7 @@ Packager = require(<span class="string">"packager"</span>)
   <span class="comment"># Add editor's metadata</span>
   builder.addPostProcessor (pkg) -&gt;
     pkg.progenitor =
-      url: <span class="string">"http://strd6.github.io/editor/"</span>
+      url: document.location.href
 
   <span class="comment"># Add metadata from our config</span>
   builder.addPostProcessor (pkg) -&gt;
