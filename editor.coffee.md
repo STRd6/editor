@@ -13,7 +13,7 @@ Editor
       # Add editor's metadata
       builder.addPostProcessor (pkg) ->
         pkg.progenitor =
-          url: "http://strd6.github.io/editor/"
+          url: document.location.href
 
       # Add metadata from our config
       builder.addPostProcessor (pkg) ->
