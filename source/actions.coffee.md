@@ -7,6 +7,7 @@ Some dependencies.
 
     Packager = require "packager"
     {processDirectory} = require "./util"
+    Tests = require "tests"
 
     documenter = require("md")
 
@@ -66,8 +67,9 @@ The primary actions of the editor. This is a mixin that is included in the edito
             .then (pkg) ->
               Packager.testScripts(pkg)
             .then (testScripts) ->
+              
               # TODO: Editor should not have to return runner to run tests.
-              html = self.runner().testsHtml(testScripts)
+              html = Tests.html(testScripts)
 
         load: ({repository}) ->
           repository.latestContent()
