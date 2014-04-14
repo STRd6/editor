@@ -65,7 +65,7 @@ auto-close the window.
               sandbox.close()
 
               return error
-          ) 
+          )
 
         run: ->
           self.runInAppWindow()
