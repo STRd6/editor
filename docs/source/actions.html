@@ -39,49 +39,10 @@
             <div class="content"><pre><code class="lang-coffeescript">Packager = require <span class="string">"packager"</span>
 {processDirectory} = require <span class="string">"./util"</span>
 
-documenter = require(<span class="string">"md"</span>)</code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-3">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-3">&#182;</a>
-              </div>
-              <p>The primary actions of the editor. This is a mixin that is included in the editor.</p>
+documenter = require <span class="string">"md"</span>
 
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">Actions</span></span> = (I={}, self) -&gt;
+<span class="function"><span class="title">Actions</span></span> = (I={}, self) -&gt;
   self.extend
-
-    run: -&gt;
-      self.runInSandboxWindow self.config(),
-        self.build()
-        .<span class="keyword">then</span> (pkg) -&gt;
-          Packager.standAlone pkg
-        .<span class="keyword">then</span> (files) -&gt;
-          content = index(files)?.content
-
-    runDocs: ({file}) -&gt;
-      file ?= <span class="string">"index"</span>
-
-      self.runInSandboxWindow docsConfig,
-        self.build()
-        .<span class="keyword">then</span> (pkg) -&gt;
-          documenter.documentAll(pkg)
-        .<span class="keyword">then</span> (docs) -&gt;
-          script = docs.first()
-
-          path = script.path.split(<span class="string">"/"</span>)
-          path.pop()
-          path.push(<span class="string">"<span class="subst">#{file}</span>.html"</span>)
-          path = path.join(<span class="string">"/"</span>)
-
-          <span class="keyword">if</span> file = findFile(path, docs)
-            file.content + <span class="string">"&lt;script&gt;<span class="subst">#{script.content}</span>&lt;\/script&gt;"</span>
-          <span class="keyword">else</span>
-            <span class="string">"Failed to find file at <span class="subst">#{path}</span>"</span>
 
     publish: -&gt;
       self.build()
@@ -100,15 +61,6 @@ documenter = require(<span class="string">"md"</span>)</code></pre>
           <span class="keyword">else</span>
             self.repository().publish(Packager.standAlone(pkg, docs), <span class="literal">undefined</span>, publishBranch)
 
-    test: -&gt;
-      self.runInSandboxWindow self.config(),
-        self.build()
-        .<span class="keyword">then</span> (pkg) -&gt;
-          Packager.testScripts(pkg)
-        .<span class="keyword">then</span> (testScripts) -&gt;
-          <span class="comment"># TODO: Editor should not have to return runner to run tests.</span>
-          html = self.runner().testsHtml(testScripts)
-
     load: ({repository}) -&gt;
       repository.latestContent()
       .<span class="keyword">then</span> (results) -&gt;
@@ -118,80 +70,6 @@ documenter = require(<span class="string">"md"</span>)</code></pre>
         self.loadFiles files
 
 module.exports = Actions</code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <h2 id="helpers">Helpers</h2>
-
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">
-</code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">docsConfig =
-  width: <span class="number">1280</span>
-  height: <span class="number">800</span></code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <p>Get the <code>index.html</code> from a list of files.</p>
-
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">index</span></span> = (files) -&gt;
-  files.filter (file) -&gt;
-    <span class="regexp">/index\.html$/</span>.test file.path
-  .first()</code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <p>Find a file in a list of files by path.</p>
-
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">findFile</span></span> = (path, files) -&gt;
-  files.filter (file) -&gt;
-    file.path <span class="keyword">is</span> path
-  .first()</code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <p>Process results returned from Github API.</p>
-
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">
-</code></pre>
 </div>
         </li>
         
