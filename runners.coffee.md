@@ -5,6 +5,7 @@ Hold all the ways the editor can run things: apps, docs, tests, maybe more.
 
     Packager = require "packager"
     Runner = require("runner")
+    {PackageRunner} = Runner
     Tests = require "tests"
     documenter = require "md"
 
@@ -13,6 +14,8 @@ Hold all the ways the editor can run things: apps, docs, tests, maybe more.
       docRunner = Runner()
       testRunner = Runner()
 
+      runningInstances = []
+
       self.extend
 
 Rebuild the package and send the reload message to the runner with the newest package.
@@ -20,7 +23,7 @@ Rebuild the package and send the reload message to the runner with the newest pa
         hotReload: ->
           self.build()
           .then (pkg) ->
-            appRunner.reload(pkg)
+            runningInstances.invoke "launch", pkg
 
 Run some code in a sandboxed popup window. We need to popup the window immediately
 in response to user input to prevent pop-up blocking so we also pass a promise
@@ -42,13 +45,30 @@ auto-close the window.
               return error
           )
 
+        runInAppWindow: ->
+          sandbox = appRunner.run
+            config: self.config()
+
+          self.build()
+          .then(
+            (pkg) ->
+              packageRunner = PackageRunner(sandbox.document)
+              runningInstances.push packageRunner
+
+              sandbox.addEventListener "unload", ->
+                runningInstances.remove(packageRunner)
+
+              packageRunner.launch(pkg)
+
+              packageRunner
+            , (error) ->
+              sandbox.close()
+
+              return error
+          ) 
+
         run: ->
-          self.runInSandboxWindow self.config(), appRunner,
-            self.build()
-            .then (pkg) ->
-              Packager.standAlone pkg
-            .then (files) ->
-              content = index(files)?.content
+          self.runInAppWindow()
 
         runDocs: ({file}) ->
           file ?= "index"
