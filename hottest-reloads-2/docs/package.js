@@ -192,7 +192,13 @@
     },
     "pixie.cson": {
       "path": "pixie.cson",
-      "content": "version: \"0.3.0\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"https://code.jquery.com/jquery-1.10.1.min.js\"\n  \"http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js\"\n]\ndependencies:\n  analytics: \"distri/google-analytics:v0.1.0\"\n  builder: \"distri/builder:v0.3.8\"\n  chrapps: \"distri/chrapps:v0.1.0\"\n  cson: \"distri/cson:v0.1.0\"\n  filetree: \"STRd6/filetree:v0.3.1\"\n  github: \"distri/github:v0.4.3\"\n  issues: \"distri/issues:v0.2.1\"\n  md: \"distri/md:v0.4.1\"\n  notifications: \"distri/notifications:v0.3.0\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  runtime: \"distri/runtime:v0.3.0\"\n  packager: \"distri/packager:v0.5.6\"\n  runner: \"distri/runner:v0.2.3-pre.6\"\n  tests: \"distri/tests:v0.1.1\"\n  \"value-widget\": \"distri/value-widget:v0.1.2\"\n",
+      "content": "version: \"0.3.0\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\"\n  \"https://code.jquery.com/jquery-1.10.1.min.js\"\n  \"http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js\"\n]\ndependencies:\n  analytics: \"distri/google-analytics:v0.1.0\"\n  builder: \"distri/builder:v0.3.8\"\n  chrapps: \"distri/chrapps:v0.1.0\"\n  cson: \"distri/cson:v0.1.0\"\n  filetree: \"STRd6/filetree:v0.3.1\"\n  github: \"distri/github:v0.4.3\"\n  issues: \"distri/issues:v0.2.1\"\n  md: \"distri/md:v0.4.1\"\n  notifications: \"distri/notifications:v0.3.0\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  runtime: \"distri/runtime:v0.3.0\"\n  packager: \"distri/packager:v0.5.6\"\n  runner: \"distri/runner:v0.2.3\"\n  tests: \"distri/tests:v0.1.1\"\n  \"value-widget\": \"distri/value-widget:v0.1.2\"\n",
+      "mode": "100644",
+      "type": "blob"
+    },
+    "runners.coffee.md": {
+      "path": "runners.coffee.md",
+      "content": "Runners\n=======\n\nHold all the ways the editor can run things: apps, docs, tests, maybe more.\n\n    Packager = require \"packager\"\n    Runner = require(\"runner\")\n    {PackageRunner} = Runner\n    Tests = require \"tests\"\n    documenter = require \"md\"\n\n    module.exports = (I={}, self) ->\n      appRunner = Runner()\n      docRunner = Runner()\n      testRunner = Runner()\n\n      runningInstances = []\n\n      self.extend\n\nRebuild the package and send the reload message to the runner with the newest package.\n\n        hotReload: ->\n          self.build()\n          .then (pkg) ->\n            runningInstances.invoke \"launch\", pkg\n\nRun some code in a sandboxed popup window. We need to popup the window immediately\nin response to user input to prevent pop-up blocking so we also pass a promise\nthat will contain the content to render in the window. If the promise fails we\nauto-close the window.\n\n        runInSandboxWindow: (config, runner, promise) ->\n          sandbox = runner.run\n            config: config\n\n          promise.then(\n            (content) ->\n              sandbox.document.open()\n              sandbox.document.write(content)\n              sandbox.document.close()\n            , (error) ->\n              sandbox.close()\n\n              return error\n          )\n\n        runInAppWindow: ->\n          sandbox = appRunner.run\n            config: self.config()\n\n          self.build()\n          .then(\n            (pkg) ->\n              packageRunner = PackageRunner(sandbox.document)\n              runningInstances.push packageRunner\n\n              sandbox.addEventListener \"unload\", ->\n                runningInstances.remove(packageRunner)\n\n              packageRunner.launch(pkg)\n\n              packageRunner\n            , (error) ->\n              sandbox.close()\n\n              return error\n          )\n\n        run: ->\n          self.runInAppWindow()\n\n        runDocs: ({file}) ->\n          file ?= \"index\"\n\n          self.runInSandboxWindow docsConfig, docRunner,\n            self.build()\n            .then (pkg) ->\n              documenter.documentAll(pkg)\n            .then (docs) ->\n              script = docs.first()\n\n              path = script.path.split(\"/\")\n              path.pop()\n              path.push(\"#{file}.html\")\n              path = path.join(\"/\")\n\n              if file = findFile(path, docs)\n                file.content + \"<script>#{script.content}<\\/script>\"\n              else\n                \"Failed to find file at #{path}\"\n\n        test: ->\n          self.runInSandboxWindow self.config(), testRunner,\n            self.build()\n            .then (pkg) ->\n              Packager.testScripts(pkg)\n            .then (testScripts) ->\n\n              # TODO: Editor should not have to return runner to run tests.\n              html = Tests.html(testScripts)\n\nHelpers\n-------\n\n    docsConfig =\n      width: 1280\n      height: 800\n\nGet the `index.html` from a list of files.\n\n    index = (files) ->\n      files.filter (file) ->\n        /index\\.html$/.test file.path\n      .first()\n\nFind a file in a list of files by path.\n\n    findFile = (path, files) ->\n      files.filter (file) ->\n        file.path is path\n      .first()\n",
       "mode": "100644",
       "type": "blob"
     },
@@ -267,11 +273,6 @@
       "content": "    Util = require \"../source/util\"\n\n    describe \"Util\", ->\n      it \"should allow reading of the source config\", ->\n        assert Util.readSourceConfig(PACKAGE)\n",
       "mode": "100644",
       "type": "blob"
-    },
-    "runners.coffee.md": {
-      "path": "runners.coffee.md",
-      "content": "Runners\n=======\n\nHold all the ways the editor can run things: apps, docs, tests, maybe more.\n\n    Packager = require \"packager\"\n    Runner = require(\"runner\")\n    {PackageRunner} = Runner\n    Tests = require \"tests\"\n    documenter = require \"md\"\n\n    module.exports = (I={}, self) ->\n      appRunner = Runner()\n      docRunner = Runner()\n      testRunner = Runner()\n\n      runningInstances = []\n\n      self.extend\n\nRebuild the package and send the reload message to the runner with the newest package.\n\n        hotReload: ->\n          self.build()\n          .then (pkg) ->\n            runningInstances.invoke \"launch\", pkg\n\nRun some code in a sandboxed popup window. We need to popup the window immediately\nin response to user input to prevent pop-up blocking so we also pass a promise\nthat will contain the content to render in the window. If the promise fails we\nauto-close the window.\n\n        runInSandboxWindow: (config, runner, promise) ->\n          sandbox = runner.run\n            config: config\n\n          promise.then(\n            (content) ->\n              sandbox.document.open()\n              sandbox.document.write(content)\n              sandbox.document.close()\n            , (error) ->\n              sandbox.close()\n\n              return error\n          )\n\n        runInAppWindow: ->\n          sandbox = appRunner.run\n            config: self.config()\n\n          self.build()\n          .then(\n            (pkg) ->\n              packageRunner = PackageRunner(sandbox.document)\n              runningInstances.push packageRunner\n\n              sandbox.addEventListener \"unload\", ->\n                runningInstances.remove(packageRunner)\n\n              packageRunner.launch(pkg)\n\n              packageRunner\n            , (error) ->\n              sandbox.close()\n\n              return error\n          ) \n\n        run: ->\n          self.runInAppWindow()\n\n        runDocs: ({file}) ->\n          file ?= \"index\"\n\n          self.runInSandboxWindow docsConfig, docRunner,\n            self.build()\n            .then (pkg) ->\n              documenter.documentAll(pkg)\n            .then (docs) ->\n              script = docs.first()\n\n              path = script.path.split(\"/\")\n              path.pop()\n              path.push(\"#{file}.html\")\n              path = path.join(\"/\")\n\n              if file = findFile(path, docs)\n                file.content + \"<script>#{script.content}<\\/script>\"\n              else\n                \"Failed to find file at #{path}\"\n\n        test: ->\n          self.runInSandboxWindow self.config(), testRunner,\n            self.build()\n            .then (pkg) ->\n              Packager.testScripts(pkg)\n            .then (testScripts) ->\n\n              # TODO: Editor should not have to return runner to run tests.\n              html = Tests.html(testScripts)\n\nHelpers\n-------\n\n    docsConfig =\n      width: 1280\n      height: 800\n\nGet the `index.html` from a list of files.\n\n    index = (files) ->\n      files.filter (file) ->\n        /index\\.html$/.test file.path\n      .first()\n\nFind a file in a list of files by path.\n\n    findFile = (path, files) ->\n      files.filter (file) ->\n        file.path is path\n      .first()\n",
-      "mode": "100644"
     }
   },
   "distribution": {
@@ -292,7 +293,12 @@
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.3.0\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"https://code.jquery.com/jquery-1.10.1.min.js\",\"http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js\"],\"dependencies\":{\"analytics\":\"distri/google-analytics:v0.1.0\",\"builder\":\"distri/builder:v0.3.8\",\"chrapps\":\"distri/chrapps:v0.1.0\",\"cson\":\"distri/cson:v0.1.0\",\"filetree\":\"STRd6/filetree:v0.3.1\",\"github\":\"distri/github:v0.4.3\",\"issues\":\"distri/issues:v0.2.1\",\"md\":\"distri/md:v0.4.1\",\"notifications\":\"distri/notifications:v0.3.0\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"runtime\":\"distri/runtime:v0.3.0\",\"packager\":\"distri/packager:v0.5.6\",\"runner\":\"distri/runner:v0.2.3-pre.6\",\"tests\":\"distri/tests:v0.1.1\",\"value-widget\":\"distri/value-widget:v0.1.2\"}};",
+      "content": "module.exports = {\"version\":\"0.3.0\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js\",\"https://code.jquery.com/jquery-1.10.1.min.js\",\"http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js\"],\"dependencies\":{\"analytics\":\"distri/google-analytics:v0.1.0\",\"builder\":\"distri/builder:v0.3.8\",\"chrapps\":\"distri/chrapps:v0.1.0\",\"cson\":\"distri/cson:v0.1.0\",\"filetree\":\"STRd6/filetree:v0.3.1\",\"github\":\"distri/github:v0.4.3\",\"issues\":\"distri/issues:v0.2.1\",\"md\":\"distri/md:v0.4.1\",\"notifications\":\"distri/notifications:v0.3.0\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"runtime\":\"distri/runtime:v0.3.0\",\"packager\":\"distri/packager:v0.5.6\",\"runner\":\"distri/runner:v0.2.3\",\"tests\":\"distri/tests:v0.1.1\",\"value-widget\":\"distri/value-widget:v0.1.2\"}};",
+      "type": "blob"
+    },
+    "runners": {
+      "path": "runners",
+      "content": "(function() {\n  var PackageRunner, Packager, Runner, Tests, docsConfig, documenter, findFile, index;\n\n  Packager = require(\"packager\");\n\n  Runner = require(\"runner\");\n\n  PackageRunner = Runner.PackageRunner;\n\n  Tests = require(\"tests\");\n\n  documenter = require(\"md\");\n\n  module.exports = function(I, self) {\n    var appRunner, docRunner, runningInstances, testRunner;\n    if (I == null) {\n      I = {};\n    }\n    appRunner = Runner();\n    docRunner = Runner();\n    testRunner = Runner();\n    runningInstances = [];\n    return self.extend({\n      hotReload: function() {\n        return self.build().then(function(pkg) {\n          return runningInstances.invoke(\"launch\", pkg);\n        });\n      },\n      runInSandboxWindow: function(config, runner, promise) {\n        var sandbox;\n        sandbox = runner.run({\n          config: config\n        });\n        return promise.then(function(content) {\n          sandbox.document.open();\n          sandbox.document.write(content);\n          return sandbox.document.close();\n        }, function(error) {\n          sandbox.close();\n          return error;\n        });\n      },\n      runInAppWindow: function() {\n        var sandbox;\n        sandbox = appRunner.run({\n          config: self.config()\n        });\n        return self.build().then(function(pkg) {\n          var packageRunner;\n          packageRunner = PackageRunner(sandbox.document);\n          runningInstances.push(packageRunner);\n          sandbox.addEventListener(\"unload\", function() {\n            return runningInstances.remove(packageRunner);\n          });\n          packageRunner.launch(pkg);\n          return packageRunner;\n        }, function(error) {\n          sandbox.close();\n          return error;\n        });\n      },\n      run: function() {\n        return self.runInAppWindow();\n      },\n      runDocs: function(_arg) {\n        var file;\n        file = _arg.file;\n        if (file == null) {\n          file = \"index\";\n        }\n        return self.runInSandboxWindow(docsConfig, docRunner, self.build().then(function(pkg) {\n          return documenter.documentAll(pkg);\n        }).then(function(docs) {\n          var path, script;\n          script = docs.first();\n          path = script.path.split(\"/\");\n          path.pop();\n          path.push(\"\" + file + \".html\");\n          path = path.join(\"/\");\n          if (file = findFile(path, docs)) {\n            return file.content + (\"<script>\" + script.content + \"<\\/script>\");\n          } else {\n            return \"Failed to find file at \" + path;\n          }\n        }));\n      },\n      test: function() {\n        return self.runInSandboxWindow(self.config(), testRunner, self.build().then(function(pkg) {\n          return Packager.testScripts(pkg);\n        }).then(function(testScripts) {\n          var html;\n          return html = Tests.html(testScripts);\n        }));\n      }\n    });\n  };\n\n  docsConfig = {\n    width: 1280,\n    height: 800\n  };\n\n  index = function(files) {\n    return files.filter(function(file) {\n      return /index\\.html$/.test(file.path);\n    }).first();\n  };\n\n  findFile = function(path, files) {\n    return files.filter(function(file) {\n      return file.path === path;\n    }).first();\n  };\n\n}).call(this);\n",
       "type": "blob"
     },
     "source/actions": {
@@ -353,11 +359,6 @@
     "test/util": {
       "path": "test/util",
       "content": "(function() {\n  var Util;\n\n  Util = require(\"../source/util\");\n\n  describe(\"Util\", function() {\n    return it(\"should allow reading of the source config\", function() {\n      return assert(Util.readSourceConfig(PACKAGE));\n    });\n  });\n\n}).call(this);\n",
-      "type": "blob"
-    },
-    "runners": {
-      "path": "runners",
-      "content": "(function() {\n  var PackageRunner, Packager, Runner, Tests, docsConfig, documenter, findFile, index;\n\n  Packager = require(\"packager\");\n\n  Runner = require(\"runner\");\n\n  PackageRunner = Runner.PackageRunner;\n\n  Tests = require(\"tests\");\n\n  documenter = require(\"md\");\n\n  module.exports = function(I, self) {\n    var appRunner, docRunner, runningInstances, testRunner;\n    if (I == null) {\n      I = {};\n    }\n    appRunner = Runner();\n    docRunner = Runner();\n    testRunner = Runner();\n    runningInstances = [];\n    return self.extend({\n      hotReload: function() {\n        return self.build().then(function(pkg) {\n          return runningInstances.invoke(\"launch\", pkg);\n        });\n      },\n      runInSandboxWindow: function(config, runner, promise) {\n        var sandbox;\n        sandbox = runner.run({\n          config: config\n        });\n        return promise.then(function(content) {\n          sandbox.document.open();\n          sandbox.document.write(content);\n          return sandbox.document.close();\n        }, function(error) {\n          sandbox.close();\n          return error;\n        });\n      },\n      runInAppWindow: function() {\n        var sandbox;\n        sandbox = appRunner.run({\n          config: self.config()\n        });\n        return self.build().then(function(pkg) {\n          var packageRunner;\n          packageRunner = PackageRunner(sandbox.document);\n          runningInstances.push(packageRunner);\n          sandbox.addEventListener(\"unload\", function() {\n            return runningInstances.remove(packageRunner);\n          });\n          packageRunner.launch(pkg);\n          return packageRunner;\n        }, function(error) {\n          sandbox.close();\n          return error;\n        });\n      },\n      run: function() {\n        return self.runInAppWindow();\n      },\n      runDocs: function(_arg) {\n        var file;\n        file = _arg.file;\n        if (file == null) {\n          file = \"index\";\n        }\n        return self.runInSandboxWindow(docsConfig, docRunner, self.build().then(function(pkg) {\n          return documenter.documentAll(pkg);\n        }).then(function(docs) {\n          var path, script;\n          script = docs.first();\n          path = script.path.split(\"/\");\n          path.pop();\n          path.push(\"\" + file + \".html\");\n          path = path.join(\"/\");\n          if (file = findFile(path, docs)) {\n            return file.content + (\"<script>\" + script.content + \"<\\/script>\");\n          } else {\n            return \"Failed to find file at \" + path;\n          }\n        }));\n      },\n      test: function() {\n        return self.runInSandboxWindow(self.config(), testRunner, self.build().then(function(pkg) {\n          return Packager.testScripts(pkg);\n        }).then(function(testScripts) {\n          var html;\n          return html = Tests.html(testScripts);\n        }));\n      }\n    });\n  };\n\n  docsConfig = {\n    width: 1280,\n    height: 800\n  };\n\n  index = function(files) {\n    return files.filter(function(file) {\n      return /index\\.html$/.test(file.path);\n    }).first();\n  };\n\n  findFile = function(path, files) {\n    return files.filter(function(file) {\n      return file.path === path;\n    }).first();\n  };\n\n}).call(this);\n",
       "type": "blob"
     },
     "_lib/hamljr_runtime": {
@@ -7195,32 +7196,33 @@
         },
         "package_runner.coffee.md": {
           "path": "package_runner.coffee.md",
-          "content": "Package Runner\n==============\n\nRun a package in an iframe.\n\nReload command will get the state of the app, replace the iframe with a clean\none, boot the new package and reload the app state.\n\nWhen given a document the package runner\n\n    {extend} = require \"util\"\n\n    module.exports = (document) ->\n      applyStylesheet document, require \"./style\"\n      runningInstance = null\n\n      self =\n        launch: (pkg, data) ->\n          # Get data from running instance\n          data ?= runningInstance?.contentWindow?.appData?()\n\n          # Remove Running instance\n          runningInstance?.remove()\n\n          # Create new instance\n          runningInstance = document.createElement \"iframe\"\n          document.body.appendChild runningInstance\n\n          # Pass in app state\n          extend runningInstance.contentWindow.ENV ?= {},\n            APP_STATE: data\n\n          runningInstance.contentWindow.document.write html(pkg)\n\n          return self\n\nA standalone html page for a package.\n\n    html = (pkg) ->\n      \"\"\"\n        <!DOCTYPE html>\n        <html>\n        <head>\n        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n        #{dependencyScripts(pkg.remoteDependencies)}\n        </head>\n        <body>\n        <script>\n        #{packageWrapper(pkg, \"require('./#{pkg.entryPoint}')\")}\n        <\\/script>\n        </body>\n        </html>\n      \"\"\"\n\nWrap code in a closure that provides the package and a require function. This\ncan be used for generating standalone HTML pages, scripts, and tests.\n\n    packageWrapper = (pkg, code) ->\n      \"\"\"\n        ;(function(PACKAGE) {\n        var oldRequire = window.Require;\n        #{PACKAGE.dependencies.require.distribution.main.content}\n        var require = Require.generateFor(PACKAGE);\n        window.Require = oldRequire;\n        #{code}\n        })(#{JSON.stringify(pkg, null, 2)});\n      \"\"\"\n\nHelpers\n-------\n\n`makeScript` returns a string representation of a script tag that has a src\nattribute.\n\n    makeScript = (src) ->\n      \"<script src=#{JSON.stringify(src)}><\\/script>\"\n\n`dependencyScripts` returns a string containing the script tags that are\nthe remote script dependencies of this build.\n\n    dependencyScripts = (remoteDependencies=[]) ->\n      remoteDependencies.map(makeScript).join(\"\\n\")\n\n    applyStylesheet = (document, style, id=\"primary\") ->\n      styleNode = document.createElement(\"style\")\n      styleNode.innerHTML = style\n      styleNode.id = id\n  \n      if previousStyleNode = document.head.querySelector(\"style##{id}\")\n        previousStyleNode.parentNode.removeChild(prevousStyleNode)\n  \n      document.head.appendChild(styleNode)\n",
+          "content": "Package Runner\n==============\n\nRun a package in an iframe.\n\nThe `launch` command will get the state of the app, replace the iframe with a clean\none, boot the new package and reload the app state. You can also optionally pass\nin an app state to launch into.\n\nOne example use of hot reloading is if you are modifying your css you can run\nseveral instances of your app and navigate to different states. Then you can see\nin real time how the css changes affect each one.\n\nThe package runner assumes that it has total control over the document so you\nprobably won't want to give it the one in your own window.\n\n    {extend} = require \"util\"\n\n    module.exports = (document) ->\n      applyStylesheet document, require \"./style\"\n      runningInstance = null\n\n      self =\n        launch: (pkg, data) ->\n          # Get data from running instance\n          data ?= runningInstance?.contentWindow?.appData?()\n\n          # Remove Running instance\n          runningInstance?.remove()\n\n          # Create new instance\n          runningInstance = document.createElement \"iframe\"\n          document.body.appendChild runningInstance\n\n          # Pass in app state\n          extend runningInstance.contentWindow.ENV ?= {},\n            APP_STATE: data\n\n          runningInstance.contentWindow.document.write html(pkg)\n\n          return self\n\nA standalone html page for a package.\n\n    html = (pkg) ->\n      \"\"\"\n        <!DOCTYPE html>\n        <html>\n        <head>\n        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n        #{dependencyScripts(pkg.remoteDependencies)}\n        </head>\n        <body>\n        <script>\n        #{packageWrapper(pkg, \"require('./#{pkg.entryPoint}')\")}\n        <\\/script>\n        </body>\n        </html>\n      \"\"\"\n\nWrap code in a closure that provides the package and a require function. This\ncan be used for generating standalone HTML pages, scripts, and tests.\n\n    packageWrapper = (pkg, code) ->\n      \"\"\"\n        ;(function(PACKAGE) {\n        var oldRequire = window.Require;\n        #{PACKAGE.dependencies.require.distribution.main.content}\n        var require = Require.generateFor(PACKAGE);\n        window.Require = oldRequire;\n        #{code}\n        })(#{JSON.stringify(pkg, null, 2)});\n      \"\"\"\n\nHelpers\n-------\n\n`makeScript` returns a string representation of a script tag that has a src\nattribute.\n\n    makeScript = (src) ->\n      \"<script src=#{JSON.stringify(src)}><\\/script>\"\n\n`dependencyScripts` returns a string containing the script tags that are\nthe remote script dependencies of this build.\n\n    dependencyScripts = (remoteDependencies=[]) ->\n      remoteDependencies.map(makeScript).join(\"\\n\")\n\n    applyStylesheet = (document, style, id=\"primary\") ->\n      styleNode = document.createElement(\"style\")\n      styleNode.innerHTML = style\n      styleNode.id = id\n  \n      if previousStyleNode = document.head.querySelector(\"style##{id}\")\n        previousStyleNode.parentNode.removeChild(prevousStyleNode)\n  \n      document.head.appendChild(styleNode)\n",
           "mode": "100644",
           "type": "blob"
         },
         "pixie.cson": {
           "path": "pixie.cson",
-          "content": "version: \"0.2.3-pre.6\"\nentryPoint: \"runner\"\ndependencies:\n  require: \"distri/require:v0.4.2\"\n  sandbox: \"distri/sandbox:v0.2.2-pre.0\"\n  util: \"distri/util:v0.1.0\"\n",
+          "content": "version: \"0.2.3\"\nentryPoint: \"runner\"\ndependencies:\n  require: \"distri/require:v0.4.2\"\n  sandbox: \"distri/sandbox:v0.2.2\"\n  util: \"distri/util:v0.1.0\"\n",
           "mode": "100644",
           "type": "blob"
         },
         "runner.coffee.md": {
           "path": "runner.coffee.md",
-          "content": "Runner\n======\n\nRunner manages running apps in sandboxed windows and passing messages back and\nforth from the parent to the running instances.\n\nWe keep a list of running windows so we can hot-update them when we modify our\nown code.\n\nOne cool example use is if you are modifying your css you can run several\ninstances of your app and navigate to different states. Then you can see in real\ntime how the css changes affect each one.\n\n    Sandbox = require \"sandbox\"\n\n    runningWindows = []\n\n    Runner = ->\n      run: ({config}={}) ->\n        {width, height} = (config or {})\n\n        sandbox = Sandbox\n          width: width\n          height: height\n\n        runningWindows.push sandbox\n\n        return sandbox\n\nCall a global reload method on each running window, passing in the given args.\nWe may want to switch to using `postMessage` in the future.\n\n      reload: (args...) ->\n        runningWindows = runningWindows.filter (window) ->\n          return false if window.closed\n\n          window.reload?(args...)\n\n          return true\n\n    Runner.PackageRunner = require \"./package_runner\"\n\n    module.exports = Runner\n",
-          "mode": "100644",
-          "type": "blob"
-        },
-        "test/runner.coffee": {
-          "path": "test/runner.coffee",
-          "content": "Runner = require \"../runner\"\n\ndescribe \"runner\", ->\n  it \"should hot reload\", (done) ->\n    runner = Runner()\n    r = null\n\n    setTimeout ->\n      r = runner.run()\n      runner.reload(\"test\")\n\n      assert r != window, \"Popup should not be this window\"\n    , 500\n\n    setTimeout ->\n      r.close()\n      done()\n    , 1000\n",
+          "content": "Runner\n======\n\n    Sandbox = require \"sandbox\"\n\n    Runner = ->\n      run: ({config}={}) ->\n        {width, height} = (config or {})\n\n        sandbox = Sandbox\n          width: width\n          height: height\n\n        return sandbox\n\n    Runner.PackageRunner = require \"./package_runner\"\n\n    module.exports = Runner\n",
           "mode": "100644",
           "type": "blob"
         },
         "style.styl": {
           "path": "style.styl",
           "content": "body\n  height: 100%\n  margin: 0\n\nhtml\n  height: 100%\n\niframe\n  border: none\n  height: 100%\n  width: 100%\n",
-          "mode": "100644"
+          "mode": "100644",
+          "type": "blob"
+        },
+        "test/runner.coffee": {
+          "path": "test/runner.coffee",
+          "content": "Runner = require \"../runner\"\n\ndescribe \"runner\", ->\n  it \"should launch windows\", (done) ->\n    runner = Runner()\n    r = null\n\n    setTimeout ->\n      r = runner.run()\n\n      assert r != window, \"Popup should not be this window\"\n    , 100\n\n    setTimeout ->\n      r.close()\n      done()\n    , 200\n\ndescribe \"PackageRunner\", ->\n  it \"should launch and run packages\", (done) ->\n    {PackageRunner} = Runner\n    runner = Runner()\n\n    sandbox = runner.run()\n    \n    launcher = PackageRunner(sandbox.document)\n\n    launcher.launch(PACKAGE)\n\n    setTimeout ->\n      sandbox.close()\n      done()\n    , 1000\n",
+          "mode": "100644",
+          "type": "blob"
         }
       },
       "distribution": {
@@ -7231,29 +7233,29 @@
         },
         "pixie": {
           "path": "pixie",
-          "content": "module.exports = {\"version\":\"0.2.3-pre.6\",\"entryPoint\":\"runner\",\"dependencies\":{\"require\":\"distri/require:v0.4.2\",\"sandbox\":\"distri/sandbox:v0.2.2-pre.0\",\"util\":\"distri/util:v0.1.0\"}};",
+          "content": "module.exports = {\"version\":\"0.2.3\",\"entryPoint\":\"runner\",\"dependencies\":{\"require\":\"distri/require:v0.4.2\",\"sandbox\":\"distri/sandbox:v0.2.2\",\"util\":\"distri/util:v0.1.0\"}};",
           "type": "blob"
         },
         "runner": {
           "path": "runner",
-          "content": "(function() {\n  var Runner, Sandbox, runningWindows,\n    __slice = [].slice;\n\n  Sandbox = require(\"sandbox\");\n\n  runningWindows = [];\n\n  Runner = function() {\n    return {\n      run: function(_arg) {\n        var config, height, sandbox, width, _ref;\n        config = (_arg != null ? _arg : {}).config;\n        _ref = config || {}, width = _ref.width, height = _ref.height;\n        sandbox = Sandbox({\n          width: width,\n          height: height\n        });\n        runningWindows.push(sandbox);\n        return sandbox;\n      },\n      reload: function() {\n        var args;\n        args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];\n        return runningWindows = runningWindows.filter(function(window) {\n          if (window.closed) {\n            return false;\n          }\n          if (typeof window.reload === \"function\") {\n            window.reload.apply(window, args);\n          }\n          return true;\n        });\n      }\n    };\n  };\n\n  Runner.PackageRunner = require(\"./package_runner\");\n\n  module.exports = Runner;\n\n}).call(this);\n",
-          "type": "blob"
-        },
-        "test/runner": {
-          "path": "test/runner",
-          "content": "(function() {\n  var Runner;\n\n  Runner = require(\"../runner\");\n\n  describe(\"runner\", function() {\n    return it(\"should hot reload\", function(done) {\n      var r, runner;\n      runner = Runner();\n      r = null;\n      setTimeout(function() {\n        r = runner.run();\n        runner.reload(\"test\");\n        return assert(r !== window, \"Popup should not be this window\");\n      }, 500);\n      return setTimeout(function() {\n        r.close();\n        return done();\n      }, 1000);\n    });\n  });\n\n}).call(this);\n",
+          "content": "(function() {\n  var Runner, Sandbox;\n\n  Sandbox = require(\"sandbox\");\n\n  Runner = function() {\n    return {\n      run: function(_arg) {\n        var config, height, sandbox, width, _ref;\n        config = (_arg != null ? _arg : {}).config;\n        _ref = config || {}, width = _ref.width, height = _ref.height;\n        sandbox = Sandbox({\n          width: width,\n          height: height\n        });\n        return sandbox;\n      }\n    };\n  };\n\n  Runner.PackageRunner = require(\"./package_runner\");\n\n  module.exports = Runner;\n\n}).call(this);\n",
           "type": "blob"
         },
         "style": {
           "path": "style",
           "content": "module.exports = \"body {\\n  height: 100%;\\n  margin: 0;\\n}\\n\\nhtml {\\n  height: 100%;\\n}\\n\\niframe {\\n  border: none;\\n  height: 100%;\\n  width: 100%;\\n}\";",
           "type": "blob"
+        },
+        "test/runner": {
+          "path": "test/runner",
+          "content": "(function() {\n  var Runner;\n\n  Runner = require(\"../runner\");\n\n  describe(\"runner\", function() {\n    return it(\"should launch windows\", function(done) {\n      var r, runner;\n      runner = Runner();\n      r = null;\n      setTimeout(function() {\n        r = runner.run();\n        return assert(r !== window, \"Popup should not be this window\");\n      }, 100);\n      return setTimeout(function() {\n        r.close();\n        return done();\n      }, 200);\n    });\n  });\n\n  describe(\"PackageRunner\", function() {\n    return it(\"should launch and run packages\", function(done) {\n      var PackageRunner, launcher, runner, sandbox;\n      PackageRunner = Runner.PackageRunner;\n      runner = Runner();\n      sandbox = runner.run();\n      launcher = PackageRunner(sandbox.document);\n      launcher.launch(PACKAGE);\n      return setTimeout(function() {\n        sandbox.close();\n        return done();\n      }, 1000);\n    });\n  });\n\n}).call(this);\n",
+          "type": "blob"
         }
       },
       "progenitor": {
         "url": "http://www.danielx.net/editor/"
       },
-      "version": "0.2.3-pre.6",
+      "version": "0.2.3",
       "entryPoint": "runner",
       "repository": {
         "id": 13482507,
@@ -7319,8 +7321,8 @@
         "labels_url": "https://api.github.com/repos/distri/runner/labels{/name}",
         "releases_url": "https://api.github.com/repos/distri/runner/releases{/id}",
         "created_at": "2013-10-10T20:42:25Z",
-        "updated_at": "2014-04-13T21:28:55Z",
-        "pushed_at": "2014-04-13T21:28:55Z",
+        "updated_at": "2014-04-14T16:01:28Z",
+        "pushed_at": "2014-04-14T16:01:28Z",
         "git_url": "git://github.com/distri/runner.git",
         "ssh_url": "git@github.com:distri/runner.git",
         "clone_url": "https://github.com/distri/runner.git",
@@ -7335,9 +7337,9 @@
         "has_wiki": true,
         "forks_count": 0,
         "mirror_url": null,
-        "open_issues_count": 1,
+        "open_issues_count": 0,
         "forks": 0,
-        "open_issues": 1,
+        "open_issues": 0,
         "watchers": 0,
         "default_branch": "master",
         "master_branch": "master",
@@ -7367,7 +7369,7 @@
         },
         "network_count": 0,
         "subscribers_count": 1,
-        "branch": "v0.2.3-pre.6",
+        "branch": "v0.2.3",
         "publishBranch": "gh-pages"
       },
       "dependencies": {
@@ -7609,7 +7611,7 @@
             },
             "pixie.cson": {
               "path": "pixie.cson",
-              "content": "version: \"0.2.2-pre.0\"\n",
+              "content": "version: \"0.2.2\"\n",
               "mode": "100644",
               "type": "blob"
             },
@@ -7628,7 +7630,7 @@
             },
             "pixie": {
               "path": "pixie",
-              "content": "module.exports = {\"version\":\"0.2.2-pre.0\"};",
+              "content": "module.exports = {\"version\":\"0.2.2\"};",
               "type": "blob"
             },
             "test/sandbox": {
@@ -7640,7 +7642,7 @@
           "progenitor": {
             "url": "http://www.danielx.net/editor/"
           },
-          "version": "0.2.2-pre.0",
+          "version": "0.2.2",
           "entryPoint": "main",
           "repository": {
             "id": 12746310,
@@ -7754,7 +7756,7 @@
             },
             "network_count": 0,
             "subscribers_count": 1,
-            "branch": "v0.2.2-pre.0",
+            "branch": "v0.2.2",
             "publishBranch": "gh-pages"
           },
           "dependencies": {}
