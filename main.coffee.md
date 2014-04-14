@@ -303,6 +303,10 @@ Templates
 
         .fail classicError
 
+    hotReload = (->
+      editor.hotReload()
+    ).debounce 500
+
     filetree.selectedFile.observe (file) ->
       return if file.binary?()
 
@@ -330,10 +334,6 @@ Templates
         file.editor.on "show", ->
           file.editor.show()
           textEditor.send "focus"
-
-        hotReload = (->
-          editor.hotReload()
-        ).debounce 500
 
         textEditor.observe (value) ->
           file.content(value)
