@@ -1,7 +1,7 @@
 Editor
 ======
 
-    Runner = require("runner")
+    Runners = require "./runners"
     Actions = require("./source/actions")
     Builder = require("builder")
     Packager = require("packager")
@@ -26,7 +26,6 @@ Editor
       return builder
 
     module.exports = (I={}, self=Model(I)) ->
-      runner = Runner()
       builder = initBuilder()
       filetree = Filetree()
 
@@ -100,38 +99,7 @@ Likewise we shouldn't expose the builder directly either.
         config: ->
           readSourceConfig(source: arrayToHash(filetree.data()))
 
-Rebuild the package and send the reload message to the runner with the newest package.
-
-        hotReload: ->
-          # TODO: Need to speed up the build significantly for this to be good.
-          self.build()
-          .then (pkg) ->
-            runner.reload(pkg)
-
-        # TODO: Don't expose this, instead expose things like `runDocs`, `runTests`, etc.
-        runner: ->
-          runner
-
-Run some code in a sandboxed popup window. We need to popup the window immediately
-in response to user input to prevent pop-up blocking so we also pass a promise
-that will contain the content to render in the window. If the promise fails we
-auto-close the window.
-
-        runInSandboxWindow: (config, promise) ->
-          sandbox = runner.run
-            config: config
-
-          promise.then(
-            (content) ->
-              sandbox.document.open()
-              sandbox.document.write(content)
-              sandbox.document.close()
-            , (error) ->
-              sandbox.close()
-
-              return error
-          )
-
+      self.include(Runners)
       self.include(Actions)
 
       # TODO: Merge this in and clean up the `initBuilder` code
