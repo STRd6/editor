@@ -34,7 +34,7 @@
               </div>
               
             </div>
-            <div class="content"><pre><code class="lang-coffeescript">Runner = require(<span class="string">"runner"</span>)
+            <div class="content"><pre><code class="lang-coffeescript">Runners = require <span class="string">"./runners"</span>
 Actions = require(<span class="string">"./source/actions"</span>)
 Builder = require(<span class="string">"builder"</span>)
 Packager = require(<span class="string">"packager"</span>)
@@ -59,7 +59,6 @@ Packager = require(<span class="string">"packager"</span>)
   <span class="keyword">return</span> builder
 
 module.<span class="function"><span class="title">exports</span></span> = (I={}, self=Model(I)) -&gt;
-  runner = Runner()
   builder = initBuilder()
   filetree = Filetree()
 
@@ -158,58 +157,9 @@ when complete.</p>
       builder
 
     config: -&gt;
-      readSourceConfig(source: arrayToHash(filetree.data()))</code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <p>Rebuild the package and send the reload message to the runner with the newest package.</p>
+      readSourceConfig(source: arrayToHash(filetree.data()))
 
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">    hotReload: -&gt;
-      <span class="comment"># TODO: Need to speed up the build significantly for this to be good.</span>
-      self.build()
-      .<span class="keyword">then</span> (pkg) -&gt;
-        runner.reload(pkg)
-
-    <span class="comment"># TODO: Don't expose this, instead expose things like `runDocs`, `runTests`, etc.</span>
-    runner: -&gt;
-      runner</code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <p>Run some code in a sandboxed popup window. We need to popup the window immediately
-in response to user input to prevent pop-up blocking so we also pass a promise
-that will contain the content to render in the window. If the promise fails we
-auto-close the window.</p>
-
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">    runInSandboxWindow: (config, promise) -&gt;
-      sandbox = runner.run
-        config: config
-
-      promise.<span class="keyword">then</span>(
-        (content) -&gt;
-          sandbox.document.open()
-          sandbox.document.write(content)
-          sandbox.document.close()
-        , (error) -&gt;
-          sandbox.close()
-
-          <span class="keyword">return</span> error
-      )
-
+  self.include(Runners)
   self.include(Actions)
 
   <span class="comment"># TODO: Merge this in and clean up the `initBuilder` code</span>
@@ -229,10 +179,10 @@ auto-close the window.</p>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-6">
             <div class="annotation">
               <div class="pilwrap">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <h2 id="helpers">Helpers</h2>
 
@@ -243,10 +193,10 @@ auto-close the window.</p>
         </li>
         
         
-        <li id="section-9">
+        <li id="section-7">
             <div class="annotation">
               <div class="pilwrap">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               
             </div>

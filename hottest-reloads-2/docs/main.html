@@ -375,6 +375,10 @@ actions =
 
     .fail classicError
 
+hotReload = (-&gt;
+  editor.hotReload()
+).debounce <span class="number">500</span>
+
 filetree.selectedFile.observe (file) -&gt;
   <span class="keyword">return</span> <span class="keyword">if</span> file.binary?()
 
@@ -402,10 +406,6 @@ filetree.selectedFile.observe (file) -&gt;
     file.editor.<span class="literal">on</span> <span class="string">"show"</span>, -&gt;
       file.editor.show()
       textEditor.send <span class="string">"focus"</span>
-
-    hotReload = (-&gt;
-      editor.hotReload()
-    ).debounce <span class="number">500</span>
 
     textEditor.observe (value) -&gt;
       file.content(value)
