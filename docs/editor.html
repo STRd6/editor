@@ -40,7 +40,7 @@ Builder = require(<span class="string">"builder"</span>)
 Packager = require(<span class="string">"packager"</span>)
 {Filetree, File} = require(<span class="string">"filetree"</span>)
 
-<span class="function"><span class="title">initBuilder</span></span> = -&gt;
+<span class="function"><span class="title">initBuilder</span></span> = (self) -&gt;
   builder = Builder()
 
   <span class="comment"># Add editor's metadata</span>
@@ -56,10 +56,20 @@ Packager = require(<span class="string">"packager"</span>)
     pkg.entryPoint = config.entryPoint <span class="keyword">or</span> <span class="string">"main"</span>
     pkg.remoteDependencies = config.remoteDependencies
 
+  <span class="comment"># Attach repo metadata to package</span>
+  builder.addPostProcessor (pkg) -&gt;
+    repository = self.repository()
+
+    <span class="comment"># TODO: Track commit SHA as well</span>
+    pkg.repository = cleanRepositoryData repository.toJSON()
+
+    <span class="comment"># Add publish branch</span>
+    pkg.repository.publishBranch = self.config().publishBranch <span class="keyword">or</span> repository.publishBranch()
+
   <span class="keyword">return</span> builder
 
 module.<span class="function"><span class="title">exports</span></span> = (I={}, self=Model(I)) -&gt;
-  builder = initBuilder()
+  builder = initBuilder(self)
   filetree = Filetree()
 
   self.extend
@@ -162,18 +172,6 @@ when complete.</p>
   self.include(Runners)
   self.include(Actions)
 
-  <span class="comment"># TODO: Merge this in and clean up the `initBuilder` code</span>
-  <span class="comment"># Attach repo metadata to package</span>
-  builder.addPostProcessor (pkg) -&gt;
-    repository = self.repository()
-    <span class="comment"># TODO: Track commit SHA as well</span>
-    pkg.repository = repository.toJSON()
-
-    <span class="comment"># Add publish branch</span>
-    pkg.repository.publishBranch = self.config().publishBranch <span class="keyword">or</span> repository.publishBranch()
-
-    pkg
-
   <span class="keyword">return</span> self</code></pre>
 </div>
         </li>
@@ -200,7 +198,10 @@ when complete.</p>
               </div>
               
             </div>
-            <div class="content"><pre><code class="lang-coffeescript">{readSourceConfig, arrayToHash} = require(<span class="string">"./source/util"</span>)</code></pre>
+            <div class="content"><pre><code class="lang-coffeescript">{readSourceConfig, arrayToHash} = require(<span class="string">"./source/util"</span>)
+
+<span class="function"><span class="title">cleanRepositoryData</span></span> = (data) -&gt;
+  _.pick data, <span class="string">"branch"</span>, <span class="string">"default_branch"</span>, <span class="string">"full_name"</span>, <span class="string">"homepage"</span>, <span class="string">"description"</span>, <span class="string">"html_url"</span>, <span class="string">"url"</span></code></pre>
 </div>
         </li>
         
