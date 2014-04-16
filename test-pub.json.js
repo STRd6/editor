@@ -1,4 +1,4 @@
-window[STRd6/editor:test-pub]({
+window["STRd6/editor:test-pub"]({
   "source": {
     "TODO": {
       "path": "TODO",
