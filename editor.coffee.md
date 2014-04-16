@@ -7,7 +7,7 @@ Editor
     Packager = require("packager")
     {Filetree, File} = require("filetree")
 
-    initBuilder = ->
+    initBuilder = (self) ->
       builder = Builder()
 
       # Add editor's metadata
@@ -23,10 +23,20 @@ Editor
         pkg.entryPoint = config.entryPoint or "main"
         pkg.remoteDependencies = config.remoteDependencies
 
+      # Attach repo metadata to package
+      builder.addPostProcessor (pkg) ->
+        repository = self.repository()
+
+        # TODO: Track commit SHA as well
+        pkg.repository = cleanRepositoryData repository.toJSON()
+
+        # Add publish branch
+        pkg.repository.publishBranch = self.config().publishBranch or repository.publishBranch()
+
       return builder
 
     module.exports = (I={}, self=Model(I)) ->
-      builder = initBuilder()
+      builder = initBuilder(self)
       filetree = Filetree()
 
       self.extend
@@ -102,18 +112,6 @@ Likewise we shouldn't expose the builder directly either.
       self.include(Runners)
       self.include(Actions)
 
-      # TODO: Merge this in and clean up the `initBuilder` code
-      # Attach repo metadata to package
-      builder.addPostProcessor (pkg) ->
-        repository = self.repository()
-        # TODO: Track commit SHA as well
-        pkg.repository = repository.toJSON()
-
-        # Add publish branch
-        pkg.repository.publishBranch = self.config().publishBranch or repository.publishBranch()
-
-        pkg
-
       return self
 
 Helpers
@@ -121,3 +119,5 @@ Helpers
 
     {readSourceConfig, arrayToHash} = require("./source/util")
 
+    cleanRepositoryData = (data) ->
+      _.pick data, "branch", "default_branch", "full_name", "homepage", "description", "html_url", "url"
