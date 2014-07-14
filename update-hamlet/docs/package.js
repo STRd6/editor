@@ -240,7 +240,7 @@
     },
     "templates/actions.haml.md": {
       "path": "templates/actions.haml.md",
-      "content": "The actions bar holds several buttons that can be pressed to perform actions in\nthe editor.\n\n    .actions\n      - actions = @actions\n\nRender a series of buttons, one for each action.\n\n      - Object.keys(actions).each (name) ->\n        %button(click=actions[name])\n          = name.titleize()\n\nThe issues selector is also rendered in the actions bar.\n\n      = HAMLjr.render \"issues\", @issues\n",
+      "content": "The actions bar holds several buttons that can be pressed to perform actions in\nthe editor.\n\n    .actions\n      - actions = @actions\n\nRender a series of buttons, one for each action.\n\n      - Object.keys(actions).each (name) ->\n        %button(click=actions[name])\n          = name.titleize()\n\nThe issues selector is also rendered in the actions bar.\n\n      -# = HAMLjr.render \"issues\", @issues\n",
       "mode": "100644",
       "type": "blob"
     },
@@ -333,7 +333,7 @@
     },
     "templates/actions": {
       "path": "templates/actions",
-      "content": "module.exports = (function(data) {\n  return (function() {\n    var actions, __runtime;\n    __runtime = require(\"/lib/hamlet-runtime\")(this);\n    __runtime.push(document.createDocumentFragment());\n    __runtime.push(document.createElement(\"div\"));\n    __runtime.classes(\"actions\");\n    actions = this.actions;\n    Object.keys(actions).each(function(name) {\n      __runtime.push(document.createElement(\"button\"));\n      __runtime.attribute(\"click\", actions[name]);\n      __runtime.text(name.titleize());\n      return __runtime.pop();\n    });\n    __runtime.text(HAMLjr.render(\"issues\", this.issues));\n    __runtime.pop();\n    return __runtime.pop();\n  }).call(data);\n});\n",
+      "content": "module.exports = (function(data) {\n  return (function() {\n    var actions, __runtime;\n    __runtime = require(\"/lib/hamlet-runtime\")(this);\n    __runtime.push(document.createDocumentFragment());\n    __runtime.push(document.createElement(\"div\"));\n    __runtime.classes(\"actions\");\n    actions = this.actions;\n    Object.keys(actions).each(function(name) {\n      __runtime.push(document.createElement(\"button\"));\n      __runtime.attribute(\"click\", actions[name]);\n      __runtime.text(name.titleize());\n      return __runtime.pop();\n    });\n    __runtime.pop();\n    return __runtime.pop();\n  }).call(data);\n});\n",
       "type": "blob"
     },
     "templates/editor": {
