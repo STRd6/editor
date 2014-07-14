@@ -56,19 +56,6 @@ Templates
 - [Text Editor](./templates/text_editor)
 - [Repo Info](./templates/repo_info)
 
-    # Load and attach Templates
-    templates = (HAMLjr.templates ||= {})
-    [
-      "actions"
-      "editor"
-      "github_status"
-      "repo_info"
-    ].each (name) ->
-      template = require("./templates/#{name}")
-      # TODO Transitional type check
-      if typeof template is "function"
-        templates[name] = template
-
     Editor = require("./editor")
 
     editor = global.editor = Editor()
@@ -79,7 +66,8 @@ Templates
     filetree = editor.filetree()
 
     {File, template:filetreeTemplate} = require "filetree"
-    templates["filetree"] = filetreeTemplate
+    # TODO: Filetree
+    # templates["filetree"] = filetreeTemplate
 
     Hygiene = require "hygiene"
     Runtime = require "runtime"
@@ -98,7 +86,7 @@ Templates
 
     # Branch Chooser using pull requests
     {models:{Issue, Issues}, templates:{issues:issuesTemplate}} = require("issues")
-    templates["issues"] = issuesTemplate
+    # TODO: templates["issues"] = issuesTemplate
     issues = Issues()
 
     # Github repository observable
