@@ -12,4 +12,4 @@ Render a series of buttons, one for each action.
 
 The issues selector is also rendered in the actions bar.
 
-      = HAMLjr.render "issues", @issues
+      -# = HAMLjr.render "issues", @issues
