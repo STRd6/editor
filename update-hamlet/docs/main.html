@@ -452,7 +452,7 @@ issues?.currentIssue.observe (issue) -&gt;
     changeBranch repository().defaultBranch()
 
 $root
-  .append(HAMLjr.render <span class="string">"editor"</span>,
+  .append require(<span class="string">"./templates/editor"</span>)(
     filetree: filetree
     actions: actions
     notifications: notifications
