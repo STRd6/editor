@@ -380,7 +380,7 @@ Templates
         changeBranch repository().defaultBranch()
 
     $root
-      .append(HAMLjr.render "editor",
+      .append require("./templates/editor")(
         filetree: filetree
         actions: actions
         notifications: notifications
