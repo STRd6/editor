@@ -1,8 +1,9 @@
 CACHE MANIFEST
-# 1405376599235
+# 1405377681453
 
 CACHE:
 index.html
+../update-hamlet.json.js
 https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js
 https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js
 https://code.jquery.com/jquery-1.10.1.min.js

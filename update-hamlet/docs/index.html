@@ -128,20 +128,7 @@ ValueWidget = require <span class="string">"value-widget"</span></code></pre>
 </ul>
 
             </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="comment"># Load and attach Templates</span>
-templates = (HAMLjr.templates ||= {})
-[
-  <span class="string">"actions"</span>
-  <span class="string">"editor"</span>
-  <span class="string">"github_status"</span>
-  <span class="string">"repo_info"</span>
-].each (name) -&gt;
-  template = require(<span class="string">"./templates/<span class="subst">#{name}</span>"</span>)
-  <span class="comment"># TODO Transitional type check</span>
-  <span class="keyword">if</span> <span class="keyword">typeof</span> template <span class="keyword">is</span> <span class="string">"function"</span>
-    templates[name] = template
-
-Editor = require(<span class="string">"./editor"</span>)
+            <div class="content"><pre><code class="lang-coffeescript">Editor = require(<span class="string">"./editor"</span>)
 
 editor = global.editor = Editor()
 editor.loadFiles(files)
@@ -151,7 +138,8 @@ builder = editor.builder()
 filetree = editor.filetree()
 
 {File, template:filetreeTemplate} = require <span class="string">"filetree"</span>
-templates[<span class="string">"filetree"</span>] = filetreeTemplate
+<span class="comment"># TODO: Filetree</span>
+<span class="comment"># templates["filetree"] = filetreeTemplate</span>
 
 Hygiene = require <span class="string">"hygiene"</span>
 Runtime = require <span class="string">"runtime"</span>
@@ -170,7 +158,7 @@ $root = $(<span class="string">"body"</span>)
 
 <span class="comment"># Branch Chooser using pull requests</span>
 {models:{Issue, Issues}, templates:{issues:issuesTemplate}} = require(<span class="string">"issues"</span>)
-templates[<span class="string">"issues"</span>] = issuesTemplate
+<span class="comment"># TODO: templates["issues"] = issuesTemplate</span>
 issues = Issues()
 
 <span class="comment"># Github repository observable</span>

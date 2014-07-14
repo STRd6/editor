@@ -22,11 +22,11 @@
 
             </div>
             <div class="content"><pre><code class="lang-haml">.main
-  = HAMLjr.render &quot;actions&quot;, actions: @actions, issues: @issues
-  = HAMLjr.render &quot;filetree&quot;, @filetree
+  = require(&quot;./actions&quot;) actions: @actions, issues: @issues
+  -# TODO: = require(&quot;./filetree&quot;) @filetree
   = @notifications.view
-  = HAMLjr.render &quot;repo_info&quot;, @repository
-  = HAMLjr.render &quot;github_status&quot;, @github</code></pre>
+  = require(&quot;./repo_info&quot;) @repository
+  = require(&quot;./github_status&quot;) @github</code></pre>
 </div>
         </li>
         
