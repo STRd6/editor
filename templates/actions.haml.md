@@ -6,10 +6,12 @@ the editor.
 
 Render a series of buttons, one for each action.
 
-      - Object.keys(actions).each (name) ->
-        %button(click=actions[name])
-          = name.titleize()
+      %span
+        - Object.keys(actions).each (name) ->
+          %button(click=actions[name])
+            = name.titleize()
 
 The issues selector is also rendered in the actions bar.
 
-      -# = HAMLjr.render "issues", @issues
+      %span
+        = require("issues").templates.issues @issues
