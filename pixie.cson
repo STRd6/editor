@@ -4,8 +4,8 @@ width: 960
 height: 800
 remoteDependencies: [
   "https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"
-  "https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"
-  "https://code.jquery.com/jquery-1.10.1.min.js"
+  "https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js"
+  "https://code.jquery.com/jquery-1.11.0.min.js"
   "http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js"
 ]
 dependencies:
