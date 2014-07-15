@@ -89,6 +89,9 @@ require <span class="string">"./source/deferred"</span>
 global.PACKAGE = PACKAGE
 global.require = require
 
+<span class="comment"># TODO: Have each component import observable as needed</span>
+global.Observable = require <span class="string">"observable"</span>
+
 require(<span class="string">"analytics"</span>).init(<span class="string">"UA-3464282-15"</span>)
 
 <span class="comment"># Create and auth a github API</span>
