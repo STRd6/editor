@@ -68,9 +68,7 @@ Templates
     builder = editor.builder()
     filetree = editor.filetree()
 
-    {File, template:filetreeTemplate} = require "filetree"
-    # TODO: Filetree
-    # templates["filetree"] = filetreeTemplate
+    {File} = require "filetree"
 
     Hygiene = require "hygiene"
     Runtime = require "runtime"
@@ -88,8 +86,7 @@ Templates
     $root = $("body")
 
     # Branch Chooser using pull requests
-    {models:{Issue, Issues}, templates:{issues:issuesTemplate}} = require("issues")
-    # TODO: templates["issues"] = issuesTemplate
+    {models:{Issue, Issues}} = require("issues")
     issues = Issues()
 
     # Github repository observable
