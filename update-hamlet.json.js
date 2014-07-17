@@ -26,7 +26,7 @@ window["STRd6/editor:update-hamlet"]({
     },
     "pixie.cson": {
       "path": "pixie.cson",
-      "content": "version: \"0.3.0\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\"\n  \"https://code.jquery.com/jquery-1.11.0.min.js\"\n  \"http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js\"\n]\ndependencies:\n  analytics: \"distri/google-analytics:v0.1.0\"\n  builder: \"distri/builder:v0.4.0\"\n  chrapps: \"distri/chrapps:v0.1.2\"\n  cson: \"distri/cson:v0.1.0\"\n  filetree: \"STRd6/filetree:v0.3.2\"\n  github: \"distri/github:v0.4.4\"\n  issues: \"distri/issues:v0.2.3-pre.2\"\n  md: \"distri/md:v0.4.1\"\n  notifications: \"distri/notifications:v0.3.3\"\n  observable: \"distri/observable:v0.3.1\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  runtime: \"distri/runtime:v0.3.0\"\n  packager: \"distri/packager:v0.5.7\"\n  runner: \"distri/runner:v0.2.5\"\n  tests: \"distri/tests:v0.1.1\"\n  \"value-widget\": \"distri/value-widget:v0.1.2\"\n",
+      "content": "version: \"0.3.0\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\"\n  \"https://code.jquery.com/jquery-1.11.0.min.js\"\n  \"http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js\"\n]\ndependencies:\n  analytics: \"distri/google-analytics:v0.1.0\"\n  builder: \"distri/builder:v0.4.0\"\n  chrapps: \"distri/chrapps:v0.1.2\"\n  cson: \"distri/cson:v0.1.0\"\n  filetree: \"STRd6/filetree:v0.3.2\"\n  github: \"distri/github:v0.4.4\"\n  issues: \"distri/issues:v0.2.3\"\n  md: \"distri/md:v0.4.1\"\n  notifications: \"distri/notifications:v0.3.3\"\n  observable: \"distri/observable:v0.3.1\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  runtime: \"distri/runtime:v0.3.0\"\n  packager: \"distri/packager:v0.5.7\"\n  runner: \"distri/runner:v0.2.5\"\n  tests: \"distri/tests:v0.1.1\"\n  \"value-widget\": \"distri/value-widget:v0.1.2\"\n",
       "mode": "100644",
       "type": "blob"
     },
@@ -132,7 +132,7 @@ window["STRd6/editor:update-hamlet"]({
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.3.0\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\",\"https://code.jquery.com/jquery-1.11.0.min.js\",\"http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js\"],\"dependencies\":{\"analytics\":\"distri/google-analytics:v0.1.0\",\"builder\":\"distri/builder:v0.4.0\",\"chrapps\":\"distri/chrapps:v0.1.2\",\"cson\":\"distri/cson:v0.1.0\",\"filetree\":\"STRd6/filetree:v0.3.2\",\"github\":\"distri/github:v0.4.4\",\"issues\":\"distri/issues:v0.2.3-pre.2\",\"md\":\"distri/md:v0.4.1\",\"notifications\":\"distri/notifications:v0.3.3\",\"observable\":\"distri/observable:v0.3.1\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"runtime\":\"distri/runtime:v0.3.0\",\"packager\":\"distri/packager:v0.5.7\",\"runner\":\"distri/runner:v0.2.5\",\"tests\":\"distri/tests:v0.1.1\",\"value-widget\":\"distri/value-widget:v0.1.2\"}};",
+      "content": "module.exports = {\"version\":\"0.3.0\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\",\"https://code.jquery.com/jquery-1.11.0.min.js\",\"http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js\"],\"dependencies\":{\"analytics\":\"distri/google-analytics:v0.1.0\",\"builder\":\"distri/builder:v0.4.0\",\"chrapps\":\"distri/chrapps:v0.1.2\",\"cson\":\"distri/cson:v0.1.0\",\"filetree\":\"STRd6/filetree:v0.3.2\",\"github\":\"distri/github:v0.4.4\",\"issues\":\"distri/issues:v0.2.3\",\"md\":\"distri/md:v0.4.1\",\"notifications\":\"distri/notifications:v0.3.3\",\"observable\":\"distri/observable:v0.3.1\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"runtime\":\"distri/runtime:v0.3.0\",\"packager\":\"distri/packager:v0.5.7\",\"runner\":\"distri/runner:v0.2.5\",\"tests\":\"distri/tests:v0.1.1\",\"value-widget\":\"distri/value-widget:v0.1.2\"}};",
       "type": "blob"
     },
     "runners": {
@@ -2669,7 +2669,7 @@ window["STRd6/editor:update-hamlet"]({
         },
         "issues.coffee.md": {
           "path": "issues.coffee.md",
-          "content": "Issues\n======\n\n    Composition = require \"composition\"\n    {defaults} = require \"util\"\n\n    Issue = require \"./issue\"\n\nA collection of issues including a `currentIssue` to represent the actively\nselected issue.\n\nWe may want to formalize this collection pattern later, but for now lets just\nsee how it goes.\n\n    Issues = (I={}) ->\n      defaults I,\n        issues: []\n\n      self = Composition(I)\n\nOur `issues` method is a list of `Issue` models.\n\n      self.attrModels \"issues\", Issue\n\nWe want to expose the currently selected issue as an observable as well.\n\n      self.attrObservable \"currentIssue\"\n\n      self.extend\n\nThe reset method accepts an array of raw issue data, converts it into an array\nof issue objects, replaces the previous issues with the new ones and clears the\nselected issue.\n\n        reset: (issueData) ->\n          self.currentIssue(undefined)\n          self.issues issueData.map(Issue)\n\n      return self\n\n    module.exports = Issues\n",
+          "content": "Issues\n======\n\n    Composition = require \"composition\"\n    {defaults} = require \"util\"\n\n    Issue = require \"./issue\"\n\nA collection of issues including a `currentIssue` to represent the actively\nselected issue.\n\nWe may want to formalize this collection pattern later, but for now lets just\nsee how it goes.\n\n    nullIssue =\n      toString: ->\n        \"- Default Branch -\"\n\n    Issues = (I={}) ->\n      defaults I,\n        issues: []\n\n      self = Composition(I)\n\nOur `issues` method is a list of `Issue` models.\n\n      self.attrModels \"issues\", Issue\n\nWe want to expose the currently selected issue as an observable as well.\n\n      self.attrObservable \"currentIssue\"\n\n      self.extend\n\nThe reset method accepts an array of raw issue data, converts it into an array\nof issue objects, replaces the previous issues with the new ones and clears the\nselected issue.\n\n        # TODO: We should be able to do this purely functionally\n        # composing the null issue with whatever the issues happen to be\n        reset: (issueData) ->\n          self.currentIssue(nullIssue)\n\n          self.issues [nullIssue].concat issueData.map(Issue)\n\n      self.reset I.issues\n\n      return self\n\n    module.exports = Issues\n",
           "mode": "100644",
           "type": "blob"
         },
@@ -2681,13 +2681,13 @@ window["STRd6/editor:update-hamlet"]({
         },
         "pixie.cson": {
           "path": "pixie.cson",
-          "content": "version: \"0.2.3-pre.2\"\nentryPoint: \"main\"\ndependencies:\n  composition: \"distri/model:v0.1.3\"\n  util: \"distri/util:v0.1.0\"\n",
+          "content": "version: \"0.2.3\"\nentryPoint: \"main\"\ndependencies:\n  composition: \"distri/model:v0.1.3\"\n  util: \"distri/util:v0.1.0\"\n",
           "mode": "100644",
           "type": "blob"
         },
         "test/issues.coffee": {
           "path": "test/issues.coffee",
-          "content": "{models:{Issue, Issues}} = require \"../main\"\n\ndescribe \"issues\", ->\n  it \"should be chill\", ->\n    assert Issues()\n\ndescribe \"main\", ->\n  it \"should have stuff\", ->\n    assert Issue\n    assert Issues\n\ndescribe \"Issue\", ->\n  it \"should have a full description\", ->\n    assert Issue().fullDescription()\n",
+          "content": "{models:{Issue, Issues}} = require \"../main\"\n\ndescribe \"issues\", ->\n  it \"should be chill\", ->\n    assert Issues()\n  \n  it \"should have a default null Issue\", ->\n    assert Issues().issues.size() is 1\n\ndescribe \"main\", ->\n  it \"should have stuff\", ->\n    assert Issue\n    assert Issues\n\ndescribe \"Issue\", ->\n  it \"should have a full description\", ->\n    assert Issue().fullDescription()\n",
           "mode": "100644",
           "type": "blob"
         }
@@ -2700,7 +2700,7 @@ window["STRd6/editor:update-hamlet"]({
         },
         "issues": {
           "path": "issues",
-          "content": "(function() {\n  var Composition, Issue, Issues, defaults;\n\n  Composition = require(\"composition\");\n\n  defaults = require(\"util\").defaults;\n\n  Issue = require(\"./issue\");\n\n  Issues = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    defaults(I, {\n      issues: []\n    });\n    self = Composition(I);\n    self.attrModels(\"issues\", Issue);\n    self.attrObservable(\"currentIssue\");\n    self.extend({\n      reset: function(issueData) {\n        self.currentIssue(void 0);\n        return self.issues(issueData.map(Issue));\n      }\n    });\n    return self;\n  };\n\n  module.exports = Issues;\n\n}).call(this);\n",
+          "content": "(function() {\n  var Composition, Issue, Issues, defaults, nullIssue;\n\n  Composition = require(\"composition\");\n\n  defaults = require(\"util\").defaults;\n\n  Issue = require(\"./issue\");\n\n  nullIssue = {\n    toString: function() {\n      return \"- Default Branch -\";\n    }\n  };\n\n  Issues = function(I) {\n    var self;\n    if (I == null) {\n      I = {};\n    }\n    defaults(I, {\n      issues: []\n    });\n    self = Composition(I);\n    self.attrModels(\"issues\", Issue);\n    self.attrObservable(\"currentIssue\");\n    self.extend({\n      reset: function(issueData) {\n        self.currentIssue(nullIssue);\n        return self.issues([nullIssue].concat(issueData.map(Issue)));\n      }\n    });\n    self.reset(I.issues);\n    return self;\n  };\n\n  module.exports = Issues;\n\n}).call(this);\n",
           "type": "blob"
         },
         "main": {
@@ -2710,22 +2710,22 @@ window["STRd6/editor:update-hamlet"]({
         },
         "pixie": {
           "path": "pixie",
-          "content": "module.exports = {\"version\":\"0.2.3-pre.2\",\"entryPoint\":\"main\",\"dependencies\":{\"composition\":\"distri/model:v0.1.3\",\"util\":\"distri/util:v0.1.0\"}};",
+          "content": "module.exports = {\"version\":\"0.2.3\",\"entryPoint\":\"main\",\"dependencies\":{\"composition\":\"distri/model:v0.1.3\",\"util\":\"distri/util:v0.1.0\"}};",
           "type": "blob"
         },
         "test/issues": {
           "path": "test/issues",
-          "content": "(function() {\n  var Issue, Issues, _ref;\n\n  _ref = require(\"../main\").models, Issue = _ref.Issue, Issues = _ref.Issues;\n\n  describe(\"issues\", function() {\n    return it(\"should be chill\", function() {\n      return assert(Issues());\n    });\n  });\n\n  describe(\"main\", function() {\n    return it(\"should have stuff\", function() {\n      assert(Issue);\n      return assert(Issues);\n    });\n  });\n\n  describe(\"Issue\", function() {\n    return it(\"should have a full description\", function() {\n      return assert(Issue().fullDescription());\n    });\n  });\n\n}).call(this);\n",
+          "content": "(function() {\n  var Issue, Issues, _ref;\n\n  _ref = require(\"../main\").models, Issue = _ref.Issue, Issues = _ref.Issues;\n\n  describe(\"issues\", function() {\n    it(\"should be chill\", function() {\n      return assert(Issues());\n    });\n    return it(\"should have a default null Issue\", function() {\n      return assert(Issues().issues.size() === 1);\n    });\n  });\n\n  describe(\"main\", function() {\n    return it(\"should have stuff\", function() {\n      assert(Issue);\n      return assert(Issues);\n    });\n  });\n\n  describe(\"Issue\", function() {\n    return it(\"should have a full description\", function() {\n      return assert(Issue().fullDescription());\n    });\n  });\n\n}).call(this);\n",
           "type": "blob"
         }
       },
       "progenitor": {
         "url": "http://www.danielx.net/editor/"
       },
-      "version": "0.2.3-pre.2",
+      "version": "0.2.3",
       "entryPoint": "main",
       "repository": {
-        "branch": "v0.2.3-pre.2",
+        "branch": "v0.2.3",
         "default_branch": "master",
         "full_name": "distri/issues",
         "homepage": null,
