@@ -430,7 +430,7 @@ issues?.currentIssue.observe (issue) -&gt;
 
       classicError <span class="string">"Error switching to <span class="subst">#{branchName}</span>, still on <span class="subst">#{previousBranch}</span>"</span>
 
-  <span class="keyword">if</span> issue
+  <span class="keyword">if</span> issue?.branchName?
     notify issue.fullDescription()
 
     changeBranch issue.branchName()

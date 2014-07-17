@@ -52,8 +52,7 @@ the editor.</p>
               <p>The issues selector is also rendered in the actions bar.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-haml">  %span
-    = require(&quot;issues&quot;).templates.issues @issues</code></pre>
+            <div class="content"><pre><code class="lang-haml">  %select(value=@issues.currentIssue options=@issues.issues)</code></pre>
 </div>
         </li>
         
