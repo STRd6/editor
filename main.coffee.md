@@ -358,7 +358,7 @@ Templates
 
           classicError "Error switching to #{branchName}, still on #{previousBranch}"
 
-      if issue
+      if issue?.branchName?
         notify issue.fullDescription()
 
         changeBranch issue.branchName()

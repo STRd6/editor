@@ -13,5 +13,4 @@ Render a series of buttons, one for each action.
 
 The issues selector is also rendered in the actions bar.
 
-      %span
-        = require("issues").templates.issues @issues
+      %select(value=@issues.currentIssue options=@issues.issues)
