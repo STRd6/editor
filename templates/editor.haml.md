@@ -1,8 +1,9 @@
 The main editor template renders all the other sub-templates.
 
     .main
-      = HAMLjr.render "actions", actions: @actions, issues: @issues
-      = HAMLjr.render "filetree", @filetree
-      = @notifications.view
-      = HAMLjr.render "repo_info", @repository
-      = HAMLjr.render "github_status", @github
+      = require("./actions") actions: @actions, issues: @issues
+      = require("./filetree") @filetree
+      -# TODO: Figure out why we can't just add the notifications view directly
+      = @notifications.view.children[0]
+      = require("./repo_info") @repository
+      = require("./github_status") @github

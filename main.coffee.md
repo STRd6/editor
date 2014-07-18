@@ -39,6 +39,9 @@ TODO: This needs a big cleanup.
     global.PACKAGE = PACKAGE
     global.require = require
 
+    # TODO: Have each component import observable as needed
+    global.Observable = require "observable"
+
     require("analytics").init("UA-3464282-15")
 
     # Create and auth a github API
@@ -56,19 +59,6 @@ Templates
 - [Text Editor](./templates/text_editor)
 - [Repo Info](./templates/repo_info)
 
-    # Load and attach Templates
-    templates = (HAMLjr.templates ||= {})
-    [
-      "actions"
-      "editor"
-      "github_status"
-      "repo_info"
-    ].each (name) ->
-      template = require("./templates/#{name}")
-      # TODO Transitional type check
-      if typeof template is "function"
-        templates[name] = template
-
     Editor = require("./editor")
 
     editor = global.editor = Editor()
@@ -78,8 +68,7 @@ Templates
     builder = editor.builder()
     filetree = editor.filetree()
 
-    {File, template:filetreeTemplate} = require "filetree"
-    templates["filetree"] = filetreeTemplate
+    {File} = require "filetree"
 
     Hygiene = require "hygiene"
     Runtime = require "runtime"
@@ -97,8 +86,7 @@ Templates
     $root = $("body")
 
     # Branch Chooser using pull requests
-    {models:{Issue, Issues}, templates:{issues:issuesTemplate}} = require("issues")
-    templates["issues"] = issuesTemplate
+    {models:{Issue, Issues}} = require("issues")
     issues = Issues()
 
     # Github repository observable
@@ -370,7 +358,7 @@ Templates
 
           classicError "Error switching to #{branchName}, still on #{previousBranch}"
 
-      if issue
+      if issue?.branchName?
         notify issue.fullDescription()
 
         changeBranch issue.branchName()
@@ -380,7 +368,7 @@ Templates
         changeBranch repository().defaultBranch()
 
     $root
-      .append(HAMLjr.render "editor",
+      .append require("./templates/editor")(
         filetree: filetree
         actions: actions
         notifications: notifications

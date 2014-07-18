@@ -6,15 +6,11 @@ the editor.
 
 Render a series of buttons, one for each action.
 
-      - Object.keys(actions).each (name) ->
-        %button
-          = name.titleize()
-
-In our click handler we don't pass any event data to the action.
-
-          - on "click", ->
-            - actions[name]()
+      %span
+        - Object.keys(actions).each (name) ->
+          %button(click=actions[name])
+            = name.titleize()
 
 The issues selector is also rendered in the actions bar.
 
-      = HAMLjr.render "issues", @issues
+      %select(value=@issues.currentIssue options=@issues.issues)

@@ -58,8 +58,8 @@ Determines if a file is a binary file by looking up common file extensions.
         "png"
         "sfs"
         "wav"
-      ].map (extension) ->
+      ].map((extension) ->
         "\\.#{extension}$"
-      .join("|")
+      ).join("|")
 
       path.match(pathCheckRegEx)

@@ -3,9 +3,12 @@ Github Status
 
 Display information about the current Github api session.
 
+    - redirect = ->
+      - window.location = github.authorizationUrl("bc46af967c926ba4ff87", "gist,repo,user:email")
+
     .status
       - github = this
-      - with @lastRequest, ->
+      - each @lastRequest, ->
         %div
           - if @getAllResponseHeaders and @getAllResponseHeaders().match(/X-RateLimit-Limit: 5000/)
             Authenticated Scopes:
@@ -15,6 +18,4 @@ Display information about the current Github api session.
             = @getResponseHeader("X-RateLimit-Remaining")
             = " / 5000"
           - else
-            %button Auth
-              - on "click", ->
-                - window.location = github.authorizationUrl("bc46af967c926ba4ff87", "gist,repo,user:email")
+            %button(click=redirect) Auth

@@ -1,7 +1,7 @@
 Display some info about the current repository
 
     .repo_info
-      - with this, ->
+      - each this, ->
         %div
           = @full_name
           :
