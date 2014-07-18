@@ -2,6 +2,7 @@ Util
 ====
 
     CSON = require "cson"
+    Base64 = require "base64"
 
 A collection of shared utilities
 
