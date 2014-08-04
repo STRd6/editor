@@ -168,7 +168,7 @@
   "source": {
     "TODO": {
       "path": "TODO",
-      "content": "TODO\n----\nBundled Dependencies\n- Build bundled dependencies into published script\n- Dependency source should not be in revision control\n- requires and module.exports\n- inter-component and intra-component dependencies\n- One day we'll need to implement a bundleresque system, but not today\n\nLive Update Demo\n- Hot reload css\n- Display Demo Runtime Errors in console\n\nOpen published page in editor and run live demo with same state as when editor was opened\n- Pass git repo/branch metadata to published page for use in editor\n\nPersist state across demo reloads\n\nOrganize File tree by type\nFile icons\n\nDisplay Diffs\n\nFirst auth doesn't display in bar\n\nCache Git trees and files in some form of local storage\n\nSometimes editor appears blank when switching files\n\nEditor plugins\n- static analysis\n- find in files\n- source file hygiene\n",
+      "content": "TODO\n----\nLive Update Demo\n- Hot reload css\n- Display Demo Runtime Errors in console\n\nOpen published page in editor and run live demo with same state as when editor was opened\n- Pass git repo/branch metadata to published page for use in editor\n\nPersist state across demo reloads\n\nOrganize File tree by type\nFile icons\n\nDisplay Diffs\n\nFirst auth doesn't display in bar\n\nCache Git trees and files in some form of local storage\n\nSometimes editor appears blank when switching files\n\nEditor plugins\n- static analysis\n- find in files\n- source file hygiene\n",
       "mode": "100644",
       "type": "blob"
     },
@@ -379,7 +379,7 @@
     }
   },
   "progenitor": {
-    "url": "http://www.danielx.net/editor/update-hamlet/"
+    "url": "http://www.danielx.net/editor/"
   },
   "version": "0.3.0",
   "entryPoint": "main",
