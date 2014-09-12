@@ -147,39 +147,6 @@ Templates
           editor.runDocs({file})
           .fail errors
 
-      publish_chrapp: ->
-        Chrapps = require "chrapps"
-
-        notify "Chrapping..."
-
-        editor.build().then (pkg) ->
-          editor.repository().publish(Chrapps.processPackage(pkg), undefined, "chrapps")
-        .then ->
-          notify "Chrapped!"
-        .fail (args...) ->
-          errors args
-
-      convert_data: ->
-        converter = require("./lib/converter").convertDataToJSON
-
-        converter
-          editor: editor
-          outputFileName: "images.json"
-          matcher: /^images\/(.*)\.png$/
-          mimeType: "image/png"
-
-        converter
-          editor: editor
-          outputFileName: "sounds.json"
-          matcher: /^sounds\/(.*)\.wav$/
-          mimeType: "audio/wav"
-
-        converter
-          editor: editor
-          outputFileName: "music.json"
-          matcher: /^sounds\/(.*)\.mp3$/
-          mimeType: "audio/mp3"
-
       new_file: ->
         if name = prompt("File Name", "newfile.coffee")
           file = File
