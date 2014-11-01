@@ -32,7 +32,17 @@
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h2 id="components">Components</h2>
+              <p>The funny story about this editor is that it has an unbroken history from a
+single gist <a href="https://gist.github.com/STRd6/6286182/6196ffb39db7d10c56aa263190525318ca609db7">https://gist.github.com/STRd6/6286182/6196ffb39db7d10c56aa263190525318ca609db7</a></p>
+<p>The original gist was an exploration in a self-hosting gist editor. One that
+could load gists via the Github API, update them, and create new gists. It
+succeeded at that, but I ran into the limits of the gist structure, namely no
+branches or folders.</p>
+<p>I went on and created a git repo, merged in the gist history, and continued from
+there. Maybe if I were smarter I could have rewritten it from scratch to be better,
+but I had no idea what I was doing and still don&#39;t know to this day.</p>
+<p>So that may explain why this is in such need of a cleanup.</p>
+<h2 id="demo">Demo</h2>
 
             </div>
             <div class="content"><pre><code class="lang-coffeescript">
@@ -46,6 +56,21 @@
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
+              <p><a href="/editor">Run it!</a></p>
+<h2 id="components">Components</h2>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
               <ul>
 <li><a href="/packager/docs">Packager</a></li>
 <li><a href="/hygiene/docs">Hygiene</a></li>
@@ -57,25 +82,30 @@
             <div class="content"><pre><code class="lang-coffeescript"><span class="comment"># Get stuff from our package</span>
 {source:files} = PACKAGE
 
-global.Sandbox = require <span class="string">'sandbox'</span>
-require <span class="string">"./source/duct_tape"</span>
 require <span class="string">"./source/deferred"</span>
 {processDirectory} = require <span class="string">"./source/util"</span>
 
 global.PACKAGE = PACKAGE
 global.require = require
 
+<span class="comment"># TODO: Have each component import observable as needed</span>
+global.Observable = require <span class="string">"observable"</span>
+
+require(<span class="string">"analytics"</span>).init(<span class="string">"UA-3464282-15"</span>)
+
 <span class="comment"># Create and auth a github API</span>
 <span class="comment"># Global until we consolidate editor/actions into something cleaner</span>
-global.github = require(<span class="string">"github"</span>)(require(<span class="string">"./source/github_auth"</span>)())</code></pre>
+global.github = require(<span class="string">"github"</span>)(require(<span class="string">"./source/github_auth"</span>)())
+
+ValueWidget = require <span class="string">"value-widget"</span></code></pre>
 </div>
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               <div class="pilwrap">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <h2 id="templates">Templates</h2>
 
@@ -86,10 +116,10 @@ global.github = require(<span class="string">"github"</span>)(require(<span clas
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               <div class="pilwrap">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <ul>
 <li><a href="./templates/actions">Actions</a></li>
@@ -100,22 +130,7 @@ global.github = require(<span class="string">"github"</span>)(require(<span clas
 </ul>
 
             </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="comment"># Load and attach Templates</span>
-templates = (HAMLjr.templates ||= {})
-[
-  <span class="string">"actions"</span>
-  <span class="string">"editor"</span>
-  <span class="string">"github_status"</span>
-  <span class="string">"text_editor"</span>
-  <span class="string">"repo_info"</span>
-].each (name) -&gt;
-  template = require(<span class="string">"./templates/<span class="subst">#{name}</span>"</span>)
-  <span class="comment"># TODO Transitional type check</span>
-  <span class="keyword">if</span> <span class="keyword">typeof</span> template <span class="keyword">is</span> <span class="string">"function"</span>
-    templates[name] = template
-
-Editor = require(<span class="string">"./editor"</span>)
-TextEditor = require(<span class="string">"./source/text_editor"</span>)
+            <div class="content"><pre><code class="lang-coffeescript">Editor = require(<span class="string">"./editor"</span>)
 
 editor = global.editor = Editor()
 editor.loadFiles(files)
@@ -124,8 +139,7 @@ editor.loadFiles(files)
 builder = editor.builder()
 filetree = editor.filetree()
 
-{File, template:filetreeTemplate} = require <span class="string">"filetree"</span>
-templates[<span class="string">"filetree"</span>] = filetreeTemplate
+{File} = require <span class="string">"filetree"</span>
 
 Hygiene = require <span class="string">"hygiene"</span>
 Runtime = require <span class="string">"runtime"</span>
@@ -134,20 +148,16 @@ Packager = require <span class="string">"packager"</span>
 {readSourceConfig} = require(<span class="string">"./source/util"</span>)
 
 notifications = require(<span class="string">"notifications"</span>)()
-templates.notifications = notifications.template
 {classicError, notify, errors} = notifications
 
-<span class="comment"># The root is the node that contains the script file.</span>
-runtime = Runtime(PACKAGE)
-rootNode = runtime.boot()
+Runtime(PACKAGE)
+  .boot()
+  .applyStyleSheet(require(<span class="string">'./style'</span>))
 
-runtime.applyStyleSheet(require(<span class="string">'./style'</span>))
-
-$root = $(rootNode)
+$root = $(<span class="string">"body"</span>)
 
 <span class="comment"># Branch Chooser using pull requests</span>
-{models:{Issue, Issues}, templates:{issues:issuesTemplate}} = require(<span class="string">"issues"</span>)
-templates[<span class="string">"issues"</span>] = issuesTemplate
+{models:{Issue, Issues}} = require(<span class="string">"issues"</span>)
 issues = Issues()
 
 <span class="comment"># Github repository observable</span>
@@ -169,7 +179,7 @@ repository github.Repository(PACKAGE.repository)
 
 <span class="function"><span class="title">closeOpenEditors</span></span> = -&gt;
   root = $root.children(<span class="string">".main"</span>)
-  root.find(<span class="string">".editor-wrap"</span>).remove()
+  root.find(<span class="string">"iframe"</span>).remove()
 
 actions =
   save: -&gt;
@@ -319,43 +329,42 @@ actions =
 
     .fail classicError
 
+hotReload = (-&gt;
+  editor.hotReload()
+).debounce <span class="number">500</span>
+
 filetree.selectedFile.observe (file) -&gt;
+  <span class="keyword">return</span> <span class="keyword">if</span> file.binary?()
+
   root = $root.children(<span class="string">".main"</span>)
-  root.find(<span class="string">".editor-wrap"</span>).hide()
+  root.find(<span class="string">"iframe"</span>).hide()
 
   <span class="keyword">if</span> file.editor
     file.editor.trigger(<span class="string">"show"</span>)
   <span class="keyword">else</span>
-    root.append(HAMLjr.render <span class="string">"text_editor"</span>)
-    file.editor = root.find(<span class="string">".editor-wrap"</span>).last()
+    iframe = document.createElement <span class="string">"iframe"</span>
+    root.append iframe
+    file.editor = $(iframe)
 
     <span class="keyword">switch</span> file.path().extension()
       <span class="keyword">when</span> <span class="string">"md"</span>, <span class="string">"coffee"</span>, <span class="string">"js"</span>, <span class="string">"styl"</span>, <span class="string">"cson"</span>
         file.content Hygiene.clean file.content()
 
-    textEditor = TextEditor
-      text: file.content()
-      el: file.editor.find(<span class="string">'.editor'</span>).get(<span class="number">0</span>)
-      mode: file.mode()
+    textEditor = ValueWidget
+      value: file.content()
+      iframe: iframe
+      url: <span class="string">"http://distri.github.io/text/v0.1.1/"</span>
+      options:
+        mode: file.mode()
 
     file.editor.<span class="literal">on</span> <span class="string">"show"</span>, -&gt;
       file.editor.show()
-      textEditor.editor.focus()
+      textEditor.send <span class="string">"focus"</span>
 
-    textEditor.text.observe (value) -&gt;
+    textEditor.observe (value) -&gt;
       file.content(value)
 
-      <span class="comment"># TODO May want to move this into a collection listener for all files</span>
-      <span class="comment"># in the filetree</span>
-      <span class="keyword">if</span> file.path().match(<span class="regexp">/\.styl$/</span>)
-        hotReloadCSS(file)
-
-<span class="function"><span class="title">hotReloadCSS</span></span> = ( (file) -&gt;
-  <span class="keyword">try</span>
-    css = styl(file.content(), whitespace: <span class="literal">true</span>).toString()
-
-  editor.runner().hotReloadCSS(css) <span class="keyword">if</span> css
-).debounce(<span class="number">100</span>)
+      hotReload()
 
 issues?.currentIssue.observe (issue) -&gt;
   <span class="comment"># TODO: Formalize this later</span>
@@ -387,7 +396,7 @@ issues?.currentIssue.observe (issue) -&gt;
 
       classicError <span class="string">"Error switching to <span class="subst">#{branchName}</span>, still on <span class="subst">#{previousBranch}</span>"</span>
 
-  <span class="keyword">if</span> issue
+  <span class="keyword">if</span> issue?.branchName?
     notify issue.fullDescription()
 
     changeBranch issue.branchName()
@@ -397,7 +406,7 @@ issues?.currentIssue.observe (issue) -&gt;
     changeBranch repository().defaultBranch()
 
 $root
-  .append(HAMLjr.render <span class="string">"editor"</span>,
+  .append require(<span class="string">"./templates/editor"</span>)(
     filetree: filetree
     actions: actions
     notifications: notifications
@@ -414,22 +423,145 @@ window.<span class="function"><span class="title">onbeforeunload</span></span> =
         
     </ul>
   </div>
-  <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
-<script src="http://strd6.github.io/require/v0.2.2.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
-<script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
-<script src="https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
-<script src="http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js"></script><script>
-  $.ajax({
-    url: "http://strd6.github.io/interactive/v0.8.1.jsonp",
-    dataType: "jsonp",
-    jsonpCallback: "STRd6/interactive:v0.8.1",
-    cache: true
-  }).then(function(PACKAGE) {
-    Require.generateFor(PACKAGE)("./" + PACKAGE.entryPoint)
-  })
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js"></script><script>
+  (function() {
+  var ErrorReporter, bindUpdates, createEditor, exec, findInteractiveElements, readShebang, runners;
+
+  createEditor = function(code, shebang, section) {
+    var annotationElement, contentElement, editorElement, exampleSection, runtimeElement;
+    exampleSection = $("<li>", {
+      "class": "example"
+    });
+    annotationElement = $("<div>", {
+      "class": "annotation"
+    });
+    editorElement = $("<textarea>", {
+      "class": "annotation",
+      text: code
+    });
+    contentElement = $("<div>", {
+      "class": "content"
+    });
+    runtimeElement = $("<div>", {
+      "class": "output"
+    });
+    contentElement.append(runtimeElement);
+    annotationElement.append(editorElement);
+    exampleSection.append(annotationElement);
+    exampleSection.append(contentElement);
+    section.after(exampleSection);
+    return bindUpdates(shebang, editorElement, runtimeElement);
+  };
+
+  bindUpdates = function(shebang, editorElement, runtimeElement) {
+    return editorElement.on("keyup", function() {
+      var e, report, source;
+      report = ErrorReporter(editorElement);
+      source = editorElement.val();
+      try {
+        runners[shebang]({
+          editorElement: editorElement,
+          source: source,
+          runtimeElement: runtimeElement
+        });
+        return report.clear();
+      } catch (_error) {
+        e = _error;
+        return report(e);
+      }
+    });
+  };
+
+  readShebang = function(source) {
+    var match;
+    if (match = source.match(/^\#\! (.*)\n/)) {
+      return match[1];
+    }
+  };
+
+  ErrorReporter = function(editor) {
+    var reporter;
+    reporter = function(error) {
+      var errorParagraph;
+      if (editor.next().is("p.error")) {
+        return editor.next().text(error);
+      } else {
+        errorParagraph = $("<p>", {
+          "class": "error",
+          text: error.toString()
+        });
+        return editor.after(errorParagraph);
+      }
+    };
+    reporter.clear = function() {
+      if (editor.next().is("p.error")) {
+        return editor.next().remove();
+      }
+    };
+    return reporter;
+  };
+
+  findInteractiveElements = function() {
+    return $("blockquote > pre > code").each(function() {
+      var blockQuoteElement, code, codeElement, sectionElement, shebang;
+      codeElement = $(this);
+      code = codeElement.text();
+      if (shebang = readShebang(code)) {
+        if (!runners[shebang]) {
+          return;
+        }
+        code = code.split("\n").slice(1).join("\n");
+        blockQuoteElement = codeElement.parent().parent();
+        sectionElement = blockQuoteElement.parent().parent();
+        blockQuoteElement.remove();
+        return createEditor(code, shebang, sectionElement);
+      }
+    });
+  };
+
+  runners = {};
+
+  (typeof window !== "undefined" && window !== null ? window : global).Interactive = {
+    register: function(name, runner) {
+      runners[name] = runner;
+      findInteractiveElements();
+      return $('#container').on('keyup', 'textarea', function() {
+        $(this).height(0);
+        return $(this).height(this.scrollHeight);
+      }).find('textarea').keyup();
+    }
+  };
+
+  exec = function(_arg) {
+    var code, editorElement, runtimeElement, source;
+    source = _arg.source, code = _arg.code, editorElement = _arg.editorElement, runtimeElement = _arg.runtimeElement;
+    runtimeElement.remove();
+    editorElement.replaceWith($("<pre>", {
+      text: source
+    }));
+    return setTimeout(function() {
+      return Function(code)();
+    }, 0);
+  };
+
+  $(function() {
+    Interactive.register("setup", function(params) {
+      params.code = CoffeeScript.compile(params.source);
+      return exec(params);
+    });
+    return Interactive.register("setup-js", function(params) {
+      params.code = params.source;
+      return exec(params);
+    });
+  });
+
+}).call(this);
+
 </script><script src="package.js"></script>
 </body>
 </html>

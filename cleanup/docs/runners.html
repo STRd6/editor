@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>editor</title>
+  <title>runners</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="http://strd6.github.io/cdn/parallel/docco.css" />
@@ -18,7 +18,7 @@
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h1 id="editor">Editor</h1>
+              <h1 id="runners">Runners</h1>
 
             </div>
             <div class="content"><pre><code class="lang-coffeescript">
@@ -32,48 +32,23 @@
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              
+              <p>Hold all the ways the editor can run things: apps, docs, tests, maybe more.</p>
+
             </div>
-            <div class="content"><pre><code class="lang-coffeescript">Runners = require <span class="string">"./runners"</span>
-Actions = require(<span class="string">"./source/actions"</span>)
-Builder = require(<span class="string">"builder"</span>)
-Packager = require(<span class="string">"packager"</span>)
-{Filetree, File} = require(<span class="string">"filetree"</span>)
+            <div class="content"><pre><code class="lang-coffeescript">Packager = require <span class="string">"packager"</span>
+Runner = require(<span class="string">"runner"</span>)
+{PackageRunner} = Runner
+Tests = require <span class="string">"tests"</span>
+documenter = require <span class="string">"md"</span>
 
-<span class="function"><span class="title">initBuilder</span></span> = (self) -&gt;
-  builder = Builder()
+module.<span class="function"><span class="title">exports</span></span> = (I={}, self) -&gt;
+  appRunner = Runner()
+  docRunner = Runner()
+  testRunner = Runner()
 
-  <span class="comment"># Add editor's metadata</span>
-  builder.addPostProcessor (pkg) -&gt;
-    pkg.progenitor =
-      url: document.location.href
+  runningInstances = []
 
-  <span class="comment"># Add metadata from our config</span>
-  builder.addPostProcessor (pkg) -&gt;
-    config = readSourceConfig(pkg)
-
-    pkg.version = config.version
-    pkg.entryPoint = config.entryPoint <span class="keyword">or</span> <span class="string">"main"</span>
-    pkg.remoteDependencies = config.remoteDependencies
-
-  <span class="comment"># Attach repo metadata to package</span>
-  builder.addPostProcessor (pkg) -&gt;
-    repository = self.repository()
-
-    <span class="comment"># TODO: Track commit SHA as well</span>
-    pkg.repository = cleanRepositoryData repository.toJSON()
-
-    <span class="comment"># Add publish branch</span>
-    pkg.repository.publishBranch = self.config().publishBranch <span class="keyword">or</span> repository.publishBranch()
-
-  <span class="keyword">return</span> builder
-
-module.<span class="function"><span class="title">exports</span></span> = (I={}, self=Model(I)) -&gt;
-  builder = initBuilder(self)
-  filetree = Filetree()
-
-  self.extend
-    repository: Observable()</code></pre>
+  self.extend</code></pre>
 </div>
         </li>
         
@@ -83,31 +58,13 @@ module.<span class="function"><span class="title">exports</span></span> = (I={},
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Build the project, returning a promise that will be fulfilled with the <code>pkg</code>
-when complete.</p>
+              <p>Rebuild the package and send the reload message to the runner with the newest package.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-coffeescript">    build: -&gt;
-      data = filetree.data()
-
-      builder.build(data)
+            <div class="content"><pre><code class="lang-coffeescript">    hotReload: -&gt;
+      self.build()
       .<span class="keyword">then</span> (pkg) -&gt;
-        config = readSourceConfig(pkg)
-
-        dependencies = config.dependencies <span class="keyword">or</span> {}
-
-        Packager.collectDependencies(dependencies)
-        .<span class="keyword">then</span> (dependencies) -&gt;
-          pkg.dependencies = dependencies
-
-          <span class="keyword">return</span> pkg
-
-    save: -&gt;
-      self.repository().commitTree
-        tree: filetree.data()
-
-    loadFiles: (fileData) -&gt;
-      filetree.load fileData</code></pre>
+        runningInstances.invoke <span class="string">"launch"</span>, pkg</code></pre>
 </div>
         </li>
         
@@ -117,40 +74,81 @@ when complete.</p>
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>Currently we&#39;re exposing the filetree though in the future we shouldn&#39;t be.</p>
+              <p>Run some code in a sandboxed popup window. We need to popup the window immediately
+in response to user input to prevent pop-up blocking so we also pass a promise
+that will contain the content to render in the window. If the promise fails we
+auto-close the window.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-coffeescript">    filetree: -&gt;
-      filetree
+            <div class="content"><pre><code class="lang-coffeescript">    runInSandboxWindow: (config, runner, promise) -&gt;
+      sandbox = runner.run
+        config: config
 
-    files: -&gt;
-      filetree.files()
+      promise.<span class="keyword">then</span>(
+        (content) -&gt;
+          sandbox.document.open()
+          sandbox.document.write(content)
+          sandbox.document.close()
+        , (error) -&gt;
+          sandbox.close()
 
-    fileAt: (path) -&gt;
-      self.files().select (file) -&gt;
-        file.path() <span class="keyword">is</span> path
-      .first()
+          <span class="keyword">return</span> error
+      )
 
-    fileContents: (path) -&gt;
-      self.fileAt(path)?.content()
+    runInAppWindow: -&gt;
+      sandbox = appRunner.run
+        config: self.config()
 
-    filesMatching: (expr) -&gt;
-      self.files().select (file) -&gt;
-        file.path().match expr
+      self.build()
+      .<span class="keyword">then</span>(
+        (pkg) -&gt;
+          packageRunner = PackageRunner(sandbox.document)
+          runningInstances.push packageRunner
 
-    writeFile: (path, content) -&gt;
-      <span class="keyword">if</span> existingFile = self.fileAt(path)
-        existingFile.content(content)
+          sandbox.addEventListener <span class="string">"unload"</span>, -&gt;
+            runningInstances.remove(packageRunner)
 
-        <span class="keyword">return</span> existingFile
-      <span class="keyword">else</span>
-        file = File
-          path: path
-          content: content
+          packageRunner.launch(pkg)
 
-        filetree.files.push(file)
+          packageRunner
+        , (error) -&gt;
+          sandbox.close()
 
-        <span class="keyword">return</span> file</code></pre>
+          <span class="keyword">return</span> error
+      )
+
+    run: -&gt;
+      self.runInAppWindow()
+
+    runDocs: ({file}) -&gt;
+      file ?= <span class="string">"index"</span>
+
+      self.runInSandboxWindow docsConfig, docRunner,
+        self.build()
+        .<span class="keyword">then</span> (pkg) -&gt;
+          documenter.documentAll(pkg)
+        .<span class="keyword">then</span> (docs) -&gt;
+          script = docs.first()
+
+          path = script.path.split(<span class="string">"/"</span>)
+          path.pop()
+          path.push(<span class="string">"<span class="subst">#{file}</span>.html"</span>)
+          path = path.join(<span class="string">"/"</span>)
+
+          <span class="keyword">if</span> file = findFile(path, docs)
+            file.content + <span class="string">"&lt;script&gt;<span class="subst">#{script.content}</span>&lt;\/script&gt;"</span>
+          <span class="keyword">else</span>
+            <span class="string">"Failed to find file at <span class="subst">#{path}</span>"</span>
+
+    test: -&gt;
+      self.runInSandboxWindow self.config(), testRunner,
+        self.build()
+        .<span class="keyword">then</span> (pkg) -&gt;
+          Packager.testScripts(pkg)
+        .<span class="keyword">then</span> (testScripts) -&gt;
+
+          <span class="comment"># TODO: Editor should not have to return runner to run tests.</span>
+          html = Tests.html(testScripts)</code></pre>
 </div>
         </li>
         
@@ -159,28 +157,6 @@ when complete.</p>
             <div class="annotation">
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <p>Likewise we shouldn&#39;t expose the builder directly either.</p>
-
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">    builder: -&gt;
-      builder
-
-    config: -&gt;
-      readSourceConfig(source: arrayToHash(filetree.data()))
-
-  self.include(Runners)
-  self.include(Actions)
-
-  <span class="keyword">return</span> self</code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <h2 id="helpers">Helpers</h2>
 
@@ -191,17 +167,48 @@ when complete.</p>
         </li>
         
         
+        <li id="section-6">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">docsConfig =
+  width: <span class="number">1280</span>
+  height: <span class="number">800</span></code></pre>
+</div>
+        </li>
+        
+        
         <li id="section-7">
             <div class="annotation">
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">{readSourceConfig, arrayToHash} = require(<span class="string">"./source/util"</span>)
+              <p>Get the <code>index.html</code> from a list of files.</p>
 
-<span class="function"><span class="title">cleanRepositoryData</span></span> = (data) -&gt;
-  _.pick data, <span class="string">"branch"</span>, <span class="string">"default_branch"</span>, <span class="string">"full_name"</span>, <span class="string">"homepage"</span>, <span class="string">"description"</span>, <span class="string">"html_url"</span>, <span class="string">"url"</span></code></pre>
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">index</span></span> = (files) -&gt;
+  files.filter (file) -&gt;
+    <span class="regexp">/index\.html$/</span>.test file.path
+  .first()</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Find a file in a list of files by path.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">findFile</span></span> = (path, files) -&gt;
+  files.filter (file) -&gt;
+    file.path <span class="keyword">is</span> path
+  .first()</code></pre>
 </div>
         </li>
         

@@ -39,65 +39,27 @@
             <div class="content"><pre><code class="lang-coffeescript">Packager = require <span class="string">"packager"</span>
 {processDirectory} = require <span class="string">"./util"</span>
 
-documenter = require(<span class="string">"md"</span>)</code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-3">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-3">&#182;</a>
-              </div>
-              <p>The primary actions of the editor. This is a mixin that is included in the editor.</p>
+documenter = require <span class="string">"md"</span>
 
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">Actions</span></span> = (I={}, self) -&gt;
+<span class="function"><span class="title">Actions</span></span> = (I={}, self) -&gt;
   self.extend
-
-    run: -&gt;
-      self.runInSandboxWindow self.config(),
-        self.build()
-        .<span class="keyword">then</span> (pkg) -&gt;
-          Packager.standAlone pkg
-        .<span class="keyword">then</span> (files) -&gt;
-          content = index(files)?.content
-
-    runDocs: ({file}) -&gt;
-      file ?= <span class="string">"index"</span>
-
-      self.runInSandboxWindow docsConfig,
-        self.build()
-        .<span class="keyword">then</span> (pkg) -&gt;
-          documenter.documentAll(pkg)
-        .<span class="keyword">then</span> (docs) -&gt;
-          script = docs.first()
-
-          path = script.path.split(<span class="string">"/"</span>)
-          path.pop()
-          path.push(<span class="string">"<span class="subst">#{file}</span>.html"</span>)
-          path = path.join(<span class="string">"/"</span>)
-
-          <span class="keyword">if</span> file = findFile(path, docs)
-            file.content + <span class="string">"&lt;script&gt;<span class="subst">#{script.content}</span>&lt;\/script&gt;"</span>
-          <span class="keyword">else</span>
-            <span class="string">"Failed to find file at <span class="subst">#{path}</span>"</span>
 
     publish: -&gt;
       self.build()
       .<span class="keyword">then</span> (pkg) -&gt;
         documenter.documentAll(pkg)
         .<span class="keyword">then</span> (docs) -&gt;
-          self.repository().publish(Packager.standAlone(pkg, docs))
+          <span class="comment"># NOTE: This metadata is added from the builder</span>
+          publishBranch = pkg.repository.publishBranch
 
-    test: -&gt;
-      self.runInSandboxWindow self.config(),
-        self.build()
-        .<span class="keyword">then</span> (pkg) -&gt;
-          Packager.testScripts(pkg)
-        .<span class="keyword">then</span> (testScripts) -&gt;
-          <span class="comment"># TODO: Editor should not have to return runner to run tests.</span>
-          html = self.runner().testsHtml(testScripts)
+          <span class="comment"># TODO: Don't pass files to packager, just merge them at the end</span>
+          <span class="comment"># TODO: Have differenty types of building (docs/main) that can</span>
+          <span class="comment"># be chosen in a config rather than hacks based on the branch name</span>
+          repository = self.repository()
+          <span class="keyword">if</span> repository.branch() <span class="keyword">is</span> <span class="string">"blog"</span> <span class="comment"># HACK</span>
+            self.repository().publish(docs, <span class="literal">undefined</span>, publishBranch)
+          <span class="keyword">else</span>
+            self.repository().publish(Packager.standAlone(pkg, docs), <span class="literal">undefined</span>, publishBranch)
 
     load: ({repository}) -&gt;
       repository.latestContent()
@@ -111,98 +73,147 @@ module.exports = Actions</code></pre>
 </div>
         </li>
         
-        
-        <li id="section-4">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <h2 id="helpers">Helpers</h2>
-
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">
-</code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">docsConfig =
-  width: <span class="number">1280</span>
-  height: <span class="number">800</span></code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <p>Get the <code>index.html</code> from a list of files.</p>
-
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">index</span></span> = (files) -&gt;
-  files.filter (file) -&gt;
-    <span class="regexp">/index\.html$/</span>.test file.path
-  .first()</code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <p>Find a file in a list of files by path.</p>
-
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">findFile</span></span> = (path, files) -&gt;
-  files.filter (file) -&gt;
-    file.path <span class="keyword">is</span> path
-  .first()</code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <p>Process results returned from Github API.</p>
-
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">
-</code></pre>
-</div>
-        </li>
-        
     </ul>
   </div>
-  <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
-<script src="http://strd6.github.io/require/v0.2.2.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
-<script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
-<script src="https://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
-<script src="http://www.danielx.net/tempest/javascripts/envweb-v0.4.5.js"></script><script>
-  $.ajax({
-    url: "http://strd6.github.io/interactive/v0.8.1.jsonp",
-    dataType: "jsonp",
-    jsonpCallback: "STRd6/interactive:v0.8.1",
-    cache: true
-  }).then(function(PACKAGE) {
-    Require.generateFor(PACKAGE)("./" + PACKAGE.entryPoint)
-  })
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js"></script><script>
+  (function() {
+  var ErrorReporter, bindUpdates, createEditor, exec, findInteractiveElements, readShebang, runners;
+
+  createEditor = function(code, shebang, section) {
+    var annotationElement, contentElement, editorElement, exampleSection, runtimeElement;
+    exampleSection = $("<li>", {
+      "class": "example"
+    });
+    annotationElement = $("<div>", {
+      "class": "annotation"
+    });
+    editorElement = $("<textarea>", {
+      "class": "annotation",
+      text: code
+    });
+    contentElement = $("<div>", {
+      "class": "content"
+    });
+    runtimeElement = $("<div>", {
+      "class": "output"
+    });
+    contentElement.append(runtimeElement);
+    annotationElement.append(editorElement);
+    exampleSection.append(annotationElement);
+    exampleSection.append(contentElement);
+    section.after(exampleSection);
+    return bindUpdates(shebang, editorElement, runtimeElement);
+  };
+
+  bindUpdates = function(shebang, editorElement, runtimeElement) {
+    return editorElement.on("keyup", function() {
+      var e, report, source;
+      report = ErrorReporter(editorElement);
+      source = editorElement.val();
+      try {
+        runners[shebang]({
+          editorElement: editorElement,
+          source: source,
+          runtimeElement: runtimeElement
+        });
+        return report.clear();
+      } catch (_error) {
+        e = _error;
+        return report(e);
+      }
+    });
+  };
+
+  readShebang = function(source) {
+    var match;
+    if (match = source.match(/^\#\! (.*)\n/)) {
+      return match[1];
+    }
+  };
+
+  ErrorReporter = function(editor) {
+    var reporter;
+    reporter = function(error) {
+      var errorParagraph;
+      if (editor.next().is("p.error")) {
+        return editor.next().text(error);
+      } else {
+        errorParagraph = $("<p>", {
+          "class": "error",
+          text: error.toString()
+        });
+        return editor.after(errorParagraph);
+      }
+    };
+    reporter.clear = function() {
+      if (editor.next().is("p.error")) {
+        return editor.next().remove();
+      }
+    };
+    return reporter;
+  };
+
+  findInteractiveElements = function() {
+    return $("blockquote > pre > code").each(function() {
+      var blockQuoteElement, code, codeElement, sectionElement, shebang;
+      codeElement = $(this);
+      code = codeElement.text();
+      if (shebang = readShebang(code)) {
+        if (!runners[shebang]) {
+          return;
+        }
+        code = code.split("\n").slice(1).join("\n");
+        blockQuoteElement = codeElement.parent().parent();
+        sectionElement = blockQuoteElement.parent().parent();
+        blockQuoteElement.remove();
+        return createEditor(code, shebang, sectionElement);
+      }
+    });
+  };
+
+  runners = {};
+
+  (typeof window !== "undefined" && window !== null ? window : global).Interactive = {
+    register: function(name, runner) {
+      runners[name] = runner;
+      findInteractiveElements();
+      return $('#container').on('keyup', 'textarea', function() {
+        $(this).height(0);
+        return $(this).height(this.scrollHeight);
+      }).find('textarea').keyup();
+    }
+  };
+
+  exec = function(_arg) {
+    var code, editorElement, runtimeElement, source;
+    source = _arg.source, code = _arg.code, editorElement = _arg.editorElement, runtimeElement = _arg.runtimeElement;
+    runtimeElement.remove();
+    editorElement.replaceWith($("<pre>", {
+      text: source
+    }));
+    return setTimeout(function() {
+      return Function(code)();
+    }, 0);
+  };
+
+  $(function() {
+    Interactive.register("setup", function(params) {
+      params.code = CoffeeScript.compile(params.source);
+      return exec(params);
+    });
+    return Interactive.register("setup-js", function(params) {
+      params.code = params.source;
+      return exec(params);
+    });
+  });
+
+}).call(this);
+
 </script><script src="../package.js"></script>
 </body>
 </html>
