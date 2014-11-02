@@ -6,13 +6,13 @@ remoteDependencies: [
   "https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"
   "https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js"
   "https://code.jquery.com/jquery-1.11.0.min.js"
-  "http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js"
 ]
 dependencies:
   analytics: "distri/google-analytics:v0.1.0"
   base64: "distri/base64:v0.9.0"
-  builder: "distri/builder:v0.4.0"
+  builder: "distri/builder:v0.4.2"
   chrapps: "distri/chrapps:v0.1.2"
+  cornerstone: "distri/cornerstone:v0.2.6"
   cson: "distri/cson:v0.1.0"
   filetree: "STRd6/filetree:v0.3.2"
   github: "distri/github:v0.4.4"

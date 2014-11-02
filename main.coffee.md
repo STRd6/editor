@@ -32,6 +32,7 @@ TODO: This needs a big cleanup.
     # Get stuff from our package
     {source:files} = PACKAGE
 
+    require "cornerstone"
     require "./source/deferred"
     {processDirectory} = require "./source/util"
 
