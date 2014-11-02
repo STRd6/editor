@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# 1414875763901
+# 1414890107117
 
 CACHE:
 index.html
@@ -7,7 +7,6 @@ index.html
 https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js
 https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js
 https://code.jquery.com/jquery-1.11.0.min.js
-http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js
 
 NETWORK:
 https://*
