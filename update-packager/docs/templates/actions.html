@@ -36,9 +36,10 @@ the editor.</p>
               <p>Render a series of buttons, one for each action.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-haml">  - Object.keys(actions).each (name) -&gt;
-    %button
-      = name.titleize()</code></pre>
+            <div class="content"><pre><code class="lang-haml">  %span
+    - Object.keys(actions).each (name) -&gt;
+      %button(click=actions[name])
+        = name.titleize()</code></pre>
 </div>
         </li>
         
@@ -48,24 +49,10 @@ the editor.</p>
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>In our click handler we don&#39;t pass any event data to the action.</p>
-
-            </div>
-            <div class="content"><pre><code class="lang-haml">      - on &quot;click&quot;, -&gt;
-        - actions[name]()</code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
               <p>The issues selector is also rendered in the actions bar.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-haml">  = HAMLjr.render &quot;issues&quot;, @issues</code></pre>
+            <div class="content"><pre><code class="lang-haml">  %select(value=@issues.currentIssue options=@issues.issues)</code></pre>
 </div>
         </li>
         
@@ -74,7 +61,8 @@ the editor.</p>
   <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-<script src="http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js"></script><script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script><script>
   (function() {
   var ErrorReporter, bindUpdates, createEditor, exec, findInteractiveElements, readShebang, runners;
 

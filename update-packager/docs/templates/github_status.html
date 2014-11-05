@@ -35,9 +35,12 @@
               <p>Display information about the current Github api session.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-haml">.status
+            <div class="content"><pre><code class="lang-haml">- redirect = -&gt;
+  - window.location = github.authorizationUrl(&quot;bc46af967c926ba4ff87&quot;, &quot;gist,repo,user:email&quot;)
+
+.status
   - github = this
-  - with @lastRequest, -&gt;
+  - each @lastRequest, -&gt;
     %div
       - if @getAllResponseHeaders and @getAllResponseHeaders().match(/X-RateLimit-Limit: 5000/)
         Authenticated Scopes:
@@ -47,9 +50,7 @@
         = @getResponseHeader(&quot;X-RateLimit-Remaining&quot;)
         = &quot; / 5000&quot;
       - else
-        %button Auth
-          - on &quot;click&quot;, -&gt;
-            - window.location = github.authorizationUrl(&quot;bc46af967c926ba4ff87&quot;, &quot;gist,repo,user:email&quot;)</code></pre>
+        %button(click=redirect) Auth</code></pre>
 </div>
         </li>
         
@@ -58,7 +59,8 @@
   <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-<script src="http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js"></script><script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script><script>
   (function() {
   var ErrorReporter, bindUpdates, createEditor, exec, findInteractiveElements, readShebang, runners;
 
