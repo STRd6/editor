@@ -5,7 +5,7 @@ Returns a promise that will contain the auth token, or an error.
 
     Q = require "q"
 
-    GithubAuth = ->
+    GithubAuth = Q.fcall ->
 
 If the url contains a querystring parameter `code` then we send it to our auth
 server to get the OAuth token.
@@ -15,18 +15,21 @@ server to get the OAuth token.
         .then (data) ->
           if token = data.token
             localStorage.authToken = token
+            console.log token
           else
+            console.log "Boo urnns"
             if localStorage.authToken
-              Q.fcall -> localStorage.authToken
+              localStorage.authToken
             else
-              Q.fcall -> throw "Failed to get authorization from server and no token in local storage"
+              throw "Failed to get authorization from server and no token in local storage"
       else
 
 We also check localStorage for our auth token.
 
         if localStorage.authToken
-          Q.fcall -> localStorage.authToken
+          localStorage.authToken
+          
         else
-          Q.fcall -> throw "No token in local storage"
+          throw "No token in local storage"
 
     module.exports = GithubAuth

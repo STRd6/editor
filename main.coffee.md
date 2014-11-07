@@ -47,7 +47,7 @@ TODO: This needs a big cleanup.
 
     # Create and auth a github API
     # Global until we consolidate editor/actions into something cleaner
-    global.github = require("github")(require("./source/github_auth")())
+    global.github = require("github")(require("./source/github_auth"))
 
     ValueWidget = require "value-widget"
 
