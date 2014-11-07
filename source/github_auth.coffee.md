@@ -15,9 +15,7 @@ server to get the OAuth token.
         .then (data) ->
           if token = data.token
             localStorage.authToken = token
-            console.log token
           else
-            console.log "Boo urnns"
             if localStorage.authToken
               localStorage.authToken
             else
