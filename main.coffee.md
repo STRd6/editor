@@ -102,7 +102,11 @@ Templates
 
     PACKAGE.repository.url ||= "repos/#{PACKAGE.repository.full_name}"
 
-    repository github.Repository(PACKAGE.repository)
+    # Need to delay this slightly so our auth token deferred has time to load
+    # TODO: Make better use of observables and computed functions so the timing
+    # doesn't matter
+    setTimeout ->
+      repository github.Repository(PACKAGE.repository)
 
     confirmUnsaved = ->
       confirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
