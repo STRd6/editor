@@ -1,4 +1,4 @@
-version: "0.3.0"
+version: "0.3.1"
 entryPoint: "main"
 width: 960
 height: 800
@@ -10,7 +10,7 @@ remoteDependencies: [
 dependencies:
   analytics: "distri/google-analytics:v0.1.0"
   base64: "distri/base64:v0.9.0"
-  builder: "distri/builder:v0.4.2"
+  builder: "distri/builder:v0.4.3"
   chrapps: "distri/chrapps:v0.1.2"
   cornerstone: "distri/cornerstone:v0.2.6"
   cson: "distri/cson:v0.1.0"
