@@ -33,7 +33,8 @@ TODO: This needs a big cleanup.
     {source:files} = PACKAGE
 
     require "cornerstone"
-    require "./source/deferred"
+    Q = require "q"
+    {confirmIf} = require "../lib/ui"
     {processDirectory} = require "./source/util"
 
     global.PACKAGE = PACKAGE
@@ -104,7 +105,7 @@ Templates
     repository github.Repository(PACKAGE.repository)
 
     confirmUnsaved = ->
-      Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
+      confirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
 
     closeOpenEditors = ->
       root = $root.children(".main")
@@ -165,7 +166,7 @@ Templates
           if fullName
             github.repository(fullName).then repository
           else
-            Deferred().reject("No repo given")
+            Q.fcall -> throw "No repo given"
         .then (repositoryInstance) ->
           notify "Loading files..."
 
