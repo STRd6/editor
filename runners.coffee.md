@@ -41,8 +41,8 @@ auto-close the window.
               sandbox.document.close()
             , (error) ->
               sandbox.close()
-
-              return error
+              console.log error
+              throw error
           )
 
         runInAppWindow: ->

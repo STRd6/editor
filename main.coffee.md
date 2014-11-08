@@ -143,7 +143,9 @@ Templates
         notify "Running tests..."
 
         editor.test()
-        .fail errors
+        .fail (e) ->
+          errors [].concat(e)
+        .done()
 
       docs: ->
         notify "Running Docs..."
