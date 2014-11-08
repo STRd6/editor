@@ -62,8 +62,7 @@ Templates
     editor = global.editor = Editor()
     editor.loadFiles(files)
 
-    # TODO: Don't expose these
-    builder = editor.builder()
+    # TODO: Don't expose this
     filetree = editor.filetree()
 
     {File} = require "filetree"
