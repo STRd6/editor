@@ -215,7 +215,9 @@ actions =
     notify <span class="string">"Running tests..."</span>
 
     editor.test()
-    .fail errors
+    .fail (e) -&gt;
+      errors [].concat(e)
+    .done()
 
   docs: -&gt;
     notify <span class="string">"Running Docs..."</span>

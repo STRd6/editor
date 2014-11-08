@@ -92,7 +92,7 @@ auto-close the window.</p>
         , (error) -&gt;
           sandbox.close()
 
-          <span class="keyword">return</span> error
+          <span class="keyword">throw</span> error
       )
 
     runInAppWindow: -&gt;
