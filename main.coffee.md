@@ -129,12 +129,14 @@ Templates
           notify "Saved and published!"
         .fail (args...) ->
           errors args
+        .done()
 
       run: ->
         notify "Running..."
 
         editor.run()
         .fail classicError
+        .done()
 
       test: ->
         notify "Running tests..."
@@ -150,6 +152,7 @@ Templates
         if file = prompt("Docs file", "index")
           editor.runDocs({file})
           .fail errors
+          .done()
 
       new_file: ->
         if name = prompt("File Name", "newfile.coffee")
@@ -180,6 +183,7 @@ Templates
 
             notifications.push "Loaded"
         .fail classicError
+        .done()
 
       new_feature: ->
         if title = prompt("Description")
@@ -199,6 +203,7 @@ Templates
 
             notifications.push "Created!"
           , classicError
+          .done()
 
       pull_master: ->
         confirmUnsaved()
@@ -218,6 +223,7 @@ Templates
             notifications.push "Loaded!"
           .fail ->
             classicError "Error loading #{repository().url()}"
+        .done()
 
       pull_upstream: ->
         confirmUnsaved()
@@ -237,6 +243,7 @@ Templates
         ).then ->
           notifications.push "\nYour code is up to date with the upstream master"
           closeOpenEditors()
+        .done()
 
       tag_version: ->
         notify "Building..."
@@ -261,6 +268,7 @@ Templates
             notifications.push "Published!"
 
         .fail classicError
+        .done()
 
     hotReload = (->
       editor.hotReload()
