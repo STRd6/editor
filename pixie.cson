@@ -17,7 +17,7 @@ dependencies:
   filetree: "STRd6/filetree:v0.3.2"
   github: "distri/github:v0.4.6"
   issues: "distri/issues:v0.2.3"
-  md: "distri/md:v0.4.2-pre.0"
+  md: "distri/md:v0.4.2"
   notifications: "distri/notifications:v0.3.3"
   observable: "distri/observable:v0.3.1"
   q: "distri/q:v1.0.1"
