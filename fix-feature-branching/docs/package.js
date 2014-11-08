@@ -198,7 +198,7 @@
     },
     "pixie.cson": {
       "path": "pixie.cson",
-      "content": "version: \"0.3.2\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\"\n  \"https://code.jquery.com/jquery-1.11.0.min.js\"\n]\ndependencies:\n  analytics: \"distri/google-analytics:v0.1.0\"\n  base64: \"distri/base64:v0.9.0\"\n  builder: \"distri/builder:v0.4.3\"\n  chrapps: \"distri/chrapps:v0.1.2\"\n  cornerstone: \"distri/cornerstone:v0.2.6\"\n  cson: \"distri/cson:v0.1.0\"\n  filetree: \"STRd6/filetree:v0.3.2\"\n  github: \"distri/github:v0.4.7-pre.0\"\n  issues: \"distri/issues:v0.2.3\"\n  md: \"distri/md:v0.4.2\"\n  notifications: \"distri/notifications:v0.3.3\"\n  observable: \"distri/observable:v0.3.1\"\n  q: \"distri/q:v1.0.1\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  runtime: \"distri/runtime:v0.3.0\"\n  packager: \"distri/packager:v0.5.12\"\n  runner: \"distri/runner:v0.2.5\"\n  tests: \"distri/tests:v0.1.1\"\n  \"value-widget\": \"distri/value-widget:v0.1.2\"\n",
+      "content": "version: \"0.3.2\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\"\n  \"https://code.jquery.com/jquery-1.11.0.min.js\"\n]\ndependencies:\n  analytics: \"distri/google-analytics:v0.1.0\"\n  base64: \"distri/base64:v0.9.0\"\n  builder: \"distri/builder:v0.4.3\"\n  chrapps: \"distri/chrapps:v0.1.2\"\n  cornerstone: \"distri/cornerstone:v0.2.6\"\n  cson: \"distri/cson:v0.1.0\"\n  filetree: \"STRd6/filetree:v0.3.2\"\n  github: \"distri/github:v0.4.7\"\n  issues: \"distri/issues:v0.2.3\"\n  md: \"distri/md:v0.4.2\"\n  notifications: \"distri/notifications:v0.3.3\"\n  observable: \"distri/observable:v0.3.1\"\n  q: \"distri/q:v1.0.1\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  runtime: \"distri/runtime:v0.3.0\"\n  packager: \"distri/packager:v0.5.12\"\n  runner: \"distri/runner:v0.2.5\"\n  tests: \"distri/tests:v0.1.1\"\n  \"value-widget\": \"distri/value-widget:v0.1.2\"\n",
       "mode": "100644",
       "type": "blob"
     },
@@ -298,7 +298,7 @@
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.3.2\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\",\"https://code.jquery.com/jquery-1.11.0.min.js\"],\"dependencies\":{\"analytics\":\"distri/google-analytics:v0.1.0\",\"base64\":\"distri/base64:v0.9.0\",\"builder\":\"distri/builder:v0.4.3\",\"chrapps\":\"distri/chrapps:v0.1.2\",\"cornerstone\":\"distri/cornerstone:v0.2.6\",\"cson\":\"distri/cson:v0.1.0\",\"filetree\":\"STRd6/filetree:v0.3.2\",\"github\":\"distri/github:v0.4.7-pre.0\",\"issues\":\"distri/issues:v0.2.3\",\"md\":\"distri/md:v0.4.2\",\"notifications\":\"distri/notifications:v0.3.3\",\"observable\":\"distri/observable:v0.3.1\",\"q\":\"distri/q:v1.0.1\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"runtime\":\"distri/runtime:v0.3.0\",\"packager\":\"distri/packager:v0.5.12\",\"runner\":\"distri/runner:v0.2.5\",\"tests\":\"distri/tests:v0.1.1\",\"value-widget\":\"distri/value-widget:v0.1.2\"}};",
+      "content": "module.exports = {\"version\":\"0.3.2\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\",\"https://code.jquery.com/jquery-1.11.0.min.js\"],\"dependencies\":{\"analytics\":\"distri/google-analytics:v0.1.0\",\"base64\":\"distri/base64:v0.9.0\",\"builder\":\"distri/builder:v0.4.3\",\"chrapps\":\"distri/chrapps:v0.1.2\",\"cornerstone\":\"distri/cornerstone:v0.2.6\",\"cson\":\"distri/cson:v0.1.0\",\"filetree\":\"STRd6/filetree:v0.3.2\",\"github\":\"distri/github:v0.4.7\",\"issues\":\"distri/issues:v0.2.3\",\"md\":\"distri/md:v0.4.2\",\"notifications\":\"distri/notifications:v0.3.3\",\"observable\":\"distri/observable:v0.3.1\",\"q\":\"distri/q:v1.0.1\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"runtime\":\"distri/runtime:v0.3.0\",\"packager\":\"distri/packager:v0.5.12\",\"runner\":\"distri/runner:v0.2.5\",\"tests\":\"distri/tests:v0.1.1\",\"value-widget\":\"distri/value-widget:v0.1.2\"}};",
       "type": "blob"
     },
     "runners": {
@@ -4555,7 +4555,7 @@
         },
         "pixie.cson": {
           "path": "pixie.cson",
-          "content": "version: \"0.4.7-pre.0\"\nremoteDependencies: [\n  \"https://code.jquery.com/jquery-1.11.0.min.js\"\n]\ndependencies:\n  emojer: \"STRd6/emojer:v0.2.0\"\n  model: \"distri/model:v0.1.3\"\n  observable: \"distri/observable:v0.3.1\"\n  q: \"distri/q:v1.0.1\"\n",
+          "content": "version: \"0.4.7\"\nremoteDependencies: [\n  \"https://code.jquery.com/jquery-1.11.0.min.js\"\n]\ndependencies:\n  emojer: \"STRd6/emojer:v0.2.0\"\n  model: \"distri/model:v0.1.3\"\n  observable: \"distri/observable:v0.3.1\"\n  q: \"distri/q:v1.0.1\"\n",
           "mode": "100644",
           "type": "blob"
         },
@@ -4600,7 +4600,7 @@
         },
         "pixie": {
           "path": "pixie",
-          "content": "module.exports = {\"version\":\"0.4.7-pre.0\",\"remoteDependencies\":[\"https://code.jquery.com/jquery-1.11.0.min.js\"],\"dependencies\":{\"emojer\":\"STRd6/emojer:v0.2.0\",\"model\":\"distri/model:v0.1.3\",\"observable\":\"distri/observable:v0.3.1\",\"q\":\"distri/q:v1.0.1\"}};",
+          "content": "module.exports = {\"version\":\"0.4.7\",\"remoteDependencies\":[\"https://code.jquery.com/jquery-1.11.0.min.js\"],\"dependencies\":{\"emojer\":\"STRd6/emojer:v0.2.0\",\"model\":\"distri/model:v0.1.3\",\"observable\":\"distri/observable:v0.3.1\",\"q\":\"distri/q:v1.0.1\"}};",
           "type": "blob"
         },
         "repository": {
@@ -4617,13 +4617,13 @@
       "progenitor": {
         "url": "http://www.danielx.net/editor/"
       },
-      "version": "0.4.7-pre.0",
+      "version": "0.4.7",
       "entryPoint": "main",
       "remoteDependencies": [
         "https://code.jquery.com/jquery-1.11.0.min.js"
       ],
       "repository": {
-        "branch": "v0.4.7-pre.0",
+        "branch": "v0.4.7",
         "default_branch": "master",
         "full_name": "distri/github",
         "homepage": null,
