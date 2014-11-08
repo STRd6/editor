@@ -83,7 +83,8 @@ but I had no idea what I was doing and still don&#39;t know to this day.</p>
 {source:files} = PACKAGE
 
 require <span class="string">"cornerstone"</span>
-require <span class="string">"./source/deferred"</span>
+Q = require <span class="string">"q"</span>
+{confirmIf} = require <span class="string">"../lib/ui"</span>
 {processDirectory} = require <span class="string">"./source/util"</span>
 
 global.PACKAGE = PACKAGE
@@ -96,7 +97,7 @@ require(<span class="string">"analytics"</span>).init(<span class="string">"UA-3
 
 <span class="comment"># Create and auth a github API</span>
 <span class="comment"># Global until we consolidate editor/actions into something cleaner</span>
-global.github = require(<span class="string">"github"</span>)(require(<span class="string">"./source/github_auth"</span>)())
+global.github = require(<span class="string">"github"</span>)(require(<span class="string">"./source/github_auth"</span>))
 
 ValueWidget = require <span class="string">"value-widget"</span></code></pre>
 </div>
@@ -173,10 +174,14 @@ repository.observe (repository) -&gt;
 
 PACKAGE.repository.url ||= <span class="string">"repos/<span class="subst">#{PACKAGE.repository.full_name}</span>"</span>
 
-repository github.Repository(PACKAGE.repository)
+<span class="comment"># Need to delay this slightly so our auth token deferred has time to load</span>
+<span class="comment"># TODO: Make better use of observables and computed functions so the timing</span>
+<span class="comment"># doesn't matter</span>
+setTimeout -&gt;
+  repository github.Repository(PACKAGE.repository)
 
 <span class="function"><span class="title">confirmUnsaved</span></span> = -&gt;
-  Deferred.ConfirmIf(filetree.hasUnsavedChanges(), <span class="string">"You will lose unsaved changes in your current branch, continue?"</span>)
+  confirmIf(filetree.hasUnsavedChanges(), <span class="string">"You will lose unsaved changes in your current branch, continue?"</span>)
 
 <span class="function"><span class="title">closeOpenEditors</span></span> = -&gt;
   root = $root.children(<span class="string">".main"</span>)
@@ -237,7 +242,7 @@ actions =
       <span class="keyword">if</span> fullName
         github.repository(fullName).<span class="keyword">then</span> repository
       <span class="keyword">else</span>
-        Deferred().reject(<span class="string">"No repo given"</span>)
+        Q.fcall -&gt; <span class="keyword">throw</span> <span class="string">"No repo given"</span>
     .<span class="keyword">then</span> (repositoryInstance) -&gt;
       notify <span class="string">"Loading files..."</span>
 
