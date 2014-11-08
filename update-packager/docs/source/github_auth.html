@@ -25,7 +25,7 @@ server to authenticate them with our app secret key.</p>
             </div>
             <div class="content"><pre><code class="lang-coffeescript">Q = require <span class="string">"q"</span>
 
-<span class="function"><span class="title">GithubAuth</span></span> = -&gt;</code></pre>
+module.exports = Q.fcall -&gt;</code></pre>
 </div>
         </li>
         
@@ -46,9 +46,9 @@ server to get the OAuth token.</p>
         localStorage.authToken = token
       <span class="keyword">else</span>
         <span class="keyword">if</span> localStorage.authToken
-          Q.fcall -&gt; localStorage.authToken
+          localStorage.authToken
         <span class="keyword">else</span>
-          Q.fcall -&gt; <span class="keyword">throw</span> <span class="string">"Failed to get authorization from server and no token in local storage"</span>
+          <span class="keyword">throw</span> <span class="string">"Failed to get authorization from server and no token in local storage"</span>
   <span class="keyword">else</span></code></pre>
 </div>
         </li>
@@ -63,11 +63,9 @@ server to get the OAuth token.</p>
 
             </div>
             <div class="content"><pre><code class="lang-coffeescript">    <span class="keyword">if</span> localStorage.authToken
-      Q.fcall -&gt; localStorage.authToken
+      localStorage.authToken
     <span class="keyword">else</span>
-      Q.fcall -&gt; <span class="keyword">throw</span> <span class="string">"No token in local storage"</span>
-
-module.exports = GithubAuth</code></pre>
+      <span class="keyword">throw</span> <span class="string">"No token in local storage"</span></code></pre>
 </div>
         </li>
         
