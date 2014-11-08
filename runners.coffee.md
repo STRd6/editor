@@ -42,7 +42,7 @@ auto-close the window.
             , (error) ->
               sandbox.close()
 
-              return error
+              throw error
           )
 
         runInAppWindow: ->
