@@ -48,7 +48,7 @@ when complete.
         build: ->
           data = filetree.data()
 
-          builder.build(data)
+          Q(builder.build(data))
           .then (pkg) ->
             config = readSourceConfig(pkg)
 

@@ -33,7 +33,8 @@ TODO: This needs a big cleanup.
     {source:files} = PACKAGE
 
     require "cornerstone"
-    require "./source/deferred"
+    Q = require "q"
+    {confirmIf} = require "../lib/ui"
     {processDirectory} = require "./source/util"
 
     global.PACKAGE = PACKAGE
@@ -46,7 +47,7 @@ TODO: This needs a big cleanup.
 
     # Create and auth a github API
     # Global until we consolidate editor/actions into something cleaner
-    global.github = require("github")(require("./source/github_auth")())
+    global.github = require("github")(require("./source/github_auth"))
 
     ValueWidget = require "value-widget"
 
@@ -101,10 +102,14 @@ Templates
 
     PACKAGE.repository.url ||= "repos/#{PACKAGE.repository.full_name}"
 
-    repository github.Repository(PACKAGE.repository)
+    # Need to delay this slightly so our auth token deferred has time to load
+    # TODO: Make better use of observables and computed functions so the timing
+    # doesn't matter
+    setTimeout ->
+      repository github.Repository(PACKAGE.repository)
 
     confirmUnsaved = ->
-      Deferred.ConfirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
+      confirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
 
     closeOpenEditors = ->
       root = $root.children(".main")
@@ -165,7 +170,7 @@ Templates
           if fullName
             github.repository(fullName).then repository
           else
-            Deferred().reject("No repo given")
+            Q.fcall -> throw "No repo given"
         .then (repositoryInstance) ->
           notify "Loading files..."
 
