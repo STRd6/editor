@@ -36,16 +36,11 @@
 
             </div>
             <div class="content"><pre><code class="lang-coffeescript">Packager = require <span class="string">"packager"</span>
-Runner = require(<span class="string">"runner"</span>)
-{PackageRunner} = Runner
+{PackageRunner, Sandbox} = require(<span class="string">"runner"</span>)
 Tests = require <span class="string">"tests"</span>
 documenter = require <span class="string">"md"</span>
 
 module.<span class="function"><span class="title">exports</span></span> = (I={}, self) -&gt;
-  appRunner = Runner()
-  docRunner = Runner()
-  testRunner = Runner()
-
   runningInstances = []
 
   self.extend</code></pre>
@@ -80,9 +75,8 @@ that will contain the content to render in the window. If the promise fails we
 auto-close the window.</p>
 
             </div>
-            <div class="content"><pre><code class="lang-coffeescript">    runInSandboxWindow: (config, runner, promise) -&gt;
-      sandbox = runner.run
-        config: config
+            <div class="content"><pre><code class="lang-coffeescript">    runInSandboxWindow: (config, promise) -&gt;
+      sandbox = Sandbox config
 
       promise.<span class="keyword">then</span>(
         (content) -&gt;
@@ -96,23 +90,21 @@ auto-close the window.</p>
       )
 
     runInAppWindow: -&gt;
-      sandbox = appRunner.run
-        config: self.config()
+      packageRunner = PackageRunner(self.config())
 
       self.build()
       .<span class="keyword">then</span>(
         (pkg) -&gt;
-          packageRunner = PackageRunner(sandbox.document)
           runningInstances.push packageRunner
 
-          sandbox.addEventListener <span class="string">"unload"</span>, -&gt;
+          packageRunner.window.addEventListener <span class="string">"unload"</span>, -&gt;
             runningInstances.remove(packageRunner)
 
           packageRunner.launch(pkg)
 
           packageRunner
         , (error) -&gt;
-          sandbox.close()
+          packageRunner.close()
 
           <span class="keyword">return</span> error
       )
@@ -123,7 +115,7 @@ auto-close the window.</p>
     runDocs: ({file}) -&gt;
       file ?= <span class="string">"index"</span>
 
-      self.runInSandboxWindow docsConfig, docRunner,
+      self.runInSandboxWindow docsConfig,
         self.build()
         .<span class="keyword">then</span> (pkg) -&gt;
           documenter.documentAll(pkg)
@@ -141,7 +133,7 @@ auto-close the window.</p>
             <span class="string">"Failed to find file at <span class="subst">#{path}</span>"</span>
 
     test: -&gt;
-      self.runInSandboxWindow self.config(), testRunner,
+      self.runInSandboxWindow self.config(),
         self.build()
         .<span class="keyword">then</span> (pkg) -&gt;
           Packager.testScripts(pkg)
