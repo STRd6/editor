@@ -40,9 +40,6 @@ TODO: This needs a big cleanup.
     global.PACKAGE = PACKAGE
     global.require = require
 
-    # TODO: Have each component import observable as needed
-    global.Observable = require "observable"
-
     require("analytics").init("UA-3464282-15")
 
     # Create and auth a github API
