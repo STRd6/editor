@@ -36,7 +36,7 @@
 
             </div>
             <div class="content"><pre><code class="lang-coffeescript">Packager = require <span class="string">"packager"</span>
-{PackageRunner, Sandbox} = require(<span class="string">"runner"</span>)
+{PackageRunner} = Runner = require(<span class="string">"runner"</span>)
 Tests = require <span class="string">"tests"</span>
 documenter = require <span class="string">"md"</span>
 
@@ -59,35 +59,7 @@ module.<span class="function"><span class="title">exports</span></span> = (I={},
             <div class="content"><pre><code class="lang-coffeescript">    hotReload: -&gt;
       self.build()
       .<span class="keyword">then</span> (pkg) -&gt;
-        runningInstances.invoke <span class="string">"launch"</span>, pkg</code></pre>
-</div>
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <p>Run some code in a sandboxed popup window. We need to popup the window immediately
-in response to user input to prevent pop-up blocking so we also pass a promise
-that will contain the content to render in the window. If the promise fails we
-auto-close the window.</p>
-
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">    runInSandboxWindow: (config, promise) -&gt;
-      sandbox = Sandbox config
-
-      promise.<span class="keyword">then</span>(
-        (content) -&gt;
-          sandbox.document.open()
-          sandbox.document.write(content)
-          sandbox.document.close()
-        , (error) -&gt;
-          sandbox.close()
-
-          <span class="keyword">throw</span> error
-      )
+        runningInstances.invoke <span class="string">"launch"</span>, pkg
 
     runInAppWindow: -&gt;
       packageRunner = PackageRunner(self.config())
@@ -115,7 +87,7 @@ auto-close the window.</p>
     runDocs: ({file}) -&gt;
       file ?= <span class="string">"index"</span>
 
-      self.runInSandboxWindow docsConfig,
+      Runner.openWindowWithContent docsConfig,
         self.build()
         .<span class="keyword">then</span> (pkg) -&gt;
           documenter.documentAll(pkg)
@@ -133,7 +105,7 @@ auto-close the window.</p>
             <span class="string">"Failed to find file at <span class="subst">#{path}</span>"</span>
 
     test: -&gt;
-      self.runInSandboxWindow self.config(),
+      Runner.openWindowWithContent self.config(),
         self.build()
         .<span class="keyword">then</span> (pkg) -&gt;
           Packager.testScripts(pkg)
@@ -145,10 +117,10 @@ auto-close the window.</p>
         </li>
         
         
-        <li id="section-5">
+        <li id="section-4">
             <div class="annotation">
               <div class="pilwrap">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <h2 id="helpers">Helpers</h2>
 
@@ -159,10 +131,10 @@ auto-close the window.</p>
         </li>
         
         
-        <li id="section-6">
+        <li id="section-5">
             <div class="annotation">
               <div class="pilwrap">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               
             </div>
@@ -173,10 +145,10 @@ auto-close the window.</p>
         </li>
         
         
-        <li id="section-7">
+        <li id="section-6">
             <div class="annotation">
               <div class="pilwrap">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>Get the <code>index.html</code> from a list of files.</p>
 
@@ -189,10 +161,10 @@ auto-close the window.</p>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               <div class="pilwrap">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>Find a file in a list of files by path.</p>
 
