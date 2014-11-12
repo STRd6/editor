@@ -4,7 +4,7 @@ Runners
 Hold all the ways the editor can run things: apps, docs, tests, maybe more.
 
     Packager = require "packager"
-    {PackageRunner, Sandbox} = require("runner")
+    {PackageRunner} = Runner = require("runner")
     Tests = require "tests"
     documenter = require "md"
 
@@ -19,25 +19,6 @@ Rebuild the package and send the reload message to the runner with the newest pa
           self.build()
           .then (pkg) ->
             runningInstances.invoke "launch", pkg
-
-Run some code in a sandboxed popup window. We need to popup the window immediately
-in response to user input to prevent pop-up blocking so we also pass a promise
-that will contain the content to render in the window. If the promise fails we
-auto-close the window.
-
-        runInSandboxWindow: (config, promise) ->
-          sandbox = Sandbox config
-
-          promise.then(
-            (content) ->
-              sandbox.document.open()
-              sandbox.document.write(content)
-              sandbox.document.close()
-            , (error) ->
-              sandbox.close()
-
-              throw error
-          )
 
         runInAppWindow: ->
           packageRunner = PackageRunner(self.config())
@@ -65,7 +46,7 @@ auto-close the window.
         runDocs: ({file}) ->
           file ?= "index"
 
-          self.runInSandboxWindow docsConfig,
+          Runner.openWindowWithContent docsConfig,
             self.build()
             .then (pkg) ->
               documenter.documentAll(pkg)
@@ -83,7 +64,7 @@ auto-close the window.
                 "Failed to find file at #{path}"
 
         test: ->
-          self.runInSandboxWindow self.config(),
+          Runner.openWindowWithContent self.config(),
             self.build()
             .then (pkg) ->
               Packager.testScripts(pkg)
