@@ -1,4 +1,4 @@
-version: "0.3.2"
+version: "0.3.2-pre.0"
 entryPoint: "main"
 width: 960
 height: 800

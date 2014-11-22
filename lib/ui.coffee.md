@@ -20,7 +20,10 @@ future to have their own look and feel.
 
     confirmIf = (shouldConfirm, message) ->
       if shouldConfirm
-        confirm(message)
+        if window.confirm(message)
+          Q.fcall ->
+        else
+          Q.fcall -> throw "Cancelled"
       else
         Q.fcall ->
 
