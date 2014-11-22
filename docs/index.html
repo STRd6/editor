@@ -90,9 +90,6 @@ Q = require <span class="string">"q"</span>
 global.PACKAGE = PACKAGE
 global.require = require
 
-<span class="comment"># TODO: Have each component import observable as needed</span>
-global.Observable = require <span class="string">"observable"</span>
-
 require(<span class="string">"analytics"</span>).init(<span class="string">"UA-3464282-15"</span>)
 
 <span class="comment"># Create and auth a github API</span>
@@ -137,8 +134,7 @@ ValueWidget = require <span class="string">"value-widget"</span></code></pre>
 editor = global.editor = Editor()
 editor.loadFiles(files)
 
-<span class="comment"># TODO: Don't expose these</span>
-builder = editor.builder()
+<span class="comment"># TODO: Don't expose this</span>
 filetree = editor.filetree()
 
 {File} = require <span class="string">"filetree"</span>
@@ -204,12 +200,14 @@ actions =
       notify <span class="string">"Saved and published!"</span>
     .fail (args...) -&gt;
       errors args
+    .done()
 
   run: -&gt;
     notify <span class="string">"Running..."</span>
 
     editor.run()
     .fail classicError
+    .done()
 
   test: -&gt;
     notify <span class="string">"Running tests..."</span>
@@ -225,6 +223,7 @@ actions =
     <span class="keyword">if</span> file = prompt(<span class="string">"Docs file"</span>, <span class="string">"index"</span>)
       editor.runDocs({file})
       .fail errors
+      .done()
 
   new_file: -&gt;
     <span class="keyword">if</span> name = prompt(<span class="string">"File Name"</span>, <span class="string">"newfile.coffee"</span>)
@@ -255,6 +254,7 @@ actions =
 
         notifications.push <span class="string">"Loaded"</span>
     .fail classicError
+    .done()
 
   new_feature: -&gt;
     <span class="keyword">if</span> title = prompt(<span class="string">"Description"</span>)
@@ -274,6 +274,7 @@ actions =
 
         notifications.push <span class="string">"Created!"</span>
       , classicError
+      .done()
 
   pull_master: -&gt;
     confirmUnsaved()
@@ -293,6 +294,7 @@ actions =
         notifications.push <span class="string">"Loaded!"</span>
       .fail -&gt;
         classicError <span class="string">"Error loading <span class="subst">#{repository().url()}</span>"</span>
+    .done()
 
   pull_upstream: -&gt;
     confirmUnsaved()
@@ -312,6 +314,7 @@ actions =
     ).<span class="keyword">then</span> -&gt;
       notifications.push <span class="string">"\nYour code is up to date with the upstream master"</span>
       closeOpenEditors()
+    .done()
 
   tag_version: -&gt;
     notify <span class="string">"Building..."</span>
@@ -336,6 +339,7 @@ actions =
         notifications.push <span class="string">"Published!"</span>
 
     .fail classicError
+    .done()
 
 hotReload = (-&gt;
   editor.hotReload()
