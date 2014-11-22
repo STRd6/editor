@@ -24,6 +24,6 @@ dependencies:
   hygiene: "STRd6/hygiene:v0.2.0"
   runtime: "distri/runtime:v0.3.0"
   packager: "distri/packager:v0.5.14"
-  runner: "distri/runner:v0.2.5"
+  runner: "distri/runner:v0.2.8"
   tests: "distri/tests:v0.1.1"
   "value-widget": "distri/value-widget:v0.1.2"

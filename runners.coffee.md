@@ -4,16 +4,11 @@ Runners
 Hold all the ways the editor can run things: apps, docs, tests, maybe more.
 
     Packager = require "packager"
-    Runner = require("runner")
-    {PackageRunner} = Runner
+    {PackageRunner} = Runner = require("runner")
     Tests = require "tests"
     documenter = require "md"
 
     module.exports = (I={}, self) ->
-      appRunner = Runner()
-      docRunner = Runner()
-      testRunner = Runner()
-
       runningInstances = []
 
       self.extend
@@ -25,44 +20,22 @@ Rebuild the package and send the reload message to the runner with the newest pa
           .then (pkg) ->
             runningInstances.invoke "launch", pkg
 
-Run some code in a sandboxed popup window. We need to popup the window immediately
-in response to user input to prevent pop-up blocking so we also pass a promise
-that will contain the content to render in the window. If the promise fails we
-auto-close the window.
-
-        runInSandboxWindow: (config, runner, promise) ->
-          sandbox = runner.run
-            config: config
-
-          promise.then(
-            (content) ->
-              sandbox.document.open()
-              sandbox.document.write(content)
-              sandbox.document.close()
-            , (error) ->
-              sandbox.close()
-
-              throw error
-          )
-
         runInAppWindow: ->
-          sandbox = appRunner.run
-            config: self.config()
+          packageRunner = PackageRunner(self.config())
 
           self.build()
           .then(
             (pkg) ->
-              packageRunner = PackageRunner(sandbox.document)
               runningInstances.push packageRunner
 
-              sandbox.addEventListener "unload", ->
+              packageRunner.window.addEventListener "unload", ->
                 runningInstances.remove(packageRunner)
 
               packageRunner.launch(pkg)
 
               packageRunner
             , (error) ->
-              sandbox.close()
+              packageRunner.close()
 
               return error
           )
@@ -73,7 +46,7 @@ auto-close the window.
         runDocs: ({file}) ->
           file ?= "index"
 
-          self.runInSandboxWindow docsConfig, docRunner,
+          Runner.openWindowWithContent docsConfig,
             self.build()
             .then (pkg) ->
               documenter.documentAll(pkg)
@@ -91,7 +64,7 @@ auto-close the window.
                 "Failed to find file at #{path}"
 
         test: ->
-          self.runInSandboxWindow self.config(), testRunner,
+          Runner.openWindowWithContent self.config(),
             self.build()
             .then (pkg) ->
               Packager.testScripts(pkg)
