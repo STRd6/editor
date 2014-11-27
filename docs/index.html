@@ -76,13 +76,10 @@ but I had no idea what I was doing and still don&#39;t know to this day.</p>
 <li><a href="/hygiene/docs">Hygiene</a></li>
 <li><a href="/runtime/docs">Runtime</a></li>
 </ul>
-<p>TODO: This needs a big cleanup.</p>
+<p>TODO: This needs a big cleanup.    </p>
 
             </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="comment"># Get stuff from our package</span>
-{source:files} = PACKAGE
-
-require <span class="string">"cornerstone"</span>
+            <div class="content"><pre><code class="lang-coffeescript">require <span class="string">"cornerstone"</span>
 Q = require <span class="string">"q"</span>
 {confirmIf} = require <span class="string">"../lib/ui"</span>
 {processDirectory} = require <span class="string">"./source/util"</span>
@@ -132,7 +129,7 @@ ValueWidget = require <span class="string">"value-widget"</span></code></pre>
             <div class="content"><pre><code class="lang-coffeescript">Editor = require(<span class="string">"./editor"</span>)
 
 editor = global.editor = Editor()
-editor.loadFiles(files)
+editor.loadFiles(PACKAGE.source)
 
 <span class="comment"># TODO: Don't expose this</span>
 filetree = editor.filetree()

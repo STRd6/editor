@@ -40,14 +40,14 @@
 
 .status
   - github = this
-  - each @lastRequest, -&gt;
+  - if request = @lastRequest()
     %div
-      - if @getAllResponseHeaders and @getAllResponseHeaders().match(/X-RateLimit-Limit: 5000/)
+      - if request.getAllResponseHeaders and request.getAllResponseHeaders().match(/X-RateLimit-Limit: 5000/)
         Authenticated Scopes:
-        = @getResponseHeader(&quot;X-OAuth-Scopes&quot;)
+        = request.getResponseHeader(&quot;X-OAuth-Scopes&quot;)
         %br
         Rate Limit Remaining:
-        = @getResponseHeader(&quot;X-RateLimit-Remaining&quot;)
+        = request.getResponseHeader(&quot;X-RateLimit-Remaining&quot;)
         = &quot; / 5000&quot;
       - else
         %button(click=redirect) Auth</code></pre>

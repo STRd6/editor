@@ -22,11 +22,11 @@
 
             </div>
             <div class="content"><pre><code class="lang-haml">.repo_info
-  - each this, -&gt;
+  - if info = this()
     %div
-      = @full_name
+      = info.full_name
       :
-      = @branch</code></pre>
+      = info.branch</code></pre>
 </div>
         </li>
         
