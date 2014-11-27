@@ -112,6 +112,9 @@ Likewise we shouldn't expose the builder directly either.
       self.include(Runners)
       self.include(Actions)
 
+      extend require("postmaster")(),
+        load: self.loadFiles
+
       return self
 
 Helpers

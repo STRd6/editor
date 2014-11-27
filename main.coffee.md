@@ -27,10 +27,7 @@ Components
 - [Hygiene](/hygiene/docs)
 - [Runtime](/runtime/docs)
 
-TODO: This needs a big cleanup.
-
-    # Get stuff from our package
-    {source:files} = PACKAGE
+TODO: This needs a big cleanup.    
 
     require "cornerstone"
     Q = require "q"
@@ -60,7 +57,7 @@ Templates
     Editor = require("./editor")
 
     editor = global.editor = Editor()
-    editor.loadFiles(files)
+    editor.loadFiles(PACKAGE.source)
 
     # TODO: Don't expose this
     filetree = editor.filetree()
