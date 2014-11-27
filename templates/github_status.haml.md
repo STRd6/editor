@@ -8,14 +8,14 @@ Display information about the current Github api session.
 
     .status
       - github = this
-      - each @lastRequest, ->
+      - if request = @lastRequest()
         %div
-          - if @getAllResponseHeaders and @getAllResponseHeaders().match(/X-RateLimit-Limit: 5000/)
+          - if request.getAllResponseHeaders and request.getAllResponseHeaders().match(/X-RateLimit-Limit: 5000/)
             Authenticated Scopes:
-            = @getResponseHeader("X-OAuth-Scopes")
+            = request.getResponseHeader("X-OAuth-Scopes")
             %br
             Rate Limit Remaining:
-            = @getResponseHeader("X-RateLimit-Remaining")
+            = request.getResponseHeader("X-RateLimit-Remaining")
             = " / 5000"
           - else
             %button(click=redirect) Auth
