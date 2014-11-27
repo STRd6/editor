@@ -1,8 +1,8 @@
 Display some info about the current repository
 
     .repo_info
-      - each this, ->
+      - if info = this()
         %div
-          = @full_name
+          = info.full_name
           :
-          = @branch
+          = info.branch
