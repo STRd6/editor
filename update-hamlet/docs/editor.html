@@ -90,7 +90,7 @@ when complete.</p>
             <div class="content"><pre><code class="lang-coffeescript">    build: -&gt;
       data = filetree.data()
 
-      builder.build(data)
+      Q(builder.build(data))
       .<span class="keyword">then</span> (pkg) -&gt;
         config = readSourceConfig(pkg)
 
@@ -172,6 +172,9 @@ when complete.</p>
   self.include(Runners)
   self.include(Actions)
 
+  extend require(<span class="string">"postmaster"</span>)(),
+    load: self.loadFiles
+
   <span class="keyword">return</span> self</code></pre>
 </div>
         </li>
@@ -211,8 +214,7 @@ when complete.</p>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js"></script>
-<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
-<script src="http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js"></script><script>
+<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script><script>
   (function() {
   var ErrorReporter, bindUpdates, createEditor, exec, findInteractiveElements, readShebang, runners;
 

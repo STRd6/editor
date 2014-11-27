@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>templates/repo_info</title>
+  <title>lib/ui</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="http://strd6.github.io/cdn/parallel/docco.css" />
@@ -18,15 +18,49 @@
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <p>Display some info about the current repository</p>
+              <h1 id="ui-helpers">UI Helpers</h1>
 
             </div>
-            <div class="content"><pre><code class="lang-haml">.repo_info
-  - if info = this()
-    %div
-      = info.full_name
-      :
-      = info.branch</code></pre>
+            <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>UI helpers that return promises.</p>
+<p>Currently just wrapping native JS ui methods, but could be expanded in the
+future to have their own look and feel.</p>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">Q = require <span class="string">"q"</span>
+
+<span class="function"><span class="title">confirm</span></span> = (message) -&gt;
+  deferred = Q.defer()
+
+  <span class="keyword">if</span> confirm(message)
+    deferred.resolve()
+  <span class="keyword">else</span>
+    deferred.reject()
+
+  <span class="keyword">return</span> deferred.promise
+
+<span class="function"><span class="title">confirmIf</span></span> = (shouldConfirm, message) -&gt;
+  <span class="keyword">if</span> shouldConfirm
+    <span class="keyword">if</span> window.confirm(message)
+      Q.fcall -&gt;
+    <span class="keyword">else</span>
+      Q.fcall -&gt; <span class="keyword">throw</span> <span class="string">"Cancelled"</span>
+  <span class="keyword">else</span>
+    Q.fcall -&gt;
+
+module.exports =
+  confirm: confirm
+  confirmIf: confirmIf</code></pre>
 </div>
         </li>
         

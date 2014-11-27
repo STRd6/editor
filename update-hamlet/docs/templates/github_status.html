@@ -40,14 +40,14 @@
 
 .status
   - github = this
-  - each @lastRequest, -&gt;
+  - if request = @lastRequest()
     %div
-      - if @getAllResponseHeaders and @getAllResponseHeaders().match(/X-RateLimit-Limit: 5000/)
+      - if request.getAllResponseHeaders and request.getAllResponseHeaders().match(/X-RateLimit-Limit: 5000/)
         Authenticated Scopes:
-        = @getResponseHeader(&quot;X-OAuth-Scopes&quot;)
+        = request.getResponseHeader(&quot;X-OAuth-Scopes&quot;)
         %br
         Rate Limit Remaining:
-        = @getResponseHeader(&quot;X-RateLimit-Remaining&quot;)
+        = request.getResponseHeader(&quot;X-RateLimit-Remaining&quot;)
         = &quot; / 5000&quot;
       - else
         %button(click=redirect) Auth</code></pre>
@@ -60,8 +60,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js"></script>
-<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
-<script src="http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js"></script><script>
+<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script><script>
   (function() {
   var ErrorReporter, bindUpdates, createEditor, exec, findInteractiveElements, readShebang, runners;
 

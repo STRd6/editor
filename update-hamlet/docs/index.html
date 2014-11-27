@@ -76,27 +76,22 @@ but I had no idea what I was doing and still don&#39;t know to this day.</p>
 <li><a href="/hygiene/docs">Hygiene</a></li>
 <li><a href="/runtime/docs">Runtime</a></li>
 </ul>
-<p>TODO: This needs a big cleanup.</p>
+<p>TODO: This needs a big cleanup.    </p>
 
             </div>
-            <div class="content"><pre><code class="lang-coffeescript"><span class="comment"># Get stuff from our package</span>
-{source:files} = PACKAGE
-
-require <span class="string">"./source/duct_tape"</span>
-require <span class="string">"./source/deferred"</span>
+            <div class="content"><pre><code class="lang-coffeescript">require <span class="string">"cornerstone"</span>
+Q = require <span class="string">"q"</span>
+{confirmIf} = require <span class="string">"../lib/ui"</span>
 {processDirectory} = require <span class="string">"./source/util"</span>
 
 global.PACKAGE = PACKAGE
 global.require = require
 
-<span class="comment"># TODO: Have each component import observable as needed</span>
-global.Observable = require <span class="string">"observable"</span>
-
 require(<span class="string">"analytics"</span>).init(<span class="string">"UA-3464282-15"</span>)
 
 <span class="comment"># Create and auth a github API</span>
 <span class="comment"># Global until we consolidate editor/actions into something cleaner</span>
-global.github = require(<span class="string">"github"</span>)(require(<span class="string">"./source/github_auth"</span>)())
+global.github = require(<span class="string">"github"</span>)(require(<span class="string">"./source/github_auth"</span>))
 
 ValueWidget = require <span class="string">"value-widget"</span></code></pre>
 </div>
@@ -134,10 +129,9 @@ ValueWidget = require <span class="string">"value-widget"</span></code></pre>
             <div class="content"><pre><code class="lang-coffeescript">Editor = require(<span class="string">"./editor"</span>)
 
 editor = global.editor = Editor()
-editor.loadFiles(files)
+editor.loadFiles(PACKAGE.source)
 
-<span class="comment"># TODO: Don't expose these</span>
-builder = editor.builder()
+<span class="comment"># TODO: Don't expose this</span>
 filetree = editor.filetree()
 
 {File} = require <span class="string">"filetree"</span>
@@ -173,10 +167,14 @@ repository.observe (repository) -&gt;
 
 PACKAGE.repository.url ||= <span class="string">"repos/<span class="subst">#{PACKAGE.repository.full_name}</span>"</span>
 
-repository github.Repository(PACKAGE.repository)
+<span class="comment"># Need to delay this slightly so our auth token deferred has time to load</span>
+<span class="comment"># TODO: Make better use of observables and computed functions so the timing</span>
+<span class="comment"># doesn't matter</span>
+setTimeout -&gt;
+  repository github.Repository(PACKAGE.repository)
 
 <span class="function"><span class="title">confirmUnsaved</span></span> = -&gt;
-  Deferred.ConfirmIf(filetree.hasUnsavedChanges(), <span class="string">"You will lose unsaved changes in your current branch, continue?"</span>)
+  confirmIf(filetree.hasUnsavedChanges(), <span class="string">"You will lose unsaved changes in your current branch, continue?"</span>)
 
 <span class="function"><span class="title">closeOpenEditors</span></span> = -&gt;
   root = $root.children(<span class="string">".main"</span>)
@@ -199,18 +197,22 @@ actions =
       notify <span class="string">"Saved and published!"</span>
     .fail (args...) -&gt;
       errors args
+    .done()
 
   run: -&gt;
     notify <span class="string">"Running..."</span>
 
     editor.run()
     .fail classicError
+    .done()
 
   test: -&gt;
     notify <span class="string">"Running tests..."</span>
 
     editor.test()
-    .fail errors
+    .fail (e) -&gt;
+      errors [].concat(e)
+    .done()
 
   docs: -&gt;
     notify <span class="string">"Running Docs..."</span>
@@ -218,39 +220,7 @@ actions =
     <span class="keyword">if</span> file = prompt(<span class="string">"Docs file"</span>, <span class="string">"index"</span>)
       editor.runDocs({file})
       .fail errors
-
-  publish_chrapp: -&gt;
-    Chrapps = require <span class="string">"chrapps"</span>
-
-    notify <span class="string">"Chrapping..."</span>
-
-    editor.build().<span class="keyword">then</span> (pkg) -&gt;
-      editor.repository().publish(Chrapps.processPackage(pkg), <span class="literal">undefined</span>, <span class="string">"chrapps"</span>)
-    .<span class="keyword">then</span> -&gt;
-      notify <span class="string">"Chrapped!"</span>
-    .fail (args...) -&gt;
-      errors args
-
-  convert_data: -&gt;
-    converter = require(<span class="string">"./lib/converter"</span>).convertDataToJSON
-
-    converter
-      editor: editor
-      outputFileName: <span class="string">"images.json"</span>
-      matcher: <span class="regexp">/^images\/(.*)\.png$/</span>
-      mimeType: <span class="string">"image/png"</span>
-
-    converter
-      editor: editor
-      outputFileName: <span class="string">"sounds.json"</span>
-      matcher: <span class="regexp">/^sounds\/(.*)\.wav$/</span>
-      mimeType: <span class="string">"audio/wav"</span>
-
-    converter
-      editor: editor
-      outputFileName: <span class="string">"music.json"</span>
-      matcher: <span class="regexp">/^sounds\/(.*)\.mp3$/</span>
-      mimeType: <span class="string">"audio/mp3"</span>
+      .done()
 
   new_file: -&gt;
     <span class="keyword">if</span> name = prompt(<span class="string">"File Name"</span>, <span class="string">"newfile.coffee"</span>)
@@ -270,7 +240,7 @@ actions =
       <span class="keyword">if</span> fullName
         github.repository(fullName).<span class="keyword">then</span> repository
       <span class="keyword">else</span>
-        Deferred().reject(<span class="string">"No repo given"</span>)
+        Q.fcall -&gt; <span class="keyword">throw</span> <span class="string">"No repo given"</span>
     .<span class="keyword">then</span> (repositoryInstance) -&gt;
       notify <span class="string">"Loading files..."</span>
 
@@ -281,6 +251,7 @@ actions =
 
         notifications.push <span class="string">"Loaded"</span>
     .fail classicError
+    .done()
 
   new_feature: -&gt;
     <span class="keyword">if</span> title = prompt(<span class="string">"Description"</span>)
@@ -300,6 +271,7 @@ actions =
 
         notifications.push <span class="string">"Created!"</span>
       , classicError
+      .done()
 
   pull_master: -&gt;
     confirmUnsaved()
@@ -319,6 +291,7 @@ actions =
         notifications.push <span class="string">"Loaded!"</span>
       .fail -&gt;
         classicError <span class="string">"Error loading <span class="subst">#{repository().url()}</span>"</span>
+    .done()
 
   pull_upstream: -&gt;
     confirmUnsaved()
@@ -338,6 +311,7 @@ actions =
     ).<span class="keyword">then</span> -&gt;
       notifications.push <span class="string">"\nYour code is up to date with the upstream master"</span>
       closeOpenEditors()
+    .done()
 
   tag_version: -&gt;
     notify <span class="string">"Building..."</span>
@@ -362,6 +336,7 @@ actions =
         notifications.push <span class="string">"Published!"</span>
 
     .fail classicError
+    .done()
 
 hotReload = (-&gt;
   editor.hotReload()
@@ -461,8 +436,7 @@ window.<span class="function"><span class="title">onbeforeunload</span></span> =
 <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js"></script>
-<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
-<script src="http://www.danielx.net/tempest/javascripts/envweb-v0.4.7.js"></script><script>
+<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script><script>
   (function() {
   var ErrorReporter, bindUpdates, createEditor, exec, findInteractiveElements, readShebang, runners;
 
