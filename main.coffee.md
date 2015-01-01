@@ -27,7 +27,7 @@ Components
 - [Hygiene](/hygiene/docs)
 - [Runtime](/runtime/docs)
 
-TODO: This needs a big cleanup.    
+TODO: This needs a big cleanup.
 
     require "cornerstone"
     Q = require "q"
