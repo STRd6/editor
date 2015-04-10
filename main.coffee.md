@@ -72,6 +72,10 @@ Templates
 
     notifications = require("notifications")()
     {classicError, notify, errors} = notifications
+    extend editor,
+      classicError: classicError
+      notify: notify
+      errors: errors
 
     Runtime(PACKAGE)
       .boot()
@@ -108,163 +112,7 @@ Templates
       root = $root.children(".main")
       root.find("iframe").remove()
 
-    actions =
-      save: ->
-        notify "Saving..."
-
-        editor.save()
-        .then ->
-          # TODO: This could get slightly out of sync if there were changes
-          # during the async call
-          # The correct solution will be to use git shas to determine changed status
-          # but that's a little heavy duty for right now.
-          filetree.markSaved()
-
-          editor.publish()
-        .then ->
-          notify "Saved and published!"
-        .fail (args...) ->
-          errors args
-        .done()
-
-      run: ->
-        notify "Running..."
-
-        editor.run()
-        .fail classicError
-        .done()
-
-      test: ->
-        notify "Running tests..."
-
-        editor.test()
-        .fail (e) ->
-          errors [].concat(e)
-        .done()
-
-      docs: ->
-        notify "Running Docs..."
-
-        if file = prompt("Docs file", "index")
-          editor.runDocs({file})
-          .fail errors
-          .done()
-
-      new_file: ->
-        if name = prompt("File Name", "newfile.coffee")
-          file = File
-            path: name
-            content: ""
-          filetree.files.push file
-          filetree.selectedFile file
-
-      load_repo: (skipPrompt) ->
-        confirmUnsaved()
-        .then ->
-          currentRepositoryName = repository().full_name()
-
-          fullName = prompt("Github repo", currentRepositoryName)
-
-          if fullName
-            github.repository(fullName).then repository
-          else
-            Q.fcall -> throw "No repo given"
-        .then (repositoryInstance) ->
-          notify "Loading files..."
-
-          editor.load
-            repository: repositoryInstance
-          .then ->
-            closeOpenEditors()
-
-            notifications.push "Loaded"
-        .fail classicError
-        .done()
-
-      new_feature: ->
-        if title = prompt("Description")
-          notify "Creating feature branch..."
-
-          editor.repository().createPullRequest
-            title: title
-          .then (data) ->
-            issue = Issue(data)
-            issues.issues.push issue
-
-            # TODO: Standardize this like backbone or something
-            # or think about using deferreds in some crazy way
-            issues.silent = true
-            issues.currentIssue issue
-            issues.silent = false
-
-            notifications.push "Created!"
-          , classicError
-          .done()
-
-      pull_master: ->
-        confirmUnsaved()
-        .then( ->
-          notify "Merging in default branch..."
-          repository().pullFromBranch()
-        , classicError
-        ).then ->
-          notifications.push "Merged!"
-
-          branchName = repository().branch()
-          notifications.push "\nReloading branch #{branchName}..."
-
-          editor.load
-            repository: repository()
-          .then ->
-            notifications.push "Loaded!"
-          .fail ->
-            classicError "Error loading #{repository().url()}"
-        .done()
-
-      pull_upstream: ->
-        confirmUnsaved()
-        .then( ->
-          notify "Pulling from upstream master"
-
-          upstreamRepo = repository().parent().full_name
-
-          github.repository(upstreamRepo)
-          .then (repository) ->
-            repository.latestContent()
-          .then (results) ->
-            files = processDirectory results
-            editor.loadFiles files
-
-        , classicError
-        ).then ->
-          notifications.push "\nYour code is up to date with the upstream master"
-          closeOpenEditors()
-        .done()
-
-      tag_version: ->
-        notify "Building..."
-
-        editor.build()
-        .then (pkg) ->
-          version = "v#{readSourceConfig(pkg).version}"
-
-          notify "Tagging version #{version} ..."
-
-          repository().createRef("refs/tags/#{version}")
-          .then ->
-            notifications.push "Tagged #{version}"
-          .then ->
-            notifications.push "\nPublishing..."
-
-            # Force branch for jsonp wrapper
-            pkg.repository.branch = version
-
-            repository().publish Packager.standAlone(pkg), version
-          .then ->
-            notifications.push "Published!"
-
-        .fail classicError
-        .done()
+    actions = require("./actions")(editor)
 
     hotReload = (->
       editor.hotReload()
@@ -344,6 +192,7 @@ Templates
 
     $root
       .append require("./templates/editor")(
+        editor: editor
         filetree: filetree
         actions: actions
         notifications: notifications
