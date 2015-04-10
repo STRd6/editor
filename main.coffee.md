@@ -112,7 +112,7 @@ Templates
       root = $root.children(".main")
       root.find("iframe").remove()
 
-    actions = require("./actions")(editor)
+    editor.include require("./actions")
 
     hotReload = (->
       editor.hotReload()
@@ -194,7 +194,7 @@ Templates
       .append require("./templates/editor")(
         editor: editor
         filetree: filetree
-        actions: actions
+        actions: editor.actions
         notifications: notifications
         issues: issues
         github: github

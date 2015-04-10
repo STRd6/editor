@@ -6,8 +6,8 @@ the editor.
 Render a series of buttons, one for each action.
 
       %span
-        - @actions.each ([name, fn]) ->
-          %button(click=fn)
+        - @actions.each ({name, handler}) ->
+          %button(click=handler)
             = name.titleize()
 
 The issues selector is also rendered in the actions bar.

@@ -3,10 +3,20 @@ Actions
 
 Action buttons that do stuff in the editor
 
-    module.exports = (editor) ->
-      {notify, errors, classicError} = editor
+TODO: Pass editor as an arg to actions
 
-      actions =
+    module.exports = (I, self) ->
+      {notify, errors, classicError} = editor = self
+
+      actions = self.actions = Observable []
+
+      self.addAction = (name, fn) ->
+        actions.push
+          name: name
+          handler: ->
+            fn(self)
+
+      actionData =
         save: ->
           notify "Saving..."
   
@@ -69,5 +79,5 @@ Action buttons that do stuff in the editor
           .fail classicError
           .done()
 
-      Object.keys(actions).map (name) ->
-        [name, actions[name]]
+      Object.keys(actionData).forEach (name) ->
+        self.addAction name, actionData[name]
