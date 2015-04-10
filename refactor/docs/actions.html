@@ -33,12 +33,21 @@
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
               <p>Action buttons that do stuff in the editor</p>
+<p>TODO: Pass editor as an arg to actions</p>
 
             </div>
-            <div class="content"><pre><code class="lang-coffeescript">module.<span class="function"><span class="title">exports</span></span> = (editor) -&gt;
-  {notify, errors, classicError} = editor
+            <div class="content"><pre><code class="lang-coffeescript">module.<span class="function"><span class="title">exports</span></span> = (I, self) -&gt;
+  {notify, errors, classicError} = editor = self
 
-  actions =
+  actions = self.actions = Observable []
+
+  self.<span class="function"><span class="title">addAction</span></span> = (name, fn) -&gt;
+    actions.push
+      name: name
+      handler: -&gt;
+        fn(self)
+
+  actionData =
     save: -&gt;
       notify <span class="string">"Saving..."</span>
 
@@ -101,8 +110,8 @@
       .fail classicError
       .done()
 
-  Object.keys(actions).map (name) -&gt;
-    [name, actions[name]]</code></pre>
+  Object.keys(actionData).forEach (name) -&gt;
+    self.addAction name, actionData[name]</code></pre>
 </div>
         </li>
         

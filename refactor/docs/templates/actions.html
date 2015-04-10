@@ -36,8 +36,8 @@ the editor.</p>
 
             </div>
             <div class="content"><pre><code class="lang-haml">  %span
-    - @actions.each ([name, fn]) -&gt;
-      %button(click=fn)
+    - @actions.each ({name, handler}) -&gt;
+      %button(click=handler)
         = name.titleize()</code></pre>
 </div>
         </li>

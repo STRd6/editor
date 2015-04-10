@@ -184,7 +184,7 @@ setTimeout -&gt;
   root = $root.children(<span class="string">".main"</span>)
   root.find(<span class="string">"iframe"</span>).remove()
 
-actions = require(<span class="string">"./actions"</span>)(editor)
+editor.include require(<span class="string">"./actions"</span>)
 
 hotReload = (-&gt;
   editor.hotReload()
@@ -266,7 +266,7 @@ $root
   .append require(<span class="string">"./templates/editor"</span>)(
     editor: editor
     filetree: filetree
-    actions: actions
+    actions: editor.actions
     notifications: notifications
     issues: issues
     github: github
