@@ -9,6 +9,18 @@ TODO: Pass editor as an arg to actions
     Q = require "q"
     S3Uploader = require "s3-uploader"
 
+    POLICY_KEY = "S3Policy"
+    getS3Credentials = ->
+      Q.fcall ->
+        JSON.parse localStorage[POLICY_KEY]
+      .fail ->
+        policyString = prompt "S3 Upload Policy"
+        policy = JSON.parse(policyString)
+        if policy
+          localStorage[POLICY_KEY] = policyString
+
+          return policy
+
     module.exports = (I, self) ->
       actions = self.actions = Observable []
 
@@ -32,8 +44,10 @@ TODO: Pass editor as an arg to actions
 
             editor.build()
           .then (pkg) ->
-            console.log pkg
-            # TODO: Upload to S3
+            getS3Credentials().then (policy) ->
+              console.log policy
+              console.log pkg
+              # TODO: Upload to S3
           .then ->
             editor.notify "Saved and published!"
           .fail (args...) ->
