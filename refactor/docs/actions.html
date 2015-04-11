@@ -40,8 +40,6 @@
 Q = require <span class="string">"q"</span>
 
 module.<span class="function"><span class="title">exports</span></span> = (I, self) -&gt;
-  {notify, errors, classicError} = editor = self
-
   actions = self.actions = Observable []
 
   self.<span class="function"><span class="title">addAction</span></span> = (name, fn) -&gt;
