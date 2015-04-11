@@ -36,7 +36,10 @@
 <p>TODO: Pass editor as an arg to actions</p>
 
             </div>
-            <div class="content"><pre><code class="lang-coffeescript">module.<span class="function"><span class="title">exports</span></span> = (I, self) -&gt;
+            <div class="content"><pre><code class="lang-coffeescript">{File} = require <span class="string">"filetree"</span>
+Q = require <span class="string">"q"</span>
+
+module.<span class="function"><span class="title">exports</span></span> = (I, self) -&gt;
   {notify, errors, classicError} = editor = self
 
   actions = self.actions = Observable []
@@ -48,8 +51,8 @@
         fn(self)
 
   actionData =
-    save: -&gt;
-      notify <span class="string">"Saving..."</span>
+    save: (editor) -&gt;
+      editor.notify <span class="string">"Saving..."</span>
 
       editor.save()
       .<span class="keyword">then</span> -&gt;
@@ -61,44 +64,44 @@
 
         editor.publish()
       .<span class="keyword">then</span> -&gt;
-        notify <span class="string">"Saved and published!"</span>
+        editor.notify <span class="string">"Saved and published!"</span>
       .fail (args...) -&gt;
-        errors args
+        editor.errors args
       .done()
 
-    run: -&gt;
-      notify <span class="string">"Running..."</span>
+    run: (editor) -&gt;
+      editor.notify <span class="string">"Running..."</span>
 
       editor.run()
-      .fail classicError
+      .fail editor.classicError
       .done()
 
-    test: -&gt;
-      notify <span class="string">"Running tests..."</span>
+    test: (editor) -&gt;
+      editor.notify <span class="string">"Running tests..."</span>
 
       editor.test()
       .fail (e) -&gt;
-        errors [].concat(e)
+        editor.errors [].concat(e)
       .done()
 
-    docs: -&gt;
-      notify <span class="string">"Running Docs..."</span>
+    docs: (editor) -&gt;
+      editor.notify <span class="string">"Running Docs..."</span>
 
       <span class="keyword">if</span> file = prompt(<span class="string">"Docs file"</span>, <span class="string">"index"</span>)
         editor.runDocs({file})
-        .fail errors
+        .fail editor.errors
         .done()
 
-    new_file: -&gt;
+    new_file: (editor) -&gt;
       <span class="keyword">if</span> name = prompt(<span class="string">"File Name"</span>, <span class="string">"newfile.coffee"</span>)
         file = File
           path: name
           content: <span class="string">""</span>
-        editor.filetree.files.push file
-        editor.filetree.selectedFile file
+        editor.filetree().files.push file
+        editor.filetree().selectedFile file
 
-    load_package: -&gt;
-      confirmUnsaved()
+    load_package: (editor) -&gt;
+      editor.confirmUnsaved()
       .<span class="keyword">then</span> -&gt;
         <span class="keyword">if</span> url = prompt(<span class="string">"Package URL"</span>)
           Q(jQuery.getJSON(url))
@@ -107,7 +110,7 @@
             editor.loadFiles(p.source)
         <span class="keyword">else</span>
           Q.fcall -&gt; <span class="keyword">throw</span> <span class="string">"No url given"</span>
-      .fail classicError
+      .fail editor.classicError
       .done()
 
   Object.keys(actionData).forEach (name) -&gt;
