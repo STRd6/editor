@@ -9,8 +9,6 @@ TODO: Pass editor as an arg to actions
     Q = require "q"
 
     module.exports = (I, self) ->
-      {notify, errors, classicError} = editor = self
-
       actions = self.actions = Observable []
 
       self.addAction = (name, fn) ->
