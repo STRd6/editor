@@ -26,5 +26,6 @@ dependencies:
   q: "distri/q:v1.0.1"
   runner: "distri/runner:v0.3.0"
   runtime: "distri/runtime:v0.3.0"
+  "s3-uploader": "distri/s3-uploader:v0.1.2"
   tests: "distri/tests:v0.1.1"
   "value-widget": "distri/value-widget:v0.1.2"

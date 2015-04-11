@@ -2,7 +2,6 @@ Editor
 ======
 
     Runners = require "./runners"
-    Actions = require("./source/actions")
     Builder = require("builder")
     Packager = require("packager")
     {Filetree, File} = require("filetree")
@@ -110,7 +109,6 @@ Likewise we shouldn't expose the builder directly either.
           readSourceConfig(source: arrayToHash(filetree.data()))
 
       self.include(Runners)
-      self.include(Actions)
 
       extend require("postmaster")(),
         load: self.loadFiles

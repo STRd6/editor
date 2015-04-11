@@ -7,6 +7,7 @@ TODO: Pass editor as an arg to actions
 
     {File} = require "filetree"
     Q = require "q"
+    S3Uploader = require "s3-uploader"
 
     module.exports = (I, self) ->
       actions = self.actions = Observable []
@@ -18,9 +19,9 @@ TODO: Pass editor as an arg to actions
             fn(self)
 
       actionData =
-        save: (editor) ->
-          editor.notify "Saving..."
-  
+        publish: (editor) ->
+          editor.notify "Publishing..."
+
           editor.save()
           .then ->
             # TODO: This could get slightly out of sync if there were changes
@@ -28,14 +29,17 @@ TODO: Pass editor as an arg to actions
             # The correct solution will be to use git shas to determine changed status
             # but that's a little heavy duty for right now.
             editor.filetree.markSaved()
-  
-            editor.publish()
+
+            editor.build()
+          .then (pkg) ->
+            console.log pkg
+            # TODO: Upload to S3
           .then ->
             editor.notify "Saved and published!"
           .fail (args...) ->
             editor.errors args
           .done()
-  
+
         run: (editor) ->
           editor.notify "Running..."
   
