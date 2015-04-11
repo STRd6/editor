@@ -20,6 +20,8 @@ TODO: Pass editor as an arg to actions
           localStorage[POLICY_KEY] = policyString
 
           return policy
+        else
+          throw "No policy given"
 
     module.exports = (I, self) ->
       actions = self.actions = Observable []
