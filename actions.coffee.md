@@ -5,6 +5,9 @@ Action buttons that do stuff in the editor
 
 TODO: Pass editor as an arg to actions
 
+    {File} = require "filetree"
+    Q = require "q"
+
     module.exports = (I, self) ->
       {notify, errors, classicError} = editor = self
 
@@ -17,8 +20,8 @@ TODO: Pass editor as an arg to actions
             fn(self)
 
       actionData =
-        save: ->
-          notify "Saving..."
+        save: (editor) ->
+          editor.notify "Saving..."
   
           editor.save()
           .then ->
@@ -30,44 +33,44 @@ TODO: Pass editor as an arg to actions
   
             editor.publish()
           .then ->
-            notify "Saved and published!"
+            editor.notify "Saved and published!"
           .fail (args...) ->
-            errors args
+            editor.errors args
           .done()
   
-        run: ->
-          notify "Running..."
+        run: (editor) ->
+          editor.notify "Running..."
   
           editor.run()
-          .fail classicError
+          .fail editor.classicError
           .done()
   
-        test: ->
-          notify "Running tests..."
+        test: (editor) ->
+          editor.notify "Running tests..."
   
           editor.test()
           .fail (e) ->
-            errors [].concat(e)
+            editor.errors [].concat(e)
           .done()
   
-        docs: ->
-          notify "Running Docs..."
+        docs: (editor) ->
+          editor.notify "Running Docs..."
   
           if file = prompt("Docs file", "index")
             editor.runDocs({file})
-            .fail errors
+            .fail editor.errors
             .done()
   
-        new_file: ->
+        new_file: (editor) ->
           if name = prompt("File Name", "newfile.coffee")
             file = File
               path: name
               content: ""
-            editor.filetree.files.push file
-            editor.filetree.selectedFile file
+            editor.filetree().files.push file
+            editor.filetree().selectedFile file
   
-        load_package: ->
-          confirmUnsaved()
+        load_package: (editor) ->
+          editor.confirmUnsaved()
           .then ->
             if url = prompt("Package URL")
               Q(jQuery.getJSON(url))
@@ -76,7 +79,7 @@ TODO: Pass editor as an arg to actions
                 editor.loadFiles(p.source)
             else
               Q.fcall -> throw "No url given"
-          .fail classicError
+          .fail editor.classicError
           .done()
 
       Object.keys(actionData).forEach (name) ->
