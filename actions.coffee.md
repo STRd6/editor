@@ -28,7 +28,7 @@ TODO: Pass editor as an arg to actions
             # during the async call
             # The correct solution will be to use git shas to determine changed status
             # but that's a little heavy duty for right now.
-            editor.filetree.markSaved()
+            editor.filetree().markSaved()
 
             editor.build()
           .then (pkg) ->
