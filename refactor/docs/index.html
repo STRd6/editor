@@ -129,7 +129,15 @@ ValueWidget = require <span class="string">"value-widget"</span></code></pre>
             <div class="content"><pre><code class="lang-coffeescript">Editor = require(<span class="string">"./editor"</span>)
 
 editor = global.editor = Editor()
-editor.loadFiles(PACKAGE.source)
+
+<span class="comment"># TODO: Think about tracking this state better</span>
+<span class="comment"># It shouldn't just be loading the files of the package, but</span>
+<span class="comment"># actually loading the entire package as our model to be edited</span>
+<span class="comment"># this way recursive dependency exploring would work</span>
+<span class="keyword">if</span> p = ENV?.APP_STATE?.PACKAGE
+  editor.loadFiles(p.source)
+<span class="keyword">else</span>
+  editor.loadFiles(PACKAGE.source)
 
 <span class="comment"># TODO: Don't expose this</span>
 filetree = editor.filetree()
@@ -154,28 +162,6 @@ Runtime(PACKAGE)
   .applyStyleSheet(require(<span class="string">'./style'</span>))
 
 $root = $(<span class="string">"body"</span>)
-
-<span class="comment"># Branch Chooser using pull requests</span>
-{models:{Issue, Issues}} = require(<span class="string">"issues"</span>)
-issues = Issues()
-
-<span class="comment"># Github repository observable</span>
-<span class="comment"># TODO: Finalize move into editor module</span>
-repository = editor.repository
-
-repository.observe (repository) -&gt;
-  issues.repository = repository
-  repository.pullRequests().<span class="keyword">then</span> issues.reset
-
-  notify <span class="string">"Loaded repository: <span class="subst">#{repository.full_name()}</span>"</span>
-
-PACKAGE.repository.url ||= <span class="string">"repos/<span class="subst">#{PACKAGE.repository.full_name}</span>"</span>
-
-<span class="comment"># Need to delay this slightly so our auth token deferred has time to load</span>
-<span class="comment"># TODO: Make better use of observables and computed functions so the timing</span>
-<span class="comment"># doesn't matter</span>
-setTimeout -&gt;
-  repository github.Repository(PACKAGE.repository)
 
 <span class="function"><span class="title">confirmUnsaved</span></span> = -&gt;
   confirmIf(filetree.hasUnsavedChanges(), <span class="string">"You will lose unsaved changes in your current branch, continue?"</span>)
@@ -223,54 +209,12 @@ filetree.selectedFile.observe (file) -&gt;
 
       hotReload()
 
-issues?.currentIssue.observe (issue) -&gt;
-  <span class="comment"># TODO: Formalize this later</span>
-  <span class="keyword">return</span> <span class="keyword">if</span> issues.silent
-
-  <span class="function"><span class="title">changeBranch</span></span> = (branchName) -&gt;
-    previousBranch = repository().branch()
-
-    confirmUnsaved()
-    .<span class="keyword">then</span> -&gt;
-      closeOpenEditors()
-
-      <span class="comment"># Switch to branch for working on the issue</span>
-      repository().switchToBranch(branchName)
-      .<span class="keyword">then</span> -&gt;
-        notifications.push <span class="string">"\nLoading branch <span class="subst">#{branchName}</span>..."</span>
-
-        editor.load
-          repository: repository()
-        .<span class="keyword">then</span> -&gt;
-          notifications.push <span class="string">"Loaded!"</span>
-    , -&gt;
-      <span class="comment"># TODO: Issue will appear as being selected even though we cancelled</span>
-      <span class="comment"># To correctly handle this we may need to really beef up our observables.</span>
-      <span class="comment"># One possibility is to extend observables to full fledged deferreds</span>
-      <span class="comment"># which can be rejected by listeners added to the chain.</span>
-
-      repository.branch(previousBranch)
-
-      classicError <span class="string">"Error switching to <span class="subst">#{branchName}</span>, still on <span class="subst">#{previousBranch}</span>"</span>
-
-  <span class="keyword">if</span> issue?.branchName?
-    notify issue.fullDescription()
-
-    changeBranch issue.branchName()
-  <span class="keyword">else</span>
-    notify <span class="string">"Default branch selected"</span>
-
-    changeBranch repository().defaultBranch()
-
 $root
   .append require(<span class="string">"./templates/editor"</span>)(
     editor: editor
     filetree: filetree
     actions: editor.actions
     notifications: notifications
-    issues: issues
-    github: github
-    repository: repository
   )
 
 window.<span class="function"><span class="title">onbeforeunload</span></span> = -&gt;

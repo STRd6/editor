@@ -139,6 +139,16 @@ module.<span class="function"><span class="title">exports</span></span> = (I, se
       .fail editor.classicError
       .done()
 
+    explore_dependency: (editor) -&gt;
+      name = prompt <span class="string">"Dependency Name"</span>
+      <span class="keyword">if</span> name
+        {PackageRunner} = require <span class="string">"runner"</span>
+
+        <span class="comment"># Fork editor</span>
+        PackageRunner().launch PACKAGE,
+          <span class="comment"># Load dependency in child</span>
+          PACKAGE: PACKAGE.dependencies[name]
+
   Object.keys(actionData).forEach (name) -&gt;
     self.addAction name, actionData[name]</code></pre>
 </div>
