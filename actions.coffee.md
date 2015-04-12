@@ -49,9 +49,16 @@ TODO: Pass editor as an arg to actions
             getS3Credentials().then (policy) ->
               console.log policy
               console.log pkg
-              # TODO: Upload to S3
-          .then ->
-            editor.notify "Saved and published!"
+
+              blob = new Blob [JSON.stringify(pkg)],
+                type: "application/json"
+              SHA1(blob).then (sha) ->
+                S3Uploader(policy).upload
+                  key: "data/#{sha}"
+                  blob: blob
+                  cacheControl: 31536000
+          .then (url) ->
+            editor.notify "Saved and published as #{url}"
           .fail (args...) ->
             editor.errors args
           .done()
