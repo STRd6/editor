@@ -107,6 +107,16 @@ TODO: Pass editor as an arg to actions
               Q.fcall -> throw "No url given"
           .fail editor.classicError
           .done()
+        
+        explore_dependency: (editor) ->
+          name = prompt "Dependency Name"
+          if name
+            {PackageRunner} = require "runner"
+
+            # Fork editor
+            PackageRunner().launch PACKAGE,
+              # Load dependency in child
+              PACKAGE: PACKAGE.dependencies[name]
 
       Object.keys(actionData).forEach (name) ->
         self.addAction name, actionData[name]

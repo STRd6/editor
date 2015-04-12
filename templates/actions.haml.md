@@ -9,7 +9,3 @@ Render a series of buttons, one for each action.
         - @actions.each ({name, handler}) ->
           %button(click=handler)
             = name.titleize()
-
-The issues selector is also rendered in the actions bar.
-
-      %select(value=@issues.currentIssue options=@issues.issues)

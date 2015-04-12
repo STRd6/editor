@@ -57,7 +57,15 @@ Templates
     Editor = require("./editor")
 
     editor = global.editor = Editor()
-    editor.loadFiles(PACKAGE.source)
+
+    # TODO: Think about tracking this state better
+    # It shouldn't just be loading the files of the package, but
+    # actually loading the entire package as our model to be edited
+    # this way recursive dependency exploring would work
+    if p = ENV?.APP_STATE?.PACKAGE
+      editor.loadFiles(p.source)
+    else
+      editor.loadFiles(PACKAGE.source)
 
     # TODO: Don't expose this
     filetree = editor.filetree()
@@ -82,28 +90,6 @@ Templates
       .applyStyleSheet(require('./style'))
 
     $root = $("body")
-
-    # Branch Chooser using pull requests
-    {models:{Issue, Issues}} = require("issues")
-    issues = Issues()
-
-    # Github repository observable
-    # TODO: Finalize move into editor module
-    repository = editor.repository
-
-    repository.observe (repository) ->
-      issues.repository = repository
-      repository.pullRequests().then issues.reset
-
-      notify "Loaded repository: #{repository.full_name()}"
-
-    PACKAGE.repository.url ||= "repos/#{PACKAGE.repository.full_name}"
-
-    # Need to delay this slightly so our auth token deferred has time to load
-    # TODO: Make better use of observables and computed functions so the timing
-    # doesn't matter
-    setTimeout ->
-      repository github.Repository(PACKAGE.repository)
 
     confirmUnsaved = ->
       confirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
@@ -151,54 +137,12 @@ Templates
 
           hotReload()
 
-    issues?.currentIssue.observe (issue) ->
-      # TODO: Formalize this later
-      return if issues.silent
-
-      changeBranch = (branchName) ->
-        previousBranch = repository().branch()
-
-        confirmUnsaved()
-        .then ->
-          closeOpenEditors()
-
-          # Switch to branch for working on the issue
-          repository().switchToBranch(branchName)
-          .then ->
-            notifications.push "\nLoading branch #{branchName}..."
-
-            editor.load
-              repository: repository()
-            .then ->
-              notifications.push "Loaded!"
-        , ->
-          # TODO: Issue will appear as being selected even though we cancelled
-          # To correctly handle this we may need to really beef up our observables.
-          # One possibility is to extend observables to full fledged deferreds
-          # which can be rejected by listeners added to the chain.
-
-          repository.branch(previousBranch)
-
-          classicError "Error switching to #{branchName}, still on #{previousBranch}"
-
-      if issue?.branchName?
-        notify issue.fullDescription()
-
-        changeBranch issue.branchName()
-      else
-        notify "Default branch selected"
-
-        changeBranch repository().defaultBranch()
-
     $root
       .append require("./templates/editor")(
         editor: editor
         filetree: filetree
         actions: editor.actions
         notifications: notifications
-        issues: issues
-        github: github
-        repository: repository
       )
 
     window.onbeforeunload = ->
