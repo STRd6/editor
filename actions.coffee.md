@@ -8,6 +8,7 @@ TODO: Pass editor as an arg to actions
     {File} = require "filetree"
     Q = require "q"
     S3Uploader = require "s3-uploader"
+    SHA1 = require "sha1"
 
     POLICY_KEY = "S3Policy"
     getS3Credentials = ->
