@@ -39,10 +39,6 @@ TODO: This needs a big cleanup.
 
     require("analytics").init("UA-3464282-15")
 
-    # Create and auth a github API
-    # Global until we consolidate editor/actions into something cleaner
-    global.github = require("github")(require("./source/github_auth"))
-
     ValueWidget = require "value-widget"
 
 Templates
@@ -50,9 +46,7 @@ Templates
 
 - [Actions](./templates/actions)
 - [Editor](./templates/editor)
-- [Github Status](./templates/github_status)
 - [Text Editor](./templates/text_editor)
-- [Repo Info](./templates/repo_info)
 
     Editor = require("./editor")
 
