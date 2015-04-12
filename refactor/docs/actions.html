@@ -39,6 +39,7 @@
             <div class="content"><pre><code class="lang-coffeescript">{File} = require <span class="string">"filetree"</span>
 Q = require <span class="string">"q"</span>
 S3Uploader = require <span class="string">"s3-uploader"</span>
+SHA1 = require <span class="string">"sha1"</span>
 
 POLICY_KEY = <span class="string">"S3Policy"</span>
 <span class="function"><span class="title">getS3Credentials</span></span> = -&gt;
@@ -80,9 +81,16 @@ module.<span class="function"><span class="title">exports</span></span> = (I, se
         getS3Credentials().<span class="keyword">then</span> (policy) -&gt;
           console.log policy
           console.log pkg
-          <span class="comment"># TODO: Upload to S3</span>
-      .<span class="keyword">then</span> -&gt;
-        editor.notify <span class="string">"Saved and published!"</span>
+
+          blob = <span class="keyword">new</span> Blob [JSON.stringify(pkg)],
+            type: <span class="string">"application/json"</span>
+          SHA1(blob).<span class="keyword">then</span> (sha) -&gt;
+            S3Uploader(policy).upload
+              key: <span class="string">"data/<span class="subst">#{sha}</span>"</span>
+              blob: blob
+              cacheControl: <span class="number">31536000</span>
+      .<span class="keyword">then</span> (url) -&gt;
+        editor.notify <span class="string">"Saved and published as <span class="subst">#{url}</span>"</span>
       .fail (args...) -&gt;
         editor.errors args
       .done()
