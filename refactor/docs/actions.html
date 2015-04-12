@@ -38,6 +38,21 @@
             </div>
             <div class="content"><pre><code class="lang-coffeescript">{File} = require <span class="string">"filetree"</span>
 Q = require <span class="string">"q"</span>
+S3Uploader = require <span class="string">"s3-uploader"</span>
+
+POLICY_KEY = <span class="string">"S3Policy"</span>
+<span class="function"><span class="title">getS3Credentials</span></span> = -&gt;
+  Q.fcall -&gt;
+    JSON.parse localStorage[POLICY_KEY]
+  .fail -&gt;
+    policyString = prompt <span class="string">"S3 Upload Policy"</span>
+    policy = JSON.parse(policyString)
+    <span class="keyword">if</span> policy
+      localStorage[POLICY_KEY] = policyString
+
+      <span class="keyword">return</span> policy
+    <span class="keyword">else</span>
+      <span class="keyword">throw</span> <span class="string">"No policy given"</span>
 
 module.<span class="function"><span class="title">exports</span></span> = (I, self) -&gt;
   actions = self.actions = Observable []
@@ -49,8 +64,8 @@ module.<span class="function"><span class="title">exports</span></span> = (I, se
         fn(self)
 
   actionData =
-    save: (editor) -&gt;
-      editor.notify <span class="string">"Saving..."</span>
+    publish: (editor) -&gt;
+      editor.notify <span class="string">"Publishing..."</span>
 
       editor.save()
       .<span class="keyword">then</span> -&gt;
@@ -58,9 +73,14 @@ module.<span class="function"><span class="title">exports</span></span> = (I, se
         <span class="comment"># during the async call</span>
         <span class="comment"># The correct solution will be to use git shas to determine changed status</span>
         <span class="comment"># but that's a little heavy duty for right now.</span>
-        editor.filetree.markSaved()
+        editor.filetree().markSaved()
 
-        editor.publish()
+        editor.build()
+      .<span class="keyword">then</span> (pkg) -&gt;
+        getS3Credentials().<span class="keyword">then</span> (policy) -&gt;
+          console.log policy
+          console.log pkg
+          <span class="comment"># TODO: Upload to S3</span>
       .<span class="keyword">then</span> -&gt;
         editor.notify <span class="string">"Saved and published!"</span>
       .fail (args...) -&gt;

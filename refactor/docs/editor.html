@@ -35,7 +35,6 @@
               
             </div>
             <div class="content"><pre><code class="lang-coffeescript">Runners = require <span class="string">"./runners"</span>
-Actions = require(<span class="string">"./source/actions"</span>)
 Builder = require(<span class="string">"builder"</span>)
 Packager = require(<span class="string">"packager"</span>)
 {Filetree, File} = require(<span class="string">"filetree"</span>)
@@ -170,7 +169,6 @@ when complete.</p>
       readSourceConfig(source: arrayToHash(filetree.data()))
 
   self.include(Runners)
-  self.include(Actions)
 
   extend require(<span class="string">"postmaster"</span>)(),
     load: self.loadFiles
