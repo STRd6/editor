@@ -6,6 +6,7 @@ Action buttons that do stuff in the editor
 TODO: Pass editor as an arg to actions
 
     {File} = require "filetree"
+    {PackageRunner} = require "runner"
     Q = require "q"
     S3Uploader = require "s3-uploader"
     SHA1 = require "sha1"
@@ -36,30 +37,29 @@ TODO: Pass editor as an arg to actions
       actionData =
         publish: (editor) ->
           editor.notify "Publishing..."
+          # TODO: Get real publish path
+          publishPath = "editor"
 
-          editor.save()
-          .then ->
-            # TODO: This could get slightly out of sync if there were changes
-            # during the async call
-            # The correct solution will be to use git shas to determine changed status
-            # but that's a little heavy duty for right now.
-            editor.filetree().markSaved()
-
-            editor.build()
+          editor.build()
           .then (pkg) ->
             getS3Credentials().then (policy) ->
-              console.log policy
-              console.log pkg
-
               blob = new Blob [JSON.stringify(pkg)],
                 type: "application/json"
               SHA1(blob).then (sha) ->
-                S3Uploader(policy).upload
-                  key: "data/#{sha}"
-                  blob: blob
-                  cacheControl: 31536000
-          .then (url) ->
-            editor.notify "Saved and published as #{url}"
+                Q.all [
+                  S3Uploader(policy).upload
+                    key: "#{publishPath}/index.html"
+                    blob: new Blob [PackageRunner.html(pkg)],
+                      type: "text/html"
+                    cacheControl: 0
+  
+                  S3Uploader(policy).upload
+                    key: "data/#{sha}"
+                    blob: blob
+                    cacheControl: 31536000
+                ]
+          .then ([htmlUrl, jsonUrl]) ->
+            editor.notify "Saved and published as #{htmlUrl}"
           .fail (args...) ->
             editor.errors args
           .done()
@@ -111,8 +111,6 @@ TODO: Pass editor as an arg to actions
         explore_dependency: (editor) ->
           name = prompt "Dependency Name"
           if name
-            {PackageRunner} = require "runner"
-
             # Fork editor
             PackageRunner().launch PACKAGE,
               # Load dependency in child

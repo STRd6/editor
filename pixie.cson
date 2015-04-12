@@ -23,7 +23,7 @@ dependencies:
   packager: "distri/packager:v0.5.15"
   postmaster: "distri/postmaster:v0.2.2"
   q: "distri/q:v1.0.1"
-  runner: "distri/runner:v0.3.0"
+  runner: "distri/runner:v0.3.1"
   runtime: "distri/runtime:v0.3.0"
   "s3-uploader": "distri/s3-uploader:v0.1.2"
   sha1: "distri/sha1:v0.3.0"
