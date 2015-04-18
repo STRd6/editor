@@ -41,20 +41,33 @@
 Q = require <span class="string">"q"</span>
 S3Uploader = require <span class="string">"s3-uploader"</span>
 SHA1 = require <span class="string">"sha1"</span>
+policyEndpoint = <span class="string">"http://locohost:9393/root.json"</span>
+
+<span class="function"><span class="title">fetchPolicy</span></span> = ({notify}) -&gt;
+  notify <span class="string">"Fetching policy from <span class="subst">#{policyEndpoint}</span>"</span>
+  Q($.getJSON(policyEndpoint))
 
 POLICY_KEY = <span class="string">"S3Policy"</span>
-<span class="function"><span class="title">getS3Credentials</span></span> = -&gt;
+<span class="function"><span class="title">getS3Credentials</span></span> = ({notify}) -&gt;
   Q.fcall -&gt;
-    JSON.parse localStorage[POLICY_KEY]
-  .fail -&gt;
-    policyString = prompt <span class="string">"S3 Upload Policy"</span>
-    policy = JSON.parse(policyString)
-    <span class="keyword">if</span> policy
-      localStorage[POLICY_KEY] = policyString
+    policy = JSON.parse localStorage[POLICY_KEY]
 
-      <span class="keyword">return</span> policy
+    <span class="keyword">debugger</span>
+
+    expiration = JSON.parse(atob(policy.policy)).expiration
+
+    <span class="keyword">if</span> (Date.parse(expiration) - <span class="keyword">new</span> Date) &lt;= <span class="number">30</span>
+      notify <span class="string">"Policy expired"</span>
+      fetchPolicy({notify})
     <span class="keyword">else</span>
-      <span class="keyword">throw</span> <span class="string">"No policy given"</span>
+      <span class="keyword">return</span> policy
+  .<span class="keyword">then</span> (policy) -&gt;
+    notify <span class="string">"Policy loaded"</span>
+    localStorage[POLICY_KEY] = JSON.stringify(policy)
+
+    <span class="keyword">return</span> policy
+  .fail -&gt;
+    <span class="keyword">throw</span> <span class="string">"Failed to get S3 upload Policy"</span>
 
 module.<span class="function"><span class="title">exports</span></span> = (I, self) -&gt;
   actions = self.actions = Observable []
@@ -67,19 +80,20 @@ module.<span class="function"><span class="title">exports</span></span> = (I, se
 
   actionData =
     publish: (editor) -&gt;
-      editor.notify <span class="string">"Publishing..."</span>
+      editor.notify <span class="string">"Building..."</span>
       <span class="comment"># TODO: Get real publish path</span>
-      publishPath = <span class="string">"editor"</span>
+      publishPath = editor.path()
 
       editor.build()
       .<span class="keyword">then</span> (pkg) -&gt;
-        getS3Credentials().<span class="keyword">then</span> (policy) -&gt;
+        editor.notify <span class="string">"Publishing..."</span>
+        getS3Credentials(editor).<span class="keyword">then</span> (policy) -&gt;
           blob = <span class="keyword">new</span> Blob [JSON.stringify(pkg)],
             type: <span class="string">"application/json"</span>
           SHA1(blob).<span class="keyword">then</span> (sha) -&gt;
             Q.all [
               S3Uploader(policy).upload
-                key: <span class="string">"<span class="subst">#{publishPath}</span>/index.html"</span>
+                key: publishPath
                 blob: <span class="keyword">new</span> Blob [PackageRunner.html(pkg)],
                   type: <span class="string">"text/html"</span>
                 cacheControl: <span class="number">0</span>

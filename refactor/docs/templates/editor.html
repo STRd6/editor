@@ -22,7 +22,7 @@
 
             </div>
             <div class="content"><pre><code class="lang-haml">.main
-  = require(&quot;./actions&quot;) actions: @actions, issues: @issues
+  = require(&quot;./actions&quot;) actions: @actions, issues: @issues, path: @editor.path
   = require(&quot;./filetree&quot;) @filetree
   -# TODO: Figure out why we can&#39;t just add the notifications view directly
   = @notifications.view.children[0]</code></pre>

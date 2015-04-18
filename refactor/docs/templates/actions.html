@@ -38,7 +38,10 @@ the editor.</p>
             <div class="content"><pre><code class="lang-haml">  %span
     - @actions.each ({name, handler}) -&gt;
       %button(click=handler)
-        = name.titleize()</code></pre>
+        = name.titleize()
+  %span
+    %b Path
+    %input(value=@path)</code></pre>
 </div>
         </li>
         
