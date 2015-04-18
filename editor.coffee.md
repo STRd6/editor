@@ -2,7 +2,6 @@ Editor
 ======
 
     Runners = require "./runners"
-    Actions = require("./source/actions")
     Builder = require("builder")
     Packager = require("packager")
     {Filetree, File} = require("filetree")
@@ -23,24 +22,16 @@ Editor
         pkg.entryPoint = config.entryPoint or "main"
         pkg.remoteDependencies = config.remoteDependencies
 
-      # Attach repo metadata to package
-      builder.addPostProcessor (pkg) ->
-        repository = self.repository()
-
-        # TODO: Track commit SHA as well
-        pkg.repository = cleanRepositoryData repository.toJSON()
-
-        # Add publish branch
-        pkg.repository.publishBranch = self.config().publishBranch or repository.publishBranch()
-
       return builder
 
     module.exports = (I={}, self=Model(I)) ->
       builder = initBuilder(self)
       filetree = Filetree()
 
+      defaults I,
+        path: "index.html"
+
       self.extend
-        repository: Observable()
 
 Build the project, returning a promise that will be fulfilled with the `pkg`
 when complete.
@@ -59,10 +50,6 @@ when complete.
               pkg.dependencies = dependencies
 
               return pkg
-
-        save: ->
-          self.repository().commitTree
-            tree: filetree.data()
 
         loadFiles: (fileData) ->
           filetree.load fileData
@@ -109,8 +96,8 @@ Likewise we shouldn't expose the builder directly either.
         config: ->
           readSourceConfig(source: arrayToHash(filetree.data()))
 
+      self.attrObservable "path"
       self.include(Runners)
-      self.include(Actions)
 
       extend require("postmaster")(),
         load: self.loadFiles
@@ -121,6 +108,3 @@ Helpers
 -------
 
     {readSourceConfig, arrayToHash} = require("./source/util")
-
-    cleanRepositoryData = (data) ->
-      _.pick data, "branch", "default_branch", "full_name", "homepage", "description", "html_url", "url"

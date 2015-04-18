@@ -37,7 +37,7 @@ Rebuild the package and send the reload message to the runner with the newest pa
             , (error) ->
               packageRunner.close()
 
-              return error
+              throw error
           )
 
         run: ->

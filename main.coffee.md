@@ -39,10 +39,6 @@ TODO: This needs a big cleanup.
 
     require("analytics").init("UA-3464282-15")
 
-    # Create and auth a github API
-    # Global until we consolidate editor/actions into something cleaner
-    global.github = require("github")(require("./source/github_auth"))
-
     ValueWidget = require "value-widget"
 
 Templates
@@ -50,14 +46,20 @@ Templates
 
 - [Actions](./templates/actions)
 - [Editor](./templates/editor)
-- [Github Status](./templates/github_status)
 - [Text Editor](./templates/text_editor)
-- [Repo Info](./templates/repo_info)
 
     Editor = require("./editor")
 
     editor = global.editor = Editor()
-    editor.loadFiles(PACKAGE.source)
+
+    # TODO: Think about tracking this state better
+    # It shouldn't just be loading the files of the package, but
+    # actually loading the entire package as our model to be edited
+    # this way recursive dependency exploring would work
+    if p = ENV?.APP_STATE?.PACKAGE
+      editor.loadFiles(p.source)
+    else
+      editor.loadFiles(PACKAGE.source)
 
     # TODO: Don't expose this
     filetree = editor.filetree()
@@ -72,34 +74,16 @@ Templates
 
     notifications = require("notifications")()
     {classicError, notify, errors} = notifications
+    extend editor,
+      classicError: classicError
+      notify: notify
+      errors: errors
 
     Runtime(PACKAGE)
       .boot()
       .applyStyleSheet(require('./style'))
 
     $root = $("body")
-
-    # Branch Chooser using pull requests
-    {models:{Issue, Issues}} = require("issues")
-    issues = Issues()
-
-    # Github repository observable
-    # TODO: Finalize move into editor module
-    repository = editor.repository
-
-    repository.observe (repository) ->
-      issues.repository = repository
-      repository.pullRequests().then issues.reset
-
-      notify "Loaded repository: #{repository.full_name()}"
-
-    PACKAGE.repository.url ||= "repos/#{PACKAGE.repository.full_name}"
-
-    # Need to delay this slightly so our auth token deferred has time to load
-    # TODO: Make better use of observables and computed functions so the timing
-    # doesn't matter
-    setTimeout ->
-      repository github.Repository(PACKAGE.repository)
 
     confirmUnsaved = ->
       confirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
@@ -108,163 +92,7 @@ Templates
       root = $root.children(".main")
       root.find("iframe").remove()
 
-    actions =
-      save: ->
-        notify "Saving..."
-
-        editor.save()
-        .then ->
-          # TODO: This could get slightly out of sync if there were changes
-          # during the async call
-          # The correct solution will be to use git shas to determine changed status
-          # but that's a little heavy duty for right now.
-          filetree.markSaved()
-
-          editor.publish()
-        .then ->
-          notify "Saved and published!"
-        .fail (args...) ->
-          errors args
-        .done()
-
-      run: ->
-        notify "Running..."
-
-        editor.run()
-        .fail classicError
-        .done()
-
-      test: ->
-        notify "Running tests..."
-
-        editor.test()
-        .fail (e) ->
-          errors [].concat(e)
-        .done()
-
-      docs: ->
-        notify "Running Docs..."
-
-        if file = prompt("Docs file", "index")
-          editor.runDocs({file})
-          .fail errors
-          .done()
-
-      new_file: ->
-        if name = prompt("File Name", "newfile.coffee")
-          file = File
-            path: name
-            content: ""
-          filetree.files.push file
-          filetree.selectedFile file
-
-      load_repo: (skipPrompt) ->
-        confirmUnsaved()
-        .then ->
-          currentRepositoryName = repository().full_name()
-
-          fullName = prompt("Github repo", currentRepositoryName)
-
-          if fullName
-            github.repository(fullName).then repository
-          else
-            Q.fcall -> throw "No repo given"
-        .then (repositoryInstance) ->
-          notify "Loading files..."
-
-          editor.load
-            repository: repositoryInstance
-          .then ->
-            closeOpenEditors()
-
-            notifications.push "Loaded"
-        .fail classicError
-        .done()
-
-      new_feature: ->
-        if title = prompt("Description")
-          notify "Creating feature branch..."
-
-          editor.repository().createPullRequest
-            title: title
-          .then (data) ->
-            issue = Issue(data)
-            issues.issues.push issue
-
-            # TODO: Standardize this like backbone or something
-            # or think about using deferreds in some crazy way
-            issues.silent = true
-            issues.currentIssue issue
-            issues.silent = false
-
-            notifications.push "Created!"
-          , classicError
-          .done()
-
-      pull_master: ->
-        confirmUnsaved()
-        .then( ->
-          notify "Merging in default branch..."
-          repository().pullFromBranch()
-        , classicError
-        ).then ->
-          notifications.push "Merged!"
-
-          branchName = repository().branch()
-          notifications.push "\nReloading branch #{branchName}..."
-
-          editor.load
-            repository: repository()
-          .then ->
-            notifications.push "Loaded!"
-          .fail ->
-            classicError "Error loading #{repository().url()}"
-        .done()
-
-      pull_upstream: ->
-        confirmUnsaved()
-        .then( ->
-          notify "Pulling from upstream master"
-
-          upstreamRepo = repository().parent().full_name
-
-          github.repository(upstreamRepo)
-          .then (repository) ->
-            repository.latestContent()
-          .then (results) ->
-            files = processDirectory results
-            editor.loadFiles files
-
-        , classicError
-        ).then ->
-          notifications.push "\nYour code is up to date with the upstream master"
-          closeOpenEditors()
-        .done()
-
-      tag_version: ->
-        notify "Building..."
-
-        editor.build()
-        .then (pkg) ->
-          version = "v#{readSourceConfig(pkg).version}"
-
-          notify "Tagging version #{version} ..."
-
-          repository().createRef("refs/tags/#{version}")
-          .then ->
-            notifications.push "Tagged #{version}"
-          .then ->
-            notifications.push "\nPublishing..."
-
-            # Force branch for jsonp wrapper
-            pkg.repository.branch = version
-
-            repository().publish Packager.standAlone(pkg), version
-          .then ->
-            notifications.push "Published!"
-
-        .fail classicError
-        .done()
+    editor.include require("./actions")
 
     hotReload = (->
       editor.hotReload()
@@ -303,53 +131,12 @@ Templates
 
           hotReload()
 
-    issues?.currentIssue.observe (issue) ->
-      # TODO: Formalize this later
-      return if issues.silent
-
-      changeBranch = (branchName) ->
-        previousBranch = repository().branch()
-
-        confirmUnsaved()
-        .then ->
-          closeOpenEditors()
-
-          # Switch to branch for working on the issue
-          repository().switchToBranch(branchName)
-          .then ->
-            notifications.push "\nLoading branch #{branchName}..."
-
-            editor.load
-              repository: repository()
-            .then ->
-              notifications.push "Loaded!"
-        , ->
-          # TODO: Issue will appear as being selected even though we cancelled
-          # To correctly handle this we may need to really beef up our observables.
-          # One possibility is to extend observables to full fledged deferreds
-          # which can be rejected by listeners added to the chain.
-
-          repository.branch(previousBranch)
-
-          classicError "Error switching to #{branchName}, still on #{previousBranch}"
-
-      if issue?.branchName?
-        notify issue.fullDescription()
-
-        changeBranch issue.branchName()
-      else
-        notify "Default branch selected"
-
-        changeBranch repository().defaultBranch()
-
     $root
       .append require("./templates/editor")(
+        editor: editor
         filetree: filetree
-        actions: actions
+        actions: editor.actions
         notifications: notifications
-        issues: issues
-        github: github
-        repository: repository
       )
 
     window.onbeforeunload = ->

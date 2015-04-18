@@ -1,26 +1,14 @@
 TODO
 ----
-Live Update Demo
-- Hot reload css
-- Display Demo Runtime Errors in console
 
-Open published page in editor and run live demo with same state as when editor was opened
-- Pass git repo/branch metadata to published page for use in editor
+Plugins
+- Install plugins from JSON url
+- Cache installed plugins
+- Remove plugins
+- Lifecycle events (open file, before save)
 
-Persist state across demo reloads
+Remove github, move to plugin
 
-Organize File tree by type
-File icons
+Clean up build/compiler stuff
 
-Display Diffs
-
-First auth doesn't display in bar
-
-Cache Git trees and files in some form of local storage
-
-Sometimes editor appears blank when switching files
-
-Editor plugins
-- static analysis
-- find in files
-- source file hygiene
+Publish html to whimsy.space locations
