@@ -9,3 +9,6 @@ Render a series of buttons, one for each action.
         - @actions.each ({name, handler}) ->
           %button(click=handler)
             = name.titleize()
+      %span
+        %b Path
+        %input(value=@path)

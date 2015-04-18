@@ -28,6 +28,9 @@ Editor
       builder = initBuilder(self)
       filetree = Filetree()
 
+      defaults I,
+        path: "index.html"
+
       self.extend
 
 Build the project, returning a promise that will be fulfilled with the `pkg`
@@ -93,6 +96,7 @@ Likewise we shouldn't expose the builder directly either.
         config: ->
           readSourceConfig(source: arrayToHash(filetree.data()))
 
+      self.attrObservable "path"
       self.include(Runners)
 
       extend require("postmaster")(),

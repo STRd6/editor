@@ -10,20 +10,33 @@ TODO: Pass editor as an arg to actions
     Q = require "q"
     S3Uploader = require "s3-uploader"
     SHA1 = require "sha1"
+    policyEndpoint = "http://locohost:9393/root.json"
+
+    fetchPolicy = ({notify}) ->
+      notify "Fetching policy from #{policyEndpoint}"
+      Q($.getJSON(policyEndpoint))
 
     POLICY_KEY = "S3Policy"
-    getS3Credentials = ->
+    getS3Credentials = ({notify}) ->
       Q.fcall ->
-        JSON.parse localStorage[POLICY_KEY]
-      .fail ->
-        policyString = prompt "S3 Upload Policy"
-        policy = JSON.parse(policyString)
-        if policy
-          localStorage[POLICY_KEY] = policyString
+        policy = JSON.parse localStorage[POLICY_KEY]
 
-          return policy
+        debugger
+
+        expiration = JSON.parse(atob(policy.policy)).expiration
+
+        if (Date.parse(expiration) - new Date) <= 30
+          notify "Policy expired"
+          fetchPolicy({notify})
         else
-          throw "No policy given"
+          return policy
+      .then (policy) ->
+        notify "Policy loaded"
+        localStorage[POLICY_KEY] = JSON.stringify(policy)
+
+        return policy
+      .fail ->
+        throw "Failed to get S3 upload Policy"
 
     module.exports = (I, self) ->
       actions = self.actions = Observable []
@@ -36,19 +49,20 @@ TODO: Pass editor as an arg to actions
 
       actionData =
         publish: (editor) ->
-          editor.notify "Publishing..."
+          editor.notify "Building..."
           # TODO: Get real publish path
-          publishPath = "editor"
+          publishPath = editor.path()
 
           editor.build()
           .then (pkg) ->
-            getS3Credentials().then (policy) ->
+            editor.notify "Publishing..."
+            getS3Credentials(editor).then (policy) ->
               blob = new Blob [JSON.stringify(pkg)],
                 type: "application/json"
               SHA1(blob).then (sha) ->
                 Q.all [
                   S3Uploader(policy).upload
-                    key: "#{publishPath}/index.html"
+                    key: publishPath
                     blob: new Blob [PackageRunner.html(pkg)],
                       type: "text/html"
                     cacheControl: 0
