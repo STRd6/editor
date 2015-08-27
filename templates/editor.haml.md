@@ -7,3 +7,4 @@ The main editor template renders all the other sub-templates.
       = @notifications.view.children[0]
       = require("./repo_info") @repository
       = require("./github_status") @github
+      #ace

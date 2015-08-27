@@ -42,8 +42,6 @@ TODO: This needs a big cleanup.
     # Global until we consolidate editor/actions into something cleaner
     global.github = require("github")(require("./source/github_auth"))
 
-    ValueWidget = require "value-widget"
-
 Templates
 ---------
 
@@ -272,35 +270,18 @@ Templates
     filetree.selectedFile.observe (file) ->
       return if file.binary?()
 
-      root = $root.children(".main")
-      root.find("iframe").hide()
-
-      if file.editor
-        file.editor.trigger("show")
-      else
-        iframe = document.createElement "iframe"
-        root.append iframe
-        file.editor = $(iframe)
-
+      unless file.session
         switch file.path().extension()
           when "md", "coffee", "js", "styl", "cson"
             file.content Hygiene.clean file.content()
 
-        textEditor = ValueWidget
-          value: file.content()
-          iframe: iframe
-          url: "http://distri.github.io/text/v0.1.1/"
-          options:
-            mode: file.mode()
-
-        file.editor.on "show", ->
-          file.editor.show()
-          textEditor.send "focus"
-
-        textEditor.observe (value) ->
-          file.content(value)
-
+        file.content.observe (newContent) ->
           hotReload()
+        file.session = aceShim.initSession(file)
+
+      aceShim.aceEditor().getSession()?._signal("blur")
+      aceShim.aceEditor().setSession(file.session)
+      file.session._signal?("focus")
 
     issues?.currentIssue.observe (issue) ->
       # TODO: Formalize this later
@@ -350,6 +331,9 @@ Templates
         github: github
         repository: repository
       )
+
+    AceShim = require "./ace_shim"
+    aceShim = AceShim()
 
     window.onbeforeunload = ->
       if filetree.hasUnsavedChanges()
