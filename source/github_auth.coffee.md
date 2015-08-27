@@ -3,8 +3,6 @@ server to authenticate them with our app secret key.
 
 Returns a promise that will contain the auth token, or an error.
 
-    Q = require "q"
-
     module.exports = Q.fcall ->
 
 If the url contains a querystring parameter `code` then we send it to our auth

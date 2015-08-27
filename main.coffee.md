@@ -30,7 +30,6 @@ Components
 TODO: This needs a big cleanup.
 
     require "cornerstone"
-    Q = require "q"
     {confirmIf} = require "../lib/ui"
     {processDirectory} = require "./source/util"
 
