@@ -40,6 +40,7 @@ Builder = require(<span class="string">"builder"</span>)
 Packager = require(<span class="string">"packager"</span>)
 {Filetree, File} = require(<span class="string">"filetree"</span>)
 {processDirectory} = require <span class="string">"./source/util"</span>
+{confirmIf} = require <span class="string">"./lib/ui"</span>
 documenter = require <span class="string">"md"</span>
 
 loadedPackage = Observable <span class="literal">null</span>
@@ -79,6 +80,11 @@ module.<span class="function"><span class="title">exports</span></span> = (I={},
   self.extend
     repository: Observable()
 
+    confirmUnsaved: -&gt;
+      Q.fcall -&gt;
+        <span class="keyword">if</span> filetree.hasUnsavedChanges()
+          <span class="keyword">throw</span> <span class="string">"Cancelled"</span> <span class="keyword">unless</span> window.confirm <span class="string">"You will lose unsaved changes in your current branch, continue?"</span>
+
     publish: -&gt;
       self.build()
       .<span class="keyword">then</span> (pkg) -&gt;
@@ -101,8 +107,8 @@ module.<span class="function"><span class="title">exports</span></span> = (I={},
       .<span class="keyword">then</span> (results) -&gt;
         self.repository repository
 
-        files = processDirectory results
-        self.loadFiles files</code></pre>
+        self.loadPackage
+          source: processDirectory results</code></pre>
 </div>
         </li>
         

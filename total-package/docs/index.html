@@ -80,7 +80,6 @@ but I had no idea what I was doing and still don&#39;t know to this day.</p>
 
             </div>
             <div class="content"><pre><code class="lang-coffeescript">require <span class="string">"cornerstone"</span>
-{confirmIf} = require <span class="string">"../lib/ui"</span>
 {processDirectory} = require <span class="string">"./source/util"</span>
 
 global.PACKAGE = PACKAGE
@@ -138,8 +137,6 @@ global.<span class="function"><span class="title">appData</span></span> = -&gt;
 <span class="comment"># TODO: Don't expose this</span>
 filetree = editor.filetree()
 
-{File} = require <span class="string">"filetree"</span>
-
 Hygiene = require <span class="string">"hygiene"</span>
 Runtime = require <span class="string">"runtime"</span>
 Packager = require <span class="string">"packager"</span>
@@ -148,6 +145,11 @@ Packager = require <span class="string">"packager"</span>
 
 notifications = require(<span class="string">"notifications"</span>)()
 {classicError, notify, errors} = notifications
+extend editor,
+  classicError: classicError
+  notify: notify
+  errors: errors
+  notifications: notifications
 
 Runtime(PACKAGE)
   .boot()
@@ -177,10 +179,7 @@ PACKAGE.repository.url ||= <span class="string">"repos/<span class="subst">#{PAC
 setTimeout -&gt;
   repository github.Repository(PACKAGE.repository)
 
-<span class="function"><span class="title">confirmUnsaved</span></span> = -&gt;
-  confirmIf(filetree.hasUnsavedChanges(), <span class="string">"You will lose unsaved changes in your current branch, continue?"</span>)
-
-<span class="function"><span class="title">closeOpenEditors</span></span> = -&gt;
+editor.<span class="function"><span class="title">closeOpenEditors</span></span> = -&gt;
   aceShim.aceEditor().setSession(ace.createEditSession(<span class="string">""</span>))
 
 hotReload = (-&gt;
@@ -210,9 +209,9 @@ issues?.currentIssue.observe (issue) -&gt;
   <span class="function"><span class="title">changeBranch</span></span> = (branchName) -&gt;
     previousBranch = repository().branch()
 
-    confirmUnsaved()
+    editor.confirmUnsaved()
     .<span class="keyword">then</span> -&gt;
-      closeOpenEditors()
+      editor.closeOpenEditors()
 
       <span class="comment"># Switch to branch for working on the issue</span>
       repository().switchToBranch(branchName)
