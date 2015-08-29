@@ -35,10 +35,12 @@
               
             </div>
             <div class="content"><pre><code class="lang-coffeescript">Runners = require <span class="string">"./runners"</span>
-Actions = require(<span class="string">"./source/actions"</span>)
+Actions = require(<span class="string">"./actions"</span>)
 Builder = require(<span class="string">"builder"</span>)
 Packager = require(<span class="string">"packager"</span>)
 {Filetree, File} = require(<span class="string">"filetree"</span>)
+{processDirectory} = require <span class="string">"./source/util"</span>
+documenter = require <span class="string">"md"</span>
 
 loadedPackage = Observable <span class="literal">null</span>
 
@@ -75,7 +77,32 @@ module.<span class="function"><span class="title">exports</span></span> = (I={},
   filetree = Filetree()
 
   self.extend
-    repository: Observable()</code></pre>
+    repository: Observable()
+
+    publish: -&gt;
+      self.build()
+      .<span class="keyword">then</span> (pkg) -&gt;
+        documenter.documentAll(pkg)
+        .<span class="keyword">then</span> (docs) -&gt;
+          <span class="comment"># NOTE: This metadata is added from the builder</span>
+          publishBranch = pkg.repository.publishBranch
+
+          <span class="comment"># TODO: Don't pass files to packager, just merge them at the end</span>
+          <span class="comment"># TODO: Have differenty types of building (docs/main) that can</span>
+          <span class="comment"># be chosen in a config rather than hacks based on the branch name</span>
+          repository = self.repository()
+          <span class="keyword">if</span> repository.branch() <span class="keyword">is</span> <span class="string">"blog"</span> <span class="comment"># HACK</span>
+            self.repository().publish(docs, <span class="literal">undefined</span>, publishBranch)
+          <span class="keyword">else</span>
+            self.repository().publish(Packager.standAlone(pkg, docs), <span class="literal">undefined</span>, publishBranch)
+
+    load: ({repository}) -&gt;
+      repository.latestContent()
+      .<span class="keyword">then</span> (results) -&gt;
+        self.repository repository
+
+        files = processDirectory results
+        self.loadFiles files</code></pre>
 </div>
         </li>
         
