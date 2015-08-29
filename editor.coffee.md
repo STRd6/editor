@@ -2,10 +2,12 @@ Editor
 ======
 
     Runners = require "./runners"
-    Actions = require("./source/actions")
+    Actions = require("./actions")
     Builder = require("builder")
     Packager = require("packager")
     {Filetree, File} = require("filetree")
+    {processDirectory} = require "./source/util"
+    documenter = require "md"
 
     loadedPackage = Observable null
 
@@ -43,6 +45,31 @@ Editor
 
       self.extend
         repository: Observable()
+
+        publish: ->
+          self.build()
+          .then (pkg) ->
+            documenter.documentAll(pkg)
+            .then (docs) ->
+              # NOTE: This metadata is added from the builder
+              publishBranch = pkg.repository.publishBranch
+    
+              # TODO: Don't pass files to packager, just merge them at the end
+              # TODO: Have differenty types of building (docs/main) that can
+              # be chosen in a config rather than hacks based on the branch name
+              repository = self.repository()
+              if repository.branch() is "blog" # HACK
+                self.repository().publish(docs, undefined, publishBranch)
+              else
+                self.repository().publish(Packager.standAlone(pkg, docs), undefined, publishBranch)
+    
+        load: ({repository}) ->
+          repository.latestContent()
+          .then (results) ->
+            self.repository repository
+    
+            files = processDirectory results
+            self.loadFiles files
 
 Build the project, returning a promise that will be fulfilled with the `pkg`
 when complete.
