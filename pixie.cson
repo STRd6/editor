@@ -3,6 +3,7 @@ entryPoint: "main"
 width: 960
 height: 800
 remoteDependencies: [
+  "https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js"
   "https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"
   "https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js"
   "https://code.jquery.com/jquery-1.11.0.min.js"
@@ -24,4 +25,3 @@ dependencies:
   runner: "distri/runner:v0.3.1"
   runtime: "distri/runtime:v0.3.0"
   tests: "distri/tests:v0.1.1"
-  "value-widget": "distri/value-widget:v0.1.2"
