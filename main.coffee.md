@@ -102,8 +102,7 @@ Templates
       confirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
 
     closeOpenEditors = ->
-      root = $root.children(".main")
-      root.find("iframe").remove()
+      aceShim.aceEditor().setSession(ace.createEditSession(""))
 
     actions =
       save: ->
