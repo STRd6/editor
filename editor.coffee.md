@@ -64,6 +64,9 @@ when complete.
           self.repository().commitTree
             tree: filetree.data()
 
+        loadPackage: (pkg) ->
+          filetree.load pkg.source
+
         loadFiles: (fileData) ->
           filetree.load fileData
 
@@ -113,7 +116,7 @@ Likewise we shouldn't expose the builder directly either.
       self.include(Actions)
 
       extend require("postmaster")(),
-        load: self.loadFiles
+        load: self.loadPackage
 
       return self
 
