@@ -7,6 +7,7 @@ Editor
     Packager = require("packager")
     {Filetree, File} = require("filetree")
     {processDirectory} = require "./source/util"
+    {confirmIf} = require "./lib/ui"
     documenter = require "md"
 
     loadedPackage = Observable null
@@ -46,6 +47,11 @@ Editor
       self.extend
         repository: Observable()
 
+        confirmUnsaved: ->
+          Q.fcall ->
+            if filetree.hasUnsavedChanges()
+              throw "Cancelled" unless window.confirm "You will lose unsaved changes in your current branch, continue?"
+
         publish: ->
           self.build()
           .then (pkg) ->
@@ -53,7 +59,7 @@ Editor
             .then (docs) ->
               # NOTE: This metadata is added from the builder
               publishBranch = pkg.repository.publishBranch
-    
+
               # TODO: Don't pass files to packager, just merge them at the end
               # TODO: Have differenty types of building (docs/main) that can
               # be chosen in a config rather than hacks based on the branch name
@@ -62,14 +68,14 @@ Editor
                 self.repository().publish(docs, undefined, publishBranch)
               else
                 self.repository().publish(Packager.standAlone(pkg, docs), undefined, publishBranch)
-    
+
         load: ({repository}) ->
           repository.latestContent()
           .then (results) ->
             self.repository repository
-    
-            files = processDirectory results
-            self.loadFiles files
+
+            self.loadPackage
+              source: processDirectory results
 
 Build the project, returning a promise that will be fulfilled with the `pkg`
 when complete.
@@ -97,9 +103,9 @@ when complete.
 
         dependencies: ->
           loadedPackage().dependencies
-        
+
         exploreDependency: (name) ->
-          
+
 
         loadPackage: (pkg) ->
           loadedPackage pkg

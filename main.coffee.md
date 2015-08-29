@@ -30,7 +30,6 @@ Components
 TODO: This needs a big cleanup.
 
     require "cornerstone"
-    {confirmIf} = require "../lib/ui"
     {processDirectory} = require "./source/util"
 
     global.PACKAGE = PACKAGE
@@ -66,8 +65,6 @@ Templates
     # TODO: Don't expose this
     filetree = editor.filetree()
 
-    {File} = require "filetree"
-
     Hygiene = require "hygiene"
     Runtime = require "runtime"
     Packager = require "packager"
@@ -76,6 +73,11 @@ Templates
 
     notifications = require("notifications")()
     {classicError, notify, errors} = notifications
+    extend editor,
+      classicError: classicError
+      notify: notify
+      errors: errors
+      notifications: notifications
 
     Runtime(PACKAGE)
       .boot()
@@ -105,10 +107,7 @@ Templates
     setTimeout ->
       repository github.Repository(PACKAGE.repository)
 
-    confirmUnsaved = ->
-      confirmIf(filetree.hasUnsavedChanges(), "You will lose unsaved changes in your current branch, continue?")
-
-    closeOpenEditors = ->
+    editor.closeOpenEditors = ->
       aceShim.aceEditor().setSession(ace.createEditSession(""))
 
     hotReload = (->
@@ -138,9 +137,9 @@ Templates
       changeBranch = (branchName) ->
         previousBranch = repository().branch()
 
-        confirmUnsaved()
+        editor.confirmUnsaved()
         .then ->
-          closeOpenEditors()
+          editor.closeOpenEditors()
 
           # Switch to branch for working on the issue
           repository().switchToBranch(branchName)

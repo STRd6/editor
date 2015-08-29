@@ -1,3 +1,5 @@
+{File} = require "filetree"
+
 actions =
   save: (editor) ->
     editor.notify "Saving..."
@@ -8,7 +10,7 @@ actions =
       # during the async call
       # The correct solution will be to use git shas to determine changed status
       # but that's a little heavy duty for right now.
-      filetree.markSaved()
+      editor.filetree().markSaved()
 
       editor.publish()
     .then ->
@@ -56,7 +58,7 @@ actions =
       fullName = prompt("Github repo", currentRepositoryName)
 
       if fullName
-        github.repository(fullName).then repository
+        github.repository(fullName).then editor.repository
       else
         Q.fcall -> throw "No repo given"
     .then (repositoryInstance) ->
@@ -95,18 +97,18 @@ actions =
     editor.confirmUnsaved()
     .then( ->
       editor.notify "Merging in default branch..."
-      repository().pullFromBranch()
-    , classicError
+      editor.repository().pullFromBranch()
+    , editor.classicError
     ).then ->
-      notifications.push "Merged!"
+      editor.notifications.push "Merged!"
 
       branchName = repository().branch()
-      notifications.push "\nReloading branch #{branchName}..."
+      editor.notifications.push "\nReloading branch #{branchName}..."
 
       editor.load
         repository: repository()
       .then ->
-        notifications.push "Loaded!"
+        editor.notifications.push "Loaded!"
       .fail ->
         editor.classicError "Error loading #{repository().url()}"
     .done()
@@ -116,7 +118,7 @@ actions =
     .then( ->
       editor.notify "Pulling from upstream master"
 
-      upstreamRepo = repository().parent().full_name
+      upstreamRepo = editor.repository().parent().full_name
 
       github.repository(upstreamRepo)
       .then (repository) ->
@@ -127,8 +129,8 @@ actions =
 
     , classicError
     ).then ->
-      notifications.push "\nYour code is up to date with the upstream master"
-      closeOpenEditors()
+      editor.notifications.push "\nYour code is up to date with the upstream master"
+      editor.closeOpenEditors()
     .done()
 
   tag_version: (editor) ->
@@ -142,16 +144,15 @@ actions =
 
       repository().createRef("refs/tags/#{version}")
       .then ->
-        notifications.push "Tagged #{version}"
-      .then ->
-        notifications.push "\nPublishing..."
+        editor.notifications.push "Tagged #{version}"
+        editor.notifications.push "\nPublishing..."
 
         # Force branch for jsonp wrapper
         pkg.repository.branch = version
 
-        repository().publish Packager.standAlone(pkg), version
+        editor.repository().publish Packager.standAlone(pkg), version
       .then ->
-        notifications.push "Published!"
+        editor.notifications.push "Published!"
 
     .fail editor.classicError
     .done()
