@@ -54,7 +54,14 @@ Templates
     Editor = require("./editor")
 
     editor = global.editor = Editor()
-    editor.loadPackage(PACKAGE)
+
+    if pkg = ENV?.APP_STATE
+      editor.loadPackage(pkg)
+    else
+      editor.loadPackage(PACKAGE)
+
+    global.appData = ->
+      editor.loadedPackage()
 
     # TODO: Don't expose this
     filetree = editor.filetree()

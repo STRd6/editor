@@ -7,6 +7,8 @@ Editor
     Packager = require("packager")
     {Filetree, File} = require("filetree")
 
+    loadedPackage = Observable null
+
     initBuilder = (self) ->
       builder = Builder()
 
@@ -60,11 +62,20 @@ when complete.
 
               return pkg
 
+        loadedPackage: loadedPackage
+
         save: ->
           self.repository().commitTree
             tree: filetree.data()
 
+        dependencies: ->
+          loadedPackage().dependencies
+        
+        exploreDependency: (name) ->
+          
+
         loadPackage: (pkg) ->
+          loadedPackage pkg
           filetree.load pkg.source
 
         loadFiles: (fileData) ->
