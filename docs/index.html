@@ -90,9 +90,7 @@ require(<span class="string">"analytics"</span>).init(<span class="string">"UA-3
 
 <span class="comment"># Create and auth a github API</span>
 <span class="comment"># Global until we consolidate editor/actions into something cleaner</span>
-global.github = require(<span class="string">"github"</span>)(require(<span class="string">"./source/github_auth"</span>))
-
-ValueWidget = require <span class="string">"value-widget"</span></code></pre>
+global.github = require(<span class="string">"github"</span>)(require(<span class="string">"./source/github_auth"</span>))</code></pre>
 </div>
         </li>
         
@@ -344,35 +342,18 @@ hotReload = (-&gt;
 filetree.selectedFile.observe (file) -&gt;
   <span class="keyword">return</span> <span class="keyword">if</span> file.binary?()
 
-  root = $root.children(<span class="string">".main"</span>)
-  root.find(<span class="string">"iframe"</span>).hide()
-
-  <span class="keyword">if</span> file.editor
-    file.editor.trigger(<span class="string">"show"</span>)
-  <span class="keyword">else</span>
-    iframe = document.createElement <span class="string">"iframe"</span>
-    root.append iframe
-    file.editor = $(iframe)
-
+  <span class="keyword">unless</span> file.session
     <span class="keyword">switch</span> file.path().extension()
       <span class="keyword">when</span> <span class="string">"md"</span>, <span class="string">"coffee"</span>, <span class="string">"js"</span>, <span class="string">"styl"</span>, <span class="string">"cson"</span>
         file.content Hygiene.clean file.content()
 
-    textEditor = ValueWidget
-      value: file.content()
-      iframe: iframe
-      url: <span class="string">"http://distri.github.io/text/v0.1.1/"</span>
-      options:
-        mode: file.mode()
-
-    file.editor.<span class="literal">on</span> <span class="string">"show"</span>, -&gt;
-      file.editor.show()
-      textEditor.send <span class="string">"focus"</span>
-
-    textEditor.observe (value) -&gt;
-      file.content(value)
-
+    file.content.observe (newContent) -&gt;
       hotReload()
+    file.session = aceShim.initSession(file)
+
+  aceShim.aceEditor().getSession()?._signal(<span class="string">"blur"</span>)
+  aceShim.aceEditor().setSession(file.session)
+  file.session._signal?(<span class="string">"focus"</span>)
 
 issues?.currentIssue.observe (issue) -&gt;
   <span class="comment"># TODO: Formalize this later</span>
@@ -423,6 +404,9 @@ $root
     repository: repository
   )
 
+AceShim = require <span class="string">"./ace_shim"</span>
+aceShim = AceShim()
+
 window.<span class="function"><span class="title">onbeforeunload</span></span> = -&gt;
   <span class="keyword">if</span> filetree.hasUnsavedChanges()
     <span class="string">"You have some unsaved changes, if you leave now you will lose your work."</span></code></pre>
@@ -433,6 +417,7 @@ window.<span class="function"><span class="title">onbeforeunload</span></span> =
   </div>
   <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script><script>
