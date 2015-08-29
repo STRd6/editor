@@ -40,6 +40,8 @@ Builder = require(<span class="string">"builder"</span>)
 Packager = require(<span class="string">"packager"</span>)
 {Filetree, File} = require(<span class="string">"filetree"</span>)
 
+loadedPackage = Observable <span class="literal">null</span>
+
 <span class="function"><span class="title">initBuilder</span></span> = (self) -&gt;
   builder = Builder()
 
@@ -102,11 +104,20 @@ when complete.</p>
 
           <span class="keyword">return</span> pkg
 
+    loadedPackage: loadedPackage
+
     save: -&gt;
       self.repository().commitTree
         tree: filetree.data()
 
+    dependencies: -&gt;
+      loadedPackage().dependencies
+
+    exploreDependency: (name) -&gt;
+
+
     loadPackage: (pkg) -&gt;
+      loadedPackage pkg
       filetree.load pkg.source
 
     loadFiles: (fileData) -&gt;

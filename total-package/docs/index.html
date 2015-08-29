@@ -126,7 +126,14 @@ global.github = require(<span class="string">"github"</span>)(require(<span clas
             <div class="content"><pre><code class="lang-coffeescript">Editor = require(<span class="string">"./editor"</span>)
 
 editor = global.editor = Editor()
-editor.loadPackage(PACKAGE)
+
+<span class="keyword">if</span> pkg = ENV?.APP_STATE
+  editor.loadPackage(pkg)
+<span class="keyword">else</span>
+  editor.loadPackage(PACKAGE)
+
+global.<span class="function"><span class="title">appData</span></span> = -&gt;
+  editor.loadedPackage()
 
 <span class="comment"># TODO: Don't expose this</span>
 filetree = editor.filetree()
