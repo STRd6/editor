@@ -174,8 +174,7 @@ setTimeout -&gt;
   confirmIf(filetree.hasUnsavedChanges(), <span class="string">"You will lose unsaved changes in your current branch, continue?"</span>)
 
 <span class="function"><span class="title">closeOpenEditors</span></span> = -&gt;
-  root = $root.children(<span class="string">".main"</span>)
-  root.find(<span class="string">"iframe"</span>).remove()
+  aceShim.aceEditor().setSession(ace.createEditSession(<span class="string">""</span>))
 
 actions =
   save: -&gt;
