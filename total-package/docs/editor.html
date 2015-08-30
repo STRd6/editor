@@ -77,6 +77,14 @@ module.<span class="function"><span class="title">exports</span></span> = (I={},
   builder = initBuilder(self)
   filetree = Filetree()
 
+  notifications = require(<span class="string">"notifications"</span>)()
+  {classicError, notify, errors} = notifications
+  extend self,
+    classicError: classicError
+    notify: notify
+    errors: errors
+    notifications: notifications
+
   self.extend
     repository: Observable()
 
@@ -102,12 +110,11 @@ module.<span class="function"><span class="title">exports</span></span> = (I={},
           <span class="keyword">else</span>
             self.repository().publish(Packager.standAlone(pkg, docs), <span class="literal">undefined</span>, publishBranch)
 
-    load: ({repository}) -&gt;
+    load: (repository) -&gt;
       repository.latestContent()
       .<span class="keyword">then</span> (results) -&gt;
-        self.repository repository
-
         self.loadPackage
+          repository: cleanRepositoryData repository.toJSON()
           source: processDirectory results</code></pre>
 </div>
         </li>
@@ -151,7 +158,10 @@ when complete.</p>
 
     loadPackage: (pkg) -&gt;
       loadedPackage pkg
+
       filetree.load pkg.source
+
+      pkg
 
     loadFiles: (fileData) -&gt;
       filetree.load fileData</code></pre>

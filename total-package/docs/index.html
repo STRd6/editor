@@ -143,14 +143,6 @@ Packager = require <span class="string">"packager"</span>
 
 {readSourceConfig} = require(<span class="string">"./source/util"</span>)
 
-notifications = require(<span class="string">"notifications"</span>)()
-{classicError, notify, errors} = notifications
-extend editor,
-  classicError: classicError
-  notify: notify
-  errors: errors
-  notifications: notifications
-
 Runtime(PACKAGE)
   .boot()
   .applyStyleSheet(require(<span class="string">'./style'</span>))
@@ -159,25 +151,19 @@ $root = $(<span class="string">"body"</span>)
 
 <span class="comment"># Branch Chooser using pull requests</span>
 {models:{Issue, Issues}} = require(<span class="string">"issues"</span>)
-issues = Issues()
+issues = editor.issues = Issues()
 
 <span class="comment"># Github repository observable</span>
 <span class="comment"># TODO: Finalize move into editor module</span>
 repository = editor.repository
 
-repository.observe (repository) -&gt;
+<span class="function"><span class="title">updateIssues</span></span> = (repository) -&gt;
   issues.repository = repository
   repository.pullRequests().<span class="keyword">then</span> issues.reset
 
-  notify <span class="string">"Loaded repository: <span class="subst">#{repository.full_name()}</span>"</span>
+repository.observe updateIssues
 
-PACKAGE.repository.url ||= <span class="string">"repos/<span class="subst">#{PACKAGE.repository.full_name}</span>"</span>
-
-<span class="comment"># Need to delay this slightly so our auth token deferred has time to load</span>
-<span class="comment"># TODO: Make better use of observables and computed functions so the timing</span>
-<span class="comment"># doesn't matter</span>
-setTimeout -&gt;
-  repository github.Repository(PACKAGE.repository)
+repository github.Repository(PACKAGE.repository)
 
 editor.<span class="function"><span class="title">closeOpenEditors</span></span> = -&gt;
   aceShim.aceEditor().setSession(ace.createEditSession(<span class="string">""</span>))
@@ -216,13 +202,12 @@ issues?.currentIssue.observe (issue) -&gt;
       <span class="comment"># Switch to branch for working on the issue</span>
       repository().switchToBranch(branchName)
       .<span class="keyword">then</span> -&gt;
-        notifications.push <span class="string">"\nLoading branch <span class="subst">#{branchName}</span>..."</span>
+        editor.notifications.push <span class="string">"\nLoading branch <span class="subst">#{branchName}</span>..."</span>
 
-        editor.load
-          repository: repository()
+        editor.load repository()
         .<span class="keyword">then</span> -&gt;
-          notifications.push <span class="string">"Loaded!"</span>
-    , -&gt;
+          editor.notifications.push <span class="string">"Loaded!"</span>
+    .fail -&gt;
       <span class="comment"># TODO: Issue will appear as being selected even though we cancelled</span>
       <span class="comment"># To correctly handle this we may need to really beef up our observables.</span>
       <span class="comment"># One possibility is to extend observables to full fledged deferreds</span>
@@ -230,14 +215,15 @@ issues?.currentIssue.observe (issue) -&gt;
 
       repository.branch(previousBranch)
 
-      classicError <span class="string">"Error switching to <span class="subst">#{branchName}</span>, still on <span class="subst">#{previousBranch}</span>"</span>
+      editor.classicError <span class="string">"Error switching to <span class="subst">#{branchName}</span>, still on <span class="subst">#{previousBranch}</span>"</span>
+    .done()
 
   <span class="keyword">if</span> issue?.branchName?
-    notify issue.fullDescription()
+    editor.notify issue.fullDescription()
 
     changeBranch issue.branchName()
   <span class="keyword">else</span>
-    notify <span class="string">"Default branch selected"</span>
+    editor.notify <span class="string">"Default branch selected"</span>
 
     changeBranch repository().defaultBranch()
 
@@ -245,7 +231,7 @@ $root
   .append require(<span class="string">"./templates/editor"</span>)(
     filetree: filetree
     actions: editor.actions
-    notifications: notifications
+    notifications: editor.notifications
     issues: issues
     github: github
     repository: repository
