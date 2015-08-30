@@ -168,6 +168,8 @@ Templates
     AceShim = require "./ace_shim"
     aceShim = AceShim()
 
+    editor.include require "./plugins/whimsy"
+
     window.onbeforeunload = ->
       if filetree.hasUnsavedChanges()
         "You have some unsaved changes, if you leave now you will lose your work."
