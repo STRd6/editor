@@ -27,8 +27,6 @@ Components
 - [Hygiene](/hygiene/docs)
 - [Runtime](/runtime/docs)
 
-TODO: This needs a big cleanup.
-
     require "cornerstone"
     {processDirectory} = require "./source/util"
 
