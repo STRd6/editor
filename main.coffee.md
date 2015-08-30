@@ -87,7 +87,11 @@ Templates
 
     repository.observe updateIssues
 
-    repository github.Repository(editor.loadedPackage().repository)
+    # TODO: Make better use of observables and computed functions so we no
+    # longer need this setTimeout hack
+    setTimeout ->
+      repository github.Repository(editor.loadedPackage().repository)
+    , 0
 
     editor.closeOpenEditors = ->
       aceShim.aceEditor().setSession(ace.createEditSession(""))
