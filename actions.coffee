@@ -1,5 +1,7 @@
 {File} = require "filetree"
 {models:{Issue}} = require("issues")
+Packager = require("packager")
+{readSourceConfig} = require("./source/util")
 
 actions =
   save: (editor) ->
@@ -69,6 +71,7 @@ actions =
       editor.repository repository
       editor.load repository
     .then ->
+      editor.notifications.push "Done!"
       editor.closeOpenEditors()
 
     .fail editor.classicError
@@ -104,7 +107,7 @@ actions =
     ).then ->
       editor.notifications.push "Merged!"
 
-      branchName = repository().branch()
+      branchName = editor.repository().branch()
       editor.notifications.push "\nReloading branch #{branchName}..."
 
       editor.load
@@ -112,7 +115,7 @@ actions =
       .then ->
         editor.notifications.push "Loaded!"
       .fail ->
-        editor.classicError "Error loading #{repository().url()}"
+        editor.classicError "Error loading #{editor.repository().url()}"
     .done()
 
   pull_upstream: (editor) ->
@@ -144,7 +147,7 @@ actions =
 
       editor.notify "Tagging version #{version} ..."
 
-      repository().createRef("refs/tags/#{version}")
+      editor.repository().createRef("refs/tags/#{version}")
       .then ->
         editor.notifications.push "Tagged #{version}"
         editor.notifications.push "\nPublishing..."

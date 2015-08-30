@@ -69,8 +69,6 @@ Templates
     Runtime = require "runtime"
     Packager = require "packager"
 
-    {readSourceConfig} = require("./source/util")
-
     Runtime(PACKAGE)
       .boot()
       .applyStyleSheet(require('./style'))
@@ -91,7 +89,7 @@ Templates
 
     repository.observe updateIssues
 
-    repository github.Repository(PACKAGE.repository)
+    repository github.Repository(editor.loadedPackage().repository)
 
     editor.closeOpenEditors = ->
       aceShim.aceEditor().setSession(ace.createEditSession(""))
