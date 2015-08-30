@@ -141,8 +141,6 @@ Hygiene = require <span class="string">"hygiene"</span>
 Runtime = require <span class="string">"runtime"</span>
 Packager = require <span class="string">"packager"</span>
 
-{readSourceConfig} = require(<span class="string">"./source/util"</span>)
-
 Runtime(PACKAGE)
   .boot()
   .applyStyleSheet(require(<span class="string">'./style'</span>))
@@ -163,7 +161,7 @@ repository = editor.repository
 
 repository.observe updateIssues
 
-repository github.Repository(PACKAGE.repository)
+repository github.Repository(editor.loadedPackage().repository)
 
 editor.<span class="function"><span class="title">closeOpenEditors</span></span> = -&gt;
   aceShim.aceEditor().setSession(ace.createEditSession(<span class="string">""</span>))
