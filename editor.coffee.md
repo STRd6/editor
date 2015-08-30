@@ -7,7 +7,6 @@ Editor
     Packager = require("packager")
     {Filetree, File} = require("filetree")
     {processDirectory} = require "./source/util"
-    {confirmIf} = require "./lib/ui"
     documenter = require "md"
 
     loadedPackage = Observable null
