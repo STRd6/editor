@@ -205,13 +205,13 @@ issues?.currentIssue.observe (issue) -&gt;
         editor.load repository()
         .<span class="keyword">then</span> -&gt;
           editor.notifications.push <span class="string">"Loaded!"</span>
-    .fail -&gt;
+    , -&gt;
       <span class="comment"># TODO: Issue will appear as being selected even though we cancelled</span>
       <span class="comment"># To correctly handle this we may need to really beef up our observables.</span>
       <span class="comment"># One possibility is to extend observables to full fledged deferreds</span>
       <span class="comment"># which can be rejected by listeners added to the chain.</span>
 
-      repository.branch(previousBranch)
+      repository().branch(previousBranch)
 
       editor.classicError <span class="string">"Error switching to <span class="subst">#{branchName}</span>, still on <span class="subst">#{previousBranch}</span>"</span>
     .done()
