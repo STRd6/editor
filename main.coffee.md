@@ -71,14 +71,6 @@ Templates
 
     {readSourceConfig} = require("./source/util")
 
-    notifications = require("notifications")()
-    {classicError, notify, errors} = notifications
-    extend editor,
-      classicError: classicError
-      notify: notify
-      errors: errors
-      notifications: notifications
-
     Runtime(PACKAGE)
       .boot()
       .applyStyleSheet(require('./style'))
@@ -87,25 +79,19 @@ Templates
 
     # Branch Chooser using pull requests
     {models:{Issue, Issues}} = require("issues")
-    issues = Issues()
+    issues = editor.issues = Issues()
 
     # Github repository observable
     # TODO: Finalize move into editor module
     repository = editor.repository
 
-    repository.observe (repository) ->
+    updateIssues = (repository) ->
       issues.repository = repository
       repository.pullRequests().then issues.reset
 
-      notify "Loaded repository: #{repository.full_name()}"
+    repository.observe updateIssues
 
-    PACKAGE.repository.url ||= "repos/#{PACKAGE.repository.full_name}"
-
-    # Need to delay this slightly so our auth token deferred has time to load
-    # TODO: Make better use of observables and computed functions so the timing
-    # doesn't matter
-    setTimeout ->
-      repository github.Repository(PACKAGE.repository)
+    repository github.Repository(PACKAGE.repository)
 
     editor.closeOpenEditors = ->
       aceShim.aceEditor().setSession(ace.createEditSession(""))
@@ -144,13 +130,12 @@ Templates
           # Switch to branch for working on the issue
           repository().switchToBranch(branchName)
           .then ->
-            notifications.push "\nLoading branch #{branchName}..."
+            editor.notifications.push "\nLoading branch #{branchName}..."
 
-            editor.load
-              repository: repository()
+            editor.load repository()
             .then ->
-              notifications.push "Loaded!"
-        , ->
+              editor.notifications.push "Loaded!"
+        .fail ->
           # TODO: Issue will appear as being selected even though we cancelled
           # To correctly handle this we may need to really beef up our observables.
           # One possibility is to extend observables to full fledged deferreds
@@ -158,14 +143,15 @@ Templates
 
           repository.branch(previousBranch)
 
-          classicError "Error switching to #{branchName}, still on #{previousBranch}"
+          editor.classicError "Error switching to #{branchName}, still on #{previousBranch}"
+        .done()
 
       if issue?.branchName?
-        notify issue.fullDescription()
+        editor.notify issue.fullDescription()
 
         changeBranch issue.branchName()
       else
-        notify "Default branch selected"
+        editor.notify "Default branch selected"
 
         changeBranch repository().defaultBranch()
 
@@ -173,7 +159,7 @@ Templates
       .append require("./templates/editor")(
         filetree: filetree
         actions: editor.actions
-        notifications: notifications
+        notifications: editor.notifications
         issues: issues
         github: github
         repository: repository

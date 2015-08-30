@@ -1,4 +1,5 @@
 {File} = require "filetree"
+{models:{Issue}} = require("issues")
 
 actions =
   save: (editor) ->
@@ -58,18 +59,18 @@ actions =
       fullName = prompt("Github repo", currentRepositoryName)
 
       if fullName
-        github.repository(fullName).then editor.repository
+        editor.notify "Loading repo data..."
+        github.repository(fullName)
       else
-        Q.fcall -> throw "No repo given"
-    .then (repositoryInstance) ->
-      editor.notify "Loading files..."
+        throw "No repo given"
+    .then (repository) ->
+      editor.notifications.push "Done!\nLoading files..."
 
-      editor.load
-        repository: repositoryInstance
-      .then ->
-        editor.closeOpenEditors()
+      editor.repository repository
+      editor.load repository
+    .then ->
+      editor.closeOpenEditors()
 
-        editor.notifications.push "Loaded"
     .fail editor.classicError
     .done()
 
@@ -81,6 +82,7 @@ actions =
         title: title
       .then (data) ->
         issue = Issue(data)
+        issues = editor.issues
         issues.issues.push issue
 
         # TODO: Standardize this like backbone or something
@@ -89,7 +91,7 @@ actions =
         issues.currentIssue issue
         issues.silent = false
 
-        notifications.push "Created!"
+        editor.notifications.push "Created!"
       , editor.classicError
       .done()
 

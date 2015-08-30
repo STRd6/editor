@@ -43,6 +43,14 @@ Editor
     module.exports = (I={}, self=Model(I)) ->
       builder = initBuilder(self)
       filetree = Filetree()
+      
+      notifications = require("notifications")()
+      {classicError, notify, errors} = notifications
+      extend self,
+        classicError: classicError
+        notify: notify
+        errors: errors
+        notifications: notifications
 
       self.extend
         repository: Observable()
@@ -69,12 +77,11 @@ Editor
               else
                 self.repository().publish(Packager.standAlone(pkg, docs), undefined, publishBranch)
 
-        load: ({repository}) ->
+        load: (repository) ->
           repository.latestContent()
           .then (results) ->
-            self.repository repository
-
             self.loadPackage
+              repository: cleanRepositoryData repository.toJSON()
               source: processDirectory results
 
 Build the project, returning a promise that will be fulfilled with the `pkg`
@@ -109,7 +116,10 @@ when complete.
 
         loadPackage: (pkg) ->
           loadedPackage pkg
+
           filetree.load pkg.source
+
+          pkg
 
         loadFiles: (fileData) ->
           filetree.load fileData
