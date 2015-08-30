@@ -2,10 +2,14 @@ Editor
 ======
 
     Runners = require "./runners"
-    Actions = require("./source/actions")
+    Actions = require("./actions")
     Builder = require("builder")
     Packager = require("packager")
     {Filetree, File} = require("filetree")
+    {processDirectory} = require "./source/util"
+    documenter = require "md"
+
+    loadedPackage = Observable null
 
     initBuilder = (self) ->
       builder = Builder()
@@ -38,9 +42,46 @@ Editor
     module.exports = (I={}, self=Model(I)) ->
       builder = initBuilder(self)
       filetree = Filetree()
+      
+      notifications = require("notifications")()
+      {classicError, notify, errors} = notifications
+      extend self,
+        classicError: classicError
+        notify: notify
+        errors: errors
+        notifications: notifications
 
       self.extend
         repository: Observable()
+
+        confirmUnsaved: ->
+          Q.fcall ->
+            if filetree.hasUnsavedChanges()
+              throw "Cancelled" unless window.confirm "You will lose unsaved changes in your current branch, continue?"
+
+        publish: ->
+          self.build()
+          .then (pkg) ->
+            documenter.documentAll(pkg)
+            .then (docs) ->
+              # NOTE: This metadata is added from the builder
+              publishBranch = pkg.repository.publishBranch
+
+              # TODO: Don't pass files to packager, just merge them at the end
+              # TODO: Have differenty types of building (docs/main) that can
+              # be chosen in a config rather than hacks based on the branch name
+              repository = self.repository()
+              if repository.branch() is "blog" # HACK
+                self.repository().publish(docs, undefined, publishBranch)
+              else
+                self.repository().publish(Packager.standAlone(pkg, docs), undefined, publishBranch)
+
+        load: (repository) ->
+          repository.latestContent()
+          .then (results) ->
+            self.loadPackage
+              repository: cleanRepositoryData repository.toJSON()
+              source: processDirectory results
 
 Build the project, returning a promise that will be fulfilled with the `pkg`
 when complete.
@@ -60,9 +101,24 @@ when complete.
 
               return pkg
 
+        loadedPackage: loadedPackage
+
         save: ->
           self.repository().commitTree
             tree: filetree.data()
+
+        dependencies: ->
+          loadedPackage().dependencies
+
+        exploreDependency: (name) ->
+
+
+        loadPackage: (pkg) ->
+          loadedPackage pkg
+
+          filetree.load pkg.source
+
+          pkg
 
         loadFiles: (fileData) ->
           filetree.load fileData
@@ -113,7 +169,7 @@ Likewise we shouldn't expose the builder directly either.
       self.include(Actions)
 
       extend require("postmaster")(),
-        load: self.loadFiles
+        load: self.loadPackage
 
       return self
 

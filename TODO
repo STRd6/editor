@@ -7,14 +7,16 @@ Plugins
 - Remove plugins
 - Lifecycle events (open file, before save)
 
-Remove github, move to plugin
-
 Clean up build/compiler stuff
 
 Publish html to whimsy.space locations
 
-Update to latest ACE
-
 Project level search
 
 Clean Up Dependencies
+
+Dependecy Explorer
+
+Filetree Imrovements
+
+"Open In Editor" link on published apps
