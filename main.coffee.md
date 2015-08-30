@@ -133,13 +133,13 @@ Templates
             editor.load repository()
             .then ->
               editor.notifications.push "Loaded!"
-        .fail ->
+        , ->
           # TODO: Issue will appear as being selected even though we cancelled
           # To correctly handle this we may need to really beef up our observables.
           # One possibility is to extend observables to full fledged deferreds
           # which can be rejected by listeners added to the chain.
 
-          repository.branch(previousBranch)
+          repository().branch(previousBranch)
 
           editor.classicError "Error switching to #{branchName}, still on #{previousBranch}"
         .done()
