@@ -35,10 +35,14 @@
               
             </div>
             <div class="content"><pre><code class="lang-coffeescript">Runners = require <span class="string">"./runners"</span>
-Actions = require(<span class="string">"./source/actions"</span>)
+Actions = require(<span class="string">"./actions"</span>)
 Builder = require(<span class="string">"builder"</span>)
 Packager = require(<span class="string">"packager"</span>)
 {Filetree, File} = require(<span class="string">"filetree"</span>)
+{processDirectory} = require <span class="string">"./source/util"</span>
+documenter = require <span class="string">"md"</span>
+
+loadedPackage = Observable <span class="literal">null</span>
 
 <span class="function"><span class="title">initBuilder</span></span> = (self) -&gt;
   builder = Builder()
@@ -72,8 +76,45 @@ module.<span class="function"><span class="title">exports</span></span> = (I={},
   builder = initBuilder(self)
   filetree = Filetree()
 
+  notifications = require(<span class="string">"notifications"</span>)()
+  {classicError, notify, errors} = notifications
+  extend self,
+    classicError: classicError
+    notify: notify
+    errors: errors
+    notifications: notifications
+
   self.extend
-    repository: Observable()</code></pre>
+    repository: Observable()
+
+    confirmUnsaved: -&gt;
+      Q.fcall -&gt;
+        <span class="keyword">if</span> filetree.hasUnsavedChanges()
+          <span class="keyword">throw</span> <span class="string">"Cancelled"</span> <span class="keyword">unless</span> window.confirm <span class="string">"You will lose unsaved changes in your current branch, continue?"</span>
+
+    publish: -&gt;
+      self.build()
+      .<span class="keyword">then</span> (pkg) -&gt;
+        documenter.documentAll(pkg)
+        .<span class="keyword">then</span> (docs) -&gt;
+          <span class="comment"># NOTE: This metadata is added from the builder</span>
+          publishBranch = pkg.repository.publishBranch
+
+          <span class="comment"># TODO: Don't pass files to packager, just merge them at the end</span>
+          <span class="comment"># TODO: Have differenty types of building (docs/main) that can</span>
+          <span class="comment"># be chosen in a config rather than hacks based on the branch name</span>
+          repository = self.repository()
+          <span class="keyword">if</span> repository.branch() <span class="keyword">is</span> <span class="string">"blog"</span> <span class="comment"># HACK</span>
+            self.repository().publish(docs, <span class="literal">undefined</span>, publishBranch)
+          <span class="keyword">else</span>
+            self.repository().publish(Packager.standAlone(pkg, docs), <span class="literal">undefined</span>, publishBranch)
+
+    load: (repository) -&gt;
+      repository.latestContent()
+      .<span class="keyword">then</span> (results) -&gt;
+        self.loadPackage
+          repository: cleanRepositoryData repository.toJSON()
+          source: processDirectory results</code></pre>
 </div>
         </li>
         
@@ -102,9 +143,24 @@ when complete.</p>
 
           <span class="keyword">return</span> pkg
 
+    loadedPackage: loadedPackage
+
     save: -&gt;
       self.repository().commitTree
         tree: filetree.data()
+
+    dependencies: -&gt;
+      loadedPackage().dependencies
+
+    exploreDependency: (name) -&gt;
+
+
+    loadPackage: (pkg) -&gt;
+      loadedPackage pkg
+
+      filetree.load pkg.source
+
+      pkg
 
     loadFiles: (fileData) -&gt;
       filetree.load fileData</code></pre>
@@ -173,7 +229,7 @@ when complete.</p>
   self.include(Actions)
 
   extend require(<span class="string">"postmaster"</span>)(),
-    load: self.loadFiles
+    load: self.loadPackage
 
   <span class="keyword">return</span> self</code></pre>
 </div>
