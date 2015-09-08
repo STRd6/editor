@@ -1,0 +1,15 @@
+CACHE MANIFEST
+# 1441738490929
+
+CACHE:
+index.html
+../jadelet-support.json.js
+https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js
+https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js
+https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js
+https://code.jquery.com/jquery-1.11.0.min.js
+
+NETWORK:
+https://*
+http://*
+*
