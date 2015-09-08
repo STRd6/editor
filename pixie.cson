@@ -11,7 +11,7 @@ remoteDependencies: [
 dependencies:
   analytics: "distri/google-analytics:v0.1.0"
   base64: "distri/base64:v0.9.0"
-  builder: "distri/builder:v0.5.0"
+  builder: "distri/builder:v0.5.1-pre.1"
   cornerstone: "distri/cornerstone:v0.2.10"
   cson: "distri/cson:v0.1.0"
   filetree: "STRd6/filetree:v0.3.2"
