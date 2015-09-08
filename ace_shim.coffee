@@ -17,8 +17,6 @@ module.exports = ->
 
     aceEditor.setOptions
       highlightActiveLine: true
-      showPrintMargin: false
-      scrollPastEnd: true
 
     # Filetree observable binding
     updating = false

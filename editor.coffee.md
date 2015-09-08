@@ -42,7 +42,7 @@ Editor
     module.exports = (I={}, self=Model(I)) ->
       builder = initBuilder(self)
       filetree = Filetree()
-      
+
       notifications = require("notifications")()
       {classicError, notify, errors} = notifications
       extend self,
@@ -165,11 +165,15 @@ Likewise we shouldn't expose the builder directly either.
         config: ->
           readSourceConfig(source: arrayToHash(filetree.data()))
 
+        plugin: (pluginJSON) ->
+          self.include require(pluginJSON)
+
       self.include(Runners)
       self.include(Actions)
 
       extend require("postmaster")(),
         load: self.loadPackage
+        plugin: self.plugin
 
       return self
 
