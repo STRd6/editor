@@ -185,9 +185,8 @@ filetree.selectedFile.observe (file) -&gt;
       hotReload()
     file.session = aceShim.initSession(file)
 
-  aceShim.aceEditor().getSession()?._signal(<span class="string">"blur"</span>)
   aceShim.aceEditor().setSession(file.session)
-  file.session._signal?(<span class="string">"focus"</span>)
+  aceShim.aceEditor().focus()
 
 issues?.currentIssue.observe (issue) -&gt;
   <span class="comment"># TODO: Formalize this later</span>
@@ -240,8 +239,6 @@ $root
 
 AceShim = require <span class="string">"./ace_shim"</span>
 aceShim = AceShim()
-
-editor.include require <span class="string">"./plugins/whimsy"</span>
 
 window.<span class="function"><span class="title">onbeforeunload</span></span> = -&gt;
   <span class="keyword">if</span> filetree.hasUnsavedChanges()
