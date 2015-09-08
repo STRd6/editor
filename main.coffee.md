@@ -112,9 +112,8 @@ Templates
           hotReload()
         file.session = aceShim.initSession(file)
 
-      aceShim.aceEditor().getSession()?._signal("blur")
       aceShim.aceEditor().setSession(file.session)
-      file.session._signal?("focus")
+      aceShim.aceEditor().focus()
 
     issues?.currentIssue.observe (issue) ->
       # TODO: Formalize this later
@@ -167,8 +166,6 @@ Templates
 
     AceShim = require "./ace_shim"
     aceShim = AceShim()
-
-    editor.include require "./plugins/whimsy"
 
     window.onbeforeunload = ->
       if filetree.hasUnsavedChanges()
