@@ -225,11 +225,15 @@ when complete.</p>
     config: -&gt;
       readSourceConfig(source: arrayToHash(filetree.data()))
 
+    plugin: (pluginJSON) -&gt;
+      self.include require(pluginJSON)
+
   self.include(Runners)
   self.include(Actions)
 
   extend require(<span class="string">"postmaster"</span>)(),
     load: self.loadPackage
+    plugin: self.plugin
 
   <span class="keyword">return</span> self</code></pre>
 </div>

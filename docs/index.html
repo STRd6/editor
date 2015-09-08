@@ -185,9 +185,8 @@ filetree.selectedFile.observe (file) -&gt;
       hotReload()
     file.session = aceShim.initSession(file)
 
-  aceShim.aceEditor().getSession()?._signal(<span class="string">"blur"</span>)
   aceShim.aceEditor().setSession(file.session)
-  file.session._signal?(<span class="string">"focus"</span>)
+  aceShim.aceEditor().focus()
 
 issues?.currentIssue.observe (issue) -&gt;
   <span class="comment"># TODO: Formalize this later</span>
