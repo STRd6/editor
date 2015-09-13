@@ -156,10 +156,16 @@ when complete.</p>
     exploreDependency: (name) -&gt;
 
     load: (data) -&gt;
-      <span class="keyword">if</span> data.source <span class="comment"># looks like a package</span>
-        self.loadPackage data
-      <span class="keyword">else</span>
-        ; <span class="comment"># Load plugin, maybe files or other stuff</span>
+      <span class="keyword">try</span>
+        jsonData = JSON.parse(data)
+        <span class="comment"># TODO: Load plugins, maybe files or other stuff</span>
+        <span class="keyword">if</span> jsonData
+          <span class="keyword">if</span> jsonData.source <span class="comment"># looks like a package</span>
+            self.loadPackage jsonData
+        <span class="keyword">else</span>
+          ;
+      <span class="keyword">catch</span> e
+        console.error e
 
     loadPackage: (pkg) -&gt;
       loadedPackage pkg
