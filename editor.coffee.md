@@ -5,6 +5,7 @@ Editor
     Actions = require("./actions")
     Builder = require("builder")
     Packager = require("packager")
+    Postmaster = require("postmaster")
     {Filetree, File} = require("filetree")
     {processDirectory} = require "./source/util"
     documenter = require "md"
@@ -76,7 +77,7 @@ Editor
               else
                 self.repository().publish(Packager.standAlone(pkg, docs), undefined, publishBranch)
 
-        load: (repository) ->
+        loadRepository: (repository) ->
           repository.latestContent()
           .then (results) ->
             self.loadPackage
@@ -112,6 +113,11 @@ when complete.
 
         exploreDependency: (name) ->
 
+        load: (data) ->
+          if data.source # looks like a package
+            self.loadPackage data
+          else
+            ; # Load plugin, maybe files or other stuff
 
         loadPackage: (pkg) ->
           loadedPackage pkg
@@ -170,10 +176,7 @@ Likewise we shouldn't expose the builder directly either.
 
       self.include(Runners)
       self.include(Actions)
-
-      extend require("postmaster")(),
-        load: self.loadPackage
-        plugin: self.plugin
+      self.include(Postmaster)
 
       return self
 
