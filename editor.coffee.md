@@ -178,6 +178,20 @@ Likewise we shouldn't expose the builder directly either.
       self.include(Actions)
       self.include(Postmaster)
 
+Hotkeys (Not sure if this is the best place)
+-------
+
+      document.addEventListener "keydown", (e) ->
+        if e.ctrlKey
+          if e.keyCode is 83 # s
+            e.preventDefault()
+
+            self.build()
+            .then (pkg) ->
+              self.sendToParent
+                method: "save", 
+                params: [JSON.stringify(pkg)]
+
       return self
 
 Helpers
@@ -187,3 +201,4 @@ Helpers
 
     cleanRepositoryData = (data) ->
       _.pick data, "branch", "default_branch", "full_name", "homepage", "description", "html_url", "url"
+
