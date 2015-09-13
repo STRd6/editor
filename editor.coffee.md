@@ -114,10 +114,16 @@ when complete.
         exploreDependency: (name) ->
 
         load: (data) ->
-          if data.source # looks like a package
-            self.loadPackage data
-          else
-            ; # Load plugin, maybe files or other stuff
+          try
+            jsonData = JSON.parse(data)
+            # TODO: Load plugins, maybe files or other stuff
+            if jsonData
+              if jsonData.source # looks like a package
+                self.loadPackage jsonData
+            else
+              ;
+          catch e
+            console.error e
 
         loadPackage: (pkg) ->
           loadedPackage pkg
