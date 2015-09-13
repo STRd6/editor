@@ -69,7 +69,7 @@ actions =
       editor.notifications.push "Done!\nLoading files..."
 
       editor.repository repository
-      editor.load repository
+      editor.loadRepository repository
     .then ->
       editor.notifications.push "Done!"
       editor.closeOpenEditors()
@@ -107,11 +107,11 @@ actions =
     ).then ->
       editor.notifications.push "Merged!"
 
-      branchName = editor.repository().branch()
+      repository = editor.repository()
+      branchName = repository.branch()
       editor.notifications.push "\nReloading branch #{branchName}..."
 
-      editor.load
-        repository: repository()
+      editor.loadRepository repository
       .then ->
         editor.notifications.push "Loaded!"
       .fail ->
@@ -130,7 +130,7 @@ actions =
         repository.latestContent()
       .then (results) ->
         files = processDirectory results
-        editor.loadFiles files
+        Files files
 
     , classicError
     ).then ->
