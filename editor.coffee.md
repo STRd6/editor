@@ -76,7 +76,7 @@ Editor
               else
                 self.repository().publish(Packager.standAlone(pkg, docs), undefined, publishBranch)
 
-        load: (repository) ->
+        loadRepository: (repository) ->
           repository.latestContent()
           .then (results) ->
             self.loadPackage
