@@ -236,9 +236,7 @@ when complete.</p>
 
   self.include(Runners)
   self.include(Actions)
-  self.include(Postmaster)
-
-  <span class="keyword">return</span> self</code></pre>
+  self.include(Postmaster)</code></pre>
 </div>
         </li>
         
@@ -248,7 +246,7 @@ when complete.</p>
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <h2 id="helpers">Helpers</h2>
+              <h2 id="hotkeys-not-sure-if-this-is-the-best-place-">Hotkeys (Not sure if this is the best place)</h2>
 
             </div>
             <div class="content"><pre><code class="lang-coffeescript">
@@ -261,6 +259,43 @@ when complete.</p>
             <div class="annotation">
               <div class="pilwrap">
                 <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">  document.addEventListener <span class="string">"keydown"</span>, (e) -&gt;
+    <span class="keyword">if</span> e.ctrlKey
+      <span class="keyword">if</span> e.keyCode <span class="keyword">is</span> <span class="number">83</span> <span class="comment"># s</span>
+        e.preventDefault()
+
+        self.build()
+        .<span class="keyword">then</span> (pkg) -&gt;
+          self.sendToParent
+            method: <span class="string">"save"</span>, 
+            params: [JSON.stringify(pkg)]
+
+  <span class="keyword">return</span> self</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <h2 id="helpers">Helpers</h2>
+
+            </div>
+            <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              <div class="pilwrap">
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               
             </div>
