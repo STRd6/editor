@@ -129,6 +129,7 @@ when complete.
           loadedPackage pkg
 
           filetree.load pkg.source
+          self.repository github.Repository(editor.loadedPackage().repository)
 
           pkg
 
@@ -195,7 +196,7 @@ Hotkeys (Not sure if this is the best place)
             self.build()
             .then (pkg) ->
               self.sendToParent
-                method: "save", 
+                method: "save",
                 params: [JSON.stringify(pkg)]
 
       return self
