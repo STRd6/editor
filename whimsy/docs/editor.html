@@ -171,6 +171,7 @@ when complete.</p>
       loadedPackage pkg
 
       filetree.load pkg.source
+      self.repository github.Repository(editor.loadedPackage().repository)
 
       pkg
 
@@ -276,7 +277,7 @@ when complete.</p>
         self.build()
         .<span class="keyword">then</span> (pkg) -&gt;
           self.sendToParent
-            method: <span class="string">"save"</span>, 
+            method: <span class="string">"save"</span>,
             params: [JSON.stringify(pkg)]
 
   <span class="keyword">return</span> self</code></pre>
