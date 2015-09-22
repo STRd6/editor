@@ -208,8 +208,8 @@ window["STRd6/fillmore:whimsy-test"]({
     "full_name": "STRd6/fillmore",
     "homepage": "http://whimsy.space/danielx",
     "description": "A magical land of whimsy!",
-    "html_url": "https://github.com/STRd6/editor",
-    "url": "https://api.github.com/repos/STRd6/editor",
+    "html_url": "https://github.com/STRd6/fillmore",
+    "url": "https://api.github.com/repos/STRd6/fillmore",
     "publishBranch": "gh-pages"
   },
   "dependencies": {
