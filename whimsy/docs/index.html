@@ -84,6 +84,8 @@ but I had no idea what I was doing and still don&#39;t know to this day.</p>
 global.PACKAGE = PACKAGE
 global.require = require
 
+global.logs = []
+
 require(<span class="string">"analytics"</span>).init(<span class="string">"UA-3464282-15"</span>)
 
 <span class="comment"># Create and auth a github API</span>
@@ -202,12 +204,13 @@ issues?.currentIssue.observe (issue) -&gt;
       <span class="comment"># Switch to branch for working on the issue</span>
       repository().switchToBranch(branchName)
       .<span class="keyword">then</span> -&gt;
-        editor.notifications.push <span class="string">"\nLoading branch <span class="subst">#{branchName}</span>..."</span>
+        editor.notify <span class="string">"\nLoading branch <span class="subst">#{branchName}</span>..."</span>
 
-        editor.load repository()
+        editor.loadRepository repository()
         .<span class="keyword">then</span> -&gt;
-          editor.notifications.push <span class="string">"Loaded!"</span>
-    , -&gt;
+          editor.notify <span class="string">"Loaded!"</span>
+    , (e) -&gt;
+      console.error e
       <span class="comment"># TODO: Issue will appear as being selected even though we cancelled</span>
       <span class="comment"># To correctly handle this we may need to really beef up our observables.</span>
       <span class="comment"># One possibility is to extend observables to full fledged deferreds</span>

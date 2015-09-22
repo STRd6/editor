@@ -82,8 +82,16 @@ module.<span class="function"><span class="title">exports</span></span> = (I={},
   extend self,
     classicError: classicError
     notify: notify
+    notifyAppend: (msg) -&gt;
+      global.logs.push msg
+      self.notifications.push msg
     errors: errors
     notifications: notifications
+
+  <span class="keyword">do</span> (oldNotify=self.notify) -&gt;
+    self.<span class="function"><span class="title">notify</span></span> = (msg) -&gt;
+      global.logs.push msg
+      oldNotify(msg)
 
   self.extend
     repository: Observable()
@@ -111,10 +119,11 @@ module.<span class="function"><span class="title">exports</span></span> = (I={},
             self.repository().publish(Packager.standAlone(pkg, docs), <span class="literal">undefined</span>, publishBranch)
 
     loadRepository: (repository) -&gt;
+      self.repository repository
+
       repository.latestContent()
       .<span class="keyword">then</span> (results) -&gt;
         self.loadPackage
-          repository: cleanRepositoryData repository.toJSON()
           source: processDirectory results</code></pre>
 </div>
         </li>
@@ -155,12 +164,21 @@ when complete.</p>
 
     exploreDependency: (name) -&gt;
 
+    loadFile: (file) -&gt;
+      fileReader = <span class="keyword">new</span> FileReader()
+      fileReader.<span class="function"><span class="title">onload</span></span> = (e) -&gt;
+        self.load e.target.result
+      fileReader.readAsText(file)
+
     load: (data) -&gt;
       <span class="keyword">try</span>
         jsonData = JSON.parse(data)
         <span class="comment"># TODO: Load plugins, maybe files or other stuff</span>
         <span class="keyword">if</span> jsonData
           <span class="keyword">if</span> jsonData.source <span class="comment"># looks like a package</span>
+            <span class="keyword">if</span> jsonData.repository
+              self.repository github.Repository cleanRepositoryData jsonData.repository
+
             self.loadPackage jsonData
         <span class="keyword">else</span>
           ;
@@ -171,7 +189,6 @@ when complete.</p>
       loadedPackage pkg
 
       filetree.load pkg.source
-      self.repository github.Repository(editor.loadedPackage().repository)
 
       pkg
 
@@ -279,6 +296,11 @@ when complete.</p>
           self.sendToParent
             method: <span class="string">"save"</span>,
             params: [JSON.stringify(pkg)]
+
+  <span class="comment"># Handle File Drops</span>
+  dropReader = require <span class="string">"./lib/drop"</span>
+  dropReader document.documentElement, (event) -&gt;
+    self.loadFile event.dataTransfer.files[<span class="number">0</span>]
 
   <span class="keyword">return</span> self</code></pre>
 </div>
