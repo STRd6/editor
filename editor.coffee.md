@@ -49,8 +49,16 @@ Editor
       extend self,
         classicError: classicError
         notify: notify
+        notifyAppend: (msg) ->
+          global.logs.push msg
+          self.notifications.push msg
         errors: errors
         notifications: notifications
+
+      do (oldNotify=self.notify) ->
+        self.notify = (msg) ->
+          global.logs.push msg
+          oldNotify(msg)
 
       self.extend
         repository: Observable()
@@ -78,10 +86,11 @@ Editor
                 self.repository().publish(Packager.standAlone(pkg, docs), undefined, publishBranch)
 
         loadRepository: (repository) ->
+          self.repository repository
+
           repository.latestContent()
           .then (results) ->
             self.loadPackage
-              repository: cleanRepositoryData repository.toJSON()
               source: processDirectory results
 
 Build the project, returning a promise that will be fulfilled with the `pkg`
@@ -113,12 +122,21 @@ when complete.
 
         exploreDependency: (name) ->
 
+        loadFile: (file) ->
+          fileReader = new FileReader()
+          fileReader.onload = (e) ->
+            self.load e.target.result
+          fileReader.readAsText(file)
+
         load: (data) ->
           try
             jsonData = JSON.parse(data)
             # TODO: Load plugins, maybe files or other stuff
             if jsonData
               if jsonData.source # looks like a package
+                if jsonData.repository
+                  self.repository github.Repository cleanRepositoryData jsonData.repository
+
                 self.loadPackage jsonData
             else
               ;
@@ -129,7 +147,6 @@ when complete.
           loadedPackage pkg
 
           filetree.load pkg.source
-          self.repository github.Repository(editor.loadedPackage().repository)
 
           pkg
 
@@ -198,6 +215,11 @@ Hotkeys (Not sure if this is the best place)
               self.sendToParent
                 method: "save",
                 params: [JSON.stringify(pkg)]
+
+      # Handle File Drops
+      dropReader = require "./lib/drop"
+      dropReader document.documentElement, (event) ->
+        self.loadFile event.dataTransfer.files[0]
 
       return self
 
