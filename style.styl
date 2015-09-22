@@ -1,85 +1,94 @@
-html
+html, body
   height: 100%
 
 body
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif
-  font-weigth: 300
+  font-weight: 300
   margin: 0
-  height: 100%
 
-window
-  background-color: white
-  display: flex
-  flex-direction: column
-  overflow: auto
-  position: absolute
-  resize: both
-  padding: 3px
-  border: 1px solid gray
-  min-width: 100px
-  min-height: 100px
-
-  & > h2
-    background-color: blue
-    color: white
-    margin: 0
-    border-bottom: 1px solid gray
-
-    & > .save
-      width: 16px
-      height: 16px
-      margin: 5px
-
-    & > .close, .save
-      cursor: pointer
-      float: right
-
-  & > iframe
-    border: none
-    width: 100%
-    flex: 2
-
-  & > .drop-fix
-    width: 100%
-    height: 100%
-    z-index: -1
-    top: 0
-    left: 0
-    position: absolute
-
-  &.drop-hover > .drop-fix
-    z-index: 1
-
-folder
-  display: block
-  width: 100%
-  height: 100%
-  overflow: auto
-  z-index: 3
-
-  & > .launcher
-    cursor: pointer
-    width: 64px
-    margin: 1em
-    display: inline-flex
-    flex-direction: column
-    align-items: center
-    text-align: center
-
-    & > .icon
-      width: 48px
-      height: 48px
-
-desktop
-  display: block
-  width: 100%
-  height: 100%
+.main
   position: relative
+  padding-top: 40px
+  padding-left: 200px
+  padding-bottom: 100px
+  box-sizing: border-box
+  height: 100%
 
-  & > .drag-fix
-    z-Index: -1
+  & > #ace
+    border: none
+    display: block
     width: 100%
     height: 100%
-    position: absolute
-    top: 0
-    left: 0
+
+.filetree
+  margin: 0
+  padding: 0
+  width: 200px
+  overflow-x: hidden
+  overflow-y: auto
+  position: absolute
+  left: 0
+  bottom: 0
+  top: 40px
+  z-index: 2
+
+  li
+    cursor: pointer
+    list-style-type: none
+    padding-left: 1em
+    position: relative
+    whitespace: nowrap
+
+    .delete
+      display: none
+      position: absolute
+      right: 0
+      top: 0
+
+    &:hover
+      background-color: lightyellow
+
+      .delete
+        display: inline-block
+
+.actions
+  position: absolute
+  top: 0
+  left: 200px
+  z-index: 1
+
+  button
+    margin-right: 0.25em
+
+.repo_info
+  box-sizing: border-box
+  position: absolute
+  top: 0
+  left: 0
+  padding: 0.25em 1em
+  width: 200px
+  overflow: hidden
+  border-bottom: 1px solid black
+  height: 40px
+  font-size: 0.8em
+
+.console-wrap
+  box-sizing: border-box
+  position: absolute
+  bottom: 0
+  left: 0
+  right: 0
+  padding-left: 200px
+  height: 100px
+  width: 100%
+  margin: 0
+
+  .errors
+    box-sizing: border-box
+    border-top: 1px solid black
+    color: red
+
+.status
+  top: 0
+  right: 0
+  position: absolute

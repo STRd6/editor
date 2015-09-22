@@ -1,8 +1,0 @@
-ul#filetree
-  - self = this
-  - files = @files
-  - @sortedFiles().forEach (file) ->
-    - select = (e) -> self.select(file) if e.target.nodeName is 'LI'
-    li(click=select)= file.path
-      - remove = -> files.remove(file) if confirm("Delete #{file.path()}?")
-      .delete(click=remove) X

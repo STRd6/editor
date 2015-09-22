@@ -1,3 +1,0 @@
-a.launcher(click=@fn @dragstart draggable="true" @drop)
-  img.icon(src=@icon draggable="false")
-  span= @title

@@ -1,0 +1,7 @@
+.actions
+  span
+    - @actions.each ({name, handler}) ->
+      button(click=handler)
+        = name.titleize()
+
+  select(value=@issues.currentIssue options=@issues.issues)

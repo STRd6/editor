@@ -1,8 +1,0 @@
-window(style="z-index: #{@zIndex}; width: #{@width}; height: #{@height}; top: 20px; left: 20px" @drop)
-  - close = (e) ->
-    - e.target.parentNode.parentNode.remove()
-  h2.handle
-    = @title
-    span.close(click=close) X
-  = @content
-  .drop-fix

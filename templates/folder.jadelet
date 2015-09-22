@@ -1,4 +1,0 @@
-- Launcher = require "./launcher"
-
-folder
-  = @system.filePresentersIn(@path).map Launcher
