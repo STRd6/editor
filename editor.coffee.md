@@ -212,9 +212,10 @@ Hotkeys (Not sure if this is the best place)
 
             self.build()
             .then (pkg) ->
-              self.sendToParent
-                method: "save",
-                params: [JSON.stringify(pkg)]
+              path = prompt "Path", "something.pkg"
+              if path
+                file = new File [JSON.stringify(pkg)], path, type: "application/json"
+                self.invokeRemote "saveFile", file 
 
       # Handle File Drops
       dropReader = require "./lib/drop"
