@@ -34,7 +34,9 @@
               </div>
               
             </div>
-            <div class="content"><pre><code class="lang-coffeescript">Runners = require <span class="string">"./runners"</span>
+            <div class="content"><pre><code class="lang-coffeescript">require <span class="string">"cornerstone"</span>
+
+Runners = require <span class="string">"./runners"</span>
 Actions = require(<span class="string">"./actions"</span>)
 Builder = require(<span class="string">"builder"</span>)
 Packager = require(<span class="string">"packager"</span>)
@@ -63,13 +65,14 @@ loadedPackage = Observable <span class="literal">null</span>
 
   <span class="comment"># Attach repo metadata to package</span>
   builder.addPostProcessor (pkg) -&gt;
-    repository = self.repository()
+    <span class="keyword">if</span> repository = self.repository()
+      <span class="comment"># TODO: Track commit SHA as well</span>
+      pkg.repository = cleanRepositoryData repository.toJSON()
 
-    <span class="comment"># TODO: Track commit SHA as well</span>
-    pkg.repository = cleanRepositoryData repository.toJSON()
-
-    <span class="comment"># Add publish branch</span>
-    pkg.repository.publishBranch = self.config().publishBranch <span class="keyword">or</span> repository.publishBranch()
+      <span class="comment"># Add publish branch</span>
+      pkg.repository.publishBranch = self.config().publishBranch <span class="keyword">or</span> repository.publishBranch()
+    <span class="keyword">else</span>
+      pkg
 
   <span class="keyword">return</span> builder
 
@@ -299,9 +302,9 @@ when complete.</p>
             data = JSON.stringify(pkg)
             console.log <span class="string">'heyy'</span>, data.length
             file = <span class="keyword">new</span> Blob [data], type: <span class="string">"application/json"</span>
-            file.name = path
+            <span class="comment"># file = new File [data], path, type: "application/json"</span>
             console.log file, file.size
-            self.invokeRemote <span class="string">"saveFile"</span>, file
+            self.invokeRemote <span class="string">"saveFile"</span>, file, path
 
   <span class="comment"># Handle File Drops</span>
   dropReader = require <span class="string">"./lib/drop"</span>
