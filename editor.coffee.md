@@ -214,8 +214,13 @@ Hotkeys (Not sure if this is the best place)
             .then (pkg) ->
               path = prompt "Path", "something.pkg"
               if path
-                file = new File [JSON.stringify(pkg)], path, type: "application/json"
-                self.invokeRemote "saveFile", file 
+                console.log 'yo', pkg
+                data = JSON.stringify(pkg)
+                console.log 'heyy', data.length
+                file = new Blob [data], type: "application/json"
+                file.name = path
+                console.log file, file.size
+                self.invokeRemote "saveFile", file
 
       # Handle File Drops
       dropReader = require "./lib/drop"

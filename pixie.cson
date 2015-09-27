@@ -21,7 +21,7 @@ dependencies:
   md: "distri/md:v0.4.2"
   notifications: "distri/notifications:v0.3.3"
   packager: "distri/packager:v0.5.15"
-  postmaster: "distri/postmaster:v0.3.1-pre.0"
+  postmaster: "distri/postmaster:v0.3.1"
   runner: "distri/runner:v0.3.1"
   runtime: "distri/runtime:v0.3.0"
   tests: "distri/tests:v0.1.1"
