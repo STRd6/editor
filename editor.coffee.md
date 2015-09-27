@@ -1,6 +1,8 @@
 Editor
 ======
 
+    require "cornerstone"
+
     Runners = require "./runners"
     Actions = require("./actions")
     Builder = require("builder")
@@ -30,13 +32,14 @@ Editor
 
       # Attach repo metadata to package
       builder.addPostProcessor (pkg) ->
-        repository = self.repository()
-
-        # TODO: Track commit SHA as well
-        pkg.repository = cleanRepositoryData repository.toJSON()
-
-        # Add publish branch
-        pkg.repository.publishBranch = self.config().publishBranch or repository.publishBranch()
+        if repository = self.repository()
+          # TODO: Track commit SHA as well
+          pkg.repository = cleanRepositoryData repository.toJSON()
+  
+          # Add publish branch
+          pkg.repository.publishBranch = self.config().publishBranch or repository.publishBranch()
+        else
+          pkg
 
       return builder
 
@@ -218,9 +221,9 @@ Hotkeys (Not sure if this is the best place)
                 data = JSON.stringify(pkg)
                 console.log 'heyy', data.length
                 file = new Blob [data], type: "application/json"
-                file.name = path
+                # file = new File [data], path, type: "application/json"
                 console.log file, file.size
-                self.invokeRemote "saveFile", file
+                self.invokeRemote "saveFile", file, path
 
       # Handle File Drops
       dropReader = require "./lib/drop"
