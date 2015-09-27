@@ -295,8 +295,13 @@ when complete.</p>
         .<span class="keyword">then</span> (pkg) -&gt;
           path = prompt <span class="string">"Path"</span>, <span class="string">"something.pkg"</span>
           <span class="keyword">if</span> path
-            file = <span class="keyword">new</span> File [JSON.stringify(pkg)], path, type: <span class="string">"application/json"</span>
-            self.invokeRemote <span class="string">"saveFile"</span>, file 
+            console.log <span class="string">'yo'</span>, pkg
+            data = JSON.stringify(pkg)
+            console.log <span class="string">'heyy'</span>, data.length
+            file = <span class="keyword">new</span> Blob [data], type: <span class="string">"application/json"</span>
+            file.name = path
+            console.log file, file.size
+            self.invokeRemote <span class="string">"saveFile"</span>, file
 
   <span class="comment"># Handle File Drops</span>
   dropReader = require <span class="string">"./lib/drop"</span>
