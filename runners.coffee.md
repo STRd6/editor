@@ -20,28 +20,17 @@ Rebuild the package and send the reload message to the runner with the newest pa
           .then (pkg) ->
             runningInstances.invoke "launch", pkg
 
-        runInAppWindow: ->
-          packageRunner = PackageRunner(self.config())
-
-          self.build()
-          .then(
-            (pkg) ->
-              runningInstances.push packageRunner
-
-              packageRunner.window.addEventListener "unload", ->
-                runningInstances.remove(packageRunner)
-
-              packageRunner.launch(pkg)
-
-              packageRunner
-            , (error) ->
-              packageRunner.close()
-
-              throw error
-          )
-
         run: ->
-          self.runInAppWindow()
+          self.build()
+          .then (pkg) ->
+            pkgBlob = new Blob [JSON.stringify(pkg)], type: "application/json"
+
+            url = URL.createObjectURL(pkgBlob)
+            self.invokeRemote "system", "run",
+              packageUrl: url
+              title: "Yolo"
+              width: 600
+              height: 600
 
         runDocs: ({file}) ->
           file ?= "index"

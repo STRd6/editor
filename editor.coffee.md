@@ -35,7 +35,7 @@ Editor
         if repository = self.repository()
           # TODO: Track commit SHA as well
           pkg.repository = cleanRepositoryData repository.toJSON()
-  
+
           # Add publish branch
           pkg.repository.publishBranch = self.config().publishBranch or repository.publishBranch()
         else
