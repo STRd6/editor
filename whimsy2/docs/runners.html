@@ -61,28 +61,17 @@ module.<span class="function"><span class="title">exports</span></span> = (I={},
       .<span class="keyword">then</span> (pkg) -&gt;
         runningInstances.invoke <span class="string">"launch"</span>, pkg
 
-    runInAppWindow: -&gt;
-      packageRunner = PackageRunner(self.config())
-
-      self.build()
-      .<span class="keyword">then</span>(
-        (pkg) -&gt;
-          runningInstances.push packageRunner
-
-          packageRunner.window.addEventListener <span class="string">"unload"</span>, -&gt;
-            runningInstances.remove(packageRunner)
-
-          packageRunner.launch(pkg)
-
-          packageRunner
-        , (error) -&gt;
-          packageRunner.close()
-
-          <span class="keyword">throw</span> error
-      )
-
     run: -&gt;
-      self.runInAppWindow()
+      self.build()
+      .<span class="keyword">then</span> (pkg) -&gt;
+        pkgBlob = <span class="keyword">new</span> Blob [JSON.stringify(pkg)], type: <span class="string">"application/json"</span>
+
+        url = URL.createObjectURL(pkgBlob)
+        self.invokeRemote <span class="string">"system"</span>, <span class="string">"run"</span>,
+          packageUrl: url
+          title: <span class="string">"Yolo"</span>
+          width: <span class="number">600</span>
+          height: <span class="number">600</span>
 
     runDocs: ({file}) -&gt;
       file ?= <span class="string">"index"</span>
