@@ -23,11 +23,8 @@ Rebuild the package and send the reload message to the runner with the newest pa
         run: ->
           self.build()
           .then (pkg) ->
-            pkgBlob = new Blob [JSON.stringify(pkg)], type: "application/json"
-
-            url = URL.createObjectURL(pkgBlob)
             self.invokeRemote "system", "run",
-              packageUrl: url
+              package: pkg
               title: "Yolo"
               width: 600
               height: 600
