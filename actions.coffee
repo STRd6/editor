@@ -19,6 +19,7 @@ actions =
     .then ->
       editor.notify "Saved and published!"
     .fail (args...) ->
+      console.error args
       editor.errors args
     .done()
 
@@ -26,7 +27,8 @@ actions =
     editor.notify "Running..."
 
     editor.run()
-    .fail editor.classicError
+    .fail ({message, stack}) ->
+      editor.errors [stack]
     .done()
 
   test: (editor) ->

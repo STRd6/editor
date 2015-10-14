@@ -126,10 +126,8 @@ when complete.
         exploreDependency: (name) ->
 
         loadFile: (file) ->
-          fileReader = new FileReader()
-          fileReader.onload = (e) ->
-            self.load e.target.result
-          fileReader.readAsText(file)
+          readFile(file)
+          .then self.load
 
         load: (data) ->
           try
@@ -240,3 +238,11 @@ Helpers
     cleanRepositoryData = (data) ->
       _.pick data, "branch", "default_branch", "full_name", "homepage", "description", "html_url", "url"
 
+    readFile = (file, method="readAsText") ->
+      return new Promise (resolve, reject) ->
+        reader = new FileReader()
+
+        reader.onloadend = ->
+          resolve(reader.result)
+        reader.onerror = reject
+        reader[method](file)
