@@ -1,10 +1,13 @@
 Editor
 ======
 
+    require "cornerstone"
+
     Runners = require "./runners"
     Actions = require("./actions")
     Builder = require("builder")
     Packager = require("packager")
+    Postmaster = require("postmaster")
     {Filetree, File} = require("filetree")
     {processDirectory} = require "./source/util"
     documenter = require "md"
@@ -29,13 +32,14 @@ Editor
 
       # Attach repo metadata to package
       builder.addPostProcessor (pkg) ->
-        repository = self.repository()
+        if repository = self.repository()
+          # TODO: Track commit SHA as well
+          pkg.repository = cleanRepositoryData repository.toJSON()
 
-        # TODO: Track commit SHA as well
-        pkg.repository = cleanRepositoryData repository.toJSON()
-
-        # Add publish branch
-        pkg.repository.publishBranch = self.config().publishBranch or repository.publishBranch()
+          # Add publish branch
+          pkg.repository.publishBranch = self.config().publishBranch or repository.publishBranch()
+        else
+          pkg
 
       return builder
 
@@ -48,8 +52,16 @@ Editor
       extend self,
         classicError: classicError
         notify: notify
+        notifyAppend: (msg) ->
+          global.logs.push msg
+          self.notifications.push msg
         errors: errors
         notifications: notifications
+
+      do (oldNotify=self.notify) ->
+        self.notify = (msg) ->
+          global.logs.push msg
+          oldNotify(msg)
 
       self.extend
         repository: Observable()
@@ -76,11 +88,12 @@ Editor
               else
                 self.repository().publish(Packager.standAlone(pkg, docs), undefined, publishBranch)
 
-        load: (repository) ->
+        loadRepository: (repository) ->
+          self.repository repository
+
           repository.latestContent()
           .then (results) ->
             self.loadPackage
-              repository: cleanRepositoryData repository.toJSON()
               source: processDirectory results
 
 Build the project, returning a promise that will be fulfilled with the `pkg`
@@ -112,6 +125,26 @@ when complete.
 
         exploreDependency: (name) ->
 
+        loadFile: (file) ->
+          fileReader = new FileReader()
+          fileReader.onload = (e) ->
+            self.load e.target.result
+          fileReader.readAsText(file)
+
+        load: (data) ->
+          try
+            jsonData = JSON.parse(data)
+            # TODO: Load plugins, maybe files or other stuff
+            if jsonData
+              if jsonData.source # looks like a package
+                if jsonData.repository
+                  self.repository github.Repository cleanRepositoryData jsonData.repository
+
+                self.loadPackage jsonData
+            else
+              ;
+          catch e
+            console.error e
 
         loadPackage: (pkg) ->
           loadedPackage pkg
@@ -170,10 +203,35 @@ Likewise we shouldn't expose the builder directly either.
 
       self.include(Runners)
       self.include(Actions)
+      self.include(Postmaster)
 
-      extend require("postmaster")(),
-        load: self.loadPackage
-        plugin: self.plugin
+Hotkeys (Not sure if this is the best place)
+-------
+
+      document.addEventListener "mousedown", ->
+        self.invokeRemote "focus"
+
+      document.addEventListener "keydown", (e) ->
+        if e.ctrlKey
+          if e.keyCode is 83 # s
+            e.preventDefault()
+
+            self.build()
+            .then (pkg) ->
+              path = prompt "Path", "something.pkg"
+              if path
+                console.log 'yo', pkg
+                data = JSON.stringify(pkg)
+                console.log 'heyy', data.length
+                file = new Blob [data], type: "application/json"
+                # file = new File [data], path, type: "application/json"
+                console.log file, file.size
+                self.invokeRemote "saveFile", file, path
+
+      # Handle File Drops
+      dropReader = require "./lib/drop"
+      dropReader document.documentElement, (event) ->
+        self.loadFile event.dataTransfer.files[0]
 
       return self
 
@@ -184,3 +242,4 @@ Helpers
 
     cleanRepositoryData = (data) ->
       _.pick data, "branch", "default_branch", "full_name", "homepage", "description", "html_url", "url"
+
