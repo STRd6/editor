@@ -168,8 +168,10 @@ when complete.</p>
     exploreDependency: (name) -&gt;
 
     loadFile: (file) -&gt;
-      readFile(file)
-      .<span class="keyword">then</span> self.load
+      fileReader = <span class="keyword">new</span> FileReader()
+      fileReader.<span class="function"><span class="title">onload</span></span> = (e) -&gt;
+        self.load e.target.result
+      fileReader.readAsText(file)
 
     load: (data) -&gt;
       <span class="keyword">try</span>
@@ -287,7 +289,10 @@ when complete.</p>
               </div>
               
             </div>
-            <div class="content"><pre><code class="lang-coffeescript">  document.addEventListener <span class="string">"keydown"</span>, (e) -&gt;
+            <div class="content"><pre><code class="lang-coffeescript">  document.addEventListener <span class="string">"mousedown"</span>, -&gt;
+    self.invokeRemote <span class="string">"focus"</span>
+
+  document.addEventListener <span class="string">"keydown"</span>, (e) -&gt;
     <span class="keyword">if</span> e.ctrlKey
       <span class="keyword">if</span> e.keyCode <span class="keyword">is</span> <span class="number">83</span> <span class="comment"># s</span>
         e.preventDefault()
@@ -338,16 +343,7 @@ when complete.</p>
             <div class="content"><pre><code class="lang-coffeescript">{readSourceConfig, arrayToHash} = require(<span class="string">"./source/util"</span>)
 
 <span class="function"><span class="title">cleanRepositoryData</span></span> = (data) -&gt;
-  _.pick data, <span class="string">"branch"</span>, <span class="string">"default_branch"</span>, <span class="string">"full_name"</span>, <span class="string">"homepage"</span>, <span class="string">"description"</span>, <span class="string">"html_url"</span>, <span class="string">"url"</span>
-
-<span class="function"><span class="title">readFile</span></span> = (file, method=<span class="string">"readAsText"</span>) -&gt;
-  <span class="keyword">return</span> <span class="keyword">new</span> Promise (resolve, reject) -&gt;
-    reader = <span class="keyword">new</span> FileReader()
-
-    reader.<span class="function"><span class="title">onloadend</span></span> = -&gt;
-      resolve(reader.result)
-    reader.onerror = reject
-    reader[method](file)</code></pre>
+  _.pick data, <span class="string">"branch"</span>, <span class="string">"default_branch"</span>, <span class="string">"full_name"</span>, <span class="string">"homepage"</span>, <span class="string">"description"</span>, <span class="string">"html_url"</span>, <span class="string">"url"</span></code></pre>
 </div>
         </li>
         
