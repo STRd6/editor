@@ -126,8 +126,10 @@ when complete.
         exploreDependency: (name) ->
 
         loadFile: (file) ->
-          readFile(file)
-          .then self.load
+          fileReader = new FileReader()
+          fileReader.onload = (e) ->
+            self.load e.target.result
+          fileReader.readAsText(file)
 
         load: (data) ->
           try
@@ -206,6 +208,9 @@ Likewise we shouldn't expose the builder directly either.
 Hotkeys (Not sure if this is the best place)
 -------
 
+      document.addEventListener "mousedown", ->
+        self.invokeRemote "focus"
+
       document.addEventListener "keydown", (e) ->
         if e.ctrlKey
           if e.keyCode is 83 # s
@@ -238,11 +243,3 @@ Helpers
     cleanRepositoryData = (data) ->
       _.pick data, "branch", "default_branch", "full_name", "homepage", "description", "html_url", "url"
 
-    readFile = (file, method="readAsText") ->
-      return new Promise (resolve, reject) ->
-        reader = new FileReader()
-
-        reader.onloadend = ->
-          resolve(reader.result)
-        reader.onerror = reject
-        reader[method](file)
