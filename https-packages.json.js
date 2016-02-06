@@ -180,7 +180,7 @@ window["STRd6/editor:https-packages"]({
     }
   },
   "progenitor": {
-    "url": "http://danielx.net/editor/"
+    "url": "https://danielx.net/editor/https-packages/"
   },
   "version": "0.4.0",
   "entryPoint": "main",
