@@ -24,4 +24,3 @@ dependencies:
   postmaster: "distri/postmaster:v0.2.2"
   runner: "distri/runner:v0.3.1"
   runtime: "distri/runtime:v0.3.0"
-  tests: "distri/tests:v0.1.1"
