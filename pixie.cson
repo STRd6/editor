@@ -20,7 +20,7 @@ dependencies:
   issues: "distri/issues:v0.2.3"
   md: "distri/md:v0.4.2"
   notifications: "distri/notifications:v0.3.3"
-  packager: "distri/packager:v0.5.15"
+  packager: "distri/packager:v0.6.0-pre.0"
   postmaster: "distri/postmaster:v0.2.2"
   runner: "distri/runner:v0.3.1"
   runtime: "distri/runtime:v0.3.0"
