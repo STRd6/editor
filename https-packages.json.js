@@ -32,13 +32,13 @@ window["STRd6/editor:https-packages"]({
     },
     "pixie.cson": {
       "path": "pixie.cson",
-      "content": "version: \"0.4.0\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\"\n  \"https://code.jquery.com/jquery-1.11.0.min.js\"\n]\ndependencies:\n  analytics: \"distri/google-analytics:v0.1.0\"\n  base64: \"distri/base64:v0.9.0\"\n  builder: \"distri/builder:v0.5.1-pre.1\"\n  cornerstone: \"distri/cornerstone:v0.2.10\"\n  cson: \"distri/cson:v0.1.0\"\n  filetree: \"STRd6/filetree:v0.3.2\"\n  github: \"distri/github:v0.4.7\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  issues: \"distri/issues:v0.2.3\"\n  md: \"distri/md:v0.4.2\"\n  notifications: \"distri/notifications:v0.3.3\"\n  packager: \"distri/packager:v0.6.0-pre.0\"\n  postmaster: \"distri/postmaster:v0.2.2\"\n  runner: \"distri/runner:v0.3.1\"\n  runtime: \"distri/runtime:v0.3.0\"\n  tests: \"distri/tests:v0.1.1\"\n",
+      "content": "version: \"0.4.0\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\"\n  \"https://code.jquery.com/jquery-1.11.0.min.js\"\n]\ndependencies:\n  analytics: \"distri/google-analytics:v0.1.0\"\n  base64: \"distri/base64:v0.9.0\"\n  builder: \"distri/builder:v0.5.1-pre.1\"\n  cornerstone: \"distri/cornerstone:v0.2.10\"\n  cson: \"distri/cson:v0.1.0\"\n  filetree: \"STRd6/filetree:v0.3.2\"\n  github: \"distri/github:v0.4.7\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  issues: \"distri/issues:v0.2.3\"\n  md: \"distri/md:v0.4.2\"\n  notifications: \"distri/notifications:v0.3.3\"\n  packager: \"distri/packager:v0.6.0-pre.0\"\n  postmaster: \"distri/postmaster:v0.2.2\"\n  runner: \"distri/runner:v0.3.1\"\n  runtime: \"distri/runtime:v0.3.0\"\n",
       "mode": "100644",
       "type": "blob"
     },
     "runners.coffee.md": {
       "path": "runners.coffee.md",
-      "content": "Runners\n=======\n\nHold all the ways the editor can run things: apps, docs, tests, maybe more.\n\n    Packager = require \"packager\"\n    {PackageRunner} = Runner = require(\"runner\")\n    Tests = require \"tests\"\n    documenter = require \"md\"\n\n    module.exports = (I={}, self) ->\n      runningInstances = []\n\n      self.extend\n\nRebuild the package and send the reload message to the runner with the newest package.\n\n        hotReload: ->\n          self.build()\n          .then (pkg) ->\n            runningInstances.invoke \"launch\", pkg\n\n        runInAppWindow: ->\n          packageRunner = PackageRunner(self.config())\n\n          self.build()\n          .then(\n            (pkg) ->\n              runningInstances.push packageRunner\n\n              packageRunner.window.addEventListener \"unload\", ->\n                runningInstances.remove(packageRunner)\n\n              packageRunner.launch(pkg)\n\n              packageRunner\n            , (error) ->\n              packageRunner.close()\n\n              throw error\n          )\n\n        run: ->\n          self.runInAppWindow()\n\n        runDocs: ({file}) ->\n          file ?= \"index\"\n\n          Runner.openWindowWithContent docsConfig,\n            self.build()\n            .then (pkg) ->\n              documenter.documentAll(pkg)\n            .then (docs) ->\n              script = docs.first()\n\n              path = script.path.split(\"/\")\n              path.pop()\n              path.push(\"#{file}.html\")\n              path = path.join(\"/\")\n\n              if file = findFile(path, docs)\n                file.content + \"<script>#{script.content}<\\/script>\"\n              else\n                \"Failed to find file at #{path}\"\n\n        test: ->\n          Runner.openWindowWithContent self.config(),\n            self.build()\n            .then (pkg) ->\n              Packager.testScripts(pkg)\n            .then (testScripts) ->\n\n              # TODO: Editor should not have to return runner to run tests.\n              html = Tests.html(testScripts)\n\nHelpers\n-------\n\n    docsConfig =\n      width: 1280\n      height: 800\n\nGet the `index.html` from a list of files.\n\n    index = (files) ->\n      files.filter (file) ->\n        /index\\.html$/.test file.path\n      .first()\n\nFind a file in a list of files by path.\n\n    findFile = (path, files) ->\n      files.filter (file) ->\n        file.path is path\n      .first()\n",
+      "content": "Runners\n=======\n\nHold all the ways the editor can run things: apps, docs, tests, maybe more.\n\n    Packager = require \"packager\"\n    {PackageRunner} = Runner = require(\"runner\")\n    documenter = require \"md\"\n\n    module.exports = (I={}, self) ->\n      runningInstances = []\n\n      self.extend\n\nRebuild the package and send the reload message to the runner with the newest package.\n\n        hotReload: ->\n          self.build()\n          .then (pkg) ->\n            runningInstances.invoke \"launch\", pkg\n\n        runInAppWindow: ->\n          packageRunner = PackageRunner(self.config())\n\n          self.build()\n          .then(\n            (pkg) ->\n              runningInstances.push packageRunner\n\n              packageRunner.window.addEventListener \"unload\", ->\n                runningInstances.remove(packageRunner)\n\n              packageRunner.launch(pkg)\n\n              packageRunner\n            , (error) ->\n              packageRunner.close()\n\n              throw error\n          )\n\n        run: ->\n          self.runInAppWindow()\n\n        runDocs: ({file}) ->\n          file ?= \"index\"\n\n          Runner.openWindowWithContent docsConfig,\n            self.build()\n            .then (pkg) ->\n              documenter.documentAll(pkg)\n            .then (docs) ->\n              script = docs.first()\n\n              path = script.path.split(\"/\")\n              path.pop()\n              path.push(\"#{file}.html\")\n              path = path.join(\"/\")\n\n              if file = findFile(path, docs)\n                file.content + \"<script>#{script.content}<\\/script>\"\n              else\n                \"Failed to find file at #{path}\"\n\n        test: ->\n          Runner.openWindowWithContent self.config(),\n            self.build()\n            .then (pkg) ->\n              Packager.testScripts(pkg)\n            .then (testScripts) ->\n              html = testsHtml(testScripts)\n\nHelpers\n-------\n\n    docsConfig =\n      width: 1280\n      height: 800\n\nGet the `index.html` from a list of files.\n\n    index = (files) ->\n      files.filter (file) ->\n        /index\\.html$/.test file.path\n      .first()\n\nFind a file in a list of files by path.\n\n    findFile = (path, files) ->\n      files.filter (file) ->\n        file.path is path\n      .first()\n\nTests html template.\n\n    testsHtml = (testScripts) -> \"\"\"\n      <html>\n      <head>\n        <meta charset=\"utf-8\">\n        <title>Mocha Tests</title>\n        <link rel=\"stylesheet\" href=\"https://distri.github.io/tests/mocha.css\" />\n      </head>\n      <body>\n        <div id=\"mocha\"></div>\n        <script src=\"https://distri.github.io/tests/assert.js\"><\\/script>\n        <script src=\"https://distri.github.io/tests/mocha.js\"><\\/script>\n        <script>mocha.setup('bdd')<\\/script>\n        #{testScripts}\n        <script>\n          mocha.checkLeaks();\n          mocha.globals(['jQuery']);\n          mocha.run();\n        <\\/script>\n      </body>\n      </html>\n    \"\"\"\n",
       "mode": "100644",
       "type": "blob"
     },
@@ -120,12 +120,12 @@ window["STRd6/editor:https-packages"]({
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.4.0\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js\",\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\",\"https://code.jquery.com/jquery-1.11.0.min.js\"],\"dependencies\":{\"analytics\":\"distri/google-analytics:v0.1.0\",\"base64\":\"distri/base64:v0.9.0\",\"builder\":\"distri/builder:v0.5.1-pre.1\",\"cornerstone\":\"distri/cornerstone:v0.2.10\",\"cson\":\"distri/cson:v0.1.0\",\"filetree\":\"STRd6/filetree:v0.3.2\",\"github\":\"distri/github:v0.4.7\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"issues\":\"distri/issues:v0.2.3\",\"md\":\"distri/md:v0.4.2\",\"notifications\":\"distri/notifications:v0.3.3\",\"packager\":\"distri/packager:v0.6.0-pre.0\",\"postmaster\":\"distri/postmaster:v0.2.2\",\"runner\":\"distri/runner:v0.3.1\",\"runtime\":\"distri/runtime:v0.3.0\",\"tests\":\"distri/tests:v0.1.1\"}};",
+      "content": "module.exports = {\"version\":\"0.4.0\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js\",\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\",\"https://code.jquery.com/jquery-1.11.0.min.js\"],\"dependencies\":{\"analytics\":\"distri/google-analytics:v0.1.0\",\"base64\":\"distri/base64:v0.9.0\",\"builder\":\"distri/builder:v0.5.1-pre.1\",\"cornerstone\":\"distri/cornerstone:v0.2.10\",\"cson\":\"distri/cson:v0.1.0\",\"filetree\":\"STRd6/filetree:v0.3.2\",\"github\":\"distri/github:v0.4.7\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"issues\":\"distri/issues:v0.2.3\",\"md\":\"distri/md:v0.4.2\",\"notifications\":\"distri/notifications:v0.3.3\",\"packager\":\"distri/packager:v0.6.0-pre.0\",\"postmaster\":\"distri/postmaster:v0.2.2\",\"runner\":\"distri/runner:v0.3.1\",\"runtime\":\"distri/runtime:v0.3.0\"}};",
       "type": "blob"
     },
     "runners": {
       "path": "runners",
-      "content": "(function() {\n  var PackageRunner, Packager, Runner, Tests, docsConfig, documenter, findFile, index;\n\n  Packager = require(\"packager\");\n\n  PackageRunner = (Runner = require(\"runner\")).PackageRunner;\n\n  Tests = require(\"tests\");\n\n  documenter = require(\"md\");\n\n  module.exports = function(I, self) {\n    var runningInstances;\n    if (I == null) {\n      I = {};\n    }\n    runningInstances = [];\n    return self.extend({\n      hotReload: function() {\n        return self.build().then(function(pkg) {\n          return runningInstances.invoke(\"launch\", pkg);\n        });\n      },\n      runInAppWindow: function() {\n        var packageRunner;\n        packageRunner = PackageRunner(self.config());\n        return self.build().then(function(pkg) {\n          runningInstances.push(packageRunner);\n          packageRunner.window.addEventListener(\"unload\", function() {\n            return runningInstances.remove(packageRunner);\n          });\n          packageRunner.launch(pkg);\n          return packageRunner;\n        }, function(error) {\n          packageRunner.close();\n          throw error;\n        });\n      },\n      run: function() {\n        return self.runInAppWindow();\n      },\n      runDocs: function(_arg) {\n        var file;\n        file = _arg.file;\n        if (file == null) {\n          file = \"index\";\n        }\n        return Runner.openWindowWithContent(docsConfig, self.build().then(function(pkg) {\n          return documenter.documentAll(pkg);\n        }).then(function(docs) {\n          var path, script;\n          script = docs.first();\n          path = script.path.split(\"/\");\n          path.pop();\n          path.push(\"\" + file + \".html\");\n          path = path.join(\"/\");\n          if (file = findFile(path, docs)) {\n            return file.content + (\"<script>\" + script.content + \"<\\/script>\");\n          } else {\n            return \"Failed to find file at \" + path;\n          }\n        }));\n      },\n      test: function() {\n        return Runner.openWindowWithContent(self.config(), self.build().then(function(pkg) {\n          return Packager.testScripts(pkg);\n        }).then(function(testScripts) {\n          var html;\n          return html = Tests.html(testScripts);\n        }));\n      }\n    });\n  };\n\n  docsConfig = {\n    width: 1280,\n    height: 800\n  };\n\n  index = function(files) {\n    return files.filter(function(file) {\n      return /index\\.html$/.test(file.path);\n    }).first();\n  };\n\n  findFile = function(path, files) {\n    return files.filter(function(file) {\n      return file.path === path;\n    }).first();\n  };\n\n}).call(this);\n",
+      "content": "(function() {\n  var PackageRunner, Packager, Runner, docsConfig, documenter, findFile, index, testsHtml;\n\n  Packager = require(\"packager\");\n\n  PackageRunner = (Runner = require(\"runner\")).PackageRunner;\n\n  documenter = require(\"md\");\n\n  module.exports = function(I, self) {\n    var runningInstances;\n    if (I == null) {\n      I = {};\n    }\n    runningInstances = [];\n    return self.extend({\n      hotReload: function() {\n        return self.build().then(function(pkg) {\n          return runningInstances.invoke(\"launch\", pkg);\n        });\n      },\n      runInAppWindow: function() {\n        var packageRunner;\n        packageRunner = PackageRunner(self.config());\n        return self.build().then(function(pkg) {\n          runningInstances.push(packageRunner);\n          packageRunner.window.addEventListener(\"unload\", function() {\n            return runningInstances.remove(packageRunner);\n          });\n          packageRunner.launch(pkg);\n          return packageRunner;\n        }, function(error) {\n          packageRunner.close();\n          throw error;\n        });\n      },\n      run: function() {\n        return self.runInAppWindow();\n      },\n      runDocs: function(_arg) {\n        var file;\n        file = _arg.file;\n        if (file == null) {\n          file = \"index\";\n        }\n        return Runner.openWindowWithContent(docsConfig, self.build().then(function(pkg) {\n          return documenter.documentAll(pkg);\n        }).then(function(docs) {\n          var path, script;\n          script = docs.first();\n          path = script.path.split(\"/\");\n          path.pop();\n          path.push(\"\" + file + \".html\");\n          path = path.join(\"/\");\n          if (file = findFile(path, docs)) {\n            return file.content + (\"<script>\" + script.content + \"<\\/script>\");\n          } else {\n            return \"Failed to find file at \" + path;\n          }\n        }));\n      },\n      test: function() {\n        return Runner.openWindowWithContent(self.config(), self.build().then(function(pkg) {\n          return Packager.testScripts(pkg);\n        }).then(function(testScripts) {\n          var html;\n          return html = testsHtml(testScripts);\n        }));\n      }\n    });\n  };\n\n  docsConfig = {\n    width: 1280,\n    height: 800\n  };\n\n  index = function(files) {\n    return files.filter(function(file) {\n      return /index\\.html$/.test(file.path);\n    }).first();\n  };\n\n  findFile = function(path, files) {\n    return files.filter(function(file) {\n      return file.path === path;\n    }).first();\n  };\n\n  testsHtml = function(testScripts) {\n    return \"<html>\\n<head>\\n  <meta charset=\\\"utf-8\\\">\\n  <title>Mocha Tests</title>\\n  <link rel=\\\"stylesheet\\\" href=\\\"https://distri.github.io/tests/mocha.css\\\" />\\n</head>\\n<body>\\n  <div id=\\\"mocha\\\"></div>\\n  <script src=\\\"https://distri.github.io/tests/assert.js\\\"><\\/script>\\n  <script src=\\\"https://distri.github.io/tests/mocha.js\\\"><\\/script>\\n  <script>mocha.setup('bdd')<\\/script>\\n  \" + testScripts + \"\\n  <script>\\n    mocha.checkLeaks();\\n    mocha.globals(['jQuery']);\\n    mocha.run();\\n  <\\/script>\\n</body>\\n</html>\";\n  };\n\n}).call(this);\n",
       "type": "blob"
     },
     "source/github_auth": {
@@ -7804,167 +7804,6 @@ window["STRd6/editor:https-packages"]({
           "dependencies": {}
         }
       }
-    },
-    "tests": {
-      "source": {
-        "README.md": {
-          "path": "README.md",
-          "content": "tests\n=====\n\nProvide tests to online editor\n",
-          "mode": "100644",
-          "type": "blob"
-        },
-        "TODO": {
-          "path": "TODO",
-          "content": "Investigate Leak Checking\n",
-          "mode": "100644",
-          "type": "blob"
-        },
-        "main.coffee.md": {
-          "path": "main.coffee.md",
-          "content": "Tests\n=====\n\n    module.exports =\n\nGenerate an html template that runs the given script tag strings as tests.\n\n      html: (testScripts) -> \"\"\"\n        <html>\n        <head>\n          <meta charset=\"utf-8\">\n          <title>Mocha Tests</title>\n          <link rel=\"stylesheet\" href=\"http://strd6.github.io/tests/mocha.css\" />\n        </head>\n        <body>\n          <div id=\"mocha\"></div>\n          <script src=\"http://strd6.github.io/tests/assert.js\"><\\/script>\n          <script src=\"http://strd6.github.io/tests/mocha.js\"><\\/script>\n          <script>mocha.setup('bdd')<\\/script>\n          #{testScripts}\n          <script>\n            mocha.checkLeaks();\n            mocha.globals(['jQuery']);\n            mocha.run();\n          <\\/script>\n        </body>\n        </html>\n      \"\"\"\n",
-          "mode": "100644",
-          "type": "blob"
-        },
-        "pixie.cson": {
-          "path": "pixie.cson",
-          "content": "version: \"0.1.1\"\n",
-          "mode": "100644",
-          "type": "blob"
-        }
-      },
-      "distribution": {
-        "main": {
-          "path": "main",
-          "content": "(function() {\n  module.exports = {\n    html: function(testScripts) {\n      return \"<html>\\n<head>\\n  <meta charset=\\\"utf-8\\\">\\n  <title>Mocha Tests</title>\\n  <link rel=\\\"stylesheet\\\" href=\\\"http://strd6.github.io/tests/mocha.css\\\" />\\n</head>\\n<body>\\n  <div id=\\\"mocha\\\"></div>\\n  <script src=\\\"http://strd6.github.io/tests/assert.js\\\"><\\/script>\\n  <script src=\\\"http://strd6.github.io/tests/mocha.js\\\"><\\/script>\\n  <script>mocha.setup('bdd')<\\/script>\\n  \" + testScripts + \"\\n  <script>\\n    mocha.checkLeaks();\\n    mocha.globals(['jQuery']);\\n    mocha.run();\\n  <\\/script>\\n</body>\\n</html>\";\n    }\n  };\n\n}).call(this);\n",
-          "type": "blob"
-        },
-        "pixie": {
-          "path": "pixie",
-          "content": "module.exports = {\"version\":\"0.1.1\"};",
-          "type": "blob"
-        }
-      },
-      "progenitor": {
-        "url": "http://www.danielx.net/editor/"
-      },
-      "version": "0.1.1",
-      "entryPoint": "main",
-      "repository": {
-        "id": 12771540,
-        "name": "tests",
-        "full_name": "distri/tests",
-        "owner": {
-          "login": "distri",
-          "id": 6005125,
-          "avatar_url": "https://avatars.githubusercontent.com/u/6005125?",
-          "gravatar_id": "192f3f168409e79c42107f081139d9f3",
-          "url": "https://api.github.com/users/distri",
-          "html_url": "https://github.com/distri",
-          "followers_url": "https://api.github.com/users/distri/followers",
-          "following_url": "https://api.github.com/users/distri/following{/other_user}",
-          "gists_url": "https://api.github.com/users/distri/gists{/gist_id}",
-          "starred_url": "https://api.github.com/users/distri/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/distri/subscriptions",
-          "organizations_url": "https://api.github.com/users/distri/orgs",
-          "repos_url": "https://api.github.com/users/distri/repos",
-          "events_url": "https://api.github.com/users/distri/events{/privacy}",
-          "received_events_url": "https://api.github.com/users/distri/received_events",
-          "type": "Organization",
-          "site_admin": false
-        },
-        "private": false,
-        "html_url": "https://github.com/distri/tests",
-        "description": "Provide tests to online editor",
-        "fork": false,
-        "url": "https://api.github.com/repos/distri/tests",
-        "forks_url": "https://api.github.com/repos/distri/tests/forks",
-        "keys_url": "https://api.github.com/repos/distri/tests/keys{/key_id}",
-        "collaborators_url": "https://api.github.com/repos/distri/tests/collaborators{/collaborator}",
-        "teams_url": "https://api.github.com/repos/distri/tests/teams",
-        "hooks_url": "https://api.github.com/repos/distri/tests/hooks",
-        "issue_events_url": "https://api.github.com/repos/distri/tests/issues/events{/number}",
-        "events_url": "https://api.github.com/repos/distri/tests/events",
-        "assignees_url": "https://api.github.com/repos/distri/tests/assignees{/user}",
-        "branches_url": "https://api.github.com/repos/distri/tests/branches{/branch}",
-        "tags_url": "https://api.github.com/repos/distri/tests/tags",
-        "blobs_url": "https://api.github.com/repos/distri/tests/git/blobs{/sha}",
-        "git_tags_url": "https://api.github.com/repos/distri/tests/git/tags{/sha}",
-        "git_refs_url": "https://api.github.com/repos/distri/tests/git/refs{/sha}",
-        "trees_url": "https://api.github.com/repos/distri/tests/git/trees{/sha}",
-        "statuses_url": "https://api.github.com/repos/distri/tests/statuses/{sha}",
-        "languages_url": "https://api.github.com/repos/distri/tests/languages",
-        "stargazers_url": "https://api.github.com/repos/distri/tests/stargazers",
-        "contributors_url": "https://api.github.com/repos/distri/tests/contributors",
-        "subscribers_url": "https://api.github.com/repos/distri/tests/subscribers",
-        "subscription_url": "https://api.github.com/repos/distri/tests/subscription",
-        "commits_url": "https://api.github.com/repos/distri/tests/commits{/sha}",
-        "git_commits_url": "https://api.github.com/repos/distri/tests/git/commits{/sha}",
-        "comments_url": "https://api.github.com/repos/distri/tests/comments{/number}",
-        "issue_comment_url": "https://api.github.com/repos/distri/tests/issues/comments/{number}",
-        "contents_url": "https://api.github.com/repos/distri/tests/contents/{+path}",
-        "compare_url": "https://api.github.com/repos/distri/tests/compare/{base}...{head}",
-        "merges_url": "https://api.github.com/repos/distri/tests/merges",
-        "archive_url": "https://api.github.com/repos/distri/tests/{archive_format}{/ref}",
-        "downloads_url": "https://api.github.com/repos/distri/tests/downloads",
-        "issues_url": "https://api.github.com/repos/distri/tests/issues{/number}",
-        "pulls_url": "https://api.github.com/repos/distri/tests/pulls{/number}",
-        "milestones_url": "https://api.github.com/repos/distri/tests/milestones{/number}",
-        "notifications_url": "https://api.github.com/repos/distri/tests/notifications{?since,all,participating}",
-        "labels_url": "https://api.github.com/repos/distri/tests/labels{/name}",
-        "releases_url": "https://api.github.com/repos/distri/tests/releases{/id}",
-        "created_at": "2013-09-12T00:46:52Z",
-        "updated_at": "2014-04-13T21:27:10Z",
-        "pushed_at": "2014-04-13T21:20:47Z",
-        "git_url": "git://github.com/distri/tests.git",
-        "ssh_url": "git@github.com:distri/tests.git",
-        "clone_url": "https://github.com/distri/tests.git",
-        "svn_url": "https://github.com/distri/tests",
-        "homepage": null,
-        "size": 312,
-        "stargazers_count": 0,
-        "watchers_count": 0,
-        "language": "CoffeeScript",
-        "has_issues": true,
-        "has_downloads": true,
-        "has_wiki": true,
-        "forks_count": 0,
-        "mirror_url": null,
-        "open_issues_count": 1,
-        "forks": 0,
-        "open_issues": 1,
-        "watchers": 0,
-        "default_branch": "master",
-        "master_branch": "master",
-        "permissions": {
-          "admin": true,
-          "push": true,
-          "pull": true
-        },
-        "organization": {
-          "login": "distri",
-          "id": 6005125,
-          "avatar_url": "https://avatars.githubusercontent.com/u/6005125?",
-          "gravatar_id": "192f3f168409e79c42107f081139d9f3",
-          "url": "https://api.github.com/users/distri",
-          "html_url": "https://github.com/distri",
-          "followers_url": "https://api.github.com/users/distri/followers",
-          "following_url": "https://api.github.com/users/distri/following{/other_user}",
-          "gists_url": "https://api.github.com/users/distri/gists{/gist_id}",
-          "starred_url": "https://api.github.com/users/distri/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/distri/subscriptions",
-          "organizations_url": "https://api.github.com/users/distri/orgs",
-          "repos_url": "https://api.github.com/users/distri/repos",
-          "events_url": "https://api.github.com/users/distri/events{/privacy}",
-          "received_events_url": "https://api.github.com/users/distri/received_events",
-          "type": "Organization",
-          "site_admin": false
-        },
-        "network_count": 0,
-        "subscribers_count": 1,
-        "branch": "v0.1.1",
-        "publishBranch": "gh-pages"
-      },
-      "dependencies": {}
     }
   }
 });
