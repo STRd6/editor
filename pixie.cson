@@ -1,4 +1,4 @@
-version: "0.4.0"
+version: "0.4.2"
 entryPoint: "main"
 width: 960
 height: 800
@@ -20,8 +20,7 @@ dependencies:
   issues: "distri/issues:v0.2.3"
   md: "distri/md:v0.4.2"
   notifications: "distri/notifications:v0.3.3"
-  packager: "distri/packager:v0.5.15"
+  packager: "distri/packager:v0.6.0"
   postmaster: "distri/postmaster:v0.2.2"
-  runner: "distri/runner:v0.3.1"
+  runner: "distri/runner:v0.3.2"
   runtime: "distri/runtime:v0.3.0"
-  tests: "distri/tests:v0.1.1"

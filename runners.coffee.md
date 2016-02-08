@@ -5,7 +5,6 @@ Hold all the ways the editor can run things: apps, docs, tests, maybe more.
 
     Packager = require "packager"
     {PackageRunner} = Runner = require("runner")
-    Tests = require "tests"
     documenter = require "md"
 
     module.exports = (I={}, self) ->
@@ -69,9 +68,7 @@ Rebuild the package and send the reload message to the runner with the newest pa
             .then (pkg) ->
               Packager.testScripts(pkg)
             .then (testScripts) ->
-
-              # TODO: Editor should not have to return runner to run tests.
-              html = Tests.html(testScripts)
+              html = testsHtml(testScripts)
 
 Helpers
 -------
@@ -93,3 +90,27 @@ Find a file in a list of files by path.
       files.filter (file) ->
         file.path is path
       .first()
+
+Tests html template.
+
+    testsHtml = (testScripts) -> """
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>Mocha Tests</title>
+        <link rel="stylesheet" href="https://distri.github.io/tests/mocha.css" />
+      </head>
+      <body>
+        <div id="mocha"></div>
+        <script src="https://distri.github.io/tests/assert.js"><\/script>
+        <script src="https://distri.github.io/tests/mocha.js"><\/script>
+        <script>mocha.setup('bdd')<\/script>
+        #{testScripts}
+        <script>
+          mocha.checkLeaks();
+          mocha.globals(['jQuery']);
+          mocha.run();
+        <\/script>
+      </body>
+      </html>
+    """
