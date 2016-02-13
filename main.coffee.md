@@ -33,6 +33,8 @@ Components
     global.PACKAGE = PACKAGE
     global.require = require
 
+    global.logs = []
+
     require("analytics").init("UA-3464282-15")
 
     # Create and auth a github API
@@ -129,12 +131,13 @@ Templates
           # Switch to branch for working on the issue
           repository().switchToBranch(branchName)
           .then ->
-            editor.notifications.push "\nLoading branch #{branchName}..."
+            editor.notify "\nLoading branch #{branchName}..."
 
-            editor.load repository()
+            editor.loadRepository repository()
             .then ->
-              editor.notifications.push "Loaded!"
-        , ->
+              editor.notify "Loaded!"
+        , (e) ->
+          console.error e
           # TODO: Issue will appear as being selected even though we cancelled
           # To correctly handle this we may need to really beef up our observables.
           # One possibility is to extend observables to full fledged deferreds

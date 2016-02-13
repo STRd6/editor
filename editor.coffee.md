@@ -5,6 +5,7 @@ Editor
     Actions = require("./actions")
     Builder = require("builder")
     Packager = require("packager")
+    Postmaster = require("postmaster")
     {Filetree, File} = require("filetree")
     {processDirectory} = require "./source/util"
     documenter = require "md"
@@ -48,8 +49,16 @@ Editor
       extend self,
         classicError: classicError
         notify: notify
+        notifyAppend: (msg) ->
+          global.logs.push msg
+          self.notifications.push msg
         errors: errors
         notifications: notifications
+
+      do (oldNotify=self.notify) ->
+        self.notify = (msg) ->
+          global.logs.push msg
+          oldNotify(msg)
 
       self.extend
         repository: Observable()
@@ -76,11 +85,12 @@ Editor
               else
                 self.repository().publish(Packager.standAlone(pkg, docs), undefined, publishBranch)
 
-        load: (repository) ->
+        loadRepository: (repository) ->
+          self.repository repository
+
           repository.latestContent()
           .then (results) ->
             self.loadPackage
-              repository: cleanRepositoryData repository.toJSON()
               source: processDirectory results
 
 Build the project, returning a promise that will be fulfilled with the `pkg`
@@ -112,6 +122,26 @@ when complete.
 
         exploreDependency: (name) ->
 
+        loadFile: (file) ->
+          fileReader = new FileReader()
+          fileReader.onload = (e) ->
+            self.load e.target.result
+          fileReader.readAsText(file)
+
+        load: (data) ->
+          try
+            jsonData = JSON.parse(data)
+            # TODO: Load plugins, maybe files or other stuff
+            if jsonData
+              if jsonData.source # looks like a package
+                if jsonData.repository
+                  self.repository github.Repository cleanRepositoryData jsonData.repository
+
+                self.loadPackage jsonData
+            else
+              ;
+          catch e
+            console.error e
 
         loadPackage: (pkg) ->
           loadedPackage pkg
@@ -170,10 +200,26 @@ Likewise we shouldn't expose the builder directly either.
 
       self.include(Runners)
       self.include(Actions)
+      self.include(Postmaster)
 
-      extend require("postmaster")(),
-        load: self.loadPackage
-        plugin: self.plugin
+Hotkeys (Not sure if this is the best place)
+-------
+
+      document.addEventListener "keydown", (e) ->
+        if e.ctrlKey
+          if e.keyCode is 83 # s
+            e.preventDefault()
+
+            self.build()
+            .then (pkg) ->
+              self.sendToParent
+                method: "save",
+                params: [JSON.stringify(pkg)]
+
+      # Handle File Drops
+      dropReader = require "./lib/drop"
+      dropReader document.documentElement, (event) ->
+        self.loadFile event.dataTransfer.files[0]
 
       return self
 
@@ -184,3 +230,4 @@ Helpers
 
     cleanRepositoryData = (data) ->
       _.pick data, "branch", "default_branch", "full_name", "homepage", "description", "html_url", "url"
+
