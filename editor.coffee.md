@@ -59,7 +59,7 @@ Editor
             if filetree.hasUnsavedChanges()
               throw "Cancelled" unless window.confirm "You will lose unsaved changes in your current branch, continue?"
 
-        publish: ->
+        publish: (message) ->
           self.build()
           .then (pkg) ->
             documenter.documentAll(pkg)
@@ -72,9 +72,9 @@ Editor
               # be chosen in a config rather than hacks based on the branch name
               repository = self.repository()
               if repository.branch() is "blog" # HACK
-                self.repository().publish(docs, undefined, publishBranch)
+                self.repository().publish(docs, message, publishBranch)
               else
-                self.repository().publish(Packager.standAlone(pkg, docs), undefined, publishBranch)
+                self.repository().publish(Packager.standAlone(pkg, docs), message, publishBranch)
 
         load: (repository) ->
           repository.latestContent()
@@ -103,9 +103,10 @@ when complete.
 
         loadedPackage: loadedPackage
 
-        save: ->
+        save: (message) ->
           self.repository().commitTree
             tree: filetree.data()
+            message: message
 
         dependencies: ->
           loadedPackage().dependencies

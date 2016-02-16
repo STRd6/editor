@@ -2,12 +2,15 @@
 {models:{Issue}} = require("issues")
 Packager = require("packager")
 {readSourceConfig} = require("./source/util")
+emoji = require "emojer"
 
 actions =
   save: (editor) ->
     editor.notify "Saving..."
 
-    editor.save()
+    message = "#{emoji()}#{emoji()} Updated at https://danielx.net/editor/"
+
+    editor.save(message)
     .then ->
       # TODO: This could get slightly out of sync if there were changes
       # during the async call
@@ -15,25 +18,24 @@ actions =
       # but that's a little heavy duty for right now.
       editor.filetree().markSaved()
 
-      editor.publish()
+      editor.publish(message)
     .then ->
       editor.notify "Saved and published!"
-    .fail (args...) ->
+    .catch (args...) ->
       editor.errors args
-    .done()
 
   run: (editor) ->
     editor.notify "Running..."
 
     editor.run()
-    .fail editor.classicError
+    .catch editor.classicError
     .done()
 
   test: (editor) ->
     editor.notify "Running tests..."
 
     editor.test()
-    .fail (e) ->
+    .catch (e) ->
       editor.errors [].concat(e)
     .done()
 
@@ -42,7 +44,7 @@ actions =
 
     if file = prompt("Docs file", "index")
       editor.runDocs({file})
-      .fail editor.errors
+      .catch editor.errors
       .done()
 
   new_file: (editor) ->
@@ -74,8 +76,7 @@ actions =
       editor.notifications.push "Done!"
       editor.closeOpenEditors()
 
-    .fail editor.classicError
-    .done()
+    .catch editor.classicError
 
   new_feature: (editor) ->
     if title = prompt("Description")
@@ -96,7 +97,6 @@ actions =
 
         editor.notifications.push "Created!"
       , editor.classicError
-      .done()
 
   pull_master: (editor) ->
     editor.confirmUnsaved()
@@ -114,9 +114,8 @@ actions =
         repository: repository()
       .then ->
         editor.notifications.push "Loaded!"
-      .fail ->
+      .catch ->
         editor.classicError "Error loading #{editor.repository().url()}"
-    .done()
 
   pull_upstream: (editor) ->
     editor.confirmUnsaved()
@@ -136,7 +135,6 @@ actions =
     ).then ->
       editor.notifications.push "\nYour code is up to date with the upstream master"
       editor.closeOpenEditors()
-    .done()
 
   tag_version: (editor) ->
     editor.notify "Building..."
@@ -159,8 +157,7 @@ actions =
       .then ->
         editor.notifications.push "Published!"
 
-    .fail editor.classicError
-    .done()
+    .catch editor.classicError
 
 module.exports = (I={}, self) ->
   self.actions = Observable []
