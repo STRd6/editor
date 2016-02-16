@@ -70,6 +70,8 @@ Editor
 
               message = "#{emoji()}#{emoji()} Updated at https://danielx.net/editor/"
 
+              console.log message
+
               # TODO: Don't pass files to packager, just merge them at the end
               # TODO: Have differenty types of building (docs/main) that can
               # be chosen in a config rather than hacks based on the branch name
