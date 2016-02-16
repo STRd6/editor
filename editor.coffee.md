@@ -8,6 +8,7 @@ Editor
     {Filetree, File} = require("filetree")
     {processDirectory} = require "./source/util"
     documenter = require "md"
+    emoji = require "emojer"
 
     loadedPackage = Observable null
 
@@ -66,6 +67,8 @@ Editor
             .then (docs) ->
               # NOTE: This metadata is added from the builder
               publishBranch = pkg.repository.publishBranch
+
+              message = "#{emoji()}#{emoji()} Updated at https://danielx.net/editor/"
 
               # TODO: Don't pass files to packager, just merge them at the end
               # TODO: Have differenty types of building (docs/main) that can
