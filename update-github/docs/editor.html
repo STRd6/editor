@@ -41,7 +41,6 @@ Packager = require(<span class="string">"packager"</span>)
 {Filetree, File} = require(<span class="string">"filetree"</span>)
 {processDirectory} = require <span class="string">"./source/util"</span>
 documenter = require <span class="string">"md"</span>
-emoji = require <span class="string">"emojer"</span>
 
 loadedPackage = Observable <span class="literal">null</span>
 
@@ -93,17 +92,13 @@ module.<span class="function"><span class="title">exports</span></span> = (I={},
         <span class="keyword">if</span> filetree.hasUnsavedChanges()
           <span class="keyword">throw</span> <span class="string">"Cancelled"</span> <span class="keyword">unless</span> window.confirm <span class="string">"You will lose unsaved changes in your current branch, continue?"</span>
 
-    publish: -&gt;
+    publish: (message) -&gt;
       self.build()
       .<span class="keyword">then</span> (pkg) -&gt;
         documenter.documentAll(pkg)
         .<span class="keyword">then</span> (docs) -&gt;
           <span class="comment"># NOTE: This metadata is added from the builder</span>
           publishBranch = pkg.repository.publishBranch
-
-          message = <span class="string">"<span class="subst">#{emoji()}</span><span class="subst">#{emoji()}</span> Updated at https://danielx.net/editor/"</span>
-
-          console.log message
 
           <span class="comment"># TODO: Don't pass files to packager, just merge them at the end</span>
           <span class="comment"># TODO: Have differenty types of building (docs/main) that can</span>
@@ -150,9 +145,10 @@ when complete.</p>
 
     loadedPackage: loadedPackage
 
-    save: -&gt;
+    save: (message) -&gt;
       self.repository().commitTree
         tree: filetree.data()
+        message: message
 
     dependencies: -&gt;
       loadedPackage().dependencies
