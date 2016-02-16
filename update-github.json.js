@@ -32,7 +32,7 @@ window["STRd6/editor:update-github"]({
     },
     "pixie.cson": {
       "path": "pixie.cson",
-      "content": "version: \"0.4.2\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\"\n  \"https://code.jquery.com/jquery-1.11.0.min.js\"\n]\ndependencies:\n  analytics: \"distri/google-analytics:v0.1.0\"\n  base64: \"distri/base64:v0.9.0\"\n  builder: \"distri/builder:v0.5.1-pre.1\"\n  cornerstone: \"distri/cornerstone:v0.2.10\"\n  cson: \"distri/cson:v0.1.0\"\n  emojer: \"STRd6/emojer:v0.2.0\"\n  filetree: \"STRd6/filetree:v0.3.2\"\n  github: \"distri/github:v0.5.0-pre.3\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  issues: \"distri/issues:v0.2.3\"\n  md: \"distri/md:v0.4.2\"\n  notifications: \"distri/notifications:v0.3.3\"\n  packager: \"distri/packager:v0.6.0\"\n  postmaster: \"distri/postmaster:v0.2.2\"\n  runner: \"distri/runner:v0.3.2\"\n  runtime: \"distri/runtime:v0.3.0\"\n",
+      "content": "version: \"0.4.2\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\"\n  \"https://code.jquery.com/jquery-1.11.0.min.js\"\n]\ndependencies:\n  analytics: \"distri/google-analytics:v0.1.0\"\n  base64: \"distri/base64:v0.9.0\"\n  builder: \"distri/builder:v0.5.1-pre.1\"\n  cornerstone: \"distri/cornerstone:v0.2.10\"\n  cson: \"distri/cson:v0.1.0\"\n  emojer: \"STRd6/emojer:v0.2.0\"\n  filetree: \"STRd6/filetree:v0.3.2\"\n  github: \"distri/github:v0.5.0\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  issues: \"distri/issues:v0.2.3\"\n  md: \"distri/md:v0.4.2\"\n  notifications: \"distri/notifications:v0.3.3\"\n  packager: \"distri/packager:v0.6.0\"\n  postmaster: \"distri/postmaster:v0.2.2\"\n  runner: \"distri/runner:v0.3.2\"\n  runtime: \"distri/runtime:v0.3.0\"\n",
       "mode": "100644",
       "type": "blob"
     },
@@ -120,7 +120,7 @@ window["STRd6/editor:update-github"]({
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.4.2\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js\",\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\",\"https://code.jquery.com/jquery-1.11.0.min.js\"],\"dependencies\":{\"analytics\":\"distri/google-analytics:v0.1.0\",\"base64\":\"distri/base64:v0.9.0\",\"builder\":\"distri/builder:v0.5.1-pre.1\",\"cornerstone\":\"distri/cornerstone:v0.2.10\",\"cson\":\"distri/cson:v0.1.0\",\"emojer\":\"STRd6/emojer:v0.2.0\",\"filetree\":\"STRd6/filetree:v0.3.2\",\"github\":\"distri/github:v0.5.0-pre.3\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"issues\":\"distri/issues:v0.2.3\",\"md\":\"distri/md:v0.4.2\",\"notifications\":\"distri/notifications:v0.3.3\",\"packager\":\"distri/packager:v0.6.0\",\"postmaster\":\"distri/postmaster:v0.2.2\",\"runner\":\"distri/runner:v0.3.2\",\"runtime\":\"distri/runtime:v0.3.0\"}};",
+      "content": "module.exports = {\"version\":\"0.4.2\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js\",\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\",\"https://code.jquery.com/jquery-1.11.0.min.js\"],\"dependencies\":{\"analytics\":\"distri/google-analytics:v0.1.0\",\"base64\":\"distri/base64:v0.9.0\",\"builder\":\"distri/builder:v0.5.1-pre.1\",\"cornerstone\":\"distri/cornerstone:v0.2.10\",\"cson\":\"distri/cson:v0.1.0\",\"emojer\":\"STRd6/emojer:v0.2.0\",\"filetree\":\"STRd6/filetree:v0.3.2\",\"github\":\"distri/github:v0.5.0\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"issues\":\"distri/issues:v0.2.3\",\"md\":\"distri/md:v0.4.2\",\"notifications\":\"distri/notifications:v0.3.3\",\"packager\":\"distri/packager:v0.6.0\",\"postmaster\":\"distri/postmaster:v0.2.2\",\"runner\":\"distri/runner:v0.3.2\",\"runtime\":\"distri/runtime:v0.3.0\"}};",
       "type": "blob"
     },
     "runners": {
@@ -4562,7 +4562,7 @@ window["STRd6/editor:update-github"]({
         },
         "pixie.cson": {
           "path": "pixie.cson",
-          "content": "version: \"0.5.0-pre.3\"\ndependencies:\n  ajax: \"distri/ajax:v0.1.3\"\n  model: \"distri/model:v0.1.3\"\n  observable: \"distri/observable:v0.3.1\"\n",
+          "content": "version: \"0.5.0\"\ndependencies:\n  ajax: \"distri/ajax:v0.1.3\"\n  model: \"distri/model:v0.1.3\"\n  observable: \"distri/observable:v0.3.1\"\n",
           "mode": "100644",
           "type": "blob"
         },
@@ -4597,7 +4597,7 @@ window["STRd6/editor:update-github"]({
         },
         "pixie": {
           "path": "pixie",
-          "content": "module.exports = {\"version\":\"0.5.0-pre.3\",\"dependencies\":{\"ajax\":\"distri/ajax:v0.1.3\",\"model\":\"distri/model:v0.1.3\",\"observable\":\"distri/observable:v0.3.1\"}};",
+          "content": "module.exports = {\"version\":\"0.5.0\",\"dependencies\":{\"ajax\":\"distri/ajax:v0.1.3\",\"model\":\"distri/model:v0.1.3\",\"observable\":\"distri/observable:v0.3.1\"}};",
           "type": "blob"
         },
         "repository": {
@@ -4614,10 +4614,10 @@ window["STRd6/editor:update-github"]({
       "progenitor": {
         "url": "https://danielx.net/editor/"
       },
-      "version": "0.5.0-pre.3",
+      "version": "0.5.0",
       "entryPoint": "main",
       "repository": {
-        "branch": "v0.5.0-pre.3",
+        "branch": "v0.5.0",
         "default_branch": "master",
         "full_name": "distri/github",
         "homepage": null,
