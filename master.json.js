@@ -32,7 +32,7 @@ window["STRd6/editor:master"]({
     },
     "pixie.cson": {
       "path": "pixie.cson",
-      "content": "version: \"0.4.2\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\"\n  \"https://code.jquery.com/jquery-1.11.0.min.js\"\n]\ndependencies:\n  analytics: \"distri/google-analytics:v0.1.0\"\n  base64: \"distri/base64:v0.9.0\"\n  builder: \"distri/builder:v0.5.1-pre.1\"\n  cornerstone: \"distri/cornerstone:v0.2.10\"\n  cson: \"distri/cson:v0.1.0\"\n  emojer: \"STRd6/emojer:v0.2.0\"\n  filetree: \"STRd6/filetree:v0.3.2\"\n  github: \"distri/github:v0.5.0\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  issues: \"distri/issues:v0.2.3\"\n  md: \"distri/md:v0.4.2\"\n  notifications: \"distri/notifications:v0.3.3\"\n  packager: \"distri/packager:v0.6.0\"\n  postmaster: \"distri/postmaster:v0.2.2\"\n  runner: \"distri/runner:v0.3.2\"\n  runtime: \"distri/runtime:v0.3.0\"\n",
+      "content": "version: \"0.4.2\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\"\n  \"https://code.jquery.com/jquery-1.11.0.min.js\"\n]\ndependencies:\n  analytics: \"distri/google-analytics:v0.1.0\"\n  base64: \"distri/base64:v0.9.0\"\n  builder: \"distri/builder:v0.5.1-pre.1\"\n  cornerstone: \"distri/cornerstone:v0.2.10\"\n  cson: \"distri/cson:v0.1.0\"\n  emojer: \"STRd6/emojer:v0.2.0\"\n  filetree: \"STRd6/filetree:v0.3.2\"\n  github: \"distri/github:v0.5.1-pre.0\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  issues: \"distri/issues:v0.2.3\"\n  md: \"distri/md:v0.4.2\"\n  notifications: \"distri/notifications:v0.3.3\"\n  packager: \"distri/packager:v0.6.0\"\n  postmaster: \"distri/postmaster:v0.2.2\"\n  runner: \"distri/runner:v0.3.2\"\n  runtime: \"distri/runtime:v0.3.0\"\n",
       "mode": "100644",
       "type": "blob"
     },
@@ -120,7 +120,7 @@ window["STRd6/editor:master"]({
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"version\":\"0.4.2\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js\",\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\",\"https://code.jquery.com/jquery-1.11.0.min.js\"],\"dependencies\":{\"analytics\":\"distri/google-analytics:v0.1.0\",\"base64\":\"distri/base64:v0.9.0\",\"builder\":\"distri/builder:v0.5.1-pre.1\",\"cornerstone\":\"distri/cornerstone:v0.2.10\",\"cson\":\"distri/cson:v0.1.0\",\"emojer\":\"STRd6/emojer:v0.2.0\",\"filetree\":\"STRd6/filetree:v0.3.2\",\"github\":\"distri/github:v0.5.0\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"issues\":\"distri/issues:v0.2.3\",\"md\":\"distri/md:v0.4.2\",\"notifications\":\"distri/notifications:v0.3.3\",\"packager\":\"distri/packager:v0.6.0\",\"postmaster\":\"distri/postmaster:v0.2.2\",\"runner\":\"distri/runner:v0.3.2\",\"runtime\":\"distri/runtime:v0.3.0\"}};",
+      "content": "module.exports = {\"version\":\"0.4.2\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js\",\"https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\",\"https://code.jquery.com/jquery-1.11.0.min.js\"],\"dependencies\":{\"analytics\":\"distri/google-analytics:v0.1.0\",\"base64\":\"distri/base64:v0.9.0\",\"builder\":\"distri/builder:v0.5.1-pre.1\",\"cornerstone\":\"distri/cornerstone:v0.2.10\",\"cson\":\"distri/cson:v0.1.0\",\"emojer\":\"STRd6/emojer:v0.2.0\",\"filetree\":\"STRd6/filetree:v0.3.2\",\"github\":\"distri/github:v0.5.1-pre.0\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"issues\":\"distri/issues:v0.2.3\",\"md\":\"distri/md:v0.4.2\",\"notifications\":\"distri/notifications:v0.3.3\",\"packager\":\"distri/packager:v0.6.0\",\"postmaster\":\"distri/postmaster:v0.2.2\",\"runner\":\"distri/runner:v0.3.2\",\"runtime\":\"distri/runtime:v0.3.0\"}};",
       "type": "blob"
     },
     "runners": {
@@ -180,7 +180,7 @@ window["STRd6/editor:master"]({
     }
   },
   "progenitor": {
-    "url": "https://danielx.net/editor/"
+    "url": "https://danielx.net/editor/v0.4.2/"
   },
   "version": "0.4.2",
   "entryPoint": "main",
@@ -4562,7 +4562,7 @@ window["STRd6/editor:master"]({
         },
         "pixie.cson": {
           "path": "pixie.cson",
-          "content": "version: \"0.5.0\"\ndependencies:\n  ajax: \"distri/ajax:v0.1.3\"\n  model: \"distri/model:v0.1.3\"\n  observable: \"distri/observable:v0.3.1\"\n",
+          "content": "version: \"0.5.1-pre.0\"\ndependencies:\n  ajax: \"distri/ajax:v0.1.4\"\n  model: \"distri/model:v0.1.3\"\n  observable: \"distri/observable:v0.3.1\"\n",
           "mode": "100644",
           "type": "blob"
         },
@@ -4597,7 +4597,7 @@ window["STRd6/editor:master"]({
         },
         "pixie": {
           "path": "pixie",
-          "content": "module.exports = {\"version\":\"0.5.0\",\"dependencies\":{\"ajax\":\"distri/ajax:v0.1.3\",\"model\":\"distri/model:v0.1.3\",\"observable\":\"distri/observable:v0.3.1\"}};",
+          "content": "module.exports = {\"version\":\"0.5.1-pre.0\",\"dependencies\":{\"ajax\":\"distri/ajax:v0.1.4\",\"model\":\"distri/model:v0.1.3\",\"observable\":\"distri/observable:v0.3.1\"}};",
           "type": "blob"
         },
         "repository": {
@@ -4612,12 +4612,12 @@ window["STRd6/editor:master"]({
         }
       },
       "progenitor": {
-        "url": "https://danielx.net/editor/"
+        "url": "https://danielx.net/editor/v0.4.2/"
       },
-      "version": "0.5.0",
+      "version": "0.5.1-pre.0",
       "entryPoint": "main",
       "repository": {
-        "branch": "v0.5.0",
+        "branch": "v0.5.1-pre.0",
         "default_branch": "master",
         "full_name": "distri/github",
         "homepage": null,
@@ -4643,34 +4643,38 @@ window["STRd6/editor:master"]({
             },
             "main.coffee": {
               "path": "main.coffee",
-              "content": "{extend, defaults} = require \"./util\"\n\nmodule.exports = ->\n  ajax = (options={}) ->\n    {data, headers, method, overrideMimeType, password, url, responseType, timeout, user, withCredentials} = options\n    data ?= \"\"\n    method ?= \"GET\"\n    password ?= \"\"\n    responseType ?= \"\"\n    timeout ?= 0\n    user ?= \"\"\n    withCredentials ?= false\n\n    new Promise (resolve, reject) ->\n      xhr = new XMLHttpRequest()\n      xhr.open(method, url, true, user, password)\n      xhr.responseType = responseType\n      xhr.timeout = timeout\n      xhr.withCredentialls = withCredentials\n\n      if headers\n        Object.keys(headers).forEach (header) ->\n          value = headers[header]\n          xhr.setRequestHeader header, value\n\n      if overrideMimeType\n        xhr.overrideMimeType overrideMimeType\n\n      xhr.onload = (e) ->\n        if (200 <= this.status < 300) or this.status is 304\n          resolve this.response\n          complete e, xhr, options\n        else\n          reject e\n          complete e, xhr, options\n\n      xhr.onerror = (e) -> \n        reject e\n        complete e, xhr, options\n\n      xhr.send(data)\n\n  complete = (args...) ->\n    completeHandlers.forEach (handler) ->\n      handler args...\n\n  configure = (optionDefaults) ->\n    (url, options={}) ->\n      if typeof url is \"object\"\n        options = url\n      else\n        options.url = url\n\n      defaults options, optionDefaults\n\n      ajax(options)\n\n  completeHandlers = []\n\n  extend ajax,\n    ajax: configure {}\n    complete: (handler) ->\n      completeHandlers.push handler\n\n    getJSON: configure\n      responseType: \"json\"\n\n    getBlob: configure\n      responseType: \"blob\"\n",
-              "mode": "100644"
+              "content": "{extend, defaults} = require \"./util\"\n\nmodule.exports = ->\n  ajax = (options={}) ->\n    {data, headers, method, overrideMimeType, password, url, responseType, timeout, user, withCredentials} = options\n    data ?= \"\"\n    method ?= \"GET\"\n    password ?= \"\"\n    responseType ?= \"\"\n    timeout ?= 0\n    user ?= \"\"\n    withCredentials ?= false\n\n    new Promise (resolve, reject) ->\n      xhr = new XMLHttpRequest()\n      xhr.open(method, url, true, user, password)\n      xhr.responseType = responseType\n      xhr.timeout = timeout\n      xhr.withCredentialls = withCredentials\n\n      if headers\n        Object.keys(headers).forEach (header) ->\n          value = headers[header]\n          xhr.setRequestHeader header, value\n\n      if overrideMimeType\n        xhr.overrideMimeType overrideMimeType\n\n      xhr.onload = (e) ->\n        if (200 <= this.status < 300) or this.status is 304\n          resolve this.response\n          complete e, xhr, options\n        else\n          reject xhr\n          complete e, xhr, options\n\n      xhr.onerror = (e) ->\n        reject xhr\n        complete e, xhr, options\n\n      xhr.send(data)\n\n  complete = (args...) ->\n    completeHandlers.forEach (handler) ->\n      handler args...\n\n  configure = (optionDefaults) ->\n    (url, options={}) ->\n      if typeof url is \"object\"\n        options = url\n      else\n        options.url = url\n\n      defaults options, optionDefaults\n\n      ajax(options)\n\n  completeHandlers = []\n\n  extend ajax,\n    ajax: configure {}\n    complete: (handler) ->\n      completeHandlers.push handler\n\n    getJSON: configure\n      responseType: \"json\"\n\n    getBlob: configure\n      responseType: \"blob\"\n",
+              "mode": "100644",
+              "type": "blob"
             },
-            "util.coffee": {
-              "path": "util.coffee",
-              "content": "module.exports =\n  defaults: (target, objects...) ->\n    for object in objects\n      for name of object\n        unless target.hasOwnProperty(name)\n          target[name] = object[name]\n\n    return target\n\n  extend: (target, sources...) ->\n    for source in sources\n      for name of source\n        target[name] = source[name]\n\n    return target\n",
-              "mode": "100644"
+            "pixie.cson": {
+              "path": "pixie.cson",
+              "content": "version: \"0.1.4\"\n",
+              "mode": "100644",
+              "type": "blob"
             },
             "test/test.coffee": {
               "path": "test/test.coffee",
               "content": "Ajax = require \"../main\"\n\ndescribe \"Ajax\", ->\n  it \"should getJSON\", (done) ->\n    ajax = Ajax()\n\n    ajax\n      url: \"https://api.github.com/users\"\n      responseType: \"json\"\n    .then (data) ->\n      assert data[0].id is 1\n      assert data[0].login is \"mojombo\"\n\n      done()\n\n  it \"should have complete handlers\", (done) ->\n    ajax = Ajax()\n\n    ajax.complete (e, xhr, options) ->\n      done()\n\n    ajax.getJSON(\"https://api.github.com/users\")\n\n  it \"should work with options only\", (done) ->\n    ajax = Ajax()\n\n    ajax.getJSON(url: \"https://api.github.com/users\")\n    .then (data) ->\n      assert data[0].id is 1\n      assert data[0].login is \"mojombo\"\n\n      done()\n",
-              "mode": "100644"
+              "mode": "100644",
+              "type": "blob"
             },
-            "pixie.cson": {
-              "path": "pixie.cson",
-              "content": "version: \"0.1.3\"\n",
-              "mode": "100644"
+            "util.coffee": {
+              "path": "util.coffee",
+              "content": "module.exports =\n  defaults: (target, objects...) ->\n    for object in objects\n      for name of object\n        unless target.hasOwnProperty(name)\n          target[name] = object[name]\n\n    return target\n\n  extend: (target, sources...) ->\n    for source in sources\n      for name of source\n        target[name] = source[name]\n\n    return target\n",
+              "mode": "100644",
+              "type": "blob"
             }
           },
           "distribution": {
             "main": {
               "path": "main",
-              "content": "(function() {\n  var defaults, extend, _ref,\n    __slice = [].slice;\n\n  _ref = require(\"./util\"), extend = _ref.extend, defaults = _ref.defaults;\n\n  module.exports = function() {\n    var ajax, complete, completeHandlers, configure;\n    ajax = function(options) {\n      var data, headers, method, overrideMimeType, password, responseType, timeout, url, user, withCredentials;\n      if (options == null) {\n        options = {};\n      }\n      data = options.data, headers = options.headers, method = options.method, overrideMimeType = options.overrideMimeType, password = options.password, url = options.url, responseType = options.responseType, timeout = options.timeout, user = options.user, withCredentials = options.withCredentials;\n      if (data == null) {\n        data = \"\";\n      }\n      if (method == null) {\n        method = \"GET\";\n      }\n      if (password == null) {\n        password = \"\";\n      }\n      if (responseType == null) {\n        responseType = \"\";\n      }\n      if (timeout == null) {\n        timeout = 0;\n      }\n      if (user == null) {\n        user = \"\";\n      }\n      if (withCredentials == null) {\n        withCredentials = false;\n      }\n      return new Promise(function(resolve, reject) {\n        var xhr;\n        xhr = new XMLHttpRequest();\n        xhr.open(method, url, true, user, password);\n        xhr.responseType = responseType;\n        xhr.timeout = timeout;\n        xhr.withCredentialls = withCredentials;\n        if (headers) {\n          Object.keys(headers).forEach(function(header) {\n            var value;\n            value = headers[header];\n            return xhr.setRequestHeader(header, value);\n          });\n        }\n        if (overrideMimeType) {\n          xhr.overrideMimeType(overrideMimeType);\n        }\n        xhr.onload = function(e) {\n          var _ref1;\n          if (((200 <= (_ref1 = this.status) && _ref1 < 300)) || this.status === 304) {\n            resolve(this.response);\n            return complete(e, xhr, options);\n          } else {\n            reject(e);\n            return complete(e, xhr, options);\n          }\n        };\n        xhr.onerror = function(e) {\n          reject(e);\n          return complete(e, xhr, options);\n        };\n        return xhr.send(data);\n      });\n    };\n    complete = function() {\n      var args;\n      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];\n      return completeHandlers.forEach(function(handler) {\n        return handler.apply(null, args);\n      });\n    };\n    configure = function(optionDefaults) {\n      return function(url, options) {\n        if (options == null) {\n          options = {};\n        }\n        if (typeof url === \"object\") {\n          options = url;\n        } else {\n          options.url = url;\n        }\n        defaults(options, optionDefaults);\n        return ajax(options);\n      };\n    };\n    completeHandlers = [];\n    return extend(ajax, {\n      ajax: configure({}),\n      complete: function(handler) {\n        return completeHandlers.push(handler);\n      },\n      getJSON: configure({\n        responseType: \"json\"\n      }),\n      getBlob: configure({\n        responseType: \"blob\"\n      })\n    });\n  };\n\n}).call(this);\n",
+              "content": "(function() {\n  var defaults, extend, _ref,\n    __slice = [].slice;\n\n  _ref = require(\"./util\"), extend = _ref.extend, defaults = _ref.defaults;\n\n  module.exports = function() {\n    var ajax, complete, completeHandlers, configure;\n    ajax = function(options) {\n      var data, headers, method, overrideMimeType, password, responseType, timeout, url, user, withCredentials;\n      if (options == null) {\n        options = {};\n      }\n      data = options.data, headers = options.headers, method = options.method, overrideMimeType = options.overrideMimeType, password = options.password, url = options.url, responseType = options.responseType, timeout = options.timeout, user = options.user, withCredentials = options.withCredentials;\n      if (data == null) {\n        data = \"\";\n      }\n      if (method == null) {\n        method = \"GET\";\n      }\n      if (password == null) {\n        password = \"\";\n      }\n      if (responseType == null) {\n        responseType = \"\";\n      }\n      if (timeout == null) {\n        timeout = 0;\n      }\n      if (user == null) {\n        user = \"\";\n      }\n      if (withCredentials == null) {\n        withCredentials = false;\n      }\n      return new Promise(function(resolve, reject) {\n        var xhr;\n        xhr = new XMLHttpRequest();\n        xhr.open(method, url, true, user, password);\n        xhr.responseType = responseType;\n        xhr.timeout = timeout;\n        xhr.withCredentialls = withCredentials;\n        if (headers) {\n          Object.keys(headers).forEach(function(header) {\n            var value;\n            value = headers[header];\n            return xhr.setRequestHeader(header, value);\n          });\n        }\n        if (overrideMimeType) {\n          xhr.overrideMimeType(overrideMimeType);\n        }\n        xhr.onload = function(e) {\n          var _ref1;\n          if (((200 <= (_ref1 = this.status) && _ref1 < 300)) || this.status === 304) {\n            resolve(this.response);\n            return complete(e, xhr, options);\n          } else {\n            reject(xhr);\n            return complete(e, xhr, options);\n          }\n        };\n        xhr.onerror = function(e) {\n          reject(xhr);\n          return complete(e, xhr, options);\n        };\n        return xhr.send(data);\n      });\n    };\n    complete = function() {\n      var args;\n      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];\n      return completeHandlers.forEach(function(handler) {\n        return handler.apply(null, args);\n      });\n    };\n    configure = function(optionDefaults) {\n      return function(url, options) {\n        if (options == null) {\n          options = {};\n        }\n        if (typeof url === \"object\") {\n          options = url;\n        } else {\n          options.url = url;\n        }\n        defaults(options, optionDefaults);\n        return ajax(options);\n      };\n    };\n    completeHandlers = [];\n    return extend(ajax, {\n      ajax: configure({}),\n      complete: function(handler) {\n        return completeHandlers.push(handler);\n      },\n      getJSON: configure({\n        responseType: \"json\"\n      }),\n      getBlob: configure({\n        responseType: \"blob\"\n      })\n    });\n  };\n\n}).call(this);\n",
               "type": "blob"
             },
-            "util": {
-              "path": "util",
-              "content": "(function() {\n  var __slice = [].slice;\n\n  module.exports = {\n    defaults: function() {\n      var name, object, objects, target, _i, _len;\n      target = arguments[0], objects = 2 <= arguments.length ? __slice.call(arguments, 1) : [];\n      for (_i = 0, _len = objects.length; _i < _len; _i++) {\n        object = objects[_i];\n        for (name in object) {\n          if (!target.hasOwnProperty(name)) {\n            target[name] = object[name];\n          }\n        }\n      }\n      return target;\n    },\n    extend: function() {\n      var name, source, sources, target, _i, _len;\n      target = arguments[0], sources = 2 <= arguments.length ? __slice.call(arguments, 1) : [];\n      for (_i = 0, _len = sources.length; _i < _len; _i++) {\n        source = sources[_i];\n        for (name in source) {\n          target[name] = source[name];\n        }\n      }\n      return target;\n    }\n  };\n\n}).call(this);\n",
+            "pixie": {
+              "path": "pixie",
+              "content": "module.exports = {\"version\":\"0.1.4\"};",
               "type": "blob"
             },
             "test/test": {
@@ -4678,19 +4682,19 @@ window["STRd6/editor:master"]({
               "content": "(function() {\n  var Ajax;\n\n  Ajax = require(\"../main\");\n\n  describe(\"Ajax\", function() {\n    it(\"should getJSON\", function(done) {\n      var ajax;\n      ajax = Ajax();\n      return ajax({\n        url: \"https://api.github.com/users\",\n        responseType: \"json\"\n      }).then(function(data) {\n        assert(data[0].id === 1);\n        assert(data[0].login === \"mojombo\");\n        return done();\n      });\n    });\n    it(\"should have complete handlers\", function(done) {\n      var ajax;\n      ajax = Ajax();\n      ajax.complete(function(e, xhr, options) {\n        return done();\n      });\n      return ajax.getJSON(\"https://api.github.com/users\");\n    });\n    return it(\"should work with options only\", function(done) {\n      var ajax;\n      ajax = Ajax();\n      return ajax.getJSON({\n        url: \"https://api.github.com/users\"\n      }).then(function(data) {\n        assert(data[0].id === 1);\n        assert(data[0].login === \"mojombo\");\n        return done();\n      });\n    });\n  });\n\n}).call(this);\n",
               "type": "blob"
             },
-            "pixie": {
-              "path": "pixie",
-              "content": "module.exports = {\"version\":\"0.1.3\"};",
+            "util": {
+              "path": "util",
+              "content": "(function() {\n  var __slice = [].slice;\n\n  module.exports = {\n    defaults: function() {\n      var name, object, objects, target, _i, _len;\n      target = arguments[0], objects = 2 <= arguments.length ? __slice.call(arguments, 1) : [];\n      for (_i = 0, _len = objects.length; _i < _len; _i++) {\n        object = objects[_i];\n        for (name in object) {\n          if (!target.hasOwnProperty(name)) {\n            target[name] = object[name];\n          }\n        }\n      }\n      return target;\n    },\n    extend: function() {\n      var name, source, sources, target, _i, _len;\n      target = arguments[0], sources = 2 <= arguments.length ? __slice.call(arguments, 1) : [];\n      for (_i = 0, _len = sources.length; _i < _len; _i++) {\n        source = sources[_i];\n        for (name in source) {\n          target[name] = source[name];\n        }\n      }\n      return target;\n    }\n  };\n\n}).call(this);\n",
               "type": "blob"
             }
           },
           "progenitor": {
-            "url": "https://danielx.net/editor/"
+            "url": "https://danielx.net/editor/v0.4.2/"
           },
-          "version": "0.1.3",
+          "version": "0.1.4",
           "entryPoint": "main",
           "repository": {
-            "branch": "v0.1.3",
+            "branch": "v0.1.4",
             "default_branch": "master",
             "full_name": "distri/ajax",
             "homepage": null,
