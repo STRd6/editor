@@ -75,9 +75,9 @@ Editor
               # be chosen in a config rather than hacks based on the branch name
               repository = self.repository()
               if repository.branch() is "blog" # HACK
-                self.repository().publish(docs, undefined, publishBranch)
+                self.repository().publish(docs, message, publishBranch)
               else
-                self.repository().publish(Packager.standAlone(pkg, docs), undefined, publishBranch)
+                self.repository().publish(Packager.standAlone(pkg, docs), message, publishBranch)
 
         load: (repository) ->
           repository.latestContent()
