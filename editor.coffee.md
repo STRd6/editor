@@ -8,7 +8,6 @@ Editor
     {Filetree, File} = require("filetree")
     {processDirectory} = require "./source/util"
     documenter = require "md"
-    emoji = require "emojer"
 
     loadedPackage = Observable null
 
@@ -60,17 +59,13 @@ Editor
             if filetree.hasUnsavedChanges()
               throw "Cancelled" unless window.confirm "You will lose unsaved changes in your current branch, continue?"
 
-        publish: ->
+        publish: (message) ->
           self.build()
           .then (pkg) ->
             documenter.documentAll(pkg)
             .then (docs) ->
               # NOTE: This metadata is added from the builder
               publishBranch = pkg.repository.publishBranch
-
-              message = "#{emoji()}#{emoji()} Updated at https://danielx.net/editor/"
-
-              console.log message
 
               # TODO: Don't pass files to packager, just merge them at the end
               # TODO: Have differenty types of building (docs/main) that can
@@ -108,9 +103,10 @@ when complete.
 
         loadedPackage: loadedPackage
 
-        save: ->
+        save: (message) ->
           self.repository().commitTree
             tree: filetree.data()
+            message: message
 
         dependencies: ->
           loadedPackage().dependencies

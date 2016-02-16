@@ -2,12 +2,15 @@
 {models:{Issue}} = require("issues")
 Packager = require("packager")
 {readSourceConfig} = require("./source/util")
+emoji = require "emojer"
 
 actions =
   save: (editor) ->
     editor.notify "Saving..."
 
-    editor.save()
+    message = "#{emoji()}#{emoji()} Updated at https://danielx.net/editor/"
+
+    editor.save(message)
     .then ->
       # TODO: This could get slightly out of sync if there were changes
       # during the async call
@@ -15,7 +18,7 @@ actions =
       # but that's a little heavy duty for right now.
       editor.filetree().markSaved()
 
-      editor.publish()
+      editor.publish(message)
     .then ->
       editor.notify "Saved and published!"
     .catch (args...) ->
