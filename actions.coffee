@@ -45,7 +45,7 @@ actions =
     if file = prompt("Docs file", "index")
       editor.runDocs({file})
       .catch editor.errors
-      .done()
+      
 
   new_file: (editor) ->
     if name = prompt("File Name", "newfile.coffee")
