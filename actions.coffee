@@ -44,8 +44,8 @@ actions =
 
     if file = prompt("Docs file", "index")
       editor.runDocs({file})
-      .catch editor.errors
-      
+      .catch (e) ->
+        editor.errors [e]
 
   new_file: (editor) ->
     if name = prompt("File Name", "newfile.coffee")
@@ -76,7 +76,11 @@ actions =
       editor.notifications.push "Done!"
       editor.closeOpenEditors()
 
-    .catch editor.classicError
+    .catch (e) ->
+      if e.status and e.statusText
+        editor.errors ["#{e.status} - #{e.statusText}"]
+      else
+        editor.errors [e]
 
   new_feature: (editor) ->
     if title = prompt("Description")
