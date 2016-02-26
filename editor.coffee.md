@@ -183,5 +183,14 @@ Helpers
 
     {readSourceConfig, arrayToHash} = require("./source/util")
 
+    pick = (object, keys...) ->
+      result = {}
+
+      keys.forEach (key) ->
+        if key in object
+          result[key] = object[key]
+
+      return result
+
     cleanRepositoryData = (data) ->
-      _.pick data, "branch", "default_branch", "full_name", "homepage", "description", "html_url", "url"
+      pick data, "branch", "default_branch", "full_name", "homepage", "description", "html_url", "url"

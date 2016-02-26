@@ -71,8 +71,6 @@ Templates
       .boot()
       .applyStyleSheet(require('./style'))
 
-    $root = $("body")
-
     # Branch Chooser using pull requests
     {models:{Issue, Issues}} = require("issues")
     issues = editor.issues = Issues()
@@ -154,15 +152,14 @@ Templates
 
         changeBranch repository().defaultBranch()
 
-    $root
-      .append require("./templates/editor")(
-        filetree: filetree
-        actions: editor.actions
-        notifications: editor.notifications
-        issues: issues
-        github: github
-        repository: repository
-      )
+    document.body.appendChild require("./templates/editor")(
+      filetree: filetree
+      actions: editor.actions
+      notifications: editor.notifications
+      issues: issues
+      github: github
+      repository: repository
+    )
 
     AceShim = require "./ace_shim"
     aceShim = AceShim()
