@@ -187,7 +187,7 @@ Helpers
       result = {}
 
       keys.forEach (key) ->
-        if key in object
+        if key of object
           result[key] = object[key]
 
       return result
