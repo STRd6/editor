@@ -19,7 +19,7 @@ dependencies:
   github: "distri/github:v0.5.1-pre.0"
   hygiene: "STRd6/hygiene:v0.2.0"
   issues: "distri/issues:v0.2.3"
-  md: "distri/md:v0.4.3-pre.2"
+  md: "distri/md:v0.4.3"
   notifications: "distri/notifications:v0.3.3"
   packager: "distri/packager:v0.7.0"
   postmaster: "distri/postmaster:v0.2.2"
