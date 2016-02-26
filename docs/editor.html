@@ -5,36 +5,32 @@
   <title>editor</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
-  <link rel="stylesheet" media="all" href="http://strd6.github.io/cdn/parallel/docco.css" />
+  <link rel="stylesheet" media="all" href="https://strd6.github.io/cdn/parallel/docco.css" />
 </head>
 <body>
   <div id="container">
     <div id="background"></div>
     <ul class="sections">
-        
-        
-        <li id="section-1">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-1">&#182;</a>
-              </div>
-              <h1 id="editor">Editor</h1>
+      <li id="section-1">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-1">&#182;</a>
+    </div>
+    <h1 id="editor">Editor</h1>
 
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript">
 </code></pre>
 </div>
-        </li>
-        
-        
-        <li id="section-2">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-2">&#182;</a>
-              </div>
-              
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">Runners = require <span class="string">"./runners"</span>
+</li>
+<li id="section-2">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-2">&#182;</a>
+    </div>
+    
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript">Runners = require <span class="string">"./runners"</span>
 Actions = require(<span class="string">"./actions"</span>)
 Builder = require(<span class="string">"builder"</span>)
 Packager = require(<span class="string">"packager"</span>)
@@ -116,19 +112,17 @@ module.<span class="function"><span class="title">exports</span></span> = (I={},
           repository: cleanRepositoryData repository.toJSON()
           source: processDirectory results</code></pre>
 </div>
-        </li>
-        
-        
-        <li id="section-3">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-3">&#182;</a>
-              </div>
-              <p>Build the project, returning a promise that will be fulfilled with the <code>pkg</code>
+</li>
+<li id="section-3">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-3">&#182;</a>
+    </div>
+    <p>Build the project, returning a promise that will be fulfilled with the <code>pkg</code>
 when complete.</p>
 
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">    build: -&gt;
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript">    build: -&gt;
       data = filetree.data()
 
       Q(builder.build(data))
@@ -166,18 +160,16 @@ when complete.</p>
     loadFiles: (fileData) -&gt;
       filetree.load fileData</code></pre>
 </div>
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <p>Currently we&#39;re exposing the filetree though in the future we shouldn&#39;t be.</p>
+</li>
+<li id="section-4">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-4">&#182;</a>
+    </div>
+    <p>Currently we&#39;re exposing the filetree though in the future we shouldn&#39;t be.</p>
 
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">    filetree: -&gt;
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript">    filetree: -&gt;
       filetree
 
     files: -&gt;
@@ -209,18 +201,16 @@ when complete.</p>
 
         <span class="keyword">return</span> file</code></pre>
 </div>
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <p>Likewise we shouldn&#39;t expose the builder directly either.</p>
+</li>
+<li id="section-5">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-5">&#182;</a>
+    </div>
+    <p>Likewise we shouldn&#39;t expose the builder directly either.</p>
 
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">    builder: -&gt;
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript">    builder: -&gt;
       builder
 
     config: -&gt;
@@ -238,45 +228,47 @@ when complete.</p>
 
   <span class="keyword">return</span> self</code></pre>
 </div>
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <h2 id="helpers">Helpers</h2>
+</li>
+<li id="section-6">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-6">&#182;</a>
+    </div>
+    <h2 id="helpers">Helpers</h2>
 
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript">
 </code></pre>
 </div>
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              <div class="pilwrap">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              
-            </div>
-            <div class="content"><pre><code class="lang-coffeescript">{readSourceConfig, arrayToHash} = require(<span class="string">"./source/util"</span>)
+</li>
+<li id="section-7">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-7">&#182;</a>
+    </div>
+    
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript">{readSourceConfig, arrayToHash} = require(<span class="string">"./source/util"</span>)
+
+<span class="function"><span class="title">pick</span></span> = (object, keys...) -&gt;
+  result = {}
+
+  keys.forEach (key) -&gt;
+    <span class="keyword">if</span> key <span class="keyword">in</span> object
+      result[key] = object[key]
+
+  <span class="keyword">return</span> result
 
 <span class="function"><span class="title">cleanRepositoryData</span></span> = (data) -&gt;
-  _.pick data, <span class="string">"branch"</span>, <span class="string">"default_branch"</span>, <span class="string">"full_name"</span>, <span class="string">"homepage"</span>, <span class="string">"description"</span>, <span class="string">"html_url"</span>, <span class="string">"url"</span></code></pre>
+  pick data, <span class="string">"branch"</span>, <span class="string">"default_branch"</span>, <span class="string">"full_name"</span>, <span class="string">"homepage"</span>, <span class="string">"description"</span>, <span class="string">"html_url"</span>, <span class="string">"url"</span></code></pre>
 </div>
-        </li>
-        
+</li>
     </ul>
   </div>
   <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js"></script>
-<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script><script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js"></script><script>
   (function() {
   var ErrorReporter, bindUpdates, createEditor, exec, findInteractiveElements, readShebang, runners;
 
