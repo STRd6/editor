@@ -21,8 +21,7 @@ actions =
       editor.publish(message)
     .then ->
       editor.notify "Saved and published!"
-    .catch (args...) ->
-      editor.errors args
+    .catch editor.errorCatcher
 
   run: (editor) ->
     editor.notify "Running..."
