@@ -50,6 +50,13 @@ Editor
         notify: notify
         errors: errors
         notifications: notifications
+        errorCatcher: (e) ->
+          if e.status and e.statusText
+            editor.errors ["#{e.status} - #{e.statusText}"]
+          else if e.stack
+            editor.errors [e.stack]
+          else
+            editor.errors [e]
 
       self.extend
         repository: Observable()

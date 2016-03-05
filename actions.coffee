@@ -28,8 +28,7 @@ actions =
     editor.notify "Running..."
 
     editor.run()
-    .catch editor.classicError
-    .done()
+    .catch editor.errorCatcher
 
   test: (editor) ->
     editor.notify "Running tests..."
@@ -76,11 +75,7 @@ actions =
       editor.notifications.push "Done!"
       editor.closeOpenEditors()
 
-    .catch (e) ->
-      if e.status and e.statusText
-        editor.errors ["#{e.status} - #{e.statusText}"]
-      else
-        editor.errors [e]
+    .catch editor.errorCatcher
 
   new_feature: (editor) ->
     if title = prompt("Description")
@@ -100,15 +95,14 @@ actions =
         issues.silent = false
 
         editor.notifications.push "Created!"
-      , editor.classicError
+      .catch editor.errorCatcher
 
   pull_master: (editor) ->
     editor.confirmUnsaved()
-    .then( ->
+    .then ->
       editor.notify "Merging in default branch..."
       editor.repository().pullFromBranch()
-    , editor.classicError
-    ).then ->
+    .then ->
       editor.notifications.push "Merged!"
 
       branchName = editor.repository().branch()
@@ -120,10 +114,11 @@ actions =
         editor.notifications.push "Loaded!"
       .catch ->
         editor.classicError "Error loading #{editor.repository().url()}"
+    .catch editor.errorCatcher
 
   pull_upstream: (editor) ->
     editor.confirmUnsaved()
-    .then( ->
+    .then ->
       editor.notify "Pulling from upstream master"
 
       upstreamRepo = editor.repository().parent().full_name
@@ -134,11 +129,10 @@ actions =
       .then (results) ->
         files = processDirectory results
         editor.loadFiles files
-
-    , classicError
-    ).then ->
+    .then ->
       editor.notifications.push "\nYour code is up to date with the upstream master"
       editor.closeOpenEditors()
+    .catch editor.errorCatcher
 
   tag_version: (editor) ->
     editor.notify "Building..."
@@ -158,10 +152,10 @@ actions =
         pkg.repository.branch = version
 
         editor.repository().publish Packager.standAlone(pkg), version
-      .then ->
-        editor.notifications.push "Published!"
+    .then ->
+      editor.notifications.push "Published!"
 
-    .catch editor.classicError
+    .catch editor.errorCatcher
 
 module.exports = (I={}, self) ->
   self.actions = Observable []
