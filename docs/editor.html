@@ -79,6 +79,13 @@ module.<span class="function"><span class="title">exports</span></span> = (I={},
     notify: notify
     errors: errors
     notifications: notifications
+    errorCatcher: (e) -&gt;
+      <span class="keyword">if</span> e.status <span class="keyword">and</span> e.statusText
+        editor.errors [<span class="string">"<span class="subst">#{e.status}</span> - <span class="subst">#{e.statusText}</span>"</span>]
+      <span class="keyword">else</span> <span class="keyword">if</span> e.stack
+        editor.errors [e.stack]
+      <span class="keyword">else</span>
+        editor.errors [e]
 
   self.extend
     repository: Observable()
