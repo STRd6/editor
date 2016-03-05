@@ -28,8 +28,7 @@ actions =
     editor.notify "Running..."
 
     editor.run()
-    .catch editor.classicError
-    .done()
+    .catch editor.errorCatcher
 
   test: (editor) ->
     editor.notify "Running tests..."
@@ -119,7 +118,7 @@ actions =
 
   pull_upstream: (editor) ->
     editor.confirmUnsaved()
-    .then( ->
+    .then ->
       editor.notify "Pulling from upstream master"
 
       upstreamRepo = editor.repository().parent().full_name
@@ -130,11 +129,10 @@ actions =
       .then (results) ->
         files = processDirectory results
         editor.loadFiles files
-
-    , classicError
-    ).then ->
+    .then ->
       editor.notifications.push "\nYour code is up to date with the upstream master"
       editor.closeOpenEditors()
+    .catch editor.errorCatcher
 
   tag_version: (editor) ->
     editor.notify "Building..."
@@ -154,10 +152,10 @@ actions =
         pkg.repository.branch = version
 
         editor.repository().publish Packager.standAlone(pkg), version
-      .then ->
-        editor.notifications.push "Published!"
+    .then ->
+      editor.notifications.push "Published!"
 
-    .catch editor.classicError
+    .catch editor.errorCatcher
 
 module.exports = (I={}, self) ->
   self.actions = Observable []
