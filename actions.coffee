@@ -76,11 +76,7 @@ actions =
       editor.notifications.push "Done!"
       editor.closeOpenEditors()
 
-    .catch (e) ->
-      if e.status and e.statusText
-        editor.errors ["#{e.status} - #{e.statusText}"]
-      else
-        editor.errors [e]
+    .catch editor.errorCatcher
 
   new_feature: (editor) ->
     if title = prompt("Description")
@@ -100,15 +96,14 @@ actions =
         issues.silent = false
 
         editor.notifications.push "Created!"
-      , editor.classicError
+      .catch editor.errorCatcher
 
   pull_master: (editor) ->
     editor.confirmUnsaved()
-    .then( ->
+    .then ->
       editor.notify "Merging in default branch..."
       editor.repository().pullFromBranch()
-    , editor.classicError
-    ).then ->
+    .then ->
       editor.notifications.push "Merged!"
 
       branchName = editor.repository().branch()
@@ -120,6 +115,7 @@ actions =
         editor.notifications.push "Loaded!"
       .catch ->
         editor.classicError "Error loading #{editor.repository().url()}"
+    .catch editor.errorCatcher
 
   pull_upstream: (editor) ->
     editor.confirmUnsaved()
