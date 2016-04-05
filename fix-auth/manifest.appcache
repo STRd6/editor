@@ -1,0 +1,13 @@
+CACHE MANIFEST
+# 1459814562228
+
+CACHE:
+index.html
+../fix-auth.json
+https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js
+https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js
+
+NETWORK:
+https://*
+http://*
+*
