@@ -82,9 +82,9 @@ require(<span class="string">"analytics"</span>).init(<span class="string">"UA-3
 <span class="comment"># Global until we consolidate editor/actions into something cleaner</span>
 
 global.github = require(<span class="string">"github"</span>)()
-require(<span class="string">"./source/github_auth"</span>).<span class="keyword">then</span> (token) -&gt;
+require(<span class="string">"./github_auth"</span>).<span class="keyword">then</span> (token) -&gt;
   github.token token
-.done()</code></pre>
+  github.api(<span class="string">'rate_limit'</span>)</code></pre>
 </div>
 </li>
 <li id="section-5">
