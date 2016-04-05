@@ -39,9 +39,9 @@ Components
     # Global until we consolidate editor/actions into something cleaner
 
     global.github = require("github")()
-    require("./source/github_auth").then (token) ->
+    require("./github_auth").then (token) ->
       github.token token
-    .done()
+      github.api('rate_limit')
 
 Templates
 ---------
