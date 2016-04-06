@@ -56,7 +56,7 @@
     },
     "style.styl": {
       "path": "style.styl",
-      "content": "html, body\n  height: 100%\n\nbody\n  font-family: \"HelveticaNeue-Light\", \"Helvetica Neue Light\", \"Helvetica Neue\", Helvetica, Arial, \"Lucida Grande\", sans-serif\n  font-weight: 300\n  margin: 0\n\n.main\n  position: relative\n  padding-top: 40px\n  padding-left: 200px\n  padding-bottom: 100px\n  box-sizing: border-box\n  height: 100%\n\n  & > #ace\n    border: none\n    display: block\n    width: 100%\n    height: 100%\n\n.filetree\n  margin: 0\n  padding: 0\n  width: 200px\n  overflow-x: hidden\n  overflow-y: auto\n  position: absolute\n  left: 0\n  bottom: 0\n  top: 40px\n  z-index: 2\n\n  li\n    cursor: pointer\n    list-style-type: none\n    padding-left: 1em\n    position: relative\n    whitespace: nowrap\n\n    .delete\n      display: none\n      position: absolute\n      right: 0\n      top: 0\n\n    &:hover\n      background-color: lightyellow\n\n      .delete\n        display: inline-block\n\n.actions\n  position: absolute\n  top: 0\n  left: 200px\n  z-index: 1\n\n  button\n    margin-right: 0.25em\n\n.repo_info\n  box-sizing: border-box\n  position: absolute\n  top: 0\n  left: 0\n  padding: 0.25em 1em\n  width: 200px\n  overflow: hidden\n  border-bottom: 1px solid black\n  height: 40px\n  font-size: 0.8em\n\n.console-wrap\n  box-sizing: border-box\n  position: absolute\n  bottom: 0\n  left: 0\n  right: 0\n  padding-left: 200px\n  height: 100px\n  width: 100%\n  margin: 0\n\n  .errors\n    box-sizing: border-box\n    border-top: 1px solid black\n    color: red\n\n.status\n  top: 0\n  right: 0\n  position: absolute\n",
+      "content": "html, body\n  height: 100%\n\nbody\n  font-family: \"HelveticaNeue-Light\", \"Helvetica Neue Light\", \"Helvetica Neue\", Helvetica, Arial, \"Lucida Grande\", sans-serif\n  font-weight: 300\n  margin: 0\n\n.main\n  position: relative\n  padding-top: 40px\n  padding-left: 200px\n  padding-bottom: 100px\n  box-sizing: border-box\n  height: 100%\n\n  > #ace\n    border: none\n    display: block\n    width: 100%\n    height: 100%\n\n.filetree\n  margin: 0\n  padding: 0\n  width: 200px\n  overflow-x: hidden\n  overflow-y: auto\n  position: absolute\n  left: 0\n  bottom: 0\n  top: 40px\n  z-index: 2\n\n  li\n    cursor: pointer\n    list-style-type: none\n    padding-left: 1em\n    position: relative\n    whitespace: nowrap\n\n    .delete\n      display: none\n      position: absolute\n      right: 0\n      top: 0\n\n    &:hover\n      background-color: lightyellow\n\n      .delete\n        display: inline-block\n\n.actions\n  position: absolute\n  top: 0\n  left: 200px\n  z-index: 1\n\n  button\n    margin-right: 0.25em\n\n.repo_info\n  box-sizing: border-box\n  position: absolute\n  top: 0\n  left: 0\n  padding: 0.25em 1em\n  width: 200px\n  overflow: hidden\n  border-bottom: 1px solid black\n  height: 40px\n  font-size: 0.8em\n\n.console-wrap\n  box-sizing: border-box\n  position: absolute\n  bottom: 0\n  left: 0\n  right: 0\n  padding-left: 200px\n  height: 100px\n  width: 100%\n  margin: 0\n\n  .errors\n    box-sizing: border-box\n    border-top: 1px solid black\n    color: red\n\n.status\n  top: 0\n  right: 0\n  position: absolute\n",
       "mode": "100644",
       "type": "blob"
     },
@@ -66,35 +66,30 @@
       "mode": "100644",
       "type": "blob"
     },
-    "templates/editor.haml.md": {
-      "path": "templates/editor.haml.md",
-      "content": "The main editor template renders all the other sub-templates.\n\n    .main\n      = require(\"./actions\") actions: @actions, issues: @issues\n      = require(\"./filetree\") @filetree\n      -# TODO: Figure out why we can't just add the notifications view directly\n      = @notifications.view.children[0]\n      = require(\"./repo_info\") @repository\n      = require(\"./github_status\") @github\n      #ace\n",
-      "mode": "100644",
-      "type": "blob"
+    "templates/editor.jadelet": {
+      "path": "templates/editor.jadelet",
+      "content": ".main\n  = require(\"./actions\") actions: @actions, issues: @issues\n  = require(\"./filetree\") @filetree\n  -# TODO: Figure out why we can't just add the notifications view directly\n  = @notifications.view.children[0]\n  = require(\"./repo_info\") @repository\n  = require(\"./github_status\") @github\n  #ace\n",
+      "mode": "100644"
     },
-    "templates/filetree.haml": {
-      "path": "templates/filetree.haml",
-      "content": "%ul.filetree\n  - selectedFile = @selectedFile\n  - files = @files\n  - files.forEach (file) ->\n    - select = (e) -> selectedFile(file) if e.target.nodeName is 'LI'\n    %li(click=select)= file.displayName\n      - remove = -> files.remove(file) if confirm(\"Delete #{file.path()}?\")\n      .delete(click=remove)\n        X\n",
-      "mode": "100644",
-      "type": "blob"
+    "test/util.coffee": {
+      "path": "test/util.coffee",
+      "content": "Util = require \"../source/util\"\n\ndescribe \"Util\", ->\n  it \"should allow reading of the source config\", ->\n    assert Util.readSourceConfig(PACKAGE)\n",
+      "mode": "100644"
     },
-    "templates/github_status.haml.md": {
-      "path": "templates/github_status.haml.md",
-      "content": "Github Status\n=============\n\nDisplay information about the current Github api session.\n\n    - redirect = ->\n      - window.location = github.authorizationUrl(\"bc46af967c926ba4ff87\", \"gist,repo,user:email\")\n\n    .status\n      - github = this\n      - if request = @lastRequest()\n        %div\n          - if request.getAllResponseHeaders and request.getAllResponseHeaders().match(/X-RateLimit-Limit: 5000/)\n            Authenticated Scopes:\n            = request.getResponseHeader(\"X-OAuth-Scopes\")\n            %br\n            Rate Limit Remaining:\n            = request.getResponseHeader(\"X-RateLimit-Remaining\")\n            = \" / 5000\"\n          - else\n            %button(click=redirect) Auth\n",
-      "mode": "100644",
-      "type": "blob"
+    "templates/repo_info.jadelet": {
+      "path": "templates/repo_info.jadelet",
+      "content": ".repo_info\n  - if info = this()\n    div\n      = info.full_name\n      = \":\"\n      = info.branch\n",
+      "mode": "100644"
     },
-    "templates/repo_info.haml.md": {
-      "path": "templates/repo_info.haml.md",
-      "content": "Display some info about the current repository\n\n    .repo_info\n      - if info = this()\n        %div\n          = info.full_name\n          :\n          = info.branch\n",
-      "mode": "100644",
-      "type": "blob"
+    "templates/github_status.jadelet": {
+      "path": "templates/github_status.jadelet",
+      "content": "- redirect = ->\n  - window.location = github.authorizationUrl(\"bc46af967c926ba4ff87\", \"gist,repo,user:email\")\n\n.status\n  - github = this\n  - if request = @lastRequest()\n    div\n      - if request.getAllResponseHeaders and request.getAllResponseHeaders().match(/X-RateLimit-Limit: 5000/)\n        = \"Authenticated Scopes:\"\n        = request.getResponseHeader(\"X-OAuth-Scopes\")\n        br\n        = \"Rate Limit Remaining:\"\n        = request.getResponseHeader(\"X-RateLimit-Remaining\")\n        = \" / 5000\"\n      - else\n        button(click=redirect) Auth\n",
+      "mode": "100644"
     },
-    "test/util.coffee.md": {
-      "path": "test/util.coffee.md",
-      "content": "    Util = require \"../source/util\"\n\n    describe \"Util\", ->\n      it \"should allow reading of the source config\", ->\n        assert Util.readSourceConfig(PACKAGE)\n",
-      "mode": "100644",
-      "type": "blob"
+    "templates/filetree.jadelet": {
+      "path": "templates/filetree.jadelet",
+      "content": "ul.filetree\n  - selectedFile = @selectedFile\n  - files = @files\n  - files.forEach (file) ->\n    - select = (e) -> selectedFile(file) if e.target.nodeName is 'LI'\n    li(click=select)= file.displayName\n      - remove = -> files.remove(file) if confirm(\"Delete #{file.path()}?\")\n      .delete(click=remove)\n        = \"X\"\n",
+      "mode": "100644"
     }
   },
   "distribution": {
@@ -153,24 +148,24 @@
       "content": "module.exports = function(data) {\n  \"use strict\";\n  return (function() {\n    var __root;\n    __root = require(\"/lib/hamlet-runtime\")(this);\n    __root.buffer(__root.element(\"div\", this, {\n      \"class\": [\"main\"]\n    }, function(__root) {\n      __root.buffer(require(\"./actions\")({\n        actions: this.actions,\n        issues: this.issues\n      }));\n      __root.buffer(require(\"./filetree\")(this.filetree));\n      __root.buffer(this.notifications.view.children[0]);\n      __root.buffer(require(\"./repo_info\")(this.repository));\n      __root.buffer(require(\"./github_status\")(this.github));\n      __root.buffer(__root.element(\"div\", this, {\n        id: [\"ace\"]\n      }, function(__root) {}));\n    }));\n    return __root.root;\n  }).call(data);\n};\n",
       "type": "blob"
     },
-    "templates/filetree": {
-      "path": "templates/filetree",
-      "content": "module.exports = function(data) {\n  \"use strict\";\n  return (function() {\n    var __root;\n    __root = require(\"/lib/hamlet-runtime\")(this);\n    __root.buffer(__root.element(\"ul\", this, {\n      \"class\": [\"filetree\"]\n    }, function(__root) {\n      var files, selectedFile;\n      selectedFile = this.selectedFile;\n      files = this.files;\n      files.forEach(function(file) {\n        var select;\n        select = function(e) {\n          if (e.target.nodeName === 'LI') {\n            return selectedFile(file);\n          }\n        };\n        return __root.buffer(__root.element(\"li\", this, {\n          \"click\": select\n        }, function(__root) {\n          var remove;\n          __root.buffer(file.displayName);\n          remove = function() {\n            if (confirm(\"Delete \" + (file.path()) + \"?\")) {\n              return files.remove(file);\n            }\n          };\n          __root.buffer(__root.element(\"div\", this, {\n            \"class\": [\"delete\"],\n            \"click\": remove\n          }, function(__root) {\n            __root.buffer(\"X\\n\");\n          }));\n        }));\n      });\n    }));\n    return __root.root;\n  }).call(data);\n};\n",
-      "type": "blob"
-    },
-    "templates/github_status": {
-      "path": "templates/github_status",
-      "content": "module.exports = function(data) {\n  \"use strict\";\n  return (function() {\n    var redirect, __root;\n    __root = require(\"/lib/hamlet-runtime\")(this);\n    redirect = function() {\n      return window.location = github.authorizationUrl(\"bc46af967c926ba4ff87\", \"gist,repo,user:email\");\n    };\n    __root.buffer(__root.element(\"div\", this, {\n      \"class\": [\"status\"]\n    }, function(__root) {\n      var github, request;\n      github = this;\n      if (request = this.lastRequest()) {\n        __root.buffer(__root.element(\"div\", this, {}, function(__root) {\n          if (request.getAllResponseHeaders && request.getAllResponseHeaders().match(/X-RateLimit-Limit: 5000/)) {\n            __root.buffer(\"Authenticated Scopes:\\n\");\n            __root.buffer(request.getResponseHeader(\"X-OAuth-Scopes\"));\n            __root.buffer(__root.element(\"br\", this, {}, function(__root) {}));\n            __root.buffer(\"Rate Limit Remaining:\\n\");\n            __root.buffer(request.getResponseHeader(\"X-RateLimit-Remaining\"));\n            __root.buffer(\" / 5000\");\n          } else {\n            __root.buffer(__root.element(\"button\", this, {\n              \"click\": redirect\n            }, function(__root) {\n              __root.buffer(\"Auth\\n\");\n            }));\n          }\n        }));\n      }\n    }));\n    return __root.root;\n  }).call(data);\n};\n",
+    "test/util": {
+      "path": "test/util",
+      "content": "(function() {\n  var Util;\n\n  Util = require(\"../source/util\");\n\n  describe(\"Util\", function() {\n    return it(\"should allow reading of the source config\", function() {\n      return assert(Util.readSourceConfig(PACKAGE));\n    });\n  });\n\n}).call(this);\n",
       "type": "blob"
     },
     "templates/repo_info": {
       "path": "templates/repo_info",
-      "content": "module.exports = function(data) {\n  \"use strict\";\n  return (function() {\n    var __root;\n    __root = require(\"/lib/hamlet-runtime\")(this);\n    __root.buffer(__root.element(\"div\", this, {\n      \"class\": [\"repo_info\"]\n    }, function(__root) {\n      var info;\n      if (info = this()) {\n        __root.buffer(__root.element(\"div\", this, {}, function(__root) {\n          __root.buffer(info.full_name);\n          __root.buffer(\":\\n\");\n          __root.buffer(info.branch);\n        }));\n      }\n    }));\n    return __root.root;\n  }).call(data);\n};\n",
+      "content": "module.exports = function(data) {\n  \"use strict\";\n  return (function() {\n    var __root;\n    __root = require(\"/lib/hamlet-runtime\")(this);\n    __root.buffer(__root.element(\"div\", this, {\n      \"class\": [\"repo_info\"]\n    }, function(__root) {\n      var info;\n      if (info = this()) {\n        __root.buffer(__root.element(\"div\", this, {}, function(__root) {\n          __root.buffer(info.full_name);\n          __root.buffer(\":\");\n          __root.buffer(info.branch);\n        }));\n      }\n    }));\n    return __root.root;\n  }).call(data);\n};\n",
       "type": "blob"
     },
-    "test/util": {
-      "path": "test/util",
-      "content": "(function() {\n  var Util;\n\n  Util = require(\"../source/util\");\n\n  describe(\"Util\", function() {\n    return it(\"should allow reading of the source config\", function() {\n      return assert(Util.readSourceConfig(PACKAGE));\n    });\n  });\n\n}).call(this);\n",
+    "templates/github_status": {
+      "path": "templates/github_status",
+      "content": "module.exports = function(data) {\n  \"use strict\";\n  return (function() {\n    var redirect, __root;\n    __root = require(\"/lib/hamlet-runtime\")(this);\n    redirect = function() {\n      return window.location = github.authorizationUrl(\"bc46af967c926ba4ff87\", \"gist,repo,user:email\");\n    };\n    __root.buffer(__root.element(\"div\", this, {\n      \"class\": [\"status\"]\n    }, function(__root) {\n      var github, request;\n      github = this;\n      if (request = this.lastRequest()) {\n        __root.buffer(__root.element(\"div\", this, {}, function(__root) {\n          if (request.getAllResponseHeaders && request.getAllResponseHeaders().match(/X-RateLimit-Limit: 5000/)) {\n            __root.buffer(\"Authenticated Scopes:\");\n            __root.buffer(request.getResponseHeader(\"X-OAuth-Scopes\"));\n            __root.buffer(__root.element(\"br\", this, {}, function(__root) {}));\n            __root.buffer(\"Rate Limit Remaining:\");\n            __root.buffer(request.getResponseHeader(\"X-RateLimit-Remaining\"));\n            __root.buffer(\" / 5000\");\n          } else {\n            __root.buffer(__root.element(\"button\", this, {\n              \"click\": redirect\n            }, function(__root) {\n              __root.buffer(\"Auth\\n\");\n            }));\n          }\n        }));\n      }\n    }));\n    return __root.root;\n  }).call(data);\n};\n",
+      "type": "blob"
+    },
+    "templates/filetree": {
+      "path": "templates/filetree",
+      "content": "module.exports = function(data) {\n  \"use strict\";\n  return (function() {\n    var __root;\n    __root = require(\"/lib/hamlet-runtime\")(this);\n    __root.buffer(__root.element(\"ul\", this, {\n      \"class\": [\"filetree\"]\n    }, function(__root) {\n      var files, selectedFile;\n      selectedFile = this.selectedFile;\n      files = this.files;\n      files.forEach(function(file) {\n        var select;\n        select = function(e) {\n          if (e.target.nodeName === 'LI') {\n            return selectedFile(file);\n          }\n        };\n        return __root.buffer(__root.element(\"li\", this, {\n          \"click\": select\n        }, function(__root) {\n          var remove;\n          __root.buffer(file.displayName);\n          remove = function() {\n            if (confirm(\"Delete \" + (file.path()) + \"?\")) {\n              return files.remove(file);\n            }\n          };\n          __root.buffer(__root.element(\"div\", this, {\n            \"class\": [\"delete\"],\n            \"click\": remove\n          }, function(__root) {\n            __root.buffer(\"X\");\n          }));\n        }));\n      });\n    }));\n    return __root.root;\n  }).call(data);\n};\n",
       "type": "blob"
     },
     "lib/hamlet-runtime": {
@@ -180,7 +175,7 @@
     }
   },
   "progenitor": {
-    "url": "https://strd6.github.io/editor/"
+    "url": "https://danielx.net/editor/"
   },
   "version": "0.4.2",
   "entryPoint": "main",
