@@ -1,9 +1,9 @@
-%ul.filetree
+ul.filetree
   - selectedFile = @selectedFile
   - files = @files
   - files.forEach (file) ->
     - select = (e) -> selectedFile(file) if e.target.nodeName is 'LI'
-    %li(click=select)= file.displayName
+    li(click=select)= file.displayName
       - remove = -> files.remove(file) if confirm("Delete #{file.path()}?")
       .delete(click=remove)
-        X
+        = "X"
