@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>source/util</title>
+  <title>issues</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="https://strd6.github.io/cdn/parallel/docco.css" />
@@ -16,7 +16,7 @@
     <div class="pilwrap">
       <a class="pilcrow" href="#section-1">&#182;</a>
     </div>
-    <h1 id="util">Util</h1>
+    <h1 id="issues">Issues</h1>
 
   </div>
   <div class="content"><pre><code class="lang-coffeescript">
@@ -30,8 +30,7 @@
     </div>
     
   </div>
-  <div class="content"><pre><code class="lang-coffeescript">CSON = require <span class="string">"cson"</span>
-Base64 = require <span class="string">"base64"</span></code></pre>
+  <div class="content"><pre><code class="lang-coffeescript">Issue = require <span class="string">"./issue"</span></code></pre>
 </div>
 </li>
 <li id="section-3">
@@ -39,10 +38,19 @@ Base64 = require <span class="string">"base64"</span></code></pre>
     <div class="pilwrap">
       <a class="pilcrow" href="#section-3">&#182;</a>
     </div>
-    <p>A collection of shared utilities</p>
+    <p>A collection of issues including a <code>currentIssue</code> to represent the actively
+selected issue.</p>
+<p>We may want to formalize this collection pattern later, but for now lets just
+see how it goes.</p>
 
   </div>
-  <div class="content"><pre><code class="lang-coffeescript">Util =</code></pre>
+  <div class="content"><pre><code class="lang-coffeescript">nullIssue =
+  toString: -&gt;
+    <span class="string">"- Default Branch -"</span>
+
+<span class="function"><span class="title">Issues</span></span> = (I={}, self=Model(I)) -&gt;
+  defaults I,
+    issues: []</code></pre>
 </div>
 </li>
 <li id="section-4">
@@ -50,16 +58,10 @@ Base64 = require <span class="string">"base64"</span></code></pre>
     <div class="pilwrap">
       <a class="pilcrow" href="#section-4">&#182;</a>
     </div>
-    <p>Read the config for the package from the package source.</p>
+    <p>Our <code>issues</code> method is a list of <code>Issue</code> models.</p>
 
   </div>
-  <div class="content"><pre><code class="lang-coffeescript">  readSourceConfig: (pkg=PACKAGE) -&gt;
-    <span class="keyword">if</span> configData = pkg.source[<span class="string">"pixie.cson"</span>]?.content
-      CSON.parse(configData)
-    <span class="keyword">else</span> <span class="keyword">if</span> configData = pkg.source[<span class="string">"pixie.json"</span>]?.content
-      JSON.parse(configData)
-    <span class="keyword">else</span>
-      {}</code></pre>
+  <div class="content"><pre><code class="lang-coffeescript">  self.attrModels <span class="string">"issues"</span>, Issue</code></pre>
 </div>
 </li>
 <li id="section-5">
@@ -67,23 +69,12 @@ Base64 = require <span class="string">"base64"</span></code></pre>
     <div class="pilwrap">
       <a class="pilcrow" href="#section-5">&#182;</a>
     </div>
-    <p>Decodes all content in place.</p>
+    <p>We want to expose the currently selected issue as an observable as well.</p>
 
   </div>
-  <div class="content"><pre><code class="lang-coffeescript">  processDirectory: (items) -&gt;
-    items.forEach (item) -&gt;
-      <span class="keyword">return</span> item <span class="keyword">unless</span> item.content
+  <div class="content"><pre><code class="lang-coffeescript">  self.attrObservable <span class="string">"currentIssue"</span>
 
-      <span class="keyword">if</span> isBinary(item.path)
-        item.binary = <span class="literal">true</span>
-        item.content = atob(item.content.replace(<span class="regexp">/\s/g</span>, <span class="string">""</span>))
-      <span class="keyword">else</span> <span class="comment"># Text</span>
-        <span class="comment"># NOTE: This implementation of Base64 assumes utf-8</span>
-        item.content = Base64.decode(item.content)
-
-      item.encoding = <span class="string">"raw"</span>
-
-    <span class="keyword">return</span> items</code></pre>
+  self.extend</code></pre>
 </div>
 </li>
 <li id="section-6">
@@ -91,51 +82,23 @@ Base64 = require <span class="string">"base64"</span></code></pre>
     <div class="pilwrap">
       <a class="pilcrow" href="#section-6">&#182;</a>
     </div>
-    <p><code>arrayToHash</code> converts an array of fileData objects into an object where each
-file&#39;s path is a key and the fileData is the object.</p>
+    <p>The reset method accepts an array of raw issue data, converts it into an array
+of issue objects, replaces the previous issues with the new ones and clears the
+selected issue.</p>
 
   </div>
-  <div class="content"><pre><code class="lang-coffeescript">  arrayToHash: (array) -&gt;
-    array.eachWithObject {}, (file, hash) -&gt;
-      hash[file.path] = file
+  <div class="content"><pre><code class="lang-coffeescript">    <span class="comment"># TODO: We should be able to do this purely functionally</span>
+    <span class="comment"># composing the null issue with whatever the issues happen to be</span>
+    reset: (issueData) -&gt;
+      self.currentIssue(nullIssue)
 
-module.exports = Util</code></pre>
-</div>
-</li>
-<li id="section-7">
-  <div class="annotation">
-    <div class="pilwrap">
-      <a class="pilcrow" href="#section-7">&#182;</a>
-    </div>
-    <h2 id="helpers">Helpers</h2>
+      self.issues [nullIssue].concat issueData.map (x) -&gt; Issue x
 
-  </div>
-  <div class="content"><pre><code class="lang-coffeescript">
-</code></pre>
-</div>
-</li>
-<li id="section-8">
-  <div class="annotation">
-    <div class="pilwrap">
-      <a class="pilcrow" href="#section-8">&#182;</a>
-    </div>
-    <p>Determines if a file is a binary file by looking up common file extensions.</p>
+  self.reset I.issues
 
-  </div>
-  <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">isBinary</span></span> = (path) -&gt;
-  pathCheckRegEx = RegExp [
-    <span class="string">"gif"</span>
-    <span class="string">"jpeg"</span>
-    <span class="string">"jpg"</span>
-    <span class="string">"mp3"</span>
-    <span class="string">"png"</span>
-    <span class="string">"sfs"</span>
-    <span class="string">"wav"</span>
-  ].map((extension) -&gt;
-    <span class="string">"\\.<span class="subst">#{extension}</span>$"</span>
-  ).join(<span class="string">"|"</span>)
+  <span class="keyword">return</span> self
 
-  path.match(pathCheckRegEx)</code></pre>
+module.exports = Issues</code></pre>
 </div>
 </li>
     </ul>
@@ -277,6 +240,6 @@ module.exports = Util</code></pre>
 
 }).call(this);
 
-</script><script src="../package.js"></script>
+</script><script src="package.js"></script>
 </body>
 </html>
