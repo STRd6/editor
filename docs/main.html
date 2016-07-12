@@ -137,7 +137,8 @@ Runtime(PACKAGE)
   .applyStyleSheet(require(<span class="string">'./style'</span>))
 
 <span class="comment"># Branch Chooser using pull requests</span>
-{models:{Issue, Issues}} = require(<span class="string">"issues"</span>)
+Issue = require <span class="string">"./issue"</span>
+Issues = require <span class="string">"./issues"</span>
 issues = editor.issues = Issues()
 
 <span class="comment"># Github repository observable</span>
