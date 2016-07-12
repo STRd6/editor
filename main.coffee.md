@@ -76,7 +76,8 @@ Templates
       .applyStyleSheet(require('./style'))
 
     # Branch Chooser using pull requests
-    {models:{Issue, Issues}} = require("issues")
+    Issue = require "./issue"
+    Issues = require "./issues"
     issues = editor.issues = Issues()
 
     # Github repository observable
