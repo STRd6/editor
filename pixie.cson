@@ -13,7 +13,7 @@ dependencies:
   cornerstone: "distri/cornerstone:v0.3.0-pre.2"
   cson: "distri/cson:v0.1.0"
   emojer: "STRd6/emojer:v0.2.0"
-  filetree: "distri/filetree:v0.4.0-pre.1"
+  filetree: "distri/filetree:v0.4.0-pre.2"
   github: "distri/github:v0.5.2-pre.1"
   hygiene: "STRd6/hygiene:v0.2.0"
   md: "distri/md:v0.4.3"
