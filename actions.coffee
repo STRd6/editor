@@ -1,5 +1,5 @@
 {File} = require "filetree"
-{models:{Issue}} = require("issues")
+Issue = require("./issue")
 Packager = require("packager")
 {readSourceConfig} = require("./source/util")
 emoji = require "emojer"
