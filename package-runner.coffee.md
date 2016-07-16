@@ -19,6 +19,8 @@ The package runner assumes that it has total control over the document so you
 probably won't want to give it the one in your own window.
 
     Sandbox = require "sandbox"
+    {html} = require "./packager"
+    {executePackageWrapper} = require "require"
 
     module.exports = (config={}) ->
       sandbox = Sandbox(config)
@@ -45,7 +47,7 @@ probably won't want to give it the one in your own window.
           extend runningInstance.contentWindow.ENV ?= {},
             APP_STATE: data
 
-          runningInstance.contentWindow.document.write html(pkg)
+          runningInstance.contentWindow.document.write html(pkg, executePackageWrapper)
           runningInstance.contentWindow.document.close()
 
           return self
@@ -90,24 +92,6 @@ invocation of the call, or rejected with an error object.
 
         eval: (code) ->
           runningInstance.contentWindow.eval(code)
-
-A standalone html page for a package.
-
-    html = module.exports.html = (pkg) ->
-      """
-        <!DOCTYPE html>
-        <html>
-        <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        #{dependencyScripts(pkg.remoteDependencies)}
-        </head>
-        <body>
-        <script>
-        #{require('require').executePackageWrapper(pkg)}
-        <\/script>
-        </body>
-        </html>
-      """
 
 Helpers
 -------

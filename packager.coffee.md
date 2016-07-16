@@ -63,21 +63,19 @@ Launcher
 
     launcherScript = (pkg) ->
       """
-        <script>
-          xhr = new XMLHttpRequest;
-          url = #{JSON.stringify(relativePackagePath(pkg))};
-          xhr.open("GET", url, true);
-          xhr.responseType = "json";
-          xhr.onload = function() {
-            (function(PACKAGE) {
-              var src = #{JSON.stringify(PACKAGE.dependencies.require.distribution.main.content)};
-              var Require = new Function("PACKAGE", "return " + src)({distribution: {main: {content: src}}});
-              var require = Require.generateFor(PACKAGE);
-              require('./' + PACKAGE.entryPoint);
-            })(xhr.response)
-          };
-          xhr.send();
-        <\/script>
+        xhr = new XMLHttpRequest;
+        url = #{JSON.stringify(relativePackagePath(pkg))};
+        xhr.open("GET", url, true);
+        xhr.responseType = "json";
+        xhr.onload = function() {
+          (function(PACKAGE) {
+            var src = #{JSON.stringify(PACKAGE.dependencies.require.distribution.main.content)};
+            var Require = new Function("PACKAGE", "return " + src)({distribution: {main: {content: src}}});
+            var require = Require.generateFor(PACKAGE);
+            require('./' + PACKAGE.entryPoint);
+          })(xhr.response)
+        };
+        xhr.send();
       """
 
     startsWith = (string, prefix) ->
@@ -88,26 +86,41 @@ Create a rejected promise with the given message.
     reject = (message) ->
       Promise.reject new Error message
 
+    metaTag = (name, content) ->
+      "<meta name=#{JSON.stringify(name)} content=#{JSON.stringify(content)}>"
+
 A standalone html page for a package.
 
-    html = (pkg) ->
+    html = (pkg, launcherScript=Packager.launcherScript) ->
       metas = [
         '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'
       ]
 
       try
-        info = JSON.parse pkg.distribution.pixie.content.slice(18, -1)
-        console.log info
+        jsonString = pkg.distribution.pixie.content.slice(17, -1)
+        info = JSON.parse jsonString
+        {title, description} = info
+
+        if title
+          metas.push "<title>#{title}</title>"
+
+        if description
+          metas.push metaTag "description", description.replace("\n", " ")
+
+      catch e
+        console.error e
 
       """
         <!DOCTYPE html>
         <html manifest="manifest.appcache?#{+new Date}">
           <head>
-            #{metas.join("\n")}
+            #{metas.join("\n    ")}
             #{dependencyScripts(pkg.remoteDependencies)}
           </head>
           <body>
-            #{launcherScript(pkg)}
+            <script>
+              #{launcherScript(pkg)}
+            <\/script>
           </body>
         </html>
       """
@@ -190,6 +203,8 @@ Implementation
     ajax = Ajax()
 
     Packager =
+      html: html
+      launcherScript: launcherScript
       collectDependencies: (dependencies) ->
         names = Object.keys(dependencies)
 
