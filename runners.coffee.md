@@ -3,7 +3,7 @@ Runners
 
 Hold all the ways the editor can run things: apps, docs, tests, maybe more.
 
-    Packager = require "packager"
+    Packager = require "./packager"
     {PackageRunner} = Runner = require("runner")
     documenter = require "md"
 

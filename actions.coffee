@@ -1,6 +1,6 @@
 {File} = require "filetree"
 Issue = require("./issue")
-Packager = require("packager")
+Packager = require("./packager")
 {readSourceConfig} = require("./source/util")
 emoji = require "emojer"
 

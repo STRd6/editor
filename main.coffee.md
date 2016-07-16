@@ -69,7 +69,6 @@ Templates
 
     Hygiene = require "hygiene"
     Runtime = require "runtime"
-    Packager = require "packager"
 
     Runtime(PACKAGE)
       .boot()
