@@ -131,21 +131,19 @@ used when requiring in other packages and running standalone html.</p>
   </div>
   <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">launcherScript</span></span> = (pkg) -&gt;
   <span class="string">"""
-    &lt;script&gt;
-      xhr = new XMLHttpRequest;
-      url = <span class="subst">#{JSON.stringify(relativePackagePath(pkg))}</span>;
-      xhr.open("GET", url, true);
-      xhr.responseType = "json";
-      xhr.onload = function() {
-        (function(PACKAGE) {
-          var src = <span class="subst">#{JSON.stringify(PACKAGE.dependencies.require.distribution.main.content)}</span>;
-          var Require = new Function("PACKAGE", "return " + src)({distribution: {main: {content: src}}});
-          var require = Require.generateFor(PACKAGE);
-          require('./' + PACKAGE.entryPoint);
-        })(xhr.response)
-      };
-      xhr.send();
-    &lt;\/script&gt;
+    xhr = new XMLHttpRequest;
+    url = <span class="subst">#{JSON.stringify(relativePackagePath(pkg))}</span>;
+    xhr.open("GET", url, true);
+    xhr.responseType = "json";
+    xhr.onload = function() {
+      (function(PACKAGE) {
+        var src = <span class="subst">#{JSON.stringify(PACKAGE.dependencies.require.distribution.main.content)}</span>;
+        var Require = new Function("PACKAGE", "return " + src)({distribution: {main: {content: src}}});
+        var require = Require.generateFor(PACKAGE);
+        require('./' + PACKAGE.entryPoint);
+      })(xhr.response)
+    };
+    xhr.send();
   """</span>
 
 <span class="function"><span class="title">startsWith</span></span> = (string, prefix) -&gt;
@@ -161,7 +159,10 @@ used when requiring in other packages and running standalone html.</p>
 
   </div>
   <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">reject</span></span> = (message) -&gt;
-  Promise.reject <span class="keyword">new</span> Error message</code></pre>
+  Promise.reject <span class="keyword">new</span> Error message
+
+<span class="function"><span class="title">metaTag</span></span> = (name, content) -&gt;
+  <span class="string">"&lt;meta name=<span class="subst">#{JSON.stringify(name)}</span> content=<span class="subst">#{JSON.stringify(content)}</span>&gt;"</span></code></pre>
 </div>
 </li>
 <li id="section-10">
@@ -172,24 +173,36 @@ used when requiring in other packages and running standalone html.</p>
     <p>A standalone html page for a package.</p>
 
   </div>
-  <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">html</span></span> = (pkg) -&gt;
+  <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">html</span></span> = (pkg, launcherScript=Packager.launcherScript) -&gt;
   metas = [
     <span class="string">'&lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;'</span>
   ]
 
   <span class="keyword">try</span>
-    info = JSON.parse pkg.distribution.pixie.content.slice(<span class="number">18</span>, -<span class="number">1</span>)
-    console.log info
+    jsonString = pkg.distribution.pixie.content.slice(<span class="number">17</span>, -<span class="number">1</span>)
+    info = JSON.parse jsonString
+    {title, description} = info
+
+    <span class="keyword">if</span> title
+      metas.push <span class="string">"&lt;title&gt;<span class="subst">#{title}</span>&lt;/title&gt;"</span>
+
+    <span class="keyword">if</span> description
+      metas.push metaTag <span class="string">"description"</span>, description.replace(<span class="string">"\n"</span>, <span class="string">" "</span>)
+
+  <span class="keyword">catch</span> e
+    console.error e
 
   <span class="string">"""
     &lt;!DOCTYPE html&gt;
     &lt;html manifest="manifest.appcache?<span class="subst">#{+<span class="keyword">new</span> Date}</span>"&gt;
       &lt;head&gt;
-        <span class="subst">#{metas.join("\n")}</span>
+        <span class="subst">#{metas.join("\n    ")}</span>
         <span class="subst">#{dependencyScripts(pkg.remoteDependencies)}</span>
       &lt;/head&gt;
       &lt;body&gt;
-        <span class="subst">#{launcherScript(pkg)}</span>
+        &lt;script&gt;
+          <span class="subst">#{launcherScript(pkg)}</span>
+        &lt;\/script&gt;
       &lt;/body&gt;
     &lt;/html&gt;
   """</span></code></pre>
@@ -315,6 +328,8 @@ This loads the package from the published gh-pages branch of the given repo.</p>
 ajax = Ajax()
 
 Packager =
+  html: html
+  launcherScript: launcherScript
   collectDependencies: (dependencies) -&gt;
     names = Object.keys(dependencies)
 

@@ -43,6 +43,8 @@ probably won&#39;t want to give it the one in your own window.</p>
 
   </div>
   <div class="content"><pre><code class="lang-coffeescript">Sandbox = require <span class="string">"sandbox"</span>
+{html} = require <span class="string">"./packager"</span>
+{executePackageWrapper} = require <span class="string">"require"</span>
 
 module.<span class="function"><span class="title">exports</span></span> = (config={}) -&gt;
   sandbox = Sandbox(config)
@@ -69,7 +71,7 @@ module.<span class="function"><span class="title">exports</span></span> = (confi
       extend runningInstance.contentWindow.ENV ?= {},
         APP_STATE: data
 
-      runningInstance.contentWindow.document.write html(pkg)
+      runningInstance.contentWindow.document.write html(pkg, executePackageWrapper)
       runningInstance.contentWindow.document.close()
 
       <span class="keyword">return</span> self</code></pre>
@@ -127,31 +129,6 @@ invocation of the call, or rejected with an error object.</p>
     <div class="pilwrap">
       <a class="pilcrow" href="#section-4">&#182;</a>
     </div>
-    <p>A standalone html page for a package.</p>
-
-  </div>
-  <div class="content"><pre><code class="lang-coffeescript">html = module.exports.<span class="function"><span class="title">html</span></span> = (pkg) -&gt;
-  <span class="string">"""
-    &lt;!DOCTYPE html&gt;
-    &lt;html&gt;
-    &lt;head&gt;
-    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
-    <span class="subst">#{dependencyScripts(pkg.remoteDependencies)}</span>
-    &lt;/head&gt;
-    &lt;body&gt;
-    &lt;script&gt;
-    <span class="subst">#{require('require').executePackageWrapper(pkg)}</span>
-    &lt;\/script&gt;
-    &lt;/body&gt;
-    &lt;/html&gt;
-  """</span></code></pre>
-</div>
-</li>
-<li id="section-5">
-  <div class="annotation">
-    <div class="pilwrap">
-      <a class="pilcrow" href="#section-5">&#182;</a>
-    </div>
     <h2 id="helpers">Helpers</h2>
 
   </div>
@@ -159,10 +136,10 @@ invocation of the call, or rejected with an error object.</p>
 </code></pre>
 </div>
 </li>
-<li id="section-6">
+<li id="section-5">
   <div class="annotation">
     <div class="pilwrap">
-      <a class="pilcrow" href="#section-6">&#182;</a>
+      <a class="pilcrow" href="#section-5">&#182;</a>
     </div>
     <p>Proxy calls from the iframe to the top window.</p>
 
@@ -175,10 +152,10 @@ invocation of the call, or rejected with an error object.</p>
     iframe.contentWindow[name] = document.defaultView[name]</code></pre>
 </div>
 </li>
-<li id="section-7">
+<li id="section-6">
   <div class="annotation">
     <div class="pilwrap">
-      <a class="pilcrow" href="#section-7">&#182;</a>
+      <a class="pilcrow" href="#section-6">&#182;</a>
     </div>
     <p><code>makeScript</code> returns a string representation of a script tag that has a src
 attribute.</p>
@@ -188,10 +165,10 @@ attribute.</p>
   <span class="string">"&lt;script src=<span class="subst">#{JSON.stringify(src)}</span>&gt;&lt;\/script&gt;"</span></code></pre>
 </div>
 </li>
-<li id="section-8">
+<li id="section-7">
   <div class="annotation">
     <div class="pilwrap">
-      <a class="pilcrow" href="#section-8">&#182;</a>
+      <a class="pilcrow" href="#section-7">&#182;</a>
     </div>
     <p><code>dependencyScripts</code> returns a string containing the script tags that are
 the remote script dependencies of this build.</p>
