@@ -91,11 +91,19 @@ Create a rejected promise with the given message.
 A standalone html page for a package.
 
     html = (pkg) ->
+      metas = [
+        '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'
+      ]
+
+      try
+        info = JSON.parse pkg.distribution.pixie.content.slice(18, -1)
+        console.log info
+
       """
         <!DOCTYPE html>
         <html manifest="manifest.appcache?#{+new Date}">
           <head>
-            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            #{metas.join("\n")}
             #{dependencyScripts(pkg.remoteDependencies)}
           </head>
           <body>
