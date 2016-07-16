@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>source/util</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="https://strd6.github.io/cdn/parallel/docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    <ul class="sections">
+      <li id="section-1">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-1">&#182;</a>
+    </div>
+    <h1 id="util">Util</h1>
+
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+</li>
+<li id="section-2">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-2">&#182;</a>
+    </div>
+    
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript">CSON = require <span class="string">"cson"</span>
+Base64 = require <span class="string">"base64"</span></code></pre>
+</div>
+</li>
+<li id="section-3">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-3">&#182;</a>
+    </div>
+    <p>A collection of shared utilities</p>
+
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript">Util =</code></pre>
+</div>
+</li>
+<li id="section-4">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-4">&#182;</a>
+    </div>
+    <p>Read the config for the package from the package source.</p>
+
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript">  readSourceConfig: (pkg=PACKAGE) -&gt;
+    <span class="keyword">if</span> configData = pkg.source[<span class="string">"pixie.cson"</span>]?.content
+      CSON.parse(configData)
+    <span class="keyword">else</span> <span class="keyword">if</span> configData = pkg.source[<span class="string">"pixie.json"</span>]?.content
+      JSON.parse(configData)
+    <span class="keyword">else</span>
+      {}</code></pre>
+</div>
+</li>
+<li id="section-5">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-5">&#182;</a>
+    </div>
+    <p>Decodes all content in place.</p>
+
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript">  processDirectory: (items) -&gt;
+    items.forEach (item) -&gt;
+      <span class="keyword">return</span> item <span class="keyword">unless</span> item.content
+
+      <span class="keyword">if</span> isBinary(item.path)
+        item.binary = <span class="literal">true</span>
+        item.content = atob(item.content.replace(<span class="regexp">/\s/g</span>, <span class="string">""</span>))
+      <span class="keyword">else</span> <span class="comment"># Text</span>
+        <span class="comment"># NOTE: This implementation of Base64 assumes utf-8</span>
+        item.content = Base64.decode(item.content)
+
+      item.encoding = <span class="string">"raw"</span>
+
+    <span class="keyword">return</span> items</code></pre>
+</div>
+</li>
+<li id="section-6">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-6">&#182;</a>
+    </div>
+    <p><code>arrayToHash</code> converts an array of fileData objects into an object where each
+file&#39;s path is a key and the fileData is the object.</p>
+
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript">  arrayToHash: (array) -&gt;
+    array.eachWithObject {}, (file, hash) -&gt;
+      hash[file.path] = file
+
+module.exports = Util</code></pre>
+</div>
+</li>
+<li id="section-7">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-7">&#182;</a>
+    </div>
+    <h2 id="helpers">Helpers</h2>
+
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+</li>
+<li id="section-8">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-8">&#182;</a>
+    </div>
+    <p>Determines if a file is a binary file by looking up common file extensions.</p>
+
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">isBinary</span></span> = (path) -&gt;
+  pathCheckRegEx = RegExp [
+    <span class="string">"gif"</span>
+    <span class="string">"jpeg"</span>
+    <span class="string">"jpg"</span>
+    <span class="string">"mp3"</span>
+    <span class="string">"png"</span>
+    <span class="string">"sfs"</span>
+    <span class="string">"wav"</span>
+  ].map((extension) -&gt;
+    <span class="string">"\\.<span class="subst">#{extension}</span>$"</span>
+  ).join(<span class="string">"|"</span>)
+
+  path.match(pathCheckRegEx)</code></pre>
+</div>
+</li>
+    </ul>
+  </div>
+  <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.2/ace.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js"></script><script>
+  (function() {
+  var ErrorReporter, bindUpdates, createEditor, exec, findInteractiveElements, readShebang, runners;
+
+  createEditor = function(code, shebang, section) {
+    var annotationElement, contentElement, editorElement, exampleSection, runtimeElement;
+    exampleSection = $("<li>", {
+      "class": "example"
+    });
+    annotationElement = $("<div>", {
+      "class": "annotation"
+    });
+    editorElement = $("<textarea>", {
+      "class": "annotation",
+      text: code
+    });
+    contentElement = $("<div>", {
+      "class": "content"
+    });
+    runtimeElement = $("<div>", {
+      "class": "output"
+    });
+    contentElement.append(runtimeElement);
+    annotationElement.append(editorElement);
+    exampleSection.append(annotationElement);
+    exampleSection.append(contentElement);
+    section.after(exampleSection);
+    return bindUpdates(shebang, editorElement, runtimeElement);
+  };
+
+  bindUpdates = function(shebang, editorElement, runtimeElement) {
+    return editorElement.on("keyup", function() {
+      var e, report, source;
+      report = ErrorReporter(editorElement);
+      source = editorElement.val();
+      try {
+        runners[shebang]({
+          editorElement: editorElement,
+          source: source,
+          runtimeElement: runtimeElement
+        });
+        return report.clear();
+      } catch (_error) {
+        e = _error;
+        return report(e);
+      }
+    });
+  };
+
+  readShebang = function(source) {
+    var match;
+    if (match = source.match(/^\#\! (.*)\n/)) {
+      return match[1];
+    }
+  };
+
+  ErrorReporter = function(editor) {
+    var reporter;
+    reporter = function(error) {
+      var errorParagraph;
+      if (editor.next().is("p.error")) {
+        return editor.next().text(error);
+      } else {
+        errorParagraph = $("<p>", {
+          "class": "error",
+          text: error.toString()
+        });
+        return editor.after(errorParagraph);
+      }
+    };
+    reporter.clear = function() {
+      if (editor.next().is("p.error")) {
+        return editor.next().remove();
+      }
+    };
+    return reporter;
+  };
+
+  findInteractiveElements = function() {
+    return $("blockquote > pre > code").each(function() {
+      var blockQuoteElement, code, codeElement, sectionElement, shebang;
+      codeElement = $(this);
+      code = codeElement.text();
+      if (shebang = readShebang(code)) {
+        if (!runners[shebang]) {
+          return;
+        }
+        code = code.split("\n").slice(1).join("\n");
+        blockQuoteElement = codeElement.parent().parent();
+        sectionElement = blockQuoteElement.parent().parent();
+        blockQuoteElement.remove();
+        return createEditor(code, shebang, sectionElement);
+      }
+    });
+  };
+
+  runners = {};
+
+  (typeof window !== "undefined" && window !== null ? window : global).Interactive = {
+    register: function(name, runner) {
+      runners[name] = runner;
+      findInteractiveElements();
+      return $('#container').on('keyup', 'textarea', function() {
+        $(this).height(0);
+        return $(this).height(this.scrollHeight);
+      }).find('textarea').keyup();
+    }
+  };
+
+  exec = function(_arg) {
+    var code, editorElement, runtimeElement, source;
+    source = _arg.source, code = _arg.code, editorElement = _arg.editorElement, runtimeElement = _arg.runtimeElement;
+    runtimeElement.remove();
+    editorElement.replaceWith($("<pre>", {
+      text: source
+    }));
+    return setTimeout(function() {
+      return Function(code)();
+    }, 0);
+  };
+
+  $(function() {
+    Interactive.register("setup", function(params) {
+      params.code = CoffeeScript.compile(params.source);
+      return exec(params);
+    });
+    return Interactive.register("setup-js", function(params) {
+      params.code = params.source;
+      return exec(params);
+    });
+  });
+
+}).call(this);
+
+</script><script src="../package.js"></script>
+</body>
+</html>
