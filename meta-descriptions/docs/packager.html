@@ -173,11 +173,19 @@ used when requiring in other packages and running standalone html.</p>
 
   </div>
   <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">html</span></span> = (pkg) -&gt;
+  metas = [
+    <span class="string">'&lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;'</span>
+  ]
+
+  <span class="keyword">try</span>
+    info = JSON.parse pkg.distribution.pixie.content.slice(<span class="number">18</span>, -<span class="number">1</span>)
+    console.log info
+
   <span class="string">"""
     &lt;!DOCTYPE html&gt;
     &lt;html manifest="manifest.appcache?<span class="subst">#{+<span class="keyword">new</span> Date}</span>"&gt;
       &lt;head&gt;
-        &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+        <span class="subst">#{metas.join("\n")}</span>
         <span class="subst">#{dependencyScripts(pkg.remoteDependencies)}</span>
       &lt;/head&gt;
       &lt;body&gt;

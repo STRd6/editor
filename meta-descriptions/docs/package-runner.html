@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>package-runner</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="https://strd6.github.io/cdn/parallel/docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    <ul class="sections">
+      <li id="section-1">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-1">&#182;</a>
+    </div>
+    <h1 id="package-runner">Package Runner</h1>
+
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+</li>
+<li id="section-2">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-2">&#182;</a>
+    </div>
+    <p>Run a package in an iframe.</p>
+<p>The <code>launch</code> command will get the state of the app, replace the iframe with a clean
+one, boot the new package and reload the app state. You can also optionally pass
+in an app state to launch into.</p>
+<p>A primary reason for wrapping the running iframe with a shim window is that we
+can dispose of timeouts and everything else very cleanly, while still keeping the
+same opened window.</p>
+<p>One example use of hot reloading is if you are modifying your css you can run
+several instances of your app and navigate to different states. Then you can see
+in real time how the css changes affect each one.</p>
+<p>The package runner assumes that it has total control over the document so you
+probably won&#39;t want to give it the one in your own window.</p>
+
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript">Sandbox = require <span class="string">"sandbox"</span>
+
+module.<span class="function"><span class="title">exports</span></span> = (config={}) -&gt;
+  sandbox = Sandbox(config)
+  document = sandbox.document
+
+  applyStylesheet document, require <span class="string">"./runner-style"</span>
+  runningInstance = <span class="literal">null</span>
+
+  self =
+    launch: (pkg, data) -&gt;
+      <span class="comment"># Get data from running instance</span>
+      data ?= runningInstance?.contentWindow?.appData?()
+
+      <span class="comment"># Remove Running instance</span>
+      runningInstance?.remove()
+
+      <span class="comment"># Create new instance</span>
+      runningInstance = document.createElement <span class="string">"iframe"</span>
+      document.body.appendChild runningInstance
+
+      proxyCalls document, runningInstance
+
+      <span class="comment"># Pass in app state</span>
+      extend runningInstance.contentWindow.ENV ?= {},
+        APP_STATE: data
+
+      runningInstance.contentWindow.document.write html(pkg)
+      runningInstance.contentWindow.document.close()
+
+      <span class="keyword">return</span> self</code></pre>
+</div>
+</li>
+<li id="section-3">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-3">&#182;</a>
+    </div>
+    <p>Make RPC calls to running a package that is using <code>Postmaster</code>.</p>
+<p>Returns a promise that is fulfilled with the results of the successful
+invocation of the call, or rejected with an error object.</p>
+
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript">    send: <span class="keyword">do</span> -&gt;
+      incId = -<span class="number">1</span>
+
+      handlers = {}
+
+      addEventListener <span class="string">"message"</span>, ({source, data}) -&gt;
+        <span class="keyword">if</span> source <span class="keyword">is</span> runningInstance?.contentWindow
+          {type, id, success, error} = data
+
+          <span class="keyword">if</span> type <span class="keyword">is</span> <span class="string">"response"</span>
+            <span class="keyword">if</span> success
+              handlers[id][<span class="number">0</span>](success)
+            <span class="keyword">else</span> <span class="keyword">if</span> error
+              handlers[id][<span class="number">1</span>](error)
+
+            <span class="keyword">delete</span> handlers[id]
+
+      (method, params...) -&gt;
+        <span class="keyword">new</span> Promise (resolve, reject) -&gt;
+          incId += <span class="number">1</span>
+          handlers[incId] = [resolve, reject]
+
+          runningInstance.contentWindow.postMessage
+            id: incId
+            method: method
+            params: params
+          , <span class="string">"*"</span>
+
+    window: sandbox
+
+    close: -&gt;
+      sandbox.close()
+
+    eval: (code) -&gt;
+      runningInstance.contentWindow.eval(code)</code></pre>
+</div>
+</li>
+<li id="section-4">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-4">&#182;</a>
+    </div>
+    <p>A standalone html page for a package.</p>
+
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript">html = module.exports.<span class="function"><span class="title">html</span></span> = (pkg) -&gt;
+  <span class="string">"""
+    &lt;!DOCTYPE html&gt;
+    &lt;html&gt;
+    &lt;head&gt;
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+    <span class="subst">#{dependencyScripts(pkg.remoteDependencies)}</span>
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;script&gt;
+    <span class="subst">#{require('require').executePackageWrapper(pkg)}</span>
+    &lt;\/script&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+  """</span></code></pre>
+</div>
+</li>
+<li id="section-5">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-5">&#182;</a>
+    </div>
+    <h2 id="helpers">Helpers</h2>
+
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript">
+</code></pre>
+</div>
+</li>
+<li id="section-6">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-6">&#182;</a>
+    </div>
+    <p>Proxy calls from the iframe to the top window.</p>
+
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">proxyCalls</span></span> = (document, iframe) -&gt;
+  [
+    <span class="string">"opener"</span>
+    <span class="string">"console"</span>
+  ].forEach (name) -&gt;
+    iframe.contentWindow[name] = document.defaultView[name]</code></pre>
+</div>
+</li>
+<li id="section-7">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-7">&#182;</a>
+    </div>
+    <p><code>makeScript</code> returns a string representation of a script tag that has a src
+attribute.</p>
+
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">makeScript</span></span> = (src) -&gt;
+  <span class="string">"&lt;script src=<span class="subst">#{JSON.stringify(src)}</span>&gt;&lt;\/script&gt;"</span></code></pre>
+</div>
+</li>
+<li id="section-8">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-8">&#182;</a>
+    </div>
+    <p><code>dependencyScripts</code> returns a string containing the script tags that are
+the remote script dependencies of this build.</p>
+
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">dependencyScripts</span></span> = (remoteDependencies=[]) -&gt;
+  remoteDependencies.map(makeScript).join(<span class="string">"\n"</span>)
+
+<span class="function"><span class="title">applyStylesheet</span></span> = (document, style, id=<span class="string">"primary"</span>) -&gt;
+  styleNode = document.createElement(<span class="string">"style"</span>)
+  styleNode.innerHTML = style
+  styleNode.id = id
+
+  <span class="keyword">if</span> previousStyleNode = document.head.querySelector(<span class="string">"style#<span class="subst">#{id}</span>"</span>)
+    previousStyleNode.parentNode.removeChild(prevousStyleNode)
+
+  document.head.appendChild(styleNode)</code></pre>
+</div>
+</li>
+    </ul>
+  </div>
+  <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.6.3/coffee-script.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.2/ace.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js"></script><script>
+  (function() {
+  var ErrorReporter, bindUpdates, createEditor, exec, findInteractiveElements, readShebang, runners;
+
+  createEditor = function(code, shebang, section) {
+    var annotationElement, contentElement, editorElement, exampleSection, runtimeElement;
+    exampleSection = $("<li>", {
+      "class": "example"
+    });
+    annotationElement = $("<div>", {
+      "class": "annotation"
+    });
+    editorElement = $("<textarea>", {
+      "class": "annotation",
+      text: code
+    });
+    contentElement = $("<div>", {
+      "class": "content"
+    });
+    runtimeElement = $("<div>", {
+      "class": "output"
+    });
+    contentElement.append(runtimeElement);
+    annotationElement.append(editorElement);
+    exampleSection.append(annotationElement);
+    exampleSection.append(contentElement);
+    section.after(exampleSection);
+    return bindUpdates(shebang, editorElement, runtimeElement);
+  };
+
+  bindUpdates = function(shebang, editorElement, runtimeElement) {
+    return editorElement.on("keyup", function() {
+      var e, report, source;
+      report = ErrorReporter(editorElement);
+      source = editorElement.val();
+      try {
+        runners[shebang]({
+          editorElement: editorElement,
+          source: source,
+          runtimeElement: runtimeElement
+        });
+        return report.clear();
+      } catch (_error) {
+        e = _error;
+        return report(e);
+      }
+    });
+  };
+
+  readShebang = function(source) {
+    var match;
+    if (match = source.match(/^\#\! (.*)\n/)) {
+      return match[1];
+    }
+  };
+
+  ErrorReporter = function(editor) {
+    var reporter;
+    reporter = function(error) {
+      var errorParagraph;
+      if (editor.next().is("p.error")) {
+        return editor.next().text(error);
+      } else {
+        errorParagraph = $("<p>", {
+          "class": "error",
+          text: error.toString()
+        });
+        return editor.after(errorParagraph);
+      }
+    };
+    reporter.clear = function() {
+      if (editor.next().is("p.error")) {
+        return editor.next().remove();
+      }
+    };
+    return reporter;
+  };
+
+  findInteractiveElements = function() {
+    return $("blockquote > pre > code").each(function() {
+      var blockQuoteElement, code, codeElement, sectionElement, shebang;
+      codeElement = $(this);
+      code = codeElement.text();
+      if (shebang = readShebang(code)) {
+        if (!runners[shebang]) {
+          return;
+        }
+        code = code.split("\n").slice(1).join("\n");
+        blockQuoteElement = codeElement.parent().parent();
+        sectionElement = blockQuoteElement.parent().parent();
+        blockQuoteElement.remove();
+        return createEditor(code, shebang, sectionElement);
+      }
+    });
+  };
+
+  runners = {};
+
+  (typeof window !== "undefined" && window !== null ? window : global).Interactive = {
+    register: function(name, runner) {
+      runners[name] = runner;
+      findInteractiveElements();
+      return $('#container').on('keyup', 'textarea', function() {
+        $(this).height(0);
+        return $(this).height(this.scrollHeight);
+      }).find('textarea').keyup();
+    }
+  };
+
+  exec = function(_arg) {
+    var code, editorElement, runtimeElement, source;
+    source = _arg.source, code = _arg.code, editorElement = _arg.editorElement, runtimeElement = _arg.runtimeElement;
+    runtimeElement.remove();
+    editorElement.replaceWith($("<pre>", {
+      text: source
+    }));
+    return setTimeout(function() {
+      return Function(code)();
+    }, 0);
+  };
+
+  $(function() {
+    Interactive.register("setup", function(params) {
+      params.code = CoffeeScript.compile(params.source);
+      return exec(params);
+    });
+    return Interactive.register("setup-js", function(params) {
+      params.code = params.source;
+      return exec(params);
+    });
+  });
+
+}).call(this);
+
+</script><script src="package.js"></script>
+</body>
+</html>
