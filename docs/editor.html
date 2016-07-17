@@ -33,10 +33,11 @@
   <div class="content"><pre><code class="lang-coffeescript">Runners = require <span class="string">"./runners"</span>
 Actions = require(<span class="string">"./actions"</span>)
 Builder = require(<span class="string">"builder"</span>)
-Packager = require(<span class="string">"packager"</span>)
+Packager = require(<span class="string">"./packager"</span>)
 {Filetree, File} = require(<span class="string">"filetree"</span>)
 {processDirectory} = require <span class="string">"./source/util"</span>
 documenter = require <span class="string">"md"</span>
+metaTags = require <span class="string">"./plugins/meta-tags"</span>
 
 loadedPackage = Observable <span class="literal">null</span>
 
@@ -65,6 +66,8 @@ loadedPackage = Observable <span class="literal">null</span>
 
     <span class="comment"># Add publish branch</span>
     pkg.repository.publishBranch = self.config().publishBranch <span class="keyword">or</span> repository.publishBranch()
+
+  builder.addPostProcessor metaTags
 
   <span class="keyword">return</span> builder
 

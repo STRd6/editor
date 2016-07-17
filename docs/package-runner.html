@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>runners</title>
+  <title>package-runner</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="https://strd6.github.io/cdn/parallel/docco.css" />
@@ -16,7 +16,7 @@
     <div class="pilwrap">
       <a class="pilcrow" href="#section-1">&#182;</a>
     </div>
-    <h1 id="runners">Runners</h1>
+    <h1 id="package-runner">Package Runner</h1>
 
   </div>
   <div class="content"><pre><code class="lang-coffeescript">
@@ -28,17 +28,53 @@
     <div class="pilwrap">
       <a class="pilcrow" href="#section-2">&#182;</a>
     </div>
-    <p>Hold all the ways the editor can run things: apps, docs, tests, maybe more.</p>
+    <p>Run a package in an iframe.</p>
+<p>The <code>launch</code> command will get the state of the app, replace the iframe with a clean
+one, boot the new package and reload the app state. You can also optionally pass
+in an app state to launch into.</p>
+<p>A primary reason for wrapping the running iframe with a shim window is that we
+can dispose of timeouts and everything else very cleanly, while still keeping the
+same opened window.</p>
+<p>One example use of hot reloading is if you are modifying your css you can run
+several instances of your app and navigate to different states. Then you can see
+in real time how the css changes affect each one.</p>
+<p>The package runner assumes that it has total control over the document so you
+probably won&#39;t want to give it the one in your own window.</p>
 
   </div>
-  <div class="content"><pre><code class="lang-coffeescript">Packager = require <span class="string">"./packager"</span>
-{PackageRunner} = Runner = require <span class="string">"./runner"</span>
-documenter = require <span class="string">"md"</span>
+  <div class="content"><pre><code class="lang-coffeescript">Sandbox = require <span class="string">"sandbox"</span>
+{html} = require <span class="string">"./packager"</span>
+{executePackageWrapper} = require <span class="string">"require"</span>
 
-module.<span class="function"><span class="title">exports</span></span> = (I={}, self) -&gt;
-  runningInstances = []
+module.<span class="function"><span class="title">exports</span></span> = (config={}) -&gt;
+  sandbox = Sandbox(config)
+  document = sandbox.document
 
-  self.extend</code></pre>
+  applyStylesheet document, require <span class="string">"./runner-style"</span>
+  runningInstance = <span class="literal">null</span>
+
+  self =
+    launch: (pkg, data) -&gt;
+      <span class="comment"># Get data from running instance</span>
+      data ?= runningInstance?.contentWindow?.appData?()
+
+      <span class="comment"># Remove Running instance</span>
+      runningInstance?.remove()
+
+      <span class="comment"># Create new instance</span>
+      runningInstance = document.createElement <span class="string">"iframe"</span>
+      document.body.appendChild runningInstance
+
+      proxyCalls document, runningInstance
+
+      <span class="comment"># Pass in app state</span>
+      extend runningInstance.contentWindow.ENV ?= {},
+        APP_STATE: data
+
+      runningInstance.contentWindow.document.write html(pkg, executePackageWrapper)
+      runningInstance.contentWindow.document.close()
+
+      <span class="keyword">return</span> self</code></pre>
 </div>
 </li>
 <li id="section-3">
@@ -46,64 +82,46 @@ module.<span class="function"><span class="title">exports</span></span> = (I={},
     <div class="pilwrap">
       <a class="pilcrow" href="#section-3">&#182;</a>
     </div>
-    <p>Rebuild the package and send the reload message to the runner with the newest package.</p>
+    <p>Make RPC calls to running a package that is using <code>Postmaster</code>.</p>
+<p>Returns a promise that is fulfilled with the results of the successful
+invocation of the call, or rejected with an error object.</p>
 
   </div>
-  <div class="content"><pre><code class="lang-coffeescript">    hotReload: -&gt;
-      self.build()
-      .<span class="keyword">then</span> (pkg) -&gt;
-        runningInstances.invoke <span class="string">"launch"</span>, pkg
+  <div class="content"><pre><code class="lang-coffeescript">    send: <span class="keyword">do</span> -&gt;
+      incId = -<span class="number">1</span>
 
-    runInAppWindow: -&gt;
-      packageRunner = PackageRunner(self.config())
+      handlers = {}
 
-      self.build()
-      .<span class="keyword">then</span>(
-        (pkg) -&gt;
-          runningInstances.push packageRunner
+      addEventListener <span class="string">"message"</span>, ({source, data}) -&gt;
+        <span class="keyword">if</span> source <span class="keyword">is</span> runningInstance?.contentWindow
+          {type, id, success, error} = data
 
-          packageRunner.window.addEventListener <span class="string">"unload"</span>, -&gt;
-            runningInstances.remove(packageRunner)
+          <span class="keyword">if</span> type <span class="keyword">is</span> <span class="string">"response"</span>
+            <span class="keyword">if</span> success
+              handlers[id][<span class="number">0</span>](success)
+            <span class="keyword">else</span> <span class="keyword">if</span> error
+              handlers[id][<span class="number">1</span>](error)
 
-          packageRunner.launch(pkg)
+            <span class="keyword">delete</span> handlers[id]
 
-          packageRunner
-        , (error) -&gt;
-          packageRunner.close()
+      (method, params...) -&gt;
+        <span class="keyword">new</span> Promise (resolve, reject) -&gt;
+          incId += <span class="number">1</span>
+          handlers[incId] = [resolve, reject]
 
-          <span class="keyword">throw</span> error
-      )
+          runningInstance.contentWindow.postMessage
+            id: incId
+            method: method
+            params: params
+          , <span class="string">"*"</span>
 
-    run: -&gt;
-      self.runInAppWindow()
+    window: sandbox
 
-    runDocs: ({file}) -&gt;
-      file ?= <span class="string">"index"</span>
+    close: -&gt;
+      sandbox.close()
 
-      Runner.openWindowWithContent docsConfig,
-        self.build()
-        .<span class="keyword">then</span> (pkg) -&gt;
-          documenter.documentAll(pkg)
-        .<span class="keyword">then</span> (docs) -&gt;
-          script = docs.first()
-
-          path = script.path.split(<span class="string">"/"</span>)
-          path.pop()
-          path.push(<span class="string">"<span class="subst">#{file}</span>.html"</span>)
-          path = path.join(<span class="string">"/"</span>)
-
-          <span class="keyword">if</span> file = findFile(path, docs)
-            file.content + <span class="string">"&lt;script&gt;<span class="subst">#{script.content}</span>&lt;\/script&gt;"</span>
-          <span class="keyword">else</span>
-            <span class="string">"Failed to find file at <span class="subst">#{path}</span>"</span>
-
-    test: -&gt;
-      Runner.openWindowWithContent self.config(),
-        self.build()
-        .<span class="keyword">then</span> (pkg) -&gt;
-          Packager.testScripts(pkg)
-        .<span class="keyword">then</span> (testScripts) -&gt;
-          html = testsHtml(testScripts)</code></pre>
+    eval: (code) -&gt;
+      runningInstance.contentWindow.eval(code)</code></pre>
 </div>
 </li>
 <li id="section-4">
@@ -123,11 +141,15 @@ module.<span class="function"><span class="title">exports</span></span> = (I={},
     <div class="pilwrap">
       <a class="pilcrow" href="#section-5">&#182;</a>
     </div>
-    
+    <p>Proxy calls from the iframe to the top window.</p>
+
   </div>
-  <div class="content"><pre><code class="lang-coffeescript">docsConfig =
-  width: <span class="number">1280</span>
-  height: <span class="number">800</span></code></pre>
+  <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">proxyCalls</span></span> = (document, iframe) -&gt;
+  [
+    <span class="string">"opener"</span>
+    <span class="string">"console"</span>
+  ].forEach (name) -&gt;
+    iframe.contentWindow[name] = document.defaultView[name]</code></pre>
 </div>
 </li>
 <li id="section-6">
@@ -135,13 +157,12 @@ module.<span class="function"><span class="title">exports</span></span> = (I={},
     <div class="pilwrap">
       <a class="pilcrow" href="#section-6">&#182;</a>
     </div>
-    <p>Get the <code>index.html</code> from a list of files.</p>
+    <p><code>makeScript</code> returns a string representation of a script tag that has a src
+attribute.</p>
 
   </div>
-  <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">index</span></span> = (files) -&gt;
-  files.filter (file) -&gt;
-    <span class="regexp">/index\.html$/</span>.test file.path
-  .first()</code></pre>
+  <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">makeScript</span></span> = (src) -&gt;
+  <span class="string">"&lt;script src=<span class="subst">#{JSON.stringify(src)}</span>&gt;&lt;\/script&gt;"</span></code></pre>
 </div>
 </li>
 <li id="section-7">
@@ -149,44 +170,22 @@ module.<span class="function"><span class="title">exports</span></span> = (I={},
     <div class="pilwrap">
       <a class="pilcrow" href="#section-7">&#182;</a>
     </div>
-    <p>Find a file in a list of files by path.</p>
+    <p><code>dependencyScripts</code> returns a string containing the script tags that are
+the remote script dependencies of this build.</p>
 
   </div>
-  <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">findFile</span></span> = (path, files) -&gt;
-  files.filter (file) -&gt;
-    file.path <span class="keyword">is</span> path
-  .first()</code></pre>
-</div>
-</li>
-<li id="section-8">
-  <div class="annotation">
-    <div class="pilwrap">
-      <a class="pilcrow" href="#section-8">&#182;</a>
-    </div>
-    <p>Tests html template.</p>
+  <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">dependencyScripts</span></span> = (remoteDependencies=[]) -&gt;
+  remoteDependencies.map(makeScript).join(<span class="string">"\n"</span>)
 
-  </div>
-  <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">testsHtml</span></span> = (testScripts) -&gt; <span class="string">"""
-  &lt;html&gt;
-  &lt;head&gt;
-    &lt;meta charset="utf-8"&gt;
-    &lt;title&gt;Mocha Tests&lt;/title&gt;
-    &lt;link rel="stylesheet" href="https://distri.github.io/tests/mocha.css" /&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;div id="mocha"&gt;&lt;/div&gt;
-    &lt;script src="https://distri.github.io/tests/assert.js"&gt;&lt;\/script&gt;
-    &lt;script src="https://distri.github.io/tests/mocha.js"&gt;&lt;\/script&gt;
-    &lt;script&gt;mocha.setup('bdd')&lt;\/script&gt;
-    <span class="subst">#{testScripts}</span>
-    &lt;script&gt;
-      mocha.checkLeaks();
-      mocha.globals(['jQuery']);
-      mocha.run();
-    &lt;\/script&gt;
-  &lt;/body&gt;
-  &lt;/html&gt;
-"""</span></code></pre>
+<span class="function"><span class="title">applyStylesheet</span></span> = (document, style, id=<span class="string">"primary"</span>) -&gt;
+  styleNode = document.createElement(<span class="string">"style"</span>)
+  styleNode.innerHTML = style
+  styleNode.id = id
+
+  <span class="keyword">if</span> previousStyleNode = document.head.querySelector(<span class="string">"style#<span class="subst">#{id}</span>"</span>)
+    previousStyleNode.parentNode.removeChild(prevousStyleNode)
+
+  document.head.appendChild(styleNode)</code></pre>
 </div>
 </li>
     </ul>
