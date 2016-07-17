@@ -1,3 +1,8 @@
+title: "Daniel X's Editor"
+description: """
+  Edit and publish code directly in the browser. Compiles down to HTML, CSS, and
+  JavaScript to be easily served on GitHub pages, S3, or any other static host.
+"""
 version: "0.4.2"
 entryPoint: "main"
 width: 960
@@ -7,6 +12,7 @@ remoteDependencies: [
   "https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js"
 ]
 dependencies:
+  ajax: "distri/ajax:v0.1.4"
   analytics: "distri/google-analytics:v0.1.0"
   base64: "distri/base64:v0.9.0"
   builder: "distri/builder:v0.5.3-pre.0"
@@ -18,7 +24,7 @@ dependencies:
   hygiene: "STRd6/hygiene:v0.2.0"
   md: "distri/md:v0.4.3"
   notifications: "distri/notifications:v0.3.3"
-  packager: "distri/packager:v0.7.0"
-  postmaster: "distri/postmaster:v0.2.2"
-  runner: "distri/runner:v0.3.2"
+  postmaster: "distri/postmaster:v0.2.3"
+  require: "distri/require:v0.5.2"
   runtime: "distri/runtime:v0.3.0"
+  sandbox: "distri/sandbox:v0.2.4"

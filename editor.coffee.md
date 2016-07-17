@@ -4,10 +4,11 @@ Editor
     Runners = require "./runners"
     Actions = require("./actions")
     Builder = require("builder")
-    Packager = require("packager")
+    Packager = require("./packager")
     {Filetree, File} = require("filetree")
     {processDirectory} = require "./source/util"
     documenter = require "md"
+    metaTags = require "./plugins/meta-tags"
 
     loadedPackage = Observable null
 
@@ -36,6 +37,8 @@ Editor
 
         # Add publish branch
         pkg.repository.publishBranch = self.config().publishBranch or repository.publishBranch()
+
+      builder.addPostProcessor metaTags
 
       return builder
 
