@@ -175,7 +175,8 @@ used when requiring in other packages and running standalone html.</p>
   </div>
   <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">html</span></span> = (pkg, launcherScript=Packager.launcherScript) -&gt;
   metas = [
-    <span class="string">'&lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;'</span>
+    <span class="string">'&lt;meta charset="utf-8"&gt;'</span>
+    <span class="string">'&lt;link rel="Help" href="./docs/"&gt;'</span>
   ]
 
   <span class="keyword">try</span>
@@ -188,6 +189,10 @@ used when requiring in other packages and running standalone html.</p>
 
     <span class="keyword">if</span> description
       metas.push metaTag <span class="string">"description"</span>, description.replace(<span class="string">"\n"</span>, <span class="string">" "</span>)
+
+    url = pkg.progenitor?.url
+    <span class="keyword">if</span> url
+      metas.push <span class="string">"&lt;link rel=\"Progenitor\" href=<span class="subst">#{JSON.stringify(url)}</span>&gt;"</span>
 
   <span class="keyword">catch</span> e
     console.error e
