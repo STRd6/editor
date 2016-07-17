@@ -93,7 +93,8 @@ A standalone html page for a package.
 
     html = (pkg, launcherScript=Packager.launcherScript) ->
       metas = [
-        '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />'
+        '<meta charset="utf-8">'
+        '<link rel="Help" href="./docs/">'
       ]
 
       try
@@ -106,6 +107,10 @@ A standalone html page for a package.
 
         if description
           metas.push metaTag "description", description.replace("\n", " ")
+
+        url = pkg.progenitor?.url
+        if url
+          metas.push "<link rel=\"Progenitor\" href=#{JSON.stringify(url)}>"
 
       catch e
         console.error e
