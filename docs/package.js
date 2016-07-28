@@ -229,7 +229,7 @@
     },
     "main.coffee.md": {
       "path": "main.coffee.md",
-      "content": "Editor\n======\n\nThe funny story about this editor is that it has an unbroken history from a\nsingle gist https://gist.github.com/STRd6/6286182/6196ffb39db7d10c56aa263190525318ca609db7\n\nThe original gist was an exploration in a self-hosting gist editor. One that\ncould load gists via the Github API, update them, and create new gists. It\nsucceeded at that, but I ran into the limits of the gist structure, namely no\nbranches or folders.\n\nI went on and created a git repo, merged in the gist history, and continued from\nthere. Maybe if I were smarter I could have rewritten it from scratch to be better,\nbut I had no idea what I was doing and still don't know to this day.\n\nSo that may explain why this is in such need of a cleanup.\n\nDemo\n----\n\n[Run it!](/editor)\n\nComponents\n----------\n\n- [Packager](/packager/docs)\n- [Hygiene](/hygiene/docs)\n- [Runtime](/runtime/docs)\n\n    require \"cornerstone\"\n    {processDirectory} = require \"./source/util\"\n\n    global.PACKAGE = PACKAGE\n    global.require = require\n\n    require(\"analytics\").init(\"UA-3464282-15\")\n\n    # Create and auth a github API\n    # Global until we consolidate editor/actions into something cleaner\n\n    global.github = require(\"github\")()\n    require(\"./github_auth\").then (token) ->\n      github.token token\n      github.api('rate_limit')\n\nTemplates\n---------\n\n- [Actions](./templates/actions)\n- [Editor](./templates/editor)\n- [Github Status](./templates/github_status)\n- [Text Editor](./templates/text_editor)\n- [Repo Info](./templates/repo_info)\n\n    Editor = require(\"./editor\")\n\n    editor = global.editor = Editor()\n\n    if pkg = ENV?.APP_STATE\n      editor.loadPackage(pkg)\n    else\n      editor.loadPackage(PACKAGE)\n\n    global.appData = ->\n      editor.loadedPackage()\n\n    # TODO: Don't expose this\n    filetree = editor.filetree()\n\n    Hygiene = require \"hygiene\"\n    Runtime = require \"runtime\"\n\n    Runtime(PACKAGE)\n      .boot()\n      .applyStyleSheet(require('./style'))\n\n    # Branch Chooser using pull requests\n    Issue = require \"./issue\"\n    Issues = require \"./issues\"\n    issues = editor.issues = Issues()\n\n    # Github repository observable\n    # TODO: Finalize move into editor module\n    repository = editor.repository\n\n    updateIssues = (repository) ->\n      issues.repository = repository\n      repository.pullRequests().then issues.reset\n\n    repository.observe updateIssues\n\n    # TODO: Make better use of observables and computed functions so we no\n    # longer need this setTimeout hack\n    setTimeout ->\n      repository github.Repository(editor.loadedPackage().repository)\n    , 0\n\n    editor.closeOpenEditors = ->\n      aceShim.aceEditor().setSession(ace.createEditSession(\"\"))\n\n    hotReload = (->\n      editor.hotReload()\n    ).debounce 500\n\n    filetree.selectedFile.observe (file) ->\n      return if file.binary?()\n\n      unless file.session\n        switch file.path().extension()\n          when \"md\", \"coffee\", \"js\", \"styl\", \"cson\"\n            file.content Hygiene.clean file.content()\n\n        file.content.observe (newContent) ->\n          hotReload()\n        file.session = aceShim.initSession(file)\n\n      aceShim.aceEditor().setSession(file.session)\n      aceShim.aceEditor().focus()\n\n    issues?.currentIssue.observe (issue) ->\n      # TODO: Formalize this later\n      return if issues.silent\n\n      changeBranch = (branchName) ->\n        previousBranch = repository().branch()\n\n        editor.confirmUnsaved()\n        .then ->\n          editor.closeOpenEditors()\n\n          # Switch to branch for working on the issue\n          repository().switchToBranch(branchName)\n          .then ->\n            editor.notifications.push \"\\nLoading branch #{branchName}...\"\n\n            editor.load repository()\n            .then ->\n              editor.notifications.push \"Loaded!\"\n        , ->\n          # TODO: Issue will appear as being selected even though we cancelled\n          # To correctly handle this we may need to really beef up our observables.\n          # One possibility is to extend observables to full fledged deferreds\n          # which can be rejected by listeners added to the chain.\n\n          repository().branch(previousBranch)\n\n          editor.classicError \"Error switching to #{branchName}, still on #{previousBranch}\"\n        .done()\n\n      if issue?.branchName?\n        editor.notify issue.fullDescription()\n\n        changeBranch issue.branchName()\n      else\n        editor.notify \"Default branch selected\"\n\n        changeBranch repository().defaultBranch()\n\n    document.body.appendChild require(\"./templates/editor\")(\n      filetree: filetree\n      actions: editor.actions\n      notifications: editor.notifications\n      issues: issues\n      github: github\n      repository: repository\n    )\n\n    AceShim = require \"./ace_shim\"\n    aceShim = AceShim()\n\n    window.onbeforeunload = ->\n      if filetree.hasUnsavedChanges()\n        \"You have some unsaved changes, if you leave now you will lose your work.\"\n",
+      "content": "Editor\n======\n\nThe funny story about this editor is that it has an unbroken history from a\nsingle gist https://gist.github.com/STRd6/6286182/6196ffb39db7d10c56aa263190525318ca609db7\n\nThe original gist was an exploration in a self-hosting gist editor. One that\ncould load gists via the Github API, update them, and create new gists. It\nsucceeded at that, but I ran into the limits of the gist structure, namely no\nbranches or folders.\n\nI went on and created a git repo, merged in the gist history, and continued from\nthere. Maybe if I were smarter I could have rewritten it from scratch to be better,\nbut I had no idea what I was doing and still don't know to this day.\n\nSo that may explain why this is in such need of a cleanup.\n\nDemo\n----\n\n[Run it!](/editor)\n\nComponents\n----------\n\n- [Packager](/packager/docs)\n- [Hygiene](./hygiene/)\n- [Runtime](/runtime/docs)\n\n    require \"cornerstone\"\n    {processDirectory} = require \"./source/util\"\n\n    global.PACKAGE = PACKAGE\n    global.require = require\n\n    require(\"analytics\").init(\"UA-3464282-15\")\n\n    # Create and auth a github API\n    # Global until we consolidate editor/actions into something cleaner\n\n    global.github = require(\"github\")()\n    require(\"./github_auth\").then (token) ->\n      github.token token\n      github.api('rate_limit')\n\nTemplates\n---------\n\n- [Actions](./templates/actions)\n- [Editor](./templates/editor)\n- [Github Status](./templates/github_status)\n- [Text Editor](./templates/text_editor)\n- [Repo Info](./templates/repo_info)\n\n    Editor = require(\"./editor\")\n\n    editor = global.editor = Editor()\n\n    if pkg = ENV?.APP_STATE\n      editor.loadPackage(pkg)\n    else\n      editor.loadPackage(PACKAGE)\n\n    global.appData = ->\n      editor.loadedPackage()\n\n    # TODO: Don't expose this\n    filetree = editor.filetree()\n\n    Hygiene = require \"./hygiene\"\n    Runtime = require \"runtime\"\n\n    Runtime(PACKAGE)\n      .boot()\n      .applyStyleSheet(require('./style'))\n\n    # Branch Chooser using pull requests\n    Issue = require \"./issue\"\n    Issues = require \"./issues\"\n    issues = editor.issues = Issues()\n\n    # Github repository observable\n    # TODO: Finalize move into editor module\n    repository = editor.repository\n\n    updateIssues = (repository) ->\n      issues.repository = repository\n      repository.pullRequests().then issues.reset\n\n    repository.observe updateIssues\n\n    # TODO: Make better use of observables and computed functions so we no\n    # longer need this setTimeout hack\n    setTimeout ->\n      repository github.Repository(editor.loadedPackage().repository)\n    , 0\n\n    editor.closeOpenEditors = ->\n      aceShim.aceEditor().setSession(ace.createEditSession(\"\"))\n\n    hotReload = (->\n      editor.hotReload()\n    ).debounce 500\n\n    filetree.selectedFile.observe (file) ->\n      return if file.binary?()\n\n      unless file.session\n        switch file.path().extension()\n          when \"md\", \"coffee\", \"js\", \"styl\", \"cson\"\n            file.content Hygiene.clean file.content()\n\n        file.content.observe (newContent) ->\n          hotReload()\n        file.session = aceShim.initSession(file)\n\n      aceShim.aceEditor().setSession(file.session)\n      aceShim.aceEditor().focus()\n\n    issues?.currentIssue.observe (issue) ->\n      # TODO: Formalize this later\n      return if issues.silent\n\n      changeBranch = (branchName) ->\n        previousBranch = repository().branch()\n\n        editor.confirmUnsaved()\n        .then ->\n          editor.closeOpenEditors()\n\n          # Switch to branch for working on the issue\n          repository().switchToBranch(branchName)\n          .then ->\n            editor.notifications.push \"\\nLoading branch #{branchName}...\"\n\n            editor.load repository()\n            .then ->\n              editor.notifications.push \"Loaded!\"\n        , ->\n          # TODO: Issue will appear as being selected even though we cancelled\n          # To correctly handle this we may need to really beef up our observables.\n          # One possibility is to extend observables to full fledged deferreds\n          # which can be rejected by listeners added to the chain.\n\n          repository().branch(previousBranch)\n\n          editor.classicError \"Error switching to #{branchName}, still on #{previousBranch}\"\n        .done()\n\n      if issue?.branchName?\n        editor.notify issue.fullDescription()\n\n        changeBranch issue.branchName()\n      else\n        editor.notify \"Default branch selected\"\n\n        changeBranch repository().defaultBranch()\n\n    document.body.appendChild require(\"./templates/editor\")(\n      filetree: filetree\n      actions: editor.actions\n      notifications: editor.notifications\n      issues: issues\n      github: github\n      repository: repository\n    )\n\n    AceShim = require \"./ace_shim\"\n    aceShim = AceShim()\n\n    window.onbeforeunload = ->\n      if filetree.hasUnsavedChanges()\n        \"You have some unsaved changes, if you leave now you will lose your work.\"\n",
       "mode": "100644",
       "type": "blob"
     },
@@ -247,7 +247,7 @@
     },
     "pixie.cson": {
       "path": "pixie.cson",
-      "content": "title: \"Daniel X's Editor\"\ndescription: \"\"\"\n  Edit and publish code directly in the browser. Compiles down to HTML, CSS, and\n  JavaScript to be easily served on GitHub pages, S3, or any other static host.\n\"\"\"\nversion: \"0.4.2\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.4/ace.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.4/ext-language_tools.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\"\n]\ndependencies:\n  ajax: \"distri/ajax:v0.1.4\"\n  analytics: \"distri/google-analytics:v0.1.0\"\n  base64: \"distri/base64:v0.9.1-pre.0\"\n  builder: \"distri/builder:v0.5.3-pre.0\"\n  cornerstone: \"distri/cornerstone:v0.3.0-pre.2\"\n  cson: \"distri/cson:v0.1.0\"\n  emojer: \"STRd6/emojer:v0.2.0\"\n  filetree: \"distri/filetree:v0.4.0-pre.2\"\n  github: \"distri/github:v0.5.2-pre.1\"\n  hygiene: \"STRd6/hygiene:v0.2.0\"\n  md: \"distri/md:v0.4.3\"\n  notifications: \"distri/notifications:v0.3.3\"\n  postmaster: \"distri/postmaster:v0.2.3\"\n  require: \"distri/require:v0.5.2\"\n  runtime: \"distri/runtime:v0.3.0\"\n  sandbox: \"distri/sandbox:v0.2.4\"\n",
+      "content": "title: \"Daniel X's Editor\"\ndescription: \"\"\"\n  Edit and publish code directly in the browser. Compiles down to HTML, CSS, and\n  JavaScript to be easily served on GitHub pages, S3, or any other static host.\n\"\"\"\nversion: \"0.4.2\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.4/ace.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.4/ext-language_tools.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\"\n]\ndependencies:\n  ajax: \"distri/ajax:v0.1.4\"\n  analytics: \"distri/google-analytics:v0.1.0\"\n  base64: \"distri/base64:v0.9.1-pre.0\"\n  builder: \"distri/builder:v0.5.3-pre.0\"\n  cornerstone: \"distri/cornerstone:v0.3.0-pre.2\"\n  cson: \"distri/cson:v0.1.0\"\n  emojer: \"STRd6/emojer:v0.2.0\"\n  filetree: \"distri/filetree:v0.4.0-pre.2\"\n  github: \"distri/github:v0.5.2-pre.1\"\n  md: \"distri/md:v0.4.3\"\n  notifications: \"distri/notifications:v0.3.3\"\n  postmaster: \"distri/postmaster:v0.2.3\"\n  require: \"distri/require:v0.5.2\"\n  runtime: \"distri/runtime:v0.3.0\"\n  sandbox: \"distri/sandbox:v0.2.4\"\n",
       "mode": "100644",
       "type": "blob"
     },
@@ -346,6 +346,16 @@
       "content": "module.exports = (fn) ->\n  cache = {}\n\n  memoized = (key) ->\n    unless cache[key]\n      cache[key] = fn.apply(this, arguments)\n\n      cache[key].catch ->\n        delete cache[key]\n\n    return cache[key]\n\n    return memoized\n",
       "mode": "100644",
       "type": "blob"
+    },
+    "hygiene.coffee": {
+      "path": "hygiene.coffee",
+      "content": "trailingWhitespace = /[ \\t]*$/gm\nnothing = \"\"\nnewline = \"\\n\"\n\nensureTrailingNewline = (content) ->\n  if content.lastIndexOf(newline) != content.length - 1\n    \"#{content}#{newline}\"\n  else\n    content\n\nmodule.exports =\n  clean: (content) ->\n    ensureTrailingNewline(\n      content\n      .replace(trailingWhitespace, nothing)\n    )\n",
+      "mode": "100644"
+    },
+    "test/hygiene.coffee": {
+      "path": "test/hygiene.coffee",
+      "content": "Hygiene = require \"../hygiene\"\n\ndescribe \"cleaning\", ->\n  it \"should remove trailing whitespace\", ->\n    assert.equal Hygiene.clean(\"heyy   \\n\"), \"heyy\\n\"\n\n  it \"should ensure trailing newline\", ->\n    assert.equal Hygiene.clean(\"a\"), \"a\\n\"\n\n  it \"should keep empties empty\", ->\n    assert.equal Hygiene.clean(\"\"), \"\"\n",
+      "mode": "100644"
     }
   },
   "distribution": {
@@ -381,7 +391,7 @@
     },
     "main": {
       "path": "main",
-      "content": "(function() {\n  var AceShim, Editor, Hygiene, Issue, Issues, Runtime, aceShim, editor, filetree, hotReload, issues, pkg, processDirectory, repository, updateIssues;\n\n  require(\"cornerstone\");\n\n  processDirectory = require(\"./source/util\").processDirectory;\n\n  global.PACKAGE = PACKAGE;\n\n  global.require = require;\n\n  require(\"analytics\").init(\"UA-3464282-15\");\n\n  global.github = require(\"github\")();\n\n  require(\"./github_auth\").then(function(token) {\n    github.token(token);\n    return github.api('rate_limit');\n  });\n\n  Editor = require(\"./editor\");\n\n  editor = global.editor = Editor();\n\n  if (pkg = typeof ENV !== \"undefined\" && ENV !== null ? ENV.APP_STATE : void 0) {\n    editor.loadPackage(pkg);\n  } else {\n    editor.loadPackage(PACKAGE);\n  }\n\n  global.appData = function() {\n    return editor.loadedPackage();\n  };\n\n  filetree = editor.filetree();\n\n  Hygiene = require(\"hygiene\");\n\n  Runtime = require(\"runtime\");\n\n  Runtime(PACKAGE).boot().applyStyleSheet(require('./style'));\n\n  Issue = require(\"./issue\");\n\n  Issues = require(\"./issues\");\n\n  issues = editor.issues = Issues();\n\n  repository = editor.repository;\n\n  updateIssues = function(repository) {\n    issues.repository = repository;\n    return repository.pullRequests().then(issues.reset);\n  };\n\n  repository.observe(updateIssues);\n\n  setTimeout(function() {\n    return repository(github.Repository(editor.loadedPackage().repository));\n  }, 0);\n\n  editor.closeOpenEditors = function() {\n    return aceShim.aceEditor().setSession(ace.createEditSession(\"\"));\n  };\n\n  hotReload = (function() {\n    return editor.hotReload();\n  }).debounce(500);\n\n  filetree.selectedFile.observe(function(file) {\n    if (typeof file.binary === \"function\" ? file.binary() : void 0) {\n      return;\n    }\n    if (!file.session) {\n      switch (file.path().extension()) {\n        case \"md\":\n        case \"coffee\":\n        case \"js\":\n        case \"styl\":\n        case \"cson\":\n          file.content(Hygiene.clean(file.content()));\n      }\n      file.content.observe(function(newContent) {\n        return hotReload();\n      });\n      file.session = aceShim.initSession(file);\n    }\n    aceShim.aceEditor().setSession(file.session);\n    return aceShim.aceEditor().focus();\n  });\n\n  if (issues != null) {\n    issues.currentIssue.observe(function(issue) {\n      var changeBranch;\n      if (issues.silent) {\n        return;\n      }\n      changeBranch = function(branchName) {\n        var previousBranch;\n        previousBranch = repository().branch();\n        return editor.confirmUnsaved().then(function() {\n          editor.closeOpenEditors();\n          return repository().switchToBranch(branchName).then(function() {\n            editor.notifications.push(\"\\nLoading branch \" + branchName + \"...\");\n            return editor.load(repository()).then(function() {\n              return editor.notifications.push(\"Loaded!\");\n            });\n          });\n        }, function() {\n          repository().branch(previousBranch);\n          return editor.classicError(\"Error switching to \" + branchName + \", still on \" + previousBranch);\n        }).done();\n      };\n      if ((issue != null ? issue.branchName : void 0) != null) {\n        editor.notify(issue.fullDescription());\n        return changeBranch(issue.branchName());\n      } else {\n        editor.notify(\"Default branch selected\");\n        return changeBranch(repository().defaultBranch());\n      }\n    });\n  }\n\n  document.body.appendChild(require(\"./templates/editor\")({\n    filetree: filetree,\n    actions: editor.actions,\n    notifications: editor.notifications,\n    issues: issues,\n    github: github,\n    repository: repository\n  }));\n\n  AceShim = require(\"./ace_shim\");\n\n  aceShim = AceShim();\n\n  window.onbeforeunload = function() {\n    if (filetree.hasUnsavedChanges()) {\n      return \"You have some unsaved changes, if you leave now you will lose your work.\";\n    }\n  };\n\n}).call(this);\n",
+      "content": "(function() {\n  var AceShim, Editor, Hygiene, Issue, Issues, Runtime, aceShim, editor, filetree, hotReload, issues, pkg, processDirectory, repository, updateIssues;\n\n  require(\"cornerstone\");\n\n  processDirectory = require(\"./source/util\").processDirectory;\n\n  global.PACKAGE = PACKAGE;\n\n  global.require = require;\n\n  require(\"analytics\").init(\"UA-3464282-15\");\n\n  global.github = require(\"github\")();\n\n  require(\"./github_auth\").then(function(token) {\n    github.token(token);\n    return github.api('rate_limit');\n  });\n\n  Editor = require(\"./editor\");\n\n  editor = global.editor = Editor();\n\n  if (pkg = typeof ENV !== \"undefined\" && ENV !== null ? ENV.APP_STATE : void 0) {\n    editor.loadPackage(pkg);\n  } else {\n    editor.loadPackage(PACKAGE);\n  }\n\n  global.appData = function() {\n    return editor.loadedPackage();\n  };\n\n  filetree = editor.filetree();\n\n  Hygiene = require(\"./hygiene\");\n\n  Runtime = require(\"runtime\");\n\n  Runtime(PACKAGE).boot().applyStyleSheet(require('./style'));\n\n  Issue = require(\"./issue\");\n\n  Issues = require(\"./issues\");\n\n  issues = editor.issues = Issues();\n\n  repository = editor.repository;\n\n  updateIssues = function(repository) {\n    issues.repository = repository;\n    return repository.pullRequests().then(issues.reset);\n  };\n\n  repository.observe(updateIssues);\n\n  setTimeout(function() {\n    return repository(github.Repository(editor.loadedPackage().repository));\n  }, 0);\n\n  editor.closeOpenEditors = function() {\n    return aceShim.aceEditor().setSession(ace.createEditSession(\"\"));\n  };\n\n  hotReload = (function() {\n    return editor.hotReload();\n  }).debounce(500);\n\n  filetree.selectedFile.observe(function(file) {\n    if (typeof file.binary === \"function\" ? file.binary() : void 0) {\n      return;\n    }\n    if (!file.session) {\n      switch (file.path().extension()) {\n        case \"md\":\n        case \"coffee\":\n        case \"js\":\n        case \"styl\":\n        case \"cson\":\n          file.content(Hygiene.clean(file.content()));\n      }\n      file.content.observe(function(newContent) {\n        return hotReload();\n      });\n      file.session = aceShim.initSession(file);\n    }\n    aceShim.aceEditor().setSession(file.session);\n    return aceShim.aceEditor().focus();\n  });\n\n  if (issues != null) {\n    issues.currentIssue.observe(function(issue) {\n      var changeBranch;\n      if (issues.silent) {\n        return;\n      }\n      changeBranch = function(branchName) {\n        var previousBranch;\n        previousBranch = repository().branch();\n        return editor.confirmUnsaved().then(function() {\n          editor.closeOpenEditors();\n          return repository().switchToBranch(branchName).then(function() {\n            editor.notifications.push(\"\\nLoading branch \" + branchName + \"...\");\n            return editor.load(repository()).then(function() {\n              return editor.notifications.push(\"Loaded!\");\n            });\n          });\n        }, function() {\n          repository().branch(previousBranch);\n          return editor.classicError(\"Error switching to \" + branchName + \", still on \" + previousBranch);\n        }).done();\n      };\n      if ((issue != null ? issue.branchName : void 0) != null) {\n        editor.notify(issue.fullDescription());\n        return changeBranch(issue.branchName());\n      } else {\n        editor.notify(\"Default branch selected\");\n        return changeBranch(repository().defaultBranch());\n      }\n    });\n  }\n\n  document.body.appendChild(require(\"./templates/editor\")({\n    filetree: filetree,\n    actions: editor.actions,\n    notifications: editor.notifications,\n    issues: issues,\n    github: github,\n    repository: repository\n  }));\n\n  AceShim = require(\"./ace_shim\");\n\n  aceShim = AceShim();\n\n  window.onbeforeunload = function() {\n    if (filetree.hasUnsavedChanges()) {\n      return \"You have some unsaved changes, if you leave now you will lose your work.\";\n    }\n  };\n\n}).call(this);\n",
       "type": "blob"
     },
     "package-runner": {
@@ -396,7 +406,7 @@
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"title\":\"Daniel X's Editor\",\"description\":\"Edit and publish code directly in the browser. Compiles down to HTML, CSS, and\\nJavaScript to be easily served on GitHub pages, S3, or any other static host.\",\"version\":\"0.4.2\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.4/ace.js\",\"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.4/ext-language_tools.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\"],\"dependencies\":{\"ajax\":\"distri/ajax:v0.1.4\",\"analytics\":\"distri/google-analytics:v0.1.0\",\"base64\":\"distri/base64:v0.9.1-pre.0\",\"builder\":\"distri/builder:v0.5.3-pre.0\",\"cornerstone\":\"distri/cornerstone:v0.3.0-pre.2\",\"cson\":\"distri/cson:v0.1.0\",\"emojer\":\"STRd6/emojer:v0.2.0\",\"filetree\":\"distri/filetree:v0.4.0-pre.2\",\"github\":\"distri/github:v0.5.2-pre.1\",\"hygiene\":\"STRd6/hygiene:v0.2.0\",\"md\":\"distri/md:v0.4.3\",\"notifications\":\"distri/notifications:v0.3.3\",\"postmaster\":\"distri/postmaster:v0.2.3\",\"require\":\"distri/require:v0.5.2\",\"runtime\":\"distri/runtime:v0.3.0\",\"sandbox\":\"distri/sandbox:v0.2.4\"}};",
+      "content": "module.exports = {\"title\":\"Daniel X's Editor\",\"description\":\"Edit and publish code directly in the browser. Compiles down to HTML, CSS, and\\nJavaScript to be easily served on GitHub pages, S3, or any other static host.\",\"version\":\"0.4.2\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.4/ace.js\",\"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.4/ext-language_tools.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\"],\"dependencies\":{\"ajax\":\"distri/ajax:v0.1.4\",\"analytics\":\"distri/google-analytics:v0.1.0\",\"base64\":\"distri/base64:v0.9.1-pre.0\",\"builder\":\"distri/builder:v0.5.3-pre.0\",\"cornerstone\":\"distri/cornerstone:v0.3.0-pre.2\",\"cson\":\"distri/cson:v0.1.0\",\"emojer\":\"STRd6/emojer:v0.2.0\",\"filetree\":\"distri/filetree:v0.4.0-pre.2\",\"github\":\"distri/github:v0.5.2-pre.1\",\"md\":\"distri/md:v0.4.3\",\"notifications\":\"distri/notifications:v0.3.3\",\"postmaster\":\"distri/postmaster:v0.2.3\",\"require\":\"distri/require:v0.5.2\",\"runtime\":\"distri/runtime:v0.3.0\",\"sandbox\":\"distri/sandbox:v0.2.4\"}};",
       "type": "blob"
     },
     "plugins/meta-tags": {
@@ -477,6 +487,16 @@
     "util/memoize_promise": {
       "path": "util/memoize_promise",
       "content": "(function() {\n  module.exports = function(fn) {\n    var cache, memoized;\n    cache = {};\n    return memoized = function(key) {\n      if (!cache[key]) {\n        cache[key] = fn.apply(this, arguments);\n        cache[key][\"catch\"](function() {\n          return delete cache[key];\n        });\n      }\n      return cache[key];\n      return memoized;\n    };\n  };\n\n}).call(this);\n",
+      "type": "blob"
+    },
+    "hygiene": {
+      "path": "hygiene",
+      "content": "(function() {\n  var ensureTrailingNewline, newline, nothing, trailingWhitespace;\n\n  trailingWhitespace = /[ \\t]*$/gm;\n\n  nothing = \"\";\n\n  newline = \"\\n\";\n\n  ensureTrailingNewline = function(content) {\n    if (content.lastIndexOf(newline) !== content.length - 1) {\n      return \"\" + content + newline;\n    } else {\n      return content;\n    }\n  };\n\n  module.exports = {\n    clean: function(content) {\n      return ensureTrailingNewline(content.replace(trailingWhitespace, nothing));\n    }\n  };\n\n}).call(this);\n",
+      "type": "blob"
+    },
+    "test/hygiene": {
+      "path": "test/hygiene",
+      "content": "(function() {\n  var Hygiene;\n\n  Hygiene = require(\"../hygiene\");\n\n  describe(\"cleaning\", function() {\n    it(\"should remove trailing whitespace\", function() {\n      return assert.equal(Hygiene.clean(\"heyy   \\n\"), \"heyy\\n\");\n    });\n    it(\"should ensure trailing newline\", function() {\n      return assert.equal(Hygiene.clean(\"a\"), \"a\\n\");\n    });\n    return it(\"should keep empties empty\", function() {\n      return assert.equal(Hygiene.clean(\"\"), \"\");\n    });\n  });\n\n}).call(this);\n",
       "type": "blob"
     },
     "lib/hamlet-runtime": {
@@ -4448,159 +4468,6 @@
           }
         }
       }
-    },
-    "hygiene": {
-      "source": {
-        "LICENSE": {
-          "path": "LICENSE",
-          "mode": "100644",
-          "content": "The MIT License (MIT)\n\nCopyright (c) 2013 Daniel X Moore\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the \"Software\"), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of\nthe Software, and to permit persons to whom the Software is furnished to do so,\nsubject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\nFOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR\nCOPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER\nIN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN\nCONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n",
-          "type": "blob"
-        },
-        "README.md": {
-          "path": "README.md",
-          "mode": "100644",
-          "content": "hygiene\n=======\n\nKeeping clean\n",
-          "type": "blob"
-        },
-        "hygiene.coffee.md": {
-          "path": "hygiene.coffee.md",
-          "mode": "100644",
-          "content": "Hygiene\n=======\n\nHygiene keeps our biz clean.\n\nEventually it may expand to perform complex static analysis, but right now it's\njust a bunch of dumb regexes.\n\n    trailingWhitespace = /[ \\t]*$/gm\n    nothing = \"\"\n    newline = \"\\n\"\n\n    ensureTrailingNewline = (content) ->\n      if content.lastIndexOf(newline) != content.length - 1\n        \"#{content}#{newline}\"\n      else\n        content\n\n    module.exports =\n      clean: (content) ->\n        ensureTrailingNewline(\n          content\n          .replace(trailingWhitespace, nothing)\n        )\n",
-          "type": "blob"
-        },
-        "pixie.cson": {
-          "path": "pixie.cson",
-          "mode": "100644",
-          "content": "version: \"0.2.0\"\nentryPoint: \"hygiene\"\n",
-          "type": "blob"
-        },
-        "test/hygiene.coffee": {
-          "path": "test/hygiene.coffee",
-          "mode": "100644",
-          "content": "Hygiene = require \"../hygiene\"\n\ndescribe \"cleaning\", ->\n  it \"should remove trailing whitespace\", ->\n    assert.equal Hygiene.clean(\"heyy   \\n\"), \"heyy\\n\"\n\n  it \"should ensure trailing newline\", ->\n    assert.equal Hygiene.clean(\"a\"), \"a\\n\"\n\n  it \"should keep empties empty\", ->\n    assert.equal Hygiene.clean(\"\"), \"\"\n",
-          "type": "blob"
-        }
-      },
-      "distribution": {
-        "hygiene": {
-          "path": "hygiene",
-          "content": "(function() {\n  var ensureTrailingNewline, newline, nothing, trailingWhitespace;\n\n  trailingWhitespace = /[ \\t]*$/gm;\n\n  nothing = \"\";\n\n  newline = \"\\n\";\n\n  ensureTrailingNewline = function(content) {\n    if (content.lastIndexOf(newline) !== content.length - 1) {\n      return \"\" + content + newline;\n    } else {\n      return content;\n    }\n  };\n\n  module.exports = {\n    clean: function(content) {\n      return ensureTrailingNewline(content.replace(trailingWhitespace, nothing));\n    }\n  };\n\n}).call(this);\n\n//# sourceURL=hygiene.coffee",
-          "type": "blob"
-        },
-        "pixie": {
-          "path": "pixie",
-          "content": "module.exports = {\"version\":\"0.2.0\",\"entryPoint\":\"hygiene\"};",
-          "type": "blob"
-        },
-        "test/hygiene": {
-          "path": "test/hygiene",
-          "content": "(function() {\n  var Hygiene;\n\n  Hygiene = require(\"../hygiene\");\n\n  describe(\"cleaning\", function() {\n    it(\"should remove trailing whitespace\", function() {\n      return assert.equal(Hygiene.clean(\"heyy   \\n\"), \"heyy\\n\");\n    });\n    it(\"should ensure trailing newline\", function() {\n      return assert.equal(Hygiene.clean(\"a\"), \"a\\n\");\n    });\n    return it(\"should keep empties empty\", function() {\n      return assert.equal(Hygiene.clean(\"\"), \"\");\n    });\n  });\n\n}).call(this);\n\n//# sourceURL=test/hygiene.coffee",
-          "type": "blob"
-        }
-      },
-      "progenitor": {
-        "url": "http://strd6.github.io/editor/"
-      },
-      "version": "0.2.0",
-      "entryPoint": "hygiene",
-      "repository": {
-        "id": 13007778,
-        "name": "hygiene",
-        "full_name": "STRd6/hygiene",
-        "owner": {
-          "login": "STRd6",
-          "id": 18894,
-          "avatar_url": "https://0.gravatar.com/avatar/33117162fff8a9cf50544a604f60c045?d=https%3A%2F%2Fidenticons.github.com%2F39df222bffe39629d904e4883eabc654.png&r=x",
-          "gravatar_id": "33117162fff8a9cf50544a604f60c045",
-          "url": "https://api.github.com/users/STRd6",
-          "html_url": "https://github.com/STRd6",
-          "followers_url": "https://api.github.com/users/STRd6/followers",
-          "following_url": "https://api.github.com/users/STRd6/following{/other_user}",
-          "gists_url": "https://api.github.com/users/STRd6/gists{/gist_id}",
-          "starred_url": "https://api.github.com/users/STRd6/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/STRd6/subscriptions",
-          "organizations_url": "https://api.github.com/users/STRd6/orgs",
-          "repos_url": "https://api.github.com/users/STRd6/repos",
-          "events_url": "https://api.github.com/users/STRd6/events{/privacy}",
-          "received_events_url": "https://api.github.com/users/STRd6/received_events",
-          "type": "User",
-          "site_admin": false
-        },
-        "private": false,
-        "html_url": "https://github.com/STRd6/hygiene",
-        "description": "Keeping clean",
-        "fork": false,
-        "url": "https://api.github.com/repos/STRd6/hygiene",
-        "forks_url": "https://api.github.com/repos/STRd6/hygiene/forks",
-        "keys_url": "https://api.github.com/repos/STRd6/hygiene/keys{/key_id}",
-        "collaborators_url": "https://api.github.com/repos/STRd6/hygiene/collaborators{/collaborator}",
-        "teams_url": "https://api.github.com/repos/STRd6/hygiene/teams",
-        "hooks_url": "https://api.github.com/repos/STRd6/hygiene/hooks",
-        "issue_events_url": "https://api.github.com/repos/STRd6/hygiene/issues/events{/number}",
-        "events_url": "https://api.github.com/repos/STRd6/hygiene/events",
-        "assignees_url": "https://api.github.com/repos/STRd6/hygiene/assignees{/user}",
-        "branches_url": "https://api.github.com/repos/STRd6/hygiene/branches{/branch}",
-        "tags_url": "https://api.github.com/repos/STRd6/hygiene/tags",
-        "blobs_url": "https://api.github.com/repos/STRd6/hygiene/git/blobs{/sha}",
-        "git_tags_url": "https://api.github.com/repos/STRd6/hygiene/git/tags{/sha}",
-        "git_refs_url": "https://api.github.com/repos/STRd6/hygiene/git/refs{/sha}",
-        "trees_url": "https://api.github.com/repos/STRd6/hygiene/git/trees{/sha}",
-        "statuses_url": "https://api.github.com/repos/STRd6/hygiene/statuses/{sha}",
-        "languages_url": "https://api.github.com/repos/STRd6/hygiene/languages",
-        "stargazers_url": "https://api.github.com/repos/STRd6/hygiene/stargazers",
-        "contributors_url": "https://api.github.com/repos/STRd6/hygiene/contributors",
-        "subscribers_url": "https://api.github.com/repos/STRd6/hygiene/subscribers",
-        "subscription_url": "https://api.github.com/repos/STRd6/hygiene/subscription",
-        "commits_url": "https://api.github.com/repos/STRd6/hygiene/commits{/sha}",
-        "git_commits_url": "https://api.github.com/repos/STRd6/hygiene/git/commits{/sha}",
-        "comments_url": "https://api.github.com/repos/STRd6/hygiene/comments{/number}",
-        "issue_comment_url": "https://api.github.com/repos/STRd6/hygiene/issues/comments/{number}",
-        "contents_url": "https://api.github.com/repos/STRd6/hygiene/contents/{+path}",
-        "compare_url": "https://api.github.com/repos/STRd6/hygiene/compare/{base}...{head}",
-        "merges_url": "https://api.github.com/repos/STRd6/hygiene/merges",
-        "archive_url": "https://api.github.com/repos/STRd6/hygiene/{archive_format}{/ref}",
-        "downloads_url": "https://api.github.com/repos/STRd6/hygiene/downloads",
-        "issues_url": "https://api.github.com/repos/STRd6/hygiene/issues{/number}",
-        "pulls_url": "https://api.github.com/repos/STRd6/hygiene/pulls{/number}",
-        "milestones_url": "https://api.github.com/repos/STRd6/hygiene/milestones{/number}",
-        "notifications_url": "https://api.github.com/repos/STRd6/hygiene/notifications{?since,all,participating}",
-        "labels_url": "https://api.github.com/repos/STRd6/hygiene/labels{/name}",
-        "releases_url": "https://api.github.com/repos/STRd6/hygiene/releases{/id}",
-        "created_at": "2013-09-22T04:41:53Z",
-        "updated_at": "2013-09-29T22:09:24Z",
-        "pushed_at": "2013-09-29T22:09:23Z",
-        "git_url": "git://github.com/STRd6/hygiene.git",
-        "ssh_url": "git@github.com:STRd6/hygiene.git",
-        "clone_url": "https://github.com/STRd6/hygiene.git",
-        "svn_url": "https://github.com/STRd6/hygiene",
-        "homepage": null,
-        "size": 428,
-        "stargazers_count": 0,
-        "watchers_count": 0,
-        "language": "CoffeeScript",
-        "has_issues": true,
-        "has_downloads": true,
-        "has_wiki": true,
-        "forks_count": 0,
-        "mirror_url": null,
-        "open_issues_count": 0,
-        "forks": 0,
-        "open_issues": 0,
-        "watchers": 0,
-        "default_branch": "master",
-        "master_branch": "master",
-        "permissions": {
-          "admin": true,
-          "push": true,
-          "pull": true
-        },
-        "network_count": 0,
-        "subscribers_count": 1,
-        "branch": "v0.2.0",
-        "defaultBranch": "master"
-      },
-      "dependencies": {}
     },
     "md": {
       "source": {
