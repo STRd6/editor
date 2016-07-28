@@ -1,7 +1,11 @@
+ace.require("ace/ext/language_tools")
+
 aceEditor = ace.edit "ace"
 aceEditor.$blockScrolling = Infinity
 aceEditor.setOptions
   fontSize: "16px"
+  enableBasicAutocompletion: true
+  enableLiveAutocompletion: true
 
 module.exports = ->
   aceEditor: ->
