@@ -24,7 +24,7 @@ Components
 ----------
 
 - [Packager](/packager/docs)
-- [Hygiene](/hygiene/docs)
+- [Hygiene](./hygiene/)
 - [Runtime](/runtime/docs)
 
     require "cornerstone"
@@ -67,7 +67,7 @@ Templates
     # TODO: Don't expose this
     filetree = editor.filetree()
 
-    Hygiene = require "hygiene"
+    Hygiene = require "./hygiene"
     Runtime = require "runtime"
 
     Runtime(PACKAGE)
