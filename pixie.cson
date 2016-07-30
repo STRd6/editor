@@ -17,7 +17,7 @@ dependencies:
   analytics: "distri/google-analytics:v0.1.0"
   base64: "distri/base64:v0.9.1-pre.0"
   builder: "distri/builder:v0.5.3-pre.0"
-  cornerstone: "distri/cornerstone:v0.3.0-pre.2"
+  cornerstone: "distri/cornerstone:v0.3.0-pre.3"
   cson: "distri/cson:v0.1.0"
   emojer: "STRd6/emojer:v0.2.0"
   filetree: "distri/filetree:v0.4.0-pre.2"
