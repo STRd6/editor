@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>source/util</title>
+  <title>package-runner</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="https://strd6.github.io/cdn/parallel/docco.css" />
@@ -16,7 +16,7 @@
     <div class="pilwrap">
       <a class="pilcrow" href="#section-1">&#182;</a>
     </div>
-    <h1 id="util">Util</h1>
+    <h1 id="package-runner">Package Runner</h1>
 
   </div>
   <div class="content"><pre><code class="lang-coffeescript">
@@ -28,10 +28,53 @@
     <div class="pilwrap">
       <a class="pilcrow" href="#section-2">&#182;</a>
     </div>
-    
+    <p>Run a package in an iframe.</p>
+<p>The <code>launch</code> command will get the state of the app, replace the iframe with a clean
+one, boot the new package and reload the app state. You can also optionally pass
+in an app state to launch into.</p>
+<p>A primary reason for wrapping the running iframe with a shim window is that we
+can dispose of timeouts and everything else very cleanly, while still keeping the
+same opened window.</p>
+<p>One example use of hot reloading is if you are modifying your css you can run
+several instances of your app and navigate to different states. Then you can see
+in real time how the css changes affect each one.</p>
+<p>The package runner assumes that it has total control over the document so you
+probably won&#39;t want to give it the one in your own window.</p>
+
   </div>
-  <div class="content"><pre><code class="lang-coffeescript">CSON = require <span class="string">"cson"</span>
-Base64 = require <span class="string">"base64"</span></code></pre>
+  <div class="content"><pre><code class="lang-coffeescript">Sandbox = require <span class="string">"sandbox"</span>
+{html} = require <span class="string">"./packager"</span>
+{executePackageWrapper} = require <span class="string">"require"</span>
+
+module.<span class="function"><span class="title">exports</span></span> = (config={}) -&gt;
+  sandbox = Sandbox(config)
+  document = sandbox.document
+
+  applyStylesheet document, require <span class="string">"./runner-style"</span>
+  runningInstance = <span class="literal">null</span>
+
+  self =
+    launch: (pkg, data) -&gt;
+      <span class="comment"># Get data from running instance</span>
+      data ?= runningInstance?.contentWindow?.appData?()
+
+      <span class="comment"># Remove Running instance</span>
+      runningInstance?.remove()
+
+      <span class="comment"># Create new instance</span>
+      runningInstance = document.createElement <span class="string">"iframe"</span>
+      document.body.appendChild runningInstance
+
+      proxyCalls document, runningInstance
+
+      <span class="comment"># Pass in app state</span>
+      extend runningInstance.contentWindow.ENV ?= {},
+        APP_STATE: data
+
+      runningInstance.contentWindow.document.write html(pkg, executePackageWrapper)
+      runningInstance.contentWindow.document.close()
+
+      <span class="keyword">return</span> self</code></pre>
 </div>
 </li>
 <li id="section-3">
@@ -39,73 +82,52 @@ Base64 = require <span class="string">"base64"</span></code></pre>
     <div class="pilwrap">
       <a class="pilcrow" href="#section-3">&#182;</a>
     </div>
-    <p>A collection of shared utilities</p>
+    <p>Make RPC calls to running a package that is using <code>Postmaster</code>.</p>
+<p>Returns a promise that is fulfilled with the results of the successful
+invocation of the call, or rejected with an error object.</p>
 
   </div>
-  <div class="content"><pre><code class="lang-coffeescript">Util =</code></pre>
+  <div class="content"><pre><code class="lang-coffeescript">    send: <span class="keyword">do</span> -&gt;
+      incId = -<span class="number">1</span>
+
+      handlers = {}
+
+      addEventListener <span class="string">"message"</span>, ({source, data}) -&gt;
+        <span class="keyword">if</span> source <span class="keyword">is</span> runningInstance?.contentWindow
+          {type, id, success, error} = data
+
+          <span class="keyword">if</span> type <span class="keyword">is</span> <span class="string">"response"</span>
+            <span class="keyword">if</span> success
+              handlers[id][<span class="number">0</span>](success)
+            <span class="keyword">else</span> <span class="keyword">if</span> error
+              handlers[id][<span class="number">1</span>](error)
+
+            <span class="keyword">delete</span> handlers[id]
+
+      (method, params...) -&gt;
+        <span class="keyword">new</span> Promise (resolve, reject) -&gt;
+          incId += <span class="number">1</span>
+          handlers[incId] = [resolve, reject]
+
+          runningInstance.contentWindow.postMessage
+            id: incId
+            method: method
+            params: params
+          , <span class="string">"*"</span>
+
+    window: sandbox
+
+    close: -&gt;
+      sandbox.close()
+
+    eval: (code) -&gt;
+      runningInstance.contentWindow.eval(code)</code></pre>
 </div>
 </li>
 <li id="section-4">
   <div class="annotation">
     <div class="pilwrap">
       <a class="pilcrow" href="#section-4">&#182;</a>
-    </div>
-    <p>Read the config for the package from the package source.</p>
-
-  </div>
-  <div class="content"><pre><code class="lang-coffeescript">  readSourceConfig: (pkg=PACKAGE) -&gt;
-    <span class="keyword">if</span> configData = pkg.source[<span class="string">"pixie.cson"</span>]?.content
-      CSON.parse(configData)
-    <span class="keyword">else</span> <span class="keyword">if</span> configData = pkg.source[<span class="string">"pixie.json"</span>]?.content
-      JSON.parse(configData)
-    <span class="keyword">else</span>
-      {}</code></pre>
-</div>
-</li>
-<li id="section-5">
-  <div class="annotation">
-    <div class="pilwrap">
-      <a class="pilcrow" href="#section-5">&#182;</a>
-    </div>
-    <p>Decodes all content in place.</p>
-
-  </div>
-  <div class="content"><pre><code class="lang-coffeescript">  processDirectory: (items) -&gt;
-    items.forEach (item) -&gt;
-      <span class="keyword">return</span> item <span class="keyword">unless</span> item.content
-
-      <span class="keyword">if</span> isBinary(item.path)
-        item.binary = <span class="literal">true</span>
-        item.content = atob(item.content.replace(<span class="regexp">/\s/g</span>, <span class="string">""</span>))
-      <span class="keyword">else</span> <span class="comment"># Text</span>
-        <span class="comment"># NOTE: This implementation of Base64 assumes utf-8</span>
-        item.content = Base64.decode(item.content)
-
-      item.encoding = <span class="string">"raw"</span>
-
-    <span class="keyword">return</span> items</code></pre>
-</div>
-</li>
-<li id="section-6">
-  <div class="annotation">
-    <div class="pilwrap">
-      <a class="pilcrow" href="#section-6">&#182;</a>
-    </div>
-    <p><code>arrayToHash</code> converts an array of fileData objects into an object where each
-file&#39;s path is a key and the fileData is the object.</p>
-
-  </div>
-  <div class="content"><pre><code class="lang-coffeescript">  arrayToHash: (array) -&gt;
-    array.eachWithObject {}, (file, hash) -&gt;
-      hash[file.path] = file
-
-module.exports = Util</code></pre>
-</div>
-</li>
-<li id="section-7">
-  <div class="annotation">
-    <div class="pilwrap">
-      <a class="pilcrow" href="#section-7">&#182;</a>
     </div>
     <h2 id="helpers">Helpers</h2>
 
@@ -114,28 +136,56 @@ module.exports = Util</code></pre>
 </code></pre>
 </div>
 </li>
-<li id="section-8">
+<li id="section-5">
   <div class="annotation">
     <div class="pilwrap">
-      <a class="pilcrow" href="#section-8">&#182;</a>
+      <a class="pilcrow" href="#section-5">&#182;</a>
     </div>
-    <p>Determines if a file is a binary file by looking up common file extensions.</p>
+    <p>Proxy calls from the iframe to the top window.</p>
 
   </div>
-  <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">isBinary</span></span> = (path) -&gt;
-  pathCheckRegEx = RegExp [
-    <span class="string">"gif"</span>
-    <span class="string">"jpeg"</span>
-    <span class="string">"jpg"</span>
-    <span class="string">"mp3"</span>
-    <span class="string">"png"</span>
-    <span class="string">"sfs"</span>
-    <span class="string">"wav"</span>
-  ].map((extension) -&gt;
-    <span class="string">"\\.<span class="subst">#{extension}</span>$"</span>
-  ).join(<span class="string">"|"</span>)
+  <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">proxyCalls</span></span> = (document, iframe) -&gt;
+  [
+    <span class="string">"opener"</span>
+    <span class="string">"console"</span>
+  ].forEach (name) -&gt;
+    iframe.contentWindow[name] = document.defaultView[name]</code></pre>
+</div>
+</li>
+<li id="section-6">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-6">&#182;</a>
+    </div>
+    <p><code>makeScript</code> returns a string representation of a script tag that has a src
+attribute.</p>
 
-  path.match(pathCheckRegEx)</code></pre>
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">makeScript</span></span> = (src) -&gt;
+  <span class="string">"&lt;script src=<span class="subst">#{JSON.stringify(src)}</span>&gt;&lt;\/script&gt;"</span></code></pre>
+</div>
+</li>
+<li id="section-7">
+  <div class="annotation">
+    <div class="pilwrap">
+      <a class="pilcrow" href="#section-7">&#182;</a>
+    </div>
+    <p><code>dependencyScripts</code> returns a string containing the script tags that are
+the remote script dependencies of this build.</p>
+
+  </div>
+  <div class="content"><pre><code class="lang-coffeescript"><span class="function"><span class="title">dependencyScripts</span></span> = (remoteDependencies=[]) -&gt;
+  remoteDependencies.map(makeScript).join(<span class="string">"\n"</span>)
+
+<span class="function"><span class="title">applyStylesheet</span></span> = (document, style, id=<span class="string">"primary"</span>) -&gt;
+  styleNode = document.createElement(<span class="string">"style"</span>)
+  styleNode.innerHTML = style
+  styleNode.id = id
+
+  <span class="keyword">if</span> previousStyleNode = document.head.querySelector(<span class="string">"style#<span class="subst">#{id}</span>"</span>)
+    previousStyleNode.parentNode.removeChild(prevousStyleNode)
+
+  document.head.appendChild(styleNode)</code></pre>
 </div>
 </li>
     </ul>
@@ -278,6 +328,6 @@ module.exports = Util</code></pre>
 
 }).call(this);
 
-</script><script src="../package.js"></script>
+</script><script src="package.js"></script>
 </body>
 </html>
