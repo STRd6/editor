@@ -206,7 +206,6 @@ issues?.currentIssue.observe (issue) -&gt;
       repository().branch(previousBranch)
 
       editor.classicError <span class="string">"Error switching to <span class="subst">#{branchName}</span>, still on <span class="subst">#{previousBranch}</span>"</span>
-    .done()
 
   <span class="keyword">if</span> issue?.branchName?
     editor.notify issue.fullDescription()
