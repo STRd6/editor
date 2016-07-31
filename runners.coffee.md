@@ -98,12 +98,12 @@ Tests html template.
       <head>
         <meta charset="utf-8">
         <title>Mocha Tests</title>
-        <link rel="stylesheet" href="https://distri.github.io/tests/mocha.css" />
+        <link rel="stylesheet" href="https://npmcdn.com/mocha@2.5.3/mocha.css" />
       </head>
       <body>
         <div id="mocha"></div>
         <script src="https://distri.github.io/tests/assert.js"><\/script>
-        <script src="https://distri.github.io/tests/mocha.js"><\/script>
+        <script src="https://npmcdn.com/mocha@2.5.3/mocha.js"><\/script>
         <script>mocha.setup('bdd')<\/script>
         #{testScripts}
         <script>

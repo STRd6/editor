@@ -35,7 +35,6 @@ actions =
     editor.test()
     .catch (e) ->
       editor.errors [].concat(e)
-    .done()
 
   docs: (editor) ->
     editor.notify "Running Docs..."

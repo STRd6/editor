@@ -145,7 +145,6 @@ Templates
           repository().branch(previousBranch)
 
           editor.classicError "Error switching to #{branchName}, still on #{previousBranch}"
-        .done()
 
       if issue?.branchName?
         editor.notify issue.fullDescription()
