@@ -88,7 +88,7 @@ module.exports = (I={}, self=Model(I)) ->
           repository: cleanRepositoryData repository.toJSON()
           source: processDirectory results
 
-    # Build the project, returning a promise that will be fulfilled with 
+    # Build the project, returning a promise that will be fulfilled with
     # the `pkg` when complete.
     build: ->
       data = filetree.data()

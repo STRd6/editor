@@ -106,8 +106,7 @@ actions =
       branchName = editor.repository().branch()
       editor.notifications.push "\nReloading branch #{branchName}..."
 
-      editor.load
-        repository: repository()
+      editor.load editor.repository()
       .then ->
         editor.notifications.push "Loaded!"
       .catch ->
