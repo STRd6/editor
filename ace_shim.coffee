@@ -7,6 +7,12 @@ aceEditor.setOptions
   enableBasicAutocompletion: true
   enableLiveAutocompletion: true
 
+extraModes =
+  jadelet: "jade"
+
+mode = (mode) ->
+  extraModes[mode] or mode
+
 module.exports = ->
   aceEditor: ->
     aceEditor
@@ -14,7 +20,7 @@ module.exports = ->
   initSession: (file) ->
     session = ace.createEditSession(file.content())
 
-    session.setMode("ace/mode/#{file.mode()}")
+    session.setMode("ace/mode/#{mode file.mode()}")
 
     session.setUseSoftTabs true
     session.setTabSize 2
