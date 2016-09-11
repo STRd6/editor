@@ -3,7 +3,7 @@ description: """
   Edit and publish code directly in the browser. Compiles down to HTML, CSS, and
   JavaScript to be easily served on GitHub pages, S3, or any other static host.
 """
-version: "0.4.2"
+version: "0.4.3"
 entryPoint: "main"
 width: 960
 height: 800
@@ -24,7 +24,7 @@ dependencies:
   github: "distri/github:v0.5.2-pre.1"
   md: "distri/md:v0.4.3"
   notifications: "distri/notifications:v0.3.3"
-  postmaster: "distri/postmaster:v0.2.3"
+  postmaster: "distri/postmaster:v0.5.0"
   require: "distri/require:v0.5.2"
   runtime: "distri/runtime:v0.3.0"
   sandbox: "distri/sandbox:v0.2.4"
