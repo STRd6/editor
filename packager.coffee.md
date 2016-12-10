@@ -120,11 +120,11 @@ A standalone html page for a package.
         console.error e
 
       if appCache
-        appCache = "manifest=\"manifest.appcache?#{+new Date}\""
+        appCache = " manifest=\"manifest.appcache?#{+new Date}\""
 
       """
         <!DOCTYPE html>
-        <html #{appCache}>
+        <html#{appCache}>
           <head>
             #{metas.join("\n    ")}
             #{dependencyScripts(pkg.remoteDependencies)}
