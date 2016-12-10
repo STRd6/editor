@@ -203,6 +203,8 @@ used when requiring in other packages and running standalone html.</p>
 
   <span class="keyword">if</span> appCache
     appCache = <span class="string">" manifest=\"manifest.appcache?<span class="subst">#{+<span class="keyword">new</span> Date}</span>\""</span>
+  <span class="keyword">else</span>
+    appCache = <span class="string">""</span>
 
   <span class="string">"""
     &lt;!DOCTYPE html&gt;
