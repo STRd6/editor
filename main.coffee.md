@@ -25,7 +25,6 @@ Components
 
 - [Packager](/packager/docs)
 - [Hygiene](./hygiene/)
-- [Runtime](/runtime/docs)
 
     require "cornerstone"
     {processDirectory} = require "./source/util"
@@ -68,11 +67,10 @@ Templates
     filetree = editor.filetree()
 
     Hygiene = require "./hygiene"
-    Runtime = require "runtime"
 
-    Runtime(PACKAGE)
-      .boot()
-      .applyStyleSheet(require('./style'))
+    styleNode = document.createElement("style")
+    styleNode.innerHTML = require('./style')
+    document.head.appendChild(styleNode)
 
     # Branch Chooser using pull requests
     Issue = require "./issue"
