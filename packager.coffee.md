@@ -121,6 +121,8 @@ A standalone html page for a package.
 
       if appCache
         appCache = " manifest=\"manifest.appcache?#{+new Date}\""
+      else
+        appCache = ""
 
       """
         <!DOCTYPE html>
