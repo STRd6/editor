@@ -96,6 +96,10 @@ A standalone html page for a package.
         '<meta charset="utf-8">'
         '<link rel="Help" href="./docs/">'
       ]
+      
+      {config} = pkg
+      if config
+        {appCache} = config
 
       try
         jsonString = pkg.distribution.pixie.content.slice(17, -1)
@@ -115,9 +119,12 @@ A standalone html page for a package.
       catch e
         console.error e
 
+      if appCache
+        appCache = "manifest=\"manifest.appcache?#{+new Date}\""
+
       """
         <!DOCTYPE html>
-        <html manifest="manifest.appcache?#{+new Date}">
+        <html #{appCache}>
           <head>
             #{metas.join("\n    ")}
             #{dependencyScripts(pkg.remoteDependencies)}

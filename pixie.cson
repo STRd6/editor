@@ -26,5 +26,4 @@ dependencies:
   notifications: "distri/notifications:v0.3.3"
   postmaster: "distri/postmaster:v0.5.0"
   require: "distri/require:v0.5.2"
-  runtime: "distri/runtime:v0.3.0"
   sandbox: "distri/sandbox:v0.2.4"

@@ -20,6 +20,7 @@ initBuilder = (self) ->
   builder.addPostProcessor (pkg) ->
     config = readSourceConfig(pkg)
 
+    pkg.config = config
     pkg.version = config.version
     pkg.entryPoint = config.entryPoint or "main"
     pkg.remoteDependencies = config.remoteDependencies
