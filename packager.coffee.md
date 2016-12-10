@@ -96,7 +96,7 @@ A standalone html page for a package.
         '<meta charset="utf-8">'
         '<link rel="Help" href="./docs/">'
       ]
-      
+
       {config} = pkg
       if config
         {appCache} = config
