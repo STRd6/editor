@@ -66,7 +66,6 @@ but I had no idea what I was doing and still don&#39;t know to this day.</p>
     <ul>
 <li><a href="/packager/docs">Packager</a></li>
 <li><a href="./hygiene/">Hygiene</a></li>
-<li><a href="/runtime/docs">Runtime</a></li>
 </ul>
 
   </div>
@@ -129,11 +128,10 @@ global.<span class="function"><span class="title">appData</span></span> = -&gt;
 filetree = editor.filetree()
 
 Hygiene = require <span class="string">"./hygiene"</span>
-Runtime = require <span class="string">"runtime"</span>
 
-Runtime(PACKAGE)
-  .boot()
-  .applyStyleSheet(require(<span class="string">'./style'</span>))
+styleNode = document.createElement(<span class="string">"style"</span>)
+styleNode.innerHTML = require(<span class="string">'./style'</span>)
+document.head.appendChild(styleNode)
 
 <span class="comment"># Branch Chooser using pull requests</span>
 Issue = require <span class="string">"./issue"</span>
