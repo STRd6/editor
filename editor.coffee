@@ -68,6 +68,11 @@ module.exports = (I={}, self=Model(I)) ->
     publish: (message) ->
       self.build()
       .then (pkg) ->
+        publishScript = pkg.distribution._publish
+        if publishScript
+          console.log publishScript
+          return
+
         documenter.documentAll(pkg)
         .then (docs) ->
           # NOTE: This metadata is added from the builder
