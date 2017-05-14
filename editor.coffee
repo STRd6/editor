@@ -71,7 +71,7 @@ module.exports = (I={}, self=Model(I)) ->
         publishScript = pkg.distribution._publish
         if publishScript
           code = require.packageWrapper(pkg, 'return require("./_publish")').replace(/^;/, "return ")
-          console.log code
+          console.log Function(code)()
           return
 
         documenter.documentAll(pkg)
