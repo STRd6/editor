@@ -68,10 +68,15 @@ module.exports = (I={}, self=Model(I)) ->
     publish: (message) ->
       self.build()
       .then (pkg) ->
+        # If the project defines a custom publish script execute it
+        # TODO: Security :P
+        # We'll may want to prompt to ask if we can run untrusted code
+        # though this requires a user taking action to save anyway.
+        # We can sandbox this with an iframe to mitigate.
         publishScript = pkg.distribution._publish
         if publishScript
           code = require.packageWrapper(pkg, 'return require("./_publish")').replace(/^;/, "return ")
-          console.log Function(code)()
+          Function(code)()(pkg)
           return
 
         documenter.documentAll(pkg)
