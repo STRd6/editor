@@ -4,7 +4,7 @@ module.exports = (pkg) ->
   console.log "_publish", pkg
 
   authorization = localStorage.DUMPER_AUTH
-  fetch "https://dumper.glitch.me/policy?authorization=#{}"
+  fetch "https://dumper.glitch.me/policy?authorization=#{authorization}"
   .then (response) ->
     response.json()
   .then (credentials) ->
