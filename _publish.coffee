@@ -17,10 +17,10 @@ module.exports = (pkg) ->
     html = new Blob [Packager.html(pkg)],
       type: "text/html;charset=utf-8"
 
-    [..., repo] = pkg.repository.fullName.split("/")
+    [..., repo] = pkg.repository.full_name.split("/")
     branch = pkg.repository.branch
 
-    htmlPath = if branch is pkg.repository.defaultBranch
+    htmlPath = if branch is pkg.repository.default_branch
       "index.html"
     else
       "#{branch}/index.html"
