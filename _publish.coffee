@@ -29,14 +29,14 @@ module.exports = (pkg) ->
       uploader.upload
         blob: html
         key: "public/#{repo}/#{htmlPath}"
-      ,
+    ,
       uploader.upload
         blob: json
         key: "public/#{repo}/#{branch}.json"
         cacheControl: 0
     ]
   .then (results) ->
-    console.log res
+    console.log results
 
   # TODO: Upload html and json to S3 based on branch
   # Use localStorage for an upload policy
