@@ -3,9 +3,8 @@ S3Uploader = require "./lib/s3-uploader"
 module.exports = (pkg) ->
   console.log "_publish", pkg
 
-  fetch "https://dumper.glitch.me/policy",
-    headers:
-      Authorization: "yolo"
+  authorization = localStorage.DUMPER_AUTH
+  fetch "https://dumper.glitch.me/policy?authorization=#{}"
   .then (response) ->
     response.json()
   .then (credentials) ->
