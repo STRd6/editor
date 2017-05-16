@@ -129,7 +129,8 @@ isSuccess = (request) ->
   request.status.toString()[0] is "2"
 
 sendForm = (url, formData) ->
-  new ProgressPromise (resolve, reject, notify) ->
+  # TODO: ProgressPromise
+  new Promise (resolve, reject, notify) ->
     request = new XMLHttpRequest()
 
     request.open("POST", url, true)
