@@ -10,7 +10,15 @@ module.exports = (pkg) ->
   .then (credentials) ->
     uploader = S3Uploader(credentials)
 
-    console.log credentials
+    blob = new Blob ["test"],
+      type: "text/plain"
+
+    S3Uploader.upload
+      blob: blob
+      key: "dumper-test"
+      cacheControl: 0
+  .then (res) ->
+    console.log res
 
   # TODO: Upload html and json to S3 based on branch
   # Use localStorage for an upload policy
