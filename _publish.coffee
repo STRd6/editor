@@ -13,7 +13,7 @@ module.exports = (pkg) ->
     blob = new Blob ["test"],
       type: "text/plain"
 
-    S3Uploader.upload
+    uploader.upload
       blob: blob
       key: "dumper-test"
       cacheControl: 0
