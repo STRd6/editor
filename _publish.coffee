@@ -1,4 +1,5 @@
 S3Uploader = require "./lib/s3-uploader"
+Packager = require "./packager"
 
 module.exports = (pkg) ->
   console.log "_publish", pkg
@@ -10,20 +11,31 @@ module.exports = (pkg) ->
   .then (credentials) ->
     uploader = S3Uploader(credentials)
 
-    blob = new Blob [JSON.stringify(pkg)],
-      type: "application/json"
+    json = new Blob [JSON.stringify(pkg)],
+      type: "application/json;charset=utf-8"
+
+    html = new Blob [Packager.html(pkg)],
+      type: "text/html;charset=utf-8"
 
     repo = "editor"
     branch = "master"
 
-    # TODO: Write index.html
-    # TODO: Handle non-master branches as subfolders
+    htmlPath = if branch is "master"
+      "index.html"
+    else
+      "#{branch}/index.html"
 
-    uploader.upload
-      blob: blob
-      key: "public/#{repo}/#{branch}.json"
-      cacheControl: 0
-  .then (res) ->
+    Promise.all [
+      uploader.upload
+        blob: html
+        key: "public/#{repo}/#{htmlPath}"
+      ,
+      uploader.upload
+        blob: json
+        key: "public/#{repo}/#{branch}.json"
+        cacheControl: 0
+    ]
+  .then (results) ->
     console.log res
 
   # TODO: Upload html and json to S3 based on branch
