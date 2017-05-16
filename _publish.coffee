@@ -10,12 +10,18 @@ module.exports = (pkg) ->
   .then (credentials) ->
     uploader = S3Uploader(credentials)
 
-    blob = new Blob ["test"],
-      type: "text/plain"
+    blob = new Blob [JSON.stringify(pkg)],
+      type: "application/json"
+
+    repo = "editor"
+    branch = "master"
+
+    # TODO: Write index.html
+    # TODO: Handle non-master branches as subfolders
 
     uploader.upload
       blob: blob
-      key: "dumper-test"
+      key: "public/#{repo}/#{branch}.json"
       cacheControl: 0
   .then (res) ->
     console.log res
