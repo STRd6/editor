@@ -70,7 +70,7 @@ module.exports = (I={}, self=Model(I)) ->
       .then (pkg) ->
         # If the project defines a custom publish script execute it
         # TODO: Security :P
-        # We'll may want to prompt to ask if we can run untrusted code
+        # We'll want to prompt to ask if we can run untrusted code
         # though this requires a user taking action to save anyway.
         # We can sandbox this with an iframe to mitigate.
         publishScript = pkg.distribution._publish
@@ -79,19 +79,10 @@ module.exports = (I={}, self=Model(I)) ->
           Function(code)()(pkg)
           return
 
-        documenter.documentAll(pkg)
-        .then (docs) ->
-          # NOTE: This metadata is added from the builder
-          publishBranch = pkg.repository.publishBranch
-
-          # TODO: Don't pass files to packager, just merge them at the end
-          # TODO: Have differenty types of building (docs/main) that can
-          # be chosen in a config rather than hacks based on the branch name
-          repository = self.repository()
-          if repository.branch() is "blog" # HACK
-            self.repository().publish(docs, message, publishBranch)
-          else
-            self.repository().publish(Packager.standAlone(pkg, docs), message, publishBranch)
+        # Use the editor's default publish script
+        publisher = require "./_publish"
+        publisher(pkg)
+        # TODO: Revist docs
 
     load: (repository) ->
       repository.latestContent()
