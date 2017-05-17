@@ -29,6 +29,7 @@ module.exports = (pkg) ->
       uploader.upload
         blob: html
         key: "public/#{repo}/#{htmlPath}"
+        cacheControl: 0
     ,
       uploader.upload
         blob: json
