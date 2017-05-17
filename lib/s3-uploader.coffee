@@ -91,7 +91,7 @@ module.exports = (credentials) ->
     sendForm bucketUrl, objectToForm
       key: namespacedKey
       "Content-Type": blob.type or 'binary/octet-stream'
-      "Cache-Control": "max-age=#{cacheControl or 31536000}"
+      "Cache-Control": "max-age=#{cacheControl ? 31536000}"
       AWSAccessKeyId: accessKeyId
       "x-amz-security-token": credentials.sessionToken
       acl: acl
