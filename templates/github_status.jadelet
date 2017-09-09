@@ -5,7 +5,7 @@
   - github = this
   - if request = @lastRequest()
     div
-      - if request.getAllResponseHeaders and request.getAllResponseHeaders().match(/X-RateLimit-Limit: 5000/)
+      - if request.getAllResponseHeaders and request.getAllResponseHeaders().match(/X-RateLimit-Limit: ?5000/i)
         = "Authenticated Scopes:"
         = request.getResponseHeader("X-OAuth-Scopes")
         br
