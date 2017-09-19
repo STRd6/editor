@@ -7,6 +7,9 @@ version: "0.4.3"
 entryPoint: "main"
 width: 960
 height: 800
+publish:
+  s3:
+    basePath: "public/danielx.net"
 remoteDependencies: [
   "https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.4/ace.js"
   "https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.4/ext-language_tools.js"

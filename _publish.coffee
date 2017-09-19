@@ -8,7 +8,12 @@ statusCheck = (response) ->
   else
     throw new Error response
 
+
+# Upload html and json to S3 based on branch
+# Use localStorage for secret to access an upload policy
 publishS3 = (pkg) ->
+  basePath = pkg.config?.s3?.basePath or ""
+
   authorization = localStorage.DUMPER_AUTH
   fetch "https://dumper.glitch.me/policy?authorization=#{authorization}"
   .then statusCheck
@@ -34,12 +39,12 @@ publishS3 = (pkg) ->
     Promise.all [
       uploader.upload
         blob: html
-        key: "public/#{repo}/#{htmlPath}"
+        key: "#{basePath}/#{repo}/#{htmlPath}"
         cacheControl: 0
     ,
       uploader.upload
         blob: json
-        key: "public/#{repo}/#{branch}.json"
+        key: "#{basePath}/#{repo}/#{branch}.json"
         cacheControl: 0
     ]
   .then (results) ->
@@ -47,12 +52,6 @@ publishS3 = (pkg) ->
   .catch (e) ->
     # Just swallow this so the other publish can succeed
     console.error e
-
-  # TODO: Upload html and json to S3 based on branch
-  # Use localStorage for an upload policy
-  # Alternatively use "My Briefcase" or similar... maybe it's possible to run
-  # the briefcase in in iframe and have it handle the authing
-
 
 publishGitHubPages = (pkg, editor) ->
   documenter.documentAll(pkg)
@@ -63,10 +62,15 @@ publishGitHubPages = (pkg, editor) ->
 
 module.exports = (pkg, editor) ->
   console.log "_publish", pkg
+  
+  publihsConfig = pkg.config?.publish
+
+  if publishConfig
+    s3 = publishConfig.s3
 
   # Publish to both for now
   # TODO: Switch based on config?
   Promise.all [
     publishGitHubPages(pkg, editor)
-    publishS3(pkg)
+    publishS3(pkg) if s3
   ]
