@@ -63,7 +63,7 @@ publishGitHubPages = (pkg, editor) ->
 module.exports = (pkg, editor) ->
   console.log "_publish", pkg
   
-  publihsConfig = pkg.config?.publish
+  publishConfig = pkg.config?.publish
 
   if publishConfig
     s3 = publishConfig.s3
