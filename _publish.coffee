@@ -11,8 +11,8 @@ statusCheck = (response) ->
 
 # Upload html and json to S3 based on branch
 # Use localStorage for secret to access an upload policy
-publishS3 = (pkg) ->
-  basePath = pkg.config?.s3?.basePath or ""
+publishS3 = (pkg, s3PublishConfig) ->
+  basePath = s3PublishConfig.basePath or ""
 
   authorization = localStorage.DUMPER_AUTH
   fetch "https://dumper.glitch.me/policy?authorization=#{authorization}"
@@ -72,5 +72,5 @@ module.exports = (pkg, editor) ->
   # TODO: Switch based on config?
   Promise.all [
     publishGitHubPages(pkg, editor)
-    publishS3(pkg) if s3
+    publishS3(pkg, s3) if s3
   ]
