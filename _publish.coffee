@@ -59,7 +59,7 @@ publishGitHubPages = (pkg, editor) ->
   .then (docs) ->
     publishBranch = pkg.repository.publishBranch
 
-    editor.repository().publish(Packager.standAlone(pkg, docs), message, publishBranch)
+    editor.repository().publish(Packager.standAlone(pkg, docs), "", publishBranch)
 
 module.exports = (pkg, editor) ->
   console.log "_publish", pkg
