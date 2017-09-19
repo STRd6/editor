@@ -4,7 +4,6 @@ Builder = require("builder")
 Packager = require("./packager")
 {Filetree, File} = require("filetree")
 {processDirectory} = require "./source/util"
-documenter = require "md"
 
 loadedPackage = Observable null
 
@@ -80,7 +79,7 @@ module.exports = (I={}, self=Model(I)) ->
 
         # Use the editor's default publish script
         publisher = require "./_publish"
-        publisher(pkg)
+        publisher(pkg, self)
         # TODO: Revist docs
 
     load: (repository) ->
