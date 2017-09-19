@@ -8,7 +8,6 @@ statusCheck = (response) ->
   else
     throw new Error response
 
-
 # Upload html and json to S3 based on branch
 # Use localStorage for secret to access an upload policy
 publishS3 = (pkg, s3PublishConfig) ->
@@ -62,7 +61,7 @@ publishGitHubPages = (pkg, editor) ->
 
 module.exports = (pkg, editor) ->
   console.log "_publish", pkg
-  
+
   publishConfig = pkg.config?.publish
 
   if publishConfig
