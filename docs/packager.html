@@ -397,7 +397,7 @@ package.</p>
         type: <span class="string">"blob"</span>
 
     add <span class="string">"<span class="subst">#{base}</span>index.html"</span>, html(pkg)
-    add <span class="string">"<span class="subst">#{base}</span>manifest.appcache"</span>, cacheManifest(pkg)
+    add <span class="string">"<span class="subst">#{base}</span>manifest.appcache"</span>, cacheManifest(pkg) <span class="keyword">if</span> pkg.config?.appcache
 
     json = JSON.stringify(pkg, <span class="literal">null</span>, <span class="number">2</span>)
 
