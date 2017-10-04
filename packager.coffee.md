@@ -270,7 +270,7 @@ package.
             type: "blob"
 
         add "#{base}index.html", html(pkg)
-        add "#{base}manifest.appcache", cacheManifest(pkg)
+        add "#{base}manifest.appcache", cacheManifest(pkg) if pkg.config?.appcache
 
         json = JSON.stringify(pkg, null, 2)
 

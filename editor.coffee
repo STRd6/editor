@@ -4,7 +4,6 @@ Builder = require("builder")
 Packager = require("./packager")
 {Filetree, File} = require("filetree")
 {processDirectory} = require "./source/util"
-documenter = require "md"
 
 loadedPackage = Observable null
 
@@ -76,11 +75,12 @@ module.exports = (I={}, self=Model(I)) ->
         publishScript = pkg.distribution._publish
         if publishScript
           code = require.packageWrapper(pkg, 'return require("./_publish")').replace(/^;/, "return ")
-          return Function(code)()(pkg)
+          publisher = Function(code)()
+        else
+          # Use the editor's default publish script
+          publisher = require "./_publish"
 
-        # Use the editor's default publish script
-        publisher = require "./_publish"
-        publisher(pkg)
+        publisher(pkg, self)
         # TODO: Revist docs
 
     load: (repository) ->
