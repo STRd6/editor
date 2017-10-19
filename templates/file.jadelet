@@ -1,0 +1,3 @@
+file(click=@select class=@active)
+  = @displayName
+  .delete(click=@remove) X

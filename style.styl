@@ -1,45 +1,65 @@
+*
+  box-sizing: border-box
+
 html, body
   height: 100%
 
 body
+  display: flex
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif
   font-weight: 300
   margin: 0
 
-.main
-  position: relative
-  padding-top: 40px
-  padding-left: 200px
-  padding-bottom: 100px
-  box-sizing: border-box
-  height: 100%
+main
+  display: flex
+  flex-direction: row
+  width: 100%
 
-  > #ace
-    border: none
-    display: block
-    width: 100%
-    height: 100%
+  > section
+    display: flex
+    flex-direction: column
 
-.filetree
+    &:nth-child(2)
+      flex: 1
+
+      > section
+        display: flex
+        flex-direction: row
+
+filetree
+  cursor: pointer
+  display: block
   margin: 0
   padding: 0
-  width: 200px
   overflow-x: hidden
   overflow-y: auto
-  position: absolute
-  left: 0
-  bottom: 0
-  top: 40px
-  z-index: 2
+  user-select: none
 
-  li
-    cursor: pointer
-    list-style-type: none
+  > path-name
+    display: block
+    margin-left: -1.75em
+
+    &:not(:empty)
+      &::before
+        content: "+ "
+
+      &.expanded::before
+        content: "- "
+
+    &:hover
+      background-color: lightyellow
+
+  > file, > path-name
     padding-left: 1em
+    padding-right: 1em
     position: relative
     white-space: nowrap
 
-    .delete
+  > file
+    cursor: pointer
+    display: block
+
+    > .delete
       display: none
       position: absolute
       right: 0
@@ -48,47 +68,53 @@ body
     &:hover
       background-color: lightyellow
 
-      .delete
+      > .delete
         display: inline-block
 
-.actions
-  position: absolute
-  top: 0
-  left: 200px
-  z-index: 1
+    &.active
+      background-color: lightblue
+
+  > filetree
+    > file, > path-name
+      padding-left: 2em
+    > filetree
+      > file, > path-name
+        padding-left: 3em
+      > filetree
+        > file, > path-name
+          padding-left: 4em
+        > filetree
+          > file, > path-name
+            padding-left: 5em
+
+actions
+  display: block
+  flex: 1
+  height: 40px
 
   button
     margin-right: 0.25em
 
 .repo_info
-  box-sizing: border-box
-  position: absolute
-  top: 0
-  left: 0
+  border-bottom: 1px solid black
+  font-size: 0.8em
+  height: 40px
+  overflow: hidden
   padding: 0.25em 1em
   width: 200px
-  overflow: hidden
-  border-bottom: 1px solid black
-  height: 40px
-  font-size: 0.8em
 
 .console-wrap
-  box-sizing: border-box
-  position: absolute
-  bottom: 0
-  left: 0
-  right: 0
-  padding-left: 200px
+  display: block
   height: 100px
-  width: 100%
-  margin: 0
 
-  .errors
+  > .errors
     box-sizing: border-box
     border-top: 1px solid black
     color: red
+    margin-top: 0
 
-.status
-  top: 0
-  right: 0
-  position: absolute
+    &:empty
+      margin-bottom: 0
+
+#ace
+  flex: 1
