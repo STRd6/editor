@@ -26,7 +26,7 @@ main
         display: flex
         flex-direction: row
 
-ul.filetree
+filetree
   display: block
   margin: 0
   padding: 0
@@ -34,12 +34,15 @@ ul.filetree
   overflow-y: auto
   z-index: 2
 
-  > li
+  > file, > filetree
     cursor: pointer
     list-style-type: none
     padding-left: 1em
     position: relative
     white-space: nowrap
+
+  > file
+    display: block
 
     > .delete
       display: none

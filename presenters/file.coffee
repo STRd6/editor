@@ -6,7 +6,7 @@ module.exports = (file, selectedFile, basePath="") ->
     displayName: ->
       file.displayName().replace(basePath, "")
     select: (e) ->
-      selectedFile(file) if e.target.nodeName is 'LI'
+      selectedFile(file) if e.target.nodeName is 'FILE'
     remove: ->
       files.remove(file) if confirm("Delete #{file.path()}?")
 
