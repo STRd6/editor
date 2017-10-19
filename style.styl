@@ -27,21 +27,36 @@ main
         flex-direction: row
 
 filetree
+  cursor: pointer
   display: block
   margin: 0
   padding: 0
   overflow-x: hidden
   overflow-y: auto
-  z-index: 2
+  user-select: none
 
-  > file, > filetree
-    cursor: pointer
-    list-style-type: none
+  > path-name
+    display: block
+    margin-left: -1.75em
+
+    &:not(:empty)
+      &::before
+        content: "+ "
+
+      &.expanded::before
+        content: "- "
+
+    &:hover
+      background-color: lightyellow
+
+  > file, > path-name
     padding-left: 1em
+    padding-right: 1em
     position: relative
     white-space: nowrap
 
   > file
+    cursor: pointer
     display: block
 
     > .delete
@@ -55,6 +70,22 @@ filetree
 
       > .delete
         display: inline-block
+
+    &.active
+      background-color: lightblue
+
+  > filetree
+    > file, > path-name
+      padding-left: 2em
+    > filetree
+      > file, > path-name
+        padding-left: 3em
+      > filetree
+        > file, > path-name
+          padding-left: 4em
+        > filetree
+          > file, > path-name
+            padding-left: 5em
 
 actions
   display: block

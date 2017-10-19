@@ -1,3 +1,3 @@
 filetree
-  = @basePath
+  path-name(click=@toggleExpand class=@expandedClass)= @displayPath
   = @elements

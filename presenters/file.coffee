@@ -3,6 +3,8 @@ FileTemplate = require "../templates/file"
 module.exports = (file, selectedFile, basePath="") ->
 
   self =
+    active: ->
+      "active" if file is selectedFile()
     displayName: ->
       file.displayName().replace(basePath, "")
     select: (e) ->
