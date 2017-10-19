@@ -20,7 +20,8 @@ body
     width: 100%
     height: 100%
 
-.filetree
+ul.filetree
+  display: block
   margin: 0
   padding: 0
   width: 200px
@@ -32,14 +33,14 @@ body
   top: 40px
   z-index: 2
 
-  li
+  > li
     cursor: pointer
     list-style-type: none
     padding-left: 1em
     position: relative
     white-space: nowrap
 
-    .delete
+    > .delete
       display: none
       position: absolute
       right: 0
@@ -48,7 +49,7 @@ body
     &:hover
       background-color: lightyellow
 
-      .delete
+      > .delete
         display: inline-block
 
 .actions
