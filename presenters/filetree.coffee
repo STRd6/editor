@@ -2,29 +2,10 @@ FilePresenter = require "./file"
 FiletreeTemplate = require "../templates/filetree"
 
 FiletreePresenter = (filetree, basePath="", expandedState) ->
-  expandedState ?= 
+  expandedState ?=
     "": true
   expanded = expandedState[basePath]
   selectedFile = filetree.selectedFile
-
-  directorySort = (a, b) ->
-    lengthA = a.length
-    lengthB = b.length
-    l = Math.max(lengthA, lengthB)
-
-    i = 0
-    while i < l
-      # Directories before files
-      if lengthA - 1 is i # a is file
-        return +1 if lengthB > lengthA
-      if lengthB - 1 is i # b is file
-        return -1 if lengthA > lengthB
-
-      return +1 if a[i] > b[i]
-      return -1 if a[i] < b[i]
-      i += 1
-
-    return 0
 
   self =
     basePath: basePath
@@ -33,7 +14,7 @@ FiletreePresenter = (filetree, basePath="", expandedState) ->
     expanded: Observable expanded
     expandedClass: ->
       "expanded" if self.expanded()
-    elements: ->      
+    elements: ->
       return unless self.expanded()
 
       files = filetree.files()
@@ -54,8 +35,8 @@ FiletreePresenter = (filetree, basePath="", expandedState) ->
           fileLookup[firstSegment] = file
 
       folderElements = Object.keys(folderLookup).sort().map (folderPath) ->
-        FiletreePresenter 
-          files: -> 
+        FiletreePresenter
+          files: ->
             folderLookup[folderPath]
           selectedFile: selectedFile
         , basePath + folderPath + "/", expandedState
