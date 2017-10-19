@@ -37,11 +37,16 @@ filetree
 
   > path-name
     display: block
-    margin-left: -1.75em
+    margin-left: -1em
+    position: relative
 
     &:not(:empty)
       &::before
         content: "+ "
+        left: 1em
+        position: absolute
+        text-align: center
+        width: 1em
 
       &.expanded::before
         content: "- "
