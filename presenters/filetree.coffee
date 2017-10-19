@@ -51,7 +51,7 @@ FiletreePresenter = (filetree, basePath="") ->
         , basePath + folderPath + "/"
 
       fileElements = Object.keys(fileLookup).sort().map (filePath) ->
-        FilePresenter fileLookup[filePath], selectedFile
+        FilePresenter fileLookup[filePath], selectedFile, basePath
 
       folderElements.concat fileElements
 

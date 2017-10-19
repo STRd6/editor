@@ -1,24 +1,33 @@
+*
+  box-sizing: border-box
+
 html, body
   height: 100%
 
 body
+  display: flex
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif
   font-weight: 300
   margin: 0
 
-.main
-  position: relative
-  padding-top: 40px
-  padding-left: 200px
-  padding-bottom: 100px
-  box-sizing: border-box
-  height: 100%
+main
+  display: flex
+  flex-direction: row
+  width: 100%
 
-  > #ace
-    border: none
-    display: block
-    width: 100%
-    height: 100%
+  > section
+    display: flex
+    flex-direction: column
+
+    &:first-child
+      width: 200px
+
+    &:nth-child(2)
+      flex: 1 1 auto
+
+      > section
+        display: flex
+        flex-direction: row
 
 ul.filetree
   display: block
@@ -27,10 +36,6 @@ ul.filetree
   width: 200px
   overflow-x: hidden
   overflow-y: auto
-  position: absolute
-  left: 0
-  bottom: 0
-  top: 40px
   z-index: 2
 
   > li
@@ -52,44 +57,34 @@ ul.filetree
       > .delete
         display: inline-block
 
-.actions
-  position: absolute
-  top: 0
-  left: 200px
-  z-index: 1
+actions
+  display: block
+  flex: 1
+  height: 40px
 
   button
     margin-right: 0.25em
 
 .repo_info
-  box-sizing: border-box
-  position: absolute
-  top: 0
-  left: 0
+  border-bottom: 1px solid black
+  font-size: 0.8em
+  height: 40px
+  overflow: hidden
   padding: 0.25em 1em
   width: 200px
-  overflow: hidden
-  border-bottom: 1px solid black
-  height: 40px
-  font-size: 0.8em
 
 .console-wrap
-  box-sizing: border-box
-  position: absolute
-  bottom: 0
-  left: 0
-  right: 0
-  padding-left: 200px
+  display: block
   height: 100px
-  width: 100%
-  margin: 0
 
-  .errors
+  > .errors
     box-sizing: border-box
     border-top: 1px solid black
     color: red
+    margin-top: 0
 
-.status
-  top: 0
-  right: 0
-  position: absolute
+    &:empty
+      margin-bottom: 0
+
+#ace
+  flex: 1
