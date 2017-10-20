@@ -1,6 +1,6 @@
 FileTemplate = require "../templates/file"
 
-module.exports = (file, selectedFile, basePath="") ->
+module.exports = (file, selectedFile, removeFile, basePath="") ->
 
   self =
     active: ->
@@ -10,6 +10,6 @@ module.exports = (file, selectedFile, basePath="") ->
     select: (e) ->
       selectedFile(file) if e.target.nodeName is 'FILE'
     remove: ->
-      files.remove(file) if confirm("Delete #{file.path()}?")
+      removeFile(file) if confirm("Delete #{file.path()}?")
 
   return FileTemplate self

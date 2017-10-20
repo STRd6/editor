@@ -6,6 +6,8 @@ FiletreePresenter = (filetree, basePath="", expandedState) ->
     "": true
   expanded = expandedState[basePath]
   selectedFile = filetree.selectedFile
+  filetree.remove ?= filetree.files.remove
+  removeFile = filetree.remove
 
   self =
     basePath: basePath
@@ -38,11 +40,13 @@ FiletreePresenter = (filetree, basePath="", expandedState) ->
         FiletreePresenter
           files: ->
             folderLookup[folderPath]
+          remove: removeFile
           selectedFile: selectedFile
         , basePath + folderPath + "/", expandedState
 
       fileElements = Object.keys(fileLookup).sort().map (filePath) ->
-        FilePresenter fileLookup[filePath], selectedFile, basePath
+        debugger
+        FilePresenter fileLookup[filePath], selectedFile, removeFile, basePath
 
       folderElements.concat fileElements
     toggleExpand: ->
