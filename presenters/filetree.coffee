@@ -45,7 +45,6 @@ FiletreePresenter = (filetree, basePath="", expandedState) ->
         , basePath + folderPath + "/", expandedState
 
       fileElements = Object.keys(fileLookup).sort().map (filePath) ->
-        debugger
         FilePresenter fileLookup[filePath], selectedFile, removeFile, basePath
 
       folderElements.concat fileElements
