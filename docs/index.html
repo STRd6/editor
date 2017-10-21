@@ -161,6 +161,12 @@ hotReload = (-&gt;
   editor.hotReload()
 ).debounce <span class="number">500</span>
 
+editor.<span class="function"><span class="title">goto</span></span> = (file, line) -&gt;
+  filetree.selectedFile(file)
+  aceShim.aceEditor().moveCursorTo(line, <span class="number">0</span>)
+  aceShim.aceEditor().clearSelection()
+  aceShim.aceEditor().scrollToLine(line, <span class="literal">true</span>, <span class="literal">false</span>, -&gt;)
+
 filetree.selectedFile.observe (file) -&gt;
   <span class="keyword">return</span> <span class="keyword">if</span> file.binary?()
 
