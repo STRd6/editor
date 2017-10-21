@@ -4,6 +4,8 @@ Packager = require("./packager")
 {readSourceConfig} = require("./source/util")
 emoji = require "emojer"
 
+SearchResultsTemplate = require "./templates/search-results"
+
 actions =
   save: (editor) ->
     editor.notify "Saving..."
@@ -153,6 +155,18 @@ actions =
       editor.notifications.push "Published!"
 
     .catch editor.errorCatcher
+  
+  find: (editor) ->
+    query = window.prompt "Search", "regex"
+
+    if query
+      results = editor.findInFiles(query)
+      console.log results
+      debugger
+
+      document.body.appendChild SearchResultsTemplate
+        editor: editor
+        results: results
 
 module.exports = (I={}, self) ->
   self.actions = Observable []

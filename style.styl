@@ -92,6 +92,36 @@ filetree
           > file, > path-name
             padding-left: 5em
 
+search-results
+  display: block
+  position: absolute
+  height: 100%
+  width: 30%
+  right: 0
+  background-color: white
+  z-index: 3000
+  border-left: 1px solid black
+  overflow: auto
+
+  > search-result
+    display: block
+    padding: 0.25em 0.5em
+
+    &:nth-child(2n)
+      background-color: #eee
+
+    &:hover
+      background-color: lightyellow
+
+    > span.line
+      &::before
+        content: " :"
+
+  > button.close
+    position: absolute
+    top: 1em
+    right: 1em
+
 actions
   display: block
   flex: 1

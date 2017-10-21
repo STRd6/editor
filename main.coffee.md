@@ -100,6 +100,12 @@ Templates
       editor.hotReload()
     ).debounce 500
 
+    editor.goto = (file, line) ->
+      filetree.selectedFile(file)
+      aceShim.aceEditor().moveCursorTo(line, 0)
+      aceShim.aceEditor().clearSelection()
+      aceShim.aceEditor().scrollToLine(line, true, false, ->)
+
     filetree.selectedFile.observe (file) ->
       return if file.binary?()
 

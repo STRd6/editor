@@ -148,6 +148,28 @@ module.exports = (I={}, self=Model(I)) ->
       self.files().select (file) ->
         file.path().match expr
 
+    findInFiles: (expr) ->
+      regexp = new RegExp(expr, "ig")
+      matches = []
+      totalMatches = 0
+      maxMatches = 100
+
+      self.files().forEach (file) ->
+        return if totalMatches >= maxMatches
+
+        content = file.content()
+        while result = regexp.exec(content)
+          totalMatches += 1
+          match = result[0]
+          location = regexp.lastIndex - match.length
+          line = lineFromPosition(content, location)
+          matches.push [file, match, line]
+
+          return if totalMatches >= maxMatches
+        return
+
+      return matches
+
     writeFile: (path, content) ->
       if existingFile = self.fileAt(path)
         existingFile.content(content)
@@ -195,3 +217,8 @@ pick = (object, keys...) ->
 
 cleanRepositoryData = (data) ->
   pick data, "branch", "default_branch", "full_name", "homepage", "description", "html_url", "url"
+
+lineFromPosition = (str, pos) ->
+  lines = str.substr(0, pos).match(/[\n\r]/g)
+
+  lines?.length or 0

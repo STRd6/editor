@@ -1,0 +1,10 @@
+search-results
+  - editor = @editor
+  - @results.forEach ([file, match, line]) ->
+    - click = -> editor.goto(file, line)
+    search-result(click=click)
+      span.path= file.path
+      span.line= line
+
+  - remove = (e) -> e.target.parentElement.remove()
+  button.close(click=remove) X
