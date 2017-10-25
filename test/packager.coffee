@@ -4,16 +4,10 @@ Packager = require("../packager")
 
 describe "Packager", ->
   describe "building a package", ->
-    pkg = Packager.standAlone(PACKAGE)
-    relativePackagePath = Packager.relativePackagePath(PACKAGE)
-
-    it "should have the correct manifest links", ->
-      manifest = pkg[1].content
-
-      assert manifest.match(///^#{relativePackagePath}$///m)
-      assert manifest.match(/^index.html$/m)
-
     it "should have the correct script links", ->
+      pkg = Packager.standAlone(PACKAGE)
+      relativePackagePath = Packager.relativePackagePath(PACKAGE)
+
       html = pkg[0].content
 
       assert html.match ///"#{relativePackagePath}"///

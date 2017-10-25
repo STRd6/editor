@@ -1,6 +1,6 @@
 Runners = require "./runners"
 Actions = require("./actions")
-Builder = require("builder")
+Builder = require("./source/builder")
 Packager = require("./packager")
 {Filetree, File} = require("filetree")
 {processDirectory} = require "./source/util"
