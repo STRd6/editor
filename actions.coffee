@@ -155,14 +155,13 @@ actions =
       editor.notifications.push "Published!"
 
     .catch editor.errorCatcher
-  
+
   find: (editor) ->
     query = window.prompt "Search", "regex"
 
     if query
       results = editor.findInFiles(query)
       console.log results
-      debugger
 
       document.body.appendChild SearchResultsTemplate
         editor: editor
