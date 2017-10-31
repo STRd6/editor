@@ -59,10 +59,6 @@ setTimeout ->
 editor.closeOpenEditors = ->
   aceShim.aceEditor().setSession(ace.createEditSession(""))
 
-hotReload = (->
-  editor.hotReload()
-).debounce 500
-
 editor.goto = (file, line) ->
   filetree.selectedFile(file)
   aceShim.aceEditor().moveCursorTo(line, 0)
@@ -77,8 +73,6 @@ filetree.selectedFile.observe (file) ->
       when "md", "coffee", "js", "styl", "cson"
         file.content Hygiene.clean file.content()
 
-    file.content.observe (newContent) ->
-      hotReload()
     file.session = aceShim.initSession(file)
 
   aceShim.aceEditor().setSession(file.session)
