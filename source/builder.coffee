@@ -144,7 +144,6 @@ Builder = ->
   build: (fileData, cache={}) ->
     build(fileData)
     .then (items) ->
-
       results =
         items.filter (item) ->
           item.code
@@ -162,7 +161,11 @@ Builder = ->
       postProcessors.forEach (fn) ->
         fn(pkg)
 
+      editor.errors []
       return pkg
+    .catch (e) ->
+      editor.errors [e]
+      return
 
 module.exports = Builder
 

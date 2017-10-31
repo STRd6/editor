@@ -2,7 +2,7 @@ File = require "./models/file"
 Issue = require("./issue")
 Packager = require("./packager")
 {readSourceConfig} = require("./source/util")
-emoji = require "emojer"
+emoji = require "./util/emojis"
 
 SearchResultsTemplate = require "./templates/search-results"
 
