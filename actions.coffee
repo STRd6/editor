@@ -1,4 +1,4 @@
-{File} = require "filetree"
+File = require "./models/file"
 Issue = require("./issue")
 Packager = require("./packager")
 {readSourceConfig} = require("./source/util")

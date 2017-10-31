@@ -2,7 +2,8 @@ Runners = require "./runners"
 Actions = require("./actions")
 Builder = require("./source/builder")
 Packager = require("./packager")
-{Filetree, File} = require("filetree")
+Filetree = require("./models/filetree")
+File = require("./models/file")
 {processDirectory} = require "./source/util"
 
 loadedPackage = Observable null
@@ -42,7 +43,8 @@ module.exports = (I={}, self=Model(I)) ->
 
   notifications = require("notifications")()
   {classicError, notify, errors} = notifications
-  extend self,
+
+  self.extend
     classicError: classicError
     notify: notify
     errors: errors
@@ -54,9 +56,9 @@ module.exports = (I={}, self=Model(I)) ->
         editor.errors [e.stack]
       else
         editor.errors [e]
+
     findRegex: Observable "regex"
 
-  self.extend
     repository: Observable()
 
     confirmUnsaved: ->

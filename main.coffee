@@ -1,4 +1,3 @@
-
 require "cornerstone"
 {processDirectory} = require "./source/util"
 
