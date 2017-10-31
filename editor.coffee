@@ -54,6 +54,7 @@ module.exports = (I={}, self=Model(I)) ->
         editor.errors [e.stack]
       else
         editor.errors [e]
+    findRegex: Observable "regex"
 
   self.extend
     repository: Observable()

@@ -157,11 +157,11 @@ actions =
     .catch editor.errorCatcher
 
   find: (editor) ->
-    query = window.prompt "Search", "regex"
+    query = window.prompt "Search", editor.findRegex()
 
     if query
+      editor.findRegex query
       results = editor.findInFiles(query)
-      console.log results
 
       document.body.appendChild SearchResultsTemplate
         editor: editor
