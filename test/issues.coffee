@@ -1,7 +1,7 @@
 require "cornerstone"
 
-Issue = require "../issue"
-Issues = require "../issues"
+Issue = require "../models/issue"
+Issues = require "../models/issues"
 
 describe "issues", ->
   it "should be chill", ->

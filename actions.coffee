@@ -1,5 +1,5 @@
 File = require "./models/file"
-Issue = require("./issue")
+Issue = require("./models/issue")
 Packager = require("./packager")
 {readSourceConfig} = require("./source/util")
 emoji = require "./util/emojis"

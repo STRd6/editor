@@ -225,18 +225,18 @@ Packager =
   Create the standalone components of this package. An html page that loads the
   main entry point for demonstration purposes and a json package that can be
   used as a dependency in other packages.
-  
+
   The html page is named `index.html` and is in the folder of the ref, or the root
   if our ref is the default branch.
-  
+
   Docs are generated and placed in `docs` directory as a sibling to `index.html`.
-  
+
   An application manifest is served up as a sibling to `index.html` as well.
-  
+
   The `.json` build product is placed into the root level, as siblings to the
   folder containing `index.html`. If this branch is the default then these build
   products are placed as siblings to `index.html`
-  
+
   The optional second argument is an array of files to be added to the final
   package.
   ###

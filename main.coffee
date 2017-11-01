@@ -36,8 +36,8 @@ styleNode.innerHTML = require('./style')
 document.head.appendChild(styleNode)
 
 # Branch Chooser using pull requests
-Issue = require "./issue"
-Issues = require "./issues"
+Issue = require "./models/issue"
+Issues = require "./models/issues"
 issues = editor.issues = Issues()
 
 # Github repository observable
