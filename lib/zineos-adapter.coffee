@@ -40,6 +40,8 @@ module.exports = (editor, client) ->
     # `saveData` is the built package
     saveData: ->
       editor.build()
+      .then (pkg) ->
+        new Blob [JSON.stringify(pkg)], type: "application/zineos-package+json"
 
   # TODO: Maybe consolidate these into the same thing
   editor.saved.observe (newValue) ->
