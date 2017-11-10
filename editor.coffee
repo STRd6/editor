@@ -1,3 +1,4 @@
+RemoteInterface = require "./remote-interface"
 Runners = require "./runners"
 Actions = require("./actions")
 Builder = require("./source/builder")
@@ -196,12 +197,9 @@ module.exports = (I={}, self=Model(I)) ->
     plugin: (pluginJSON) ->
       self.include require(pluginJSON)
 
-  self.include(Runners)
-  self.include(Actions)
-
-  extend require("postmaster")(),
-    load: self.loadPackage
-    plugin: self.plugin
+  self.include Runners
+  self.include Actions
+  self.include RemoteInterface
 
   return self
 
