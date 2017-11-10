@@ -18,7 +18,7 @@ in real time how the css changes affect each one.
 The package runner assumes that it has total control over the document so you
 probably won't want to give it the one in your own window.
 
-    Sandbox = require "sandbox"
+    Sandbox = require "./lib/sandbox"
     {html} = require "./packager"
     {executePackageWrapper} = require "require"
 

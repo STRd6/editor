@@ -1,4 +1,4 @@
-Sandbox = require "sandbox"
+Sandbox = require "./lib/sandbox"
 
 module.exports =
   Sandbox: Sandbox
