@@ -24,7 +24,7 @@ dependencies:
   github: "distri/github:v0.5.2-pre.1"
   md: "distri/md:v0.4.3"
   notifications: "distri/notifications:v0.3.3"
-  postmaster: "distri/postmaster:v0.5.3"
   require: "distri/require:v0.5.2"
   sandbox: "distri/sandbox:v0.2.4"
   sha1: "distri/sha1:v0.1.0"
+  sys: "STRd6/system-client:master"

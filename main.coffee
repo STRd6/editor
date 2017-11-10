@@ -1,9 +1,6 @@
 require "cornerstone"
 {processDirectory} = require "./source/util"
 
-global.PACKAGE = PACKAGE
-global.require = require
-
 require("analytics").init("UA-3464282-15")
 
 # Create and auth a github API
@@ -17,6 +14,13 @@ require("./github_auth").then (token) ->
 Editor = require("./editor")
 
 editor = global.editor = Editor()
+
+SystemClient = require "sys"
+{postmaster} = client = SystemClient()
+
+# We have a parent window, maybe it's our good friend ZineOS :)
+if postmaster.remoteTarget()
+  require("./lib/zineos-adapter")(editor, client)
 
 if pkg = ENV?.APP_STATE
   editor.loadPackage(pkg)

@@ -196,12 +196,7 @@ module.exports = (I={}, self=Model(I)) ->
     plugin: (pluginJSON) ->
       self.include require(pluginJSON)
 
-  self.include(Runners)
-  self.include(Actions)
-
-  extend require("postmaster")(),
-    load: self.loadPackage
-    plugin: self.plugin
+  self.include Runners, Actions
 
   return self
 
