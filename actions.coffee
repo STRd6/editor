@@ -172,7 +172,7 @@ module.exports = (I={}, self) ->
 
   self.extend
     addAction: (name, fn, index) ->
-      index ?= self.actions().length - 1
+      index ?= self.actions().length
 
       self.actions.splice index, 0,
         name: name
