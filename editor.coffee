@@ -198,21 +198,23 @@ module.exports = (I={}, self=Model(I)) ->
       self.include require(pluginJSON)
 
     initGitHubToken: ->
+      tokenKey = "GITHUB_TOKEN"
+
       if code = window.location.href.match(/\?code=(.*)/)?[1]
         fetch("https://hamljr-auth.herokuapp.com/authenticate/#{code}")
         .then (response) ->
           response.json()
         .then (data) ->
           if token = data.token
-            editor.setToken "authToken", token
+            editor.setToken tokenKey, token
             .then -> token
           else
-            editor.getToken("authToken")
+            editor.getToken tokenKey
             .then (token) ->
               throw "Failed to get authorization from server and no token in local storage" unless token
               return token
       else
-        self.getToken("authToken")
+        self.getToken tokenKey
         .then (token) ->
           throw "No token in local storage" unless token
           return token
