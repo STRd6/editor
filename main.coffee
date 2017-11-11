@@ -3,24 +3,16 @@ require "cornerstone"
 
 require("analytics").init("UA-3464282-15")
 
-# Create and auth a github API
-# Global until we consolidate editor/actions into something cleaner
+GitHubStatusPresenter = require("./presenters/github-status")
 
 global.github = require("github")()
-require("./github_auth").then (token) ->
-  github.token token
-  github.api('rate_limit')
 
 Editor = require("./editor")
-
 editor = global.editor = Editor()
 
-SystemClient = require "sys"
-{postmaster} = client = SystemClient()
-
-# We have a parent window, maybe it's our good friend ZineOS :)
-if postmaster.remoteTarget()
-  require("./lib/zineos-adapter")(editor, client)
+# Connect to ZineOS if available altering editor as needed
+# in any case call editor.read when done
+require("./lib/zineos-adapter")(editor)
 
 if pkg = ENV?.APP_STATE
   editor.loadPackage(pkg)
@@ -101,7 +93,7 @@ document.body.appendChild require("./templates/editor")(
   actions: editor.actions
   notifications: editor.notifications
   issues: issues
-  github: github
+  github: GitHubStatusPresenter github
   repository: repository
 )
 

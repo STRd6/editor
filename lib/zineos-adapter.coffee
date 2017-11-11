@@ -1,10 +1,9 @@
-{Observable} = require "sys"
+{Observable} = SystemClient = require "sys"
 
-module.exports = (editor, client) ->
-  {system, postmaster, application} = client
+module.exports = (editor) ->
+  {system, postmaster, application} = client = SystemClient()
 
-  system.ready()
-  .then ->
+  zineOSInit = ->
     editor.removeActionByName "save"
 
     editor.addAction "Save As", (editor) ->
@@ -14,6 +13,12 @@ module.exports = (editor, client) ->
     editor.addAction "Save", (editor) ->
       editor.save()
     , 0
+
+    editor.extend
+      getToken: (key) -> 
+        system.getToken(key)
+      setToken: (key) ->
+        system.setToken(key, value)
 
     # Add fileIO
     # Provides
@@ -64,7 +69,18 @@ module.exports = (editor, client) ->
       application.title "Progenitor#{path}#{savedIndicator}"
 
     postmaster.delegate = editor
-  , (e) ->
-    if e.message.match /No ack/i
-      return
-    else throw e
+
+  Promise.resolve()
+  .then ->
+    # We have a parent window, maybe it's our good friend ZineOS :)
+    if postmaster.remoteTarget()
+      system.ready()
+      .then ->
+        zineOSInit()
+      , (e) ->
+        if e.message.match /No ack/i
+          return
+        else 
+          console.error e
+  .then ->
+    editor.ready()
