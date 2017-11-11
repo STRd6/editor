@@ -33,8 +33,6 @@ global.appData = ->
 # TODO: Don't expose this
 filetree = editor.filetree()
 
-Hygiene = require "./hygiene"
-
 styleNode = document.createElement("style")
 styleNode.innerHTML = require('./style')
 document.head.appendChild(styleNode)
@@ -59,28 +57,6 @@ repository.observe updateIssues
 setTimeout ->
   repository github.Repository(editor.loadedPackage().repository)
 , 0
-
-editor.closeOpenEditors = ->
-  aceShim.aceEditor().setSession(ace.createEditSession(""))
-
-editor.goto = (file, line) ->
-  filetree.selectedFile(file)
-  aceShim.aceEditor().moveCursorTo(line, 0)
-  aceShim.aceEditor().clearSelection()
-  aceShim.aceEditor().scrollToLine(line, true, false, ->)
-
-filetree.selectedFile.observe (file) ->
-  return if file.binary?()
-
-  unless file.session
-    switch file.path().extension()
-      when "md", "coffee", "js", "styl", "cson"
-        file.content Hygiene.clean file.content()
-
-    file.session = aceShim.initSession(file)
-
-  aceShim.aceEditor().setSession(file.session)
-  aceShim.aceEditor().focus()
 
 issues?.currentIssue.observe (issue) ->
   # TODO: Formalize this later
@@ -129,8 +105,7 @@ document.body.appendChild require("./templates/editor")(
   repository: repository
 )
 
-AceShim = require "./ace_shim"
-aceShim = AceShim()
+editor.include require "./ace_shim"
 
 window.onbeforeunload = ->
   if filetree.hasUnsavedChanges()

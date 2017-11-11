@@ -48,7 +48,7 @@ module.exports = (I={}, self) ->
         navigateToBlobURL popup, testsHtml(testScripts)
 
 navigateToBlobURL = (popup, htmlSource) ->
-  blob = new Blob [htmlSource], 
+  blob = new Blob [htmlSource],
     type: "text/html; charset=utf-8"
   url = URL.createObjectURL(blob)
 
