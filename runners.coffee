@@ -1,38 +1,22 @@
-Packager = require "./packager"
-{PackageRunner} = Runner = require "./runner"
+Sandbox = require "./lib/sandbox"
+{html, testScripts} = Packager = require "./packager"
+{executePackageWrapper} = require "require"
+
 documenter = require "md"
 
 module.exports = (I={}, self) ->
   runningInstances = []
 
   self.extend
-    hotReload: ->
-      self.build()
-      .then (pkg) ->
-        runningInstances.invoke "launch", pkg
-
-    runInAppWindow: ->
-      packageRunner = PackageRunner(self.config())
-
-      self.build()
-      .then(
-        (pkg) ->
-          runningInstances.push packageRunner
-
-          packageRunner.window.addEventListener "unload", ->
-            runningInstances.remove(packageRunner)
-
-          packageRunner.launch(pkg)
-
-          packageRunner
-        , (error) ->
-          packageRunner.close()
-
-          throw error
-      )
+    runPackageInAppWindow: (pkg, popup) ->
+      navigateToBlobURL popup, html(pkg, executePackageWrapper)
 
     run: ->
-      self.runInAppWindow()
+      popup = Sandbox()
+
+      self.build()
+      .then (pkg) ->
+        self.runPackageInAppWindow(pkg, popup)
 
     runDocs: ({file}) ->
       file ?= "index"
@@ -55,12 +39,20 @@ module.exports = (I={}, self) ->
             "Failed to find file at #{path}"
 
     test: ->
-      Runner.openWindowWithContent self.config(),
-        self.build()
-        .then (pkg) ->
-          Packager.testScripts(pkg)
-        .then (testScripts) ->
-          html = testsHtml(testScripts)
+      popup = Sandbox()
+
+      self.build()
+      .then (pkg) ->
+        testScripts(pkg)
+      .then (testScripts) ->
+        navigateToBlobURL popup, testsHtml(testScripts)
+
+navigateToBlobURL = (popup, htmlSource) ->
+  blob = new Blob [htmlSource],
+    type: "text/html; charset=utf-8"
+  url = URL.createObjectURL(blob)
+
+  popup.location.href = url
 
 docsConfig =
   width: 1280

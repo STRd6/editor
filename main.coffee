@@ -1,22 +1,18 @@
 require "cornerstone"
 {processDirectory} = require "./source/util"
 
-global.PACKAGE = PACKAGE
-global.require = require
-
 require("analytics").init("UA-3464282-15")
 
-# Create and auth a github API
-# Global until we consolidate editor/actions into something cleaner
+GitHubStatusPresenter = require("./presenters/github-status")
 
 global.github = require("github")()
-require("./github_auth").then (token) ->
-  github.token token
-  github.api('rate_limit')
 
 Editor = require("./editor")
-
 editor = global.editor = Editor()
+
+# Connect to ZineOS if available altering editor as needed
+# in any case call editor.read when done
+require("./lib/zineos-adapter")(editor)
 
 if pkg = ENV?.APP_STATE
   editor.loadPackage(pkg)
@@ -28,8 +24,6 @@ global.appData = ->
 
 # TODO: Don't expose this
 filetree = editor.filetree()
-
-Hygiene = require "./hygiene"
 
 styleNode = document.createElement("style")
 styleNode.innerHTML = require('./style')
@@ -55,28 +49,6 @@ repository.observe updateIssues
 setTimeout ->
   repository github.Repository(editor.loadedPackage().repository)
 , 0
-
-editor.closeOpenEditors = ->
-  aceShim.aceEditor().setSession(ace.createEditSession(""))
-
-editor.goto = (file, line) ->
-  filetree.selectedFile(file)
-  aceShim.aceEditor().moveCursorTo(line, 0)
-  aceShim.aceEditor().clearSelection()
-  aceShim.aceEditor().scrollToLine(line, true, false, ->)
-
-filetree.selectedFile.observe (file) ->
-  return if file.binary?()
-
-  unless file.session
-    switch file.path().extension()
-      when "md", "coffee", "js", "styl", "cson"
-        file.content Hygiene.clean file.content()
-
-    file.session = aceShim.initSession(file)
-
-  aceShim.aceEditor().setSession(file.session)
-  aceShim.aceEditor().focus()
 
 issues?.currentIssue.observe (issue) ->
   # TODO: Formalize this later
@@ -121,12 +93,11 @@ document.body.appendChild require("./templates/editor")(
   actions: editor.actions
   notifications: editor.notifications
   issues: issues
-  github: github
+  github: GitHubStatusPresenter github
   repository: repository
 )
 
-AceShim = require "./ace_shim"
-aceShim = AceShim()
+editor.include require "./ace_shim"
 
 window.onbeforeunload = ->
   if filetree.hasUnsavedChanges()

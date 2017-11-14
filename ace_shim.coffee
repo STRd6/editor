@@ -1,3 +1,5 @@
+Hygiene = require "./hygiene"
+
 ace.require("ace/ext/language_tools")
 
 aceEditor = ace.edit "ace"
@@ -9,36 +11,65 @@ aceEditor.setOptions
 
 extraModes =
   jadelet: "jade"
+  styl: "stylus"
 
 mode = (mode) ->
   extraModes[mode] or mode
 
-module.exports = ->
-  aceEditor: ->
-    aceEditor
+module.exports = (I, self) ->
+  self.extend
+    aceEditor: ->
+      aceEditor
 
-  initSession: (file) ->
-    session = ace.createEditSession(file.content())
+    closeOpenEditors: ->
+      aceEditor.setSession(ace.createEditSession(""))
 
-    session.setMode("ace/mode/#{mode file.mode()}")
+    goto: (file, line) ->
+      self.filetree().selectedFile(file)
+      aceEditor.moveCursorTo(line, 0)
+      aceEditor.clearSelection()
+      aceEditor.scrollToLine(line, true, false, ->)
 
-    session.setUseSoftTabs true
-    session.setTabSize 2
+    initSession: (file) ->
+      session = ace.createEditSession(file.content())
 
-    aceEditor.setOptions
-      highlightActiveLine: true
+      session.setMode("ace/mode/#{mode file.mode()}")
 
-    # Filetree observable binding
-    updating = false
-    file.content.observe (newContent) ->
-      return if updating
+      session.setUseSoftTabs true
+      session.setTabSize 2
 
-      session.setValue newContent
+      aceEditor.setOptions
+        highlightActiveLine: true
 
-    # Bind session and file content
-    session.on "change", ->
-      updating = true
-      file.content session.getValue()
+      # Filetree observable binding
       updating = false
+      file.content.observe (newContent) ->
+        return if updating
 
-    return session
+        session.setValue newContent
+
+      # Bind session and file content
+      session.on "change", ->
+        updating = true
+        file.content session.getValue()
+        updating = false
+
+      # Make sure ace resets to the correct size
+      window.dispatchEvent(new Event('resize'))
+
+      return session
+
+  self.filetree().selectedFile.observe (file) ->
+    return if file.binary?()
+
+    unless file.session
+      switch file.path().extension()
+        when "md", "coffee", "js", "styl", "cson"
+          file.content Hygiene.clean file.content()
+
+      file.session = self.initSession(file)
+
+    aceEditor.setSession(file.session)
+    aceEditor.focus()
+
+  return self

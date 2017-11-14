@@ -171,11 +171,19 @@ module.exports = (I={}, self) ->
   self.actions = Observable []
 
   self.extend
-    addAction: (name, fn) ->
-      self.actions.push
+    addAction: (name, fn, index) ->
+      index ?= self.actions().length
+
+      self.actions.splice index, 0,
         name: name
         handler: ->
           fn(self)
+
+    removeActionByName: (name) ->
+      [action] = self.actions().filter (action) ->
+        action.name is name
+
+      self.actions.remove action
 
   Object.keys(actions).forEach (key) ->
     self.addAction key, actions[key]

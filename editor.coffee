@@ -1,9 +1,10 @@
 Runners = require "./runners"
-Actions = require("./actions")
-Builder = require("./source/builder")
-Packager = require("./packager")
-Filetree = require("./models/filetree")
-File = require("./models/file")
+Actions = require "./actions"
+Builder = require "./source/builder"
+Packager = require "./packager"
+Filetree = require "./models/filetree"
+File = require "./models/file"
+TokenStorage = require("./lib/token-storage")
 {processDirectory} = require "./source/util"
 
 loadedPackage = Observable null
@@ -196,12 +197,36 @@ module.exports = (I={}, self=Model(I)) ->
     plugin: (pluginJSON) ->
       self.include require(pluginJSON)
 
-  self.include(Runners)
-  self.include(Actions)
+    initGitHubToken: ->
+      tokenKey = "GITHUB_TOKEN"
 
-  extend require("postmaster")(),
-    load: self.loadPackage
-    plugin: self.plugin
+      if code = window.location.href.match(/\?code=(.*)/)?[1]
+        fetch("https://hamljr-auth.herokuapp.com/authenticate/#{code}")
+        .then (response) ->
+          response.json()
+        .then (data) ->
+          if token = data.token
+            editor.setToken tokenKey, token
+            .then -> token
+          else
+            editor.getToken tokenKey
+            .then (token) ->
+              throw "Failed to get authorization from server and no token in local storage" unless token
+              return token
+      else
+        self.getToken tokenKey
+        .then (token) ->
+          throw "No token in local storage" unless token
+          return token
+
+    ready: ->
+      self.initGitHubToken()
+      .then (token) ->
+        github.token token
+        github.api('rate_limit')
+      .catch console.warn
+
+  self.include Runners, Actions, TokenStorage
 
   return self
 

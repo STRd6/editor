@@ -6,9 +6,14 @@ html, body
 
 body
   display: flex
+  flex-direction: row
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif
+  font-size: 16px
   font-weight: 300
   margin: 0
+
+.hidden
+  display: none
 
 main
   display: flex
@@ -120,12 +125,19 @@ search-results
     right: 1em
 
 actions
-  display: block
+  display: inline
   flex: 1
   height: 40px
 
-  button
+  > button
+    font-size: 14px
+    margin-bottom: 0.25em
     margin-right: 0.25em
+
+github-status
+  display: block
+  margin-left: 0.25em
+  white-space: nowrap
 
 .repo_info
   border-bottom: 1px solid black
@@ -150,3 +162,7 @@ actions
 
 #ace
   flex: 1
+
+.ace_search_form
+  font-family: Arial, sans serif
+  font-size: 13.3333px

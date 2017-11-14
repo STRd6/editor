@@ -1,5 +1,5 @@
-actions
-  span
+div
+  actions
     - @actions.each ({name, handler}) ->
       button(click=handler)
         = name.titleize()

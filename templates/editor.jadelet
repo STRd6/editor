@@ -5,7 +5,7 @@ main
   section
     section
       = require("./actions") actions: @actions, issues: @issues
-      = require("./github_status") @github
+      = @github
     #ace
     -# TODO: Figure out why we can't just add the notifications view directly
     = @notifications.view.children[0]

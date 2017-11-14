@@ -34,3 +34,10 @@ Templates
 - [Github Status](./templates/github_status)
 - [Text Editor](./templates/text_editor)
 - [Repo Info](./templates/repo_info)
+
+FAQ
+---
+
+Help the run popup closes immediately after opening...?
+
+Make sure your adblock extension isn't being to aggro!
