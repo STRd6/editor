@@ -165,7 +165,7 @@ Builder = ->
       return pkg
     .catch (e) ->
       editor.errors [e]
-      return
+      throw e
 
 module.exports = Builder
 
