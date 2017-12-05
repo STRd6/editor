@@ -55,6 +55,13 @@ compileStyl = (source) ->
 compileCoffee = (source, path) ->
   CoffeeScript.compile(source)
 
+minifyJS = (source) ->
+  {code} = butternut.squash source,
+    check: true
+    sourceMap: "inline"
+
+  return code
+
 # `compileFile` take a fileData and returns a buildData. A buildData has a `path`,
 # and properties for what type of content was built.
 
@@ -64,7 +71,7 @@ compileFile = ({path, content}) ->
   result =
     switch extension
       when "coffee"
-        code: compileCoffee(content, path)
+        code: minifyJS compileCoffee(content, path)
       when "cson"
         code: stringData(CSON.parse(content))
       when "css"
@@ -74,7 +81,7 @@ compileFile = ({path, content}) ->
       when "jadelet"
         code: compileTemplate(content)
       when "js"
-        code: content
+        code: minifyJS content
       when "json"
         code: stringData(JSON.parse(content))
       when "md"
