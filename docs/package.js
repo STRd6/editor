@@ -313,7 +313,7 @@
     },
     "pixie.cson": {
       "path": "pixie.cson",
-      "content": "title: \"Daniel X's Editor\"\ndescription: \"\"\"\n  Edit and publish code directly in the browser. Compiles down to HTML, CSS, and\n  JavaScript to be easily served on GitHub pages, S3, or any other static host.\n\"\"\"\nversion: \"0.4.4\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\npublish:\n  s3:\n    basePath: \"public/danielx.net\"\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.4/ace.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.4/ext-language_tools.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\"\n]\ndependencies:\n  ajax: \"distri/ajax:v0.1.4\"\n  analytics: \"distri/google-analytics:v0.1.0\"\n  base64: \"distri/base64:v0.9.1-pre.0\"\n  cornerstone: \"distri/cornerstone:v0.3.0-pre.3\"\n  cson: \"distri/cson:v0.1.0\"\n  github: \"distri/github:v0.5.2-pre.1\"\n  md: \"distri/md:v0.4.3\"\n  notifications: \"distri/notifications:v0.3.3\"\n  require: \"distri/require:v0.5.2\"\n  sha1: \"distri/sha1:v0.1.0\"\n  sys: \"STRd6/system-client:v0.1.5\"\n",
+      "content": "title: \"Daniel X's Editor\"\ndescription: \"\"\"\n  Edit and publish code directly in the browser. Compiles down to HTML, CSS, and\n  JavaScript to be easily served on GitHub pages, S3, or any other static host.\n\"\"\"\nversion: \"0.4.4\"\nentryPoint: \"main\"\nwidth: 960\nheight: 800\npublish:\n  s3:\n    basePath: \"public/danielx.net\"\nremoteDependencies: [\n  \"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ace.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ext-language_tools.js\"\n  \"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\"\n]\ndependencies:\n  ajax: \"distri/ajax:v0.1.4\"\n  analytics: \"distri/google-analytics:v0.1.0\"\n  base64: \"distri/base64:v0.9.1-pre.0\"\n  cornerstone: \"distri/cornerstone:v0.3.0-pre.3\"\n  cson: \"distri/cson:v0.1.0\"\n  github: \"distri/github:v0.5.2-pre.1\"\n  md: \"distri/md:v0.4.3\"\n  notifications: \"distri/notifications:v0.3.3\"\n  require: \"distri/require:v0.5.2\"\n  sha1: \"distri/sha1:v0.1.0\"\n  sys: \"STRd6/system-client:v0.1.5\"\n",
       "mode": "100644",
       "type": "blob"
     },
@@ -566,7 +566,7 @@
     },
     "pixie": {
       "path": "pixie",
-      "content": "module.exports = {\"title\":\"Daniel X's Editor\",\"description\":\"Edit and publish code directly in the browser. Compiles down to HTML, CSS, and\\nJavaScript to be easily served on GitHub pages, S3, or any other static host.\",\"version\":\"0.4.4\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"publish\":{\"s3\":{\"basePath\":\"public/danielx.net\"}},\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.4/ace.js\",\"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.4/ext-language_tools.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\"],\"dependencies\":{\"ajax\":\"distri/ajax:v0.1.4\",\"analytics\":\"distri/google-analytics:v0.1.0\",\"base64\":\"distri/base64:v0.9.1-pre.0\",\"cornerstone\":\"distri/cornerstone:v0.3.0-pre.3\",\"cson\":\"distri/cson:v0.1.0\",\"github\":\"distri/github:v0.5.2-pre.1\",\"md\":\"distri/md:v0.4.3\",\"notifications\":\"distri/notifications:v0.3.3\",\"require\":\"distri/require:v0.5.2\",\"sha1\":\"distri/sha1:v0.1.0\",\"sys\":\"STRd6/system-client:v0.1.5\"}};",
+      "content": "module.exports = {\"title\":\"Daniel X's Editor\",\"description\":\"Edit and publish code directly in the browser. Compiles down to HTML, CSS, and\\nJavaScript to be easily served on GitHub pages, S3, or any other static host.\",\"version\":\"0.4.4\",\"entryPoint\":\"main\",\"width\":960,\"height\":800,\"publish\":{\"s3\":{\"basePath\":\"public/danielx.net\"}},\"remoteDependencies\":[\"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ace.js\",\"https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ext-language_tools.js\",\"https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js\"],\"dependencies\":{\"ajax\":\"distri/ajax:v0.1.4\",\"analytics\":\"distri/google-analytics:v0.1.0\",\"base64\":\"distri/base64:v0.9.1-pre.0\",\"cornerstone\":\"distri/cornerstone:v0.3.0-pre.3\",\"cson\":\"distri/cson:v0.1.0\",\"github\":\"distri/github:v0.5.2-pre.1\",\"md\":\"distri/md:v0.4.3\",\"notifications\":\"distri/notifications:v0.3.3\",\"require\":\"distri/require:v0.5.2\",\"sha1\":\"distri/sha1:v0.1.0\",\"sys\":\"STRd6/system-client:v0.1.5\"}};",
       "type": "blob"
     },
     "presenters/file": {
@@ -716,8 +716,8 @@
       }
     },
     "remoteDependencies": [
-      "https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.4/ace.js",
-      "https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.4/ext-language_tools.js",
+      "https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ace.js",
+      "https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ext-language_tools.js",
       "https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js"
     ],
     "dependencies": {
@@ -737,8 +737,8 @@
   "version": "0.4.4",
   "entryPoint": "main",
   "remoteDependencies": [
-    "https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.4/ace.js",
-    "https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.4/ext-language_tools.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ace.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ext-language_tools.js",
     "https://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.7.1/coffee-script.min.js"
   ],
   "repository": {
