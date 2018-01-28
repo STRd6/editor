@@ -33,6 +33,7 @@ module.exports = (I, self) ->
     initSession: (file) ->
       session = ace.createEditSession(file.content())
 
+      session.setUseWorker(false)
       session.setMode("ace/mode/#{mode file.mode()}")
 
       session.setUseSoftTabs true
