@@ -6,6 +6,6 @@ main
     section
       = require("./actions") actions: @actions, issues: @issues
       = @github
-    #ace
+    = @editorElement
     -# TODO: Figure out why we can't just add the notifications view directly
     = @notifications.view.children[0]
