@@ -88,6 +88,8 @@ issues?.currentIssue.observe (issue) ->
 
     changeBranch repository().defaultBranch()
 
+editor.include require "./modules/ace-shim"
+
 document.body.appendChild require("./templates/editor")(
   filetree: filetree
   actions: editor.actions
@@ -95,9 +97,8 @@ document.body.appendChild require("./templates/editor")(
   issues: issues
   github: GitHubStatusPresenter github
   repository: repository
+  editorElement: editor.editorElement
 )
-
-editor.include require "./ace_shim"
 
 window.onbeforeunload = ->
   if filetree.hasUnsavedChanges()
