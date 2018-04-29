@@ -29,7 +29,9 @@ module.exports = (I, self) ->
   self.filetree().selectedFile.observe (file) ->
     return if file.binary?()
 
-    unless file.session
+    {session} = file
+
+    unless session
       switch file.path().extension()
         when "md", "coffee", "js", "styl", "cson"
           file.content Hygiene.clean file.content()
