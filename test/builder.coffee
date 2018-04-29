@@ -1,4 +1,4 @@
-global.Builder = require "../source/builder"
+Builder = require "../source/builder"
 
 describe "Builder", ->
   it "should build jadelet", (done) ->
@@ -56,5 +56,5 @@ describe "Builder", ->
       done()
     .catch done
 
-  it "should provide a working Hamlet runtime", ->
-    assert typeof require("/lib/hamlet-runtime") is 'function'
+  it "should provide a working Jadelet runtime", ->
+    assert typeof require("/lib/jadelet-runtime") is 'function'

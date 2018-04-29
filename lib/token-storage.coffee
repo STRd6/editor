@@ -4,7 +4,7 @@ module.exports = (I, self) ->
       Promise.resolve()
       .then ->
         localStorage[key]
-  
+
     setToken: (key, value) ->
       Promise.resolve()
       .then ->

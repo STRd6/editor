@@ -1,5 +1,8 @@
 {Observable} = SystemClient = require "sys"
 
+# Extend Blob with convenience methods
+SystemClient.applyExtensions()
+
 module.exports = (editor) ->
   {system, postmaster, application} = client = SystemClient()
 
@@ -15,7 +18,7 @@ module.exports = (editor) ->
     , 0
 
     editor.extend
-      getToken: (key) -> 
+      getToken: (key) ->
         system.getToken(key)
       setToken: (key) ->
         system.setToken(key, value)
@@ -80,7 +83,7 @@ module.exports = (editor) ->
       , (e) ->
         if e.message.match /No ack/i
           return
-        else 
+        else
           console.error e
   .then ->
     editor.ready()

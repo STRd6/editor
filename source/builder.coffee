@@ -141,7 +141,7 @@ Builder = ->
 # Compile and build a tree of file data into a distribution. The distribution should
 # include source files, compiled files, and documentation.
 
-  build: (fileData, cache={}) ->
+  build: (fileData) ->
     build(fileData)
     .then (items) ->
       results =
@@ -161,11 +161,7 @@ Builder = ->
       postProcessors.forEach (fn) ->
         fn(pkg)
 
-      editor.errors []
       return pkg
-    .catch (e) ->
-      editor.errors [e]
-      throw e
 
 module.exports = Builder
 
